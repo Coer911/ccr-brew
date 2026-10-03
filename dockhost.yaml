@@ -1,0 +1,45 @@
+# Dockhost: проект ccr-brew — Cultura Brew (статичный сайт, nginx на 8080).
+# Сервер и база не нужны, переменных окружения и секретов нет.
+#
+# На Mac:
+#   export PATH="$HOME/.dockhost/bin:$PATH"
+#   dockhost repository build --name brew --project ccr-brew
+#   # подставьте ID проекта и полный Git SHA собранного образа в containers.brew.image
+#   dockhost compose apply ./dockhost.yaml
+
+version: 1
+project: ccr-brew
+
+repositories:
+  brew:
+    url: https://github.com/Coer911/ccr-brew.git
+    branch: gpl-fork
+    dockerFile: Dockerfile
+    dockerContext: .
+    # Сборке Next.js нужна память; самому контейнеру хватает 256 MiB.
+    memory: 2GiB
+    cpu: 1
+    cpuFraction: 50
+    state: present
+
+containers:
+  brew:
+    image: dockhost.io/<ID_ПРОЕКТА>/build/brew:<GIT_SHA>
+    replicas: 1
+    resources:
+      memory: 256MiB
+      cpu: 1
+      cpuFraction: 20
+    ports:
+      - 8080/TCP
+
+network:
+  domains:
+    brew: ~
+  routes:
+    brew-route:
+      domain: brew
+      path: /
+      type: internal
+      service: brew
+      port: 8080/TCP
