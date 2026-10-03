@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/* Цвета берутся из темы Telegram (Mini App сам задаёт --tg-theme-*),
+   в обычном браузере — свои значения светлой/тёмной темы. */
+:root {
+  --bg: var(--tg-theme-bg-color, #faf7f2);
+  --fg: var(--tg-theme-text-color, #2b211b);
+  --muted: var(--tg-theme-hint-color, #8a7b70);
+  --card: var(--tg-theme-secondary-bg-color, #f0e9df);
+  --accent: var(--tg-theme-button-color, #7a4a2a);
+  --accent-fg: var(--tg-theme-button-text-color, #ffffff);
+  --danger: var(--tg-theme-destructive-text-color, #c0392b);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: var(--tg-theme-bg-color, #1c1714);
+    --fg: var(--tg-theme-text-color, #f1e9e1);
+    --muted: var(--tg-theme-hint-color, #a39385);
+    --card: var(--tg-theme-secondary-bg-color, #2a221d);
+    --accent: var(--tg-theme-button-color, #c98b5a);
+    --accent-fg: var(--tg-theme-button-text-color, #1c1714);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-danger: var(--danger);
+}
+
+html, body { background: var(--bg); color: var(--fg); }
+body { -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  border-radius: .9rem; padding: .8rem 1.1rem; font-weight: 600;
+  background: var(--accent); color: var(--accent-fg);
+}
+.btn:disabled { opacity: .5; }
+.btn-ghost { background: var(--card); color: var(--fg); }
+.input {
+  width: 100%; border-radius: .7rem; padding: .6rem .75rem;
+  background: var(--card); color: var(--fg); border: 1px solid transparent;
+}
+.input:focus { outline: none; border-color: var(--accent); }
+.label { display: block; font-size: .8rem; color: var(--muted); margin-bottom: .25rem; }
