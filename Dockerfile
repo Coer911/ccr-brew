@@ -1,7 +1,7 @@
 # Cultura Brew — статичный сайт (Next.js export) за nginx.
 FROM node:22-alpine AS build
 WORKDIR /app
-RUN corepack enable
+RUN npm install -g pnpm@10.28.0
 COPY package.json pnpm-lock.yaml .pnpmrc* ./
 RUN pnpm install --frozen-lockfile
 COPY . .
