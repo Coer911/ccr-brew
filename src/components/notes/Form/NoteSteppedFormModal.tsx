@@ -171,7 +171,7 @@ const NoteSteppedFormModal = forwardRef<
         setHighlightedBeanId(randomBean.id);
         setTimeout(() => setHighlightedBeanId(null), 4000);
       } else {
-        showToast({ type: 'info', title: '没有可用的咖啡豆', duration: 2000 });
+        showToast({ type: 'info', title: 'Нет доступного зерна', duration: 2000 });
       }
     };
 
@@ -278,11 +278,11 @@ const NoteSteppedFormModal = forwardRef<
                   className={`${buttonBaseClass} flex items-center justify-center ${isLastStep && !isCoffeeBeanStep ? 'px-6 py-3' : 'px-5 py-3'}`}
                 >
                   {isLastStep && !isCoffeeBeanStep ? (
-                    <span className="font-medium">保存笔记</span>
+                    <span className="font-medium">Сохранить заметку</span>
                   ) : (
                     <div className="flex items-center gap-2">
                       <span className="font-medium">
-                        {isCoffeeBeanStep ? '搜索或新建' : '下一步'}
+                        {isCoffeeBeanStep ? 'Найти или добавить' : 'Далее'}
                       </span>
                       {isCoffeeBeanStep ? (
                         <Search className="h-4 w-4" strokeWidth="3" />

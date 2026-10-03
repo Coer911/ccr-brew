@@ -10,30 +10,30 @@ import { defaultSettings } from '@/lib/stores/settingsStore';
 describe('settings search reveal state', () => {
   it('reveals conditional bean settings for the selected result', () => {
     expect(
-      getBeanSettingsSearchRevealState(makeSettingRowSearchId('总价'))
+      getBeanSettingsSearchRevealState(makeSettingRowSearchId('Общая цена'))
     ).toMatchObject({ priceDetails: true, beanFields: false });
     expect(
-      getBeanSettingsSearchRevealState(makeSettingRowSearchId('备注内容'))
+      getBeanSettingsSearchRevealState(makeSettingRowSearchId('Текст заметки'))
     ).toMatchObject({ noteDetails: true });
   });
 
   it('opens the bean field drawer for nested field results', () => {
     expect(
-      getBeanSettingsSearchRevealState(makeSettingRowSearchId('烘焙商'))
+      getBeanSettingsSearchRevealState(makeSettingRowSearchId('Обжарщик'))
     ).toMatchObject({ beanFields: true });
     expect(
-      getBeanSettingsSearchRevealState(makeSettingRowSearchId('烘焙商分隔符'))
+      getBeanSettingsSearchRevealState(makeSettingRowSearchId('Разделитель обжарщика'))
     ).toMatchObject({ beanFields: true });
     expect(
-      getBeanSettingsSearchRevealState(makeSettingRowSearchId('产国'))
+      getBeanSettingsSearchRevealState(makeSettingRowSearchId('Страна'))
     ).toMatchObject({ beanFields: true });
     expect(
-      getBeanSettingsSearchRevealState(makeSettingRowSearchId('咖啡豆字段'))
+      getBeanSettingsSearchRevealState(makeSettingRowSearchId('Поля зерна'))
     ).toMatchObject({ beanFields: false });
   });
 
   it('routes immersive form search results to coffee bean settings', () => {
-    const immersiveFormSettingId = makeSettingRowSearchId('沉浸式表单');
+    const immersiveFormSettingId = makeSettingRowSearchId('Форма на весь экран');
     const items = buildSettingsSearchItems({
       settings: defaultSettings,
       visibleModules: { brewing: true, coffeeBean: true, notes: true },
@@ -49,7 +49,7 @@ describe('settings search reveal state', () => {
     ).toEqual([
       expect.objectContaining({
         pageId: 'bean-settings',
-        label: '沉浸式表单',
+        label: 'Форма на весь экран',
       }),
     ]);
   });
@@ -57,11 +57,11 @@ describe('settings search reveal state', () => {
   it('reveals disabled green-bean sections only for their nested results', () => {
     expect(
       shouldRevealGreenBeanSearchSettings(
-        makeSettingRowSearchId('预设快捷烘焙量')
+        makeSettingRowSearchId('Быстрые веса обжарки')
       )
     ).toBe(true);
     expect(
-      shouldRevealGreenBeanSearchSettings(makeSettingRowSearchId('启用生豆库'))
+      shouldRevealGreenBeanSearchSettings(makeSettingRowSearchId('Включить учёт зелёного зерна'))
     ).toBe(false);
   });
 });

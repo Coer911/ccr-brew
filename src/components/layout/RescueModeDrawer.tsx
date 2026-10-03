@@ -113,16 +113,16 @@ const RescueModeDrawer: React.FC = () => {
         fileName: includeImages
           ? `brew-guide-rescue-${date}.json`
           : `brew-guide-rescue-no-images-${date}.json`,
-        title: '导出抢救数据',
-        text: '请选择保存位置',
-        dialogTitle: '导出抢救数据',
+        title: 'Выгрузить данные для восстановления',
+        text: 'Выберите, куда сохранить',
+        dialogTitle: 'Выгрузить данные для восстановления',
       });
       dispatch({ type: 'exportSucceeded' });
-      showToast({ type: 'success', title: '已导出数据' });
+      showToast({ type: 'success', title: 'Данные выгружены' });
     } catch (error) {
       console.error('抢救导出失败:', error);
       dispatch({ type: 'exportFailed' });
-      showToast({ type: 'error', title: '导出失败' });
+      showToast({ type: 'error', title: 'Ошибка выгрузки' });
     }
   };
 
@@ -140,15 +140,15 @@ const RescueModeDrawer: React.FC = () => {
         type: stats.failedCount > 0 ? 'warning' : 'success',
         title:
           stats.failedCount > 0
-            ? `补压完成，${stats.failedCount} 张失败`
+            ? `Досжатие готово, ${stats.failedCount} не удалось`
             : stats.compressedCount > 0
-              ? `已补压 ${stats.compressedCount} 张图片`
-              : '没有需要补压的图片',
+              ? `Досжато: ${stats.compressedCount} фото`
+              : 'Нет фото для досжатия',
       });
     } catch (error) {
       console.error('图片补压失败:', error);
       dispatch({ type: 'recompressFailed' });
-      showToast({ type: 'error', title: '图片补压失败' });
+      showToast({ type: 'error', title: 'Не удалось досжать фото' });
     }
   };
 
@@ -168,16 +168,16 @@ const RescueModeDrawer: React.FC = () => {
       await exportJsonFile({
         jsonData,
         fileName: `brew-guide-legacy-preferences-rescue-${date}.json`,
-        title: '导出旧版存储数据',
-        text: '请选择保存位置',
-        dialogTitle: '导出旧版存储数据',
+        title: 'Выгрузить данные старого хранилища',
+        text: 'Выберите, куда сохранить',
+        dialogTitle: 'Выгрузить данные старого хранилища',
       });
       dispatch({ type: 'legacyPreferencesExportSucceeded' });
-      showToast({ type: 'success', title: '已导出旧版存储数据' });
+      showToast({ type: 'success', title: 'Данные старого хранилища выгружены' });
     } catch (error) {
       console.error('旧版存储数据导出失败:', error);
       dispatch({ type: 'legacyPreferencesExportFailed' });
-      showToast({ type: 'error', title: '旧版存储导出失败' });
+      showToast({ type: 'error', title: 'Не удалось выгрузить старое хранилище' });
     }
   };
 
@@ -189,7 +189,7 @@ const RescueModeDrawer: React.FC = () => {
     >
       <ActionDrawer.Content className="mb-6!">
         <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-          抢救模式
+          Режим восстановления
         </p>
       </ActionDrawer.Content>
       <ActionDrawer.Actions className="flex-col [&>button]:w-full [&>button]:flex-none [&>button]:text-left">
@@ -199,7 +199,7 @@ const RescueModeDrawer: React.FC = () => {
             isExporting || isExportingLegacyPreferences || isRecompressing
           }
         >
-          {isExporting ? '正在导出' : '导出数据'}
+          {isExporting ? 'Выгружаем' : 'Выгрузить данные'}
         </ActionDrawer.SecondaryButton>
         <ActionDrawer.SecondaryButton
           onClick={() => handleExport(false)}
@@ -207,7 +207,7 @@ const RescueModeDrawer: React.FC = () => {
             isExporting || isExportingLegacyPreferences || isRecompressing
           }
         >
-          导出数据（不带图片）
+          Выгрузить данные (без фото)
         </ActionDrawer.SecondaryButton>
         <ActionDrawer.SecondaryButton
           onClick={handleExportLegacyPreferences}
@@ -216,8 +216,8 @@ const RescueModeDrawer: React.FC = () => {
           }
         >
           {isExportingLegacyPreferences
-            ? '正在导出旧版存储'
-            : '导出旧版存储数据'}
+            ? 'Выгружаем старое хранилище'
+            : 'Выгрузить данные старого хранилища'}
         </ActionDrawer.SecondaryButton>
         <ActionDrawer.SecondaryButton
           onClick={handleRecompressImages}
@@ -225,12 +225,12 @@ const RescueModeDrawer: React.FC = () => {
             isRecompressing || isExporting || isExportingLegacyPreferences
           }
         >
-          {isRecompressing ? '补压中' : '图片补压'}
+          {isRecompressing ? 'Сжимаем' : 'Сжать фото'}
         </ActionDrawer.SecondaryButton>
         <ActionDrawer.SecondaryButton
           onClick={() => dispatch({ type: 'close' })}
         >
-          关闭
+          Закрыть
         </ActionDrawer.SecondaryButton>
       </ActionDrawer.Actions>
     </ActionDrawer>

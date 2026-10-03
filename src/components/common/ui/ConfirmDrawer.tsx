@@ -28,7 +28,7 @@ const ConfirmDrawer: React.FC<ConfirmDrawerProps> = ({
   onClose,
   onConfirm,
   message,
-  confirmText = '确认',
+  confirmText = 'Подтвердить',
   isDanger = false,
   icon: Icon = DeleteIcon,
   onExitComplete,
@@ -51,7 +51,7 @@ const ConfirmDrawer: React.FC<ConfirmDrawerProps> = ({
       </ActionDrawer.Content>
       <ActionDrawer.Actions>
         <ActionDrawer.SecondaryButton onClick={onClose}>
-          取消
+          Отмена
         </ActionDrawer.SecondaryButton>
         {isDanger ? (
           <ActionDrawer.DangerButton onClick={handleConfirm}>

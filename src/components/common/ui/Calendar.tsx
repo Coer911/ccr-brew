@@ -240,18 +240,18 @@ export function Calendar({
   const monthNames =
     locale === 'zh-CN'
       ? [
-          '1月',
-          '2月',
-          '3月',
-          '4月',
-          '5月',
-          '6月',
-          '7月',
-          '8月',
-          '9月',
-          '10月',
-          '11月',
-          '12月',
+          'Янв',
+          'Фев',
+          'Мар',
+          'Апр',
+          'Май',
+          'Июн',
+          'Июл',
+          'Авг',
+          'Сен',
+          'Окт',
+          'Ноя',
+          'Дек',
         ]
       : [
           'Jan',
@@ -291,7 +291,7 @@ export function Calendar({
         <button
           onClick={goToPrevMonth}
           className="flex items-center justify-center rounded-md p-2 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
-          aria-label="上个月"
+          aria-label="Предыдущий месяц"
           type="button"
         >
           <ChevronLeft className="icon-xs icon-secondary" />
@@ -394,7 +394,7 @@ export function Calendar({
         <button
           onClick={goToNextMonth}
           className="flex items-center justify-center rounded-md p-2 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
-          aria-label="下个月"
+          aria-label="Следующий месяц"
           type="button"
         >
           <ChevronRight className="icon-xs icon-secondary" />
@@ -457,7 +457,7 @@ export function Calendar({
           )}
           type="button"
         >
-          今天
+          Сегодня
         </button>
         {showTimeInput && (
           <div
@@ -465,10 +465,10 @@ export function Calendar({
               footerControlClass,
               'flex items-center gap-0.5 font-medium tabular-nums'
             )}
-            aria-label="选择时间"
+            aria-label="Выберите время"
           >
             <input
-              aria-label="小时"
+              aria-label="Часы"
               className={timeInputClass}
               inputMode="numeric"
               maxLength={2}
@@ -484,7 +484,7 @@ export function Calendar({
             />
             <span aria-hidden="true">:</span>
             <input
-              aria-label="分钟"
+              aria-label="Минуты"
               className={timeInputClass}
               inputMode="numeric"
               maxLength={2}

@@ -111,7 +111,7 @@ const BeanPrintModal: React.FC<BeanPrintModalProps> = ({
       console.error('保存图片失败:', error);
       const { showToast } =
         await import('@/components/common/feedback/LightToast');
-      showToast({ type: 'error', title: '保存图片失败，请重试' });
+      showToast({ type: 'error', title: 'Не удалось сохранить картинку, попробуйте ещё раз' });
     } finally {
       setIsSavingImage(false);
     }
@@ -200,16 +200,16 @@ const BeanPrintModal: React.FC<BeanPrintModalProps> = ({
               <X className="h-4 w-4" />
             </button>
             <h2 className="pointer-events-none absolute left-1/2 -translate-x-1/2 text-sm text-neutral-600 dark:text-neutral-400">
-              打印标签
+              Печать этикетки
             </h2>
             <button
               type="button"
               onClick={handleSaveImage}
               disabled={isSavingImage}
               className="flex h-8 items-center justify-center rounded-full bg-neutral-100 px-3 text-xs font-medium text-neutral-700 hover:bg-neutral-200 hover:text-neutral-900 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:hover:text-neutral-100"
-              title={preparedImageData ? '分享图片' : '保存图片'}
+              title={preparedImageData ? 'Поделиться картинкой' : 'Сохранить картинку'}
             >
-              {isSavingImage ? '生成中' : preparedImageData ? '分享' : '保存'}
+              {isSavingImage ? 'Готовим' : preparedImageData ? 'Поделиться' : 'Сохранить'}
             </button>
           </div>
 
@@ -266,9 +266,9 @@ const BeanPrintModal: React.FC<BeanPrintModalProps> = ({
           {showResetConfirm && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
               <div className="mx-4 w-full max-w-sm rounded-2xl bg-white p-6 dark:bg-neutral-900">
-                <h3 className="mb-2 text-lg font-medium">重置配置</h3>
+                <h3 className="mb-2 text-lg font-medium">Сбросить настройки</h3>
                 <p className="mb-4 text-sm text-neutral-600 dark:text-neutral-400">
-                  确定要重置所有布局设置吗？
+                  Сбросить все настройки макета?
                 </p>
                 <div className="flex gap-3">
                   <button
@@ -276,14 +276,14 @@ const BeanPrintModal: React.FC<BeanPrintModalProps> = ({
                     onClick={handleCancelReset}
                     className="flex-1 rounded-lg bg-neutral-100 py-2 text-sm font-medium hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700"
                   >
-                    取消
+                    Отмена
                   </button>
                   <button
                     type="button"
                     onClick={confirmReset}
                     className="flex-1 rounded-lg bg-red-500 py-2 text-sm font-medium text-white hover:bg-red-600"
                   >
-                    重置
+                    Сбросить
                   </button>
                 </div>
               </div>

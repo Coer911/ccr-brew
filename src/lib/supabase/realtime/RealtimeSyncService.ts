@@ -79,12 +79,12 @@ const SETTINGS_DIRTY_KEY = 'brew-guide:realtime-sync:settingsDirty';
 type PostgresPayload = RealtimePostgresChangesPayload<Record<string, unknown>>;
 
 const TASK_LABELS: Record<string, string> = {
-  [SYNC_TABLES.COFFEE_BEANS]: '咖啡豆',
-  [SYNC_TABLES.BREWING_NOTES]: '笔记',
-  [SYNC_TABLES.CUSTOM_EQUIPMENTS]: '自定义器具',
-  [SYNC_TABLES.CUSTOM_METHODS]: '自定义方案',
-  [SYNC_TABLES.USER_SETTINGS]: '设置',
-  offline_queue: '离线队列',
+  [SYNC_TABLES.COFFEE_BEANS]: 'Зерно',
+  [SYNC_TABLES.BREWING_NOTES]: 'Заметки',
+  [SYNC_TABLES.CUSTOM_EQUIPMENTS]: 'Своё устройство',
+  [SYNC_TABLES.CUSTOM_METHODS]: 'Свой рецепт',
+  [SYNC_TABLES.USER_SETTINGS]: 'Настройки',
+  offline_queue: 'Офлайн-очередь',
 };
 
 const FULL_SYNC_TASKS = [
@@ -327,7 +327,7 @@ export class RealtimeSyncService {
 
       return true;
     } catch (error) {
-      const message = error instanceof Error ? error.message : '连接失败';
+      const message = error instanceof Error ? error.message : 'Ошибка подключения';
       console.error('[RealtimeSync] 连接失败:', message);
       this.setState({ connectionStatus: 'error', error: message });
       this.scheduleReconnect(`connect-failed:${message}`);
@@ -418,12 +418,12 @@ export class RealtimeSyncService {
     const ownsProgress = !syncStore.supabaseSyncProgress.active;
     if (ownsProgress) {
       syncStore.setSyncing();
-      syncStore.startSupabaseSyncProgress('local-change', '正在上传本地变更', [
+      syncStore.startSupabaseSyncProgress('local-change', 'Загружаем изменения с устройства', [
         {
           id: changeKey,
           label: TASK_LABELS[table] || table,
           status: 'uploading',
-          detail: action === 'delete' ? '同步删除' : '上传变更',
+          detail: action === 'delete' ? 'Синхронизация удаления' : 'Загрузка изменений',
           total: 1,
           completed: 0,
         },
@@ -435,7 +435,7 @@ export class RealtimeSyncService {
         const result = await markRecordsAsDeleted(this.client, table, [
           recordId,
         ]);
-        assertSyncSuccess(result, `删除 ${table}/${recordId} 失败`);
+        assertSyncSuccess(result, `Удаление ${table}/${recordId} — ошибка`);
       } else {
         const record = this.prepareRecordForUpload(table, recordId, data);
         const result = await upsertRecords(
@@ -444,7 +444,7 @@ export class RealtimeSyncService {
           [record],
           this.createMapFn(table)
         );
-        assertSyncSuccess(result, `上传 ${table}/${recordId} 失败`);
+        assertSyncSuccess(result, `Загрузить ${table}/${recordId} — ошибка`);
       }
 
       const now = Date.now();
@@ -454,10 +454,10 @@ export class RealtimeSyncService {
       if (ownsProgress) {
         syncStore.updateSupabaseSyncTask(changeKey, {
           status: 'success',
-          detail: '已上传',
+          detail: 'Загружено',
           completed: 1,
         });
-        syncStore.finishSupabaseSyncProgress('上传完成');
+        syncStore.finishSupabaseSyncProgress('Загрузка завершена');
         syncStore.setSyncSuccess();
       }
     } catch (error) {
@@ -473,10 +473,10 @@ export class RealtimeSyncService {
       if (ownsProgress) {
         syncStore.updateSupabaseSyncTask(changeKey, {
           status: 'queued',
-          detail: '上传失败，已保留到离线队列',
+          detail: 'Ошибка загрузки, изменения сохранены в офлайн-очереди',
           error: message,
         });
-        syncStore.failSupabaseSyncProgress('上传失败，已保留到离线队列');
+        syncStore.failSupabaseSyncProgress('Ошибка загрузки, изменения сохранены в офлайн-очереди');
         syncStore.setSyncError(message);
       }
     }
@@ -549,7 +549,7 @@ export class RealtimeSyncService {
       let settled = false;
       const timeout = setTimeout(() => {
         settled = true;
-        reject(new Error('Realtime 订阅超时'));
+        reject(new Error('Время подписки Realtime истекло'));
       }, SYNC_TIMING.SUBSCRIPTION_TIMEOUT);
 
       this.channel!.subscribe(status => {
@@ -568,7 +568,7 @@ export class RealtimeSyncService {
           if (!settled) {
             settled = true;
             clearTimeout(timeout);
-            reject(new Error(`订阅失败: ${status}`));
+            reject(new Error(`Ошибка подписки: ${status}`));
             return;
           }
 
@@ -585,7 +585,7 @@ export class RealtimeSyncService {
     if (this.state.connectionStatus !== 'connecting') {
       this.setState({
         connectionStatus: 'error',
-        error: `Channel 异常: ${status}`,
+        error: `Ошибка канала: ${status}`,
       });
     }
     this.scheduleReconnect(`channel-${status}`);
@@ -652,7 +652,7 @@ export class RealtimeSyncService {
     try {
       if (this.client) {
         const result = await downloadSettingsData(this.client);
-        assertSyncSuccess(result, '下载远端设置失败');
+        assertSyncSuccess(result, 'Не удалось скачать облачные настройки');
         await refreshSettingsStores();
         const now = Date.now();
         setLastSyncTime(now);
@@ -726,8 +726,8 @@ export class RealtimeSyncService {
       syncStore.startSupabaseSyncProgress(
         phase,
         phase === 'initial-sync'
-          ? '正在初始化 Supabase 数据'
-          : '正在同步 Supabase 数据',
+          ? 'Готовим данные Supabase'
+          : 'Синхронизируем данные Supabase',
         processQueue
           ? [
               ...FULL_SYNC_TASKS,
@@ -752,7 +752,7 @@ export class RealtimeSyncService {
         }
         const now = Date.now();
         this.setState({ lastSyncTime: now, error: null });
-        syncStore.finishSupabaseSyncProgress('同步完成');
+        syncStore.finishSupabaseSyncProgress('Синхронизация завершена');
         syncStore.setSyncSuccess();
       } catch (error) {
         const message = getErrorMessage(error);
@@ -791,12 +791,12 @@ export class RealtimeSyncService {
     const ownsProgress = !syncStore.supabaseSyncProgress.active;
     if (ownsProgress) {
       syncStore.setSyncing();
-      syncStore.startSupabaseSyncProgress('settings', '正在上传设置', [
+      syncStore.startSupabaseSyncProgress('settings', 'Загружаем настройки', [
         {
           id: SYNC_TABLES.USER_SETTINGS,
           label: TASK_LABELS[SYNC_TABLES.USER_SETTINGS],
           status: 'uploading',
-          detail: '上传本地设置',
+          detail: 'Загрузка настроек с устройства',
         },
       ]);
     }
@@ -808,18 +808,18 @@ export class RealtimeSyncService {
         SYNC_TIMING.SETTINGS_UPLOAD_TIMEOUT,
         '上传设置超时'
       );
-      assertSyncSuccess(result, '上传设置失败');
+      assertSyncSuccess(result, 'Не удалось загрузить настройки');
       clearSettingsDirty();
       if (ownsProgress) {
         syncStore.updateSupabaseSyncTask(SYNC_TABLES.USER_SETTINGS, {
           status: 'success',
           detail:
             result.affectedCount > 0
-              ? `已上传 ${result.affectedCount} 项设置`
-              : '没有需要上传的设置',
+              ? `Загружено: ${result.affectedCount} настроек`
+              : 'Нет настроек для загрузки',
           uploaded: result.affectedCount,
         });
-        syncStore.finishSupabaseSyncProgress('设置已同步');
+        syncStore.finishSupabaseSyncProgress('Настройки синхронизированы');
         syncStore.setSyncSuccess();
       }
     } catch (error) {
@@ -828,7 +828,7 @@ export class RealtimeSyncService {
       if (ownsProgress) {
         syncStore.updateSupabaseSyncTask(SYNC_TABLES.USER_SETTINGS, {
           status: 'error',
-          detail: '设置上传失败',
+          detail: 'Не удалось загрузить настройки',
           error: message,
         });
         syncStore.failSupabaseSyncProgress(message);
@@ -849,7 +849,7 @@ export class RealtimeSyncService {
       useSyncStatusStore.getState().updateSupabaseSyncTask('offline_queue', {
         label: TASK_LABELS.offline_queue,
         status: 'success',
-        detail: '没有待上传变更',
+        detail: 'Нет изменений для загрузки',
         total: 0,
         completed: 0,
       });
@@ -860,12 +860,12 @@ export class RealtimeSyncService {
     const ownsProgress = !syncStore.supabaseSyncProgress.active;
     if (ownsProgress) {
       syncStore.setSyncing();
-      syncStore.startSupabaseSyncProgress('offline-queue', '正在补传离线变更', [
+      syncStore.startSupabaseSyncProgress('offline-queue', 'Догружаем офлайн-изменения', [
         {
           id: 'offline_queue',
           label: TASK_LABELS.offline_queue,
           status: 'uploading',
-          detail: `补传 ${pendingCount} 项变更`,
+          detail: `Догружаем ${pendingCount} изменений`,
           total: pendingCount,
           completed: 0,
         },
@@ -874,7 +874,7 @@ export class RealtimeSyncService {
       syncStore.updateSupabaseSyncTask('offline_queue', {
         label: TASK_LABELS.offline_queue,
         status: 'uploading',
-        detail: `补传 ${pendingCount} 项变更`,
+        detail: `Догружаем ${pendingCount} изменений`,
         total: pendingCount,
         completed: 0,
       });
@@ -885,7 +885,7 @@ export class RealtimeSyncService {
         const result = await markRecordsAsDeleted(this.client!, op.table, [
           op.recordId,
         ]);
-        assertSyncSuccess(result, `补传删除失败: ${op.table}/${op.recordId}`);
+        assertSyncSuccess(result, `Ошибка догрузки удаления: ${op.table}/${op.recordId}`);
         return true;
       }
 
@@ -900,7 +900,7 @@ export class RealtimeSyncService {
         [record],
         this.createMapFn(op.table)
       );
-      assertSyncSuccess(result, `补传上传失败: ${op.table}/${op.recordId}`);
+      assertSyncSuccess(result, `Ошибка догрузки: ${op.table}/${op.recordId}`);
       return true;
     };
 
@@ -914,26 +914,26 @@ export class RealtimeSyncService {
     if (result.failed > 0 || result.blocked > 0) {
       syncStore.updateSupabaseSyncTask('offline_queue', {
         status: 'warning',
-        detail: `${result.processed} 项已补传，${remainingCount} 项仍待处理`,
+        detail: `${result.processed} догружено, ${remainingCount} ещё ждут`,
         total: pendingCount,
         completed: result.processed,
         failed: remainingCount,
       });
       if (ownsProgress) {
-        syncStore.failSupabaseSyncProgress('部分离线变更仍待上传');
-        syncStore.setSyncError('部分离线变更仍待上传');
+        syncStore.failSupabaseSyncProgress('Часть офлайн-изменений ещё ждёт загрузки');
+        syncStore.setSyncError('Часть офлайн-изменений ещё ждёт загрузки');
       }
-      throw new Error('部分离线变更仍待上传');
+      throw new Error('Часть офлайн-изменений ещё ждёт загрузки');
     }
 
     syncStore.updateSupabaseSyncTask('offline_queue', {
       status: 'success',
-      detail: `已补传 ${result.processed} 项变更`,
+      detail: `Догружено ${result.processed} изменений`,
       total: pendingCount,
       completed: result.processed,
     });
     if (ownsProgress) {
-      syncStore.finishSupabaseSyncProgress('离线变更已补传');
+      syncStore.finishSupabaseSyncProgress('Офлайн-изменения догружены');
       syncStore.setSyncSuccess();
     }
   }

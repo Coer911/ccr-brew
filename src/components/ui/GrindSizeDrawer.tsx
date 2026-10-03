@@ -241,7 +241,7 @@ const GrindSizeDrawer: React.FC<GrindSizeDrawerProps> = ({
             value={editValue}
             onChange={e => setEditValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="输入研磨度"
+            placeholder="Введите помол"
             style={{
               fontFamily: 'ui-rounded, "SF Pro Rounded", system-ui, sans-serif',
             }}
@@ -254,7 +254,7 @@ const GrindSizeDrawer: React.FC<GrindSizeDrawerProps> = ({
           selectedGrinder.grindSizeHistory.length > 0 && (
             <div>
               <p className="mb-2 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                最近使用
+                Недавние
               </p>
               <div className="flex flex-col gap-1.5">
                 {selectedGrinder.grindSizeHistory
@@ -319,7 +319,7 @@ const GrindSizeDrawer: React.FC<GrindSizeDrawerProps> = ({
 
       <ActionDrawer.Actions>
         <ActionDrawer.SecondaryButton onClick={handleSave}>
-          关闭
+          Закрыть
         </ActionDrawer.SecondaryButton>
       </ActionDrawer.Actions>
     </ActionDrawer>
@@ -338,16 +338,16 @@ function formatTimestamp(timestamp: number): string {
   const day = 24 * hour;
 
   if (diff < minute) {
-    return '刚刚';
+    return 'Только что';
   } else if (diff < hour) {
     const minutes = Math.floor(diff / minute);
-    return `${minutes}分钟前`;
+    return `${minutes} мин назад`;
   } else if (diff < day) {
     const hours = Math.floor(diff / hour);
-    return `${hours}小时前`;
+    return `${hours} ч назад`;
   } else if (diff < 7 * day) {
     const days = Math.floor(diff / day);
-    return `${days}天前`;
+    return `${days} дн. назад`;
   } else {
     const date = new Date(timestamp);
     return `${date.getMonth() + 1}/${date.getDate()}`;

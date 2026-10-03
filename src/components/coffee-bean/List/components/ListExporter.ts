@@ -109,7 +109,7 @@ export const exportListPreview = async (
   options: ExportOptions = {}
 ) => {
   if (filteredBeans.length === 0) {
-    throw new Error('没有咖啡豆数据可导出');
+    throw new Error('Нет зерна для экспорта');
   }
 
   const isDarkMode = document.documentElement.classList.contains('dark');
@@ -165,7 +165,7 @@ export const exportListPreview = async (
       '.export-list-container'
     ) as HTMLElement;
     if (!exportComponent) {
-      throw new Error('无法找到导出组件');
+      throw new Error('Не найден компонент экспорта');
     }
 
     // 处理Next.js Image组件
@@ -228,23 +228,23 @@ export const exportListPreview = async (
       success: true,
       message:
         shareOutcome === 'activation-required'
-          ? '列表预览图已生成，请再次点击分享'
+          ? 'Картинка списка готова, нажмите «Поделиться» ещё раз'
           : shareOutcome === 'cancelled'
-            ? '已取消分享'
-            : '列表预览图已生成',
+            ? 'Отправка отменена'
+            : 'Картинка списка готова',
     };
   } catch (error) {
     console.error('生成咖啡豆列表图片失败:', error);
 
     // 提供更详细的错误信息
-    let errorMessage = '生成预览图失败';
+    let errorMessage = 'Не удалось создать картинку';
     if (error instanceof Error) {
       if (error.message.includes('canvas')) {
-        errorMessage = '图片渲染失败，请检查咖啡豆图片是否正常显示';
+        errorMessage = 'Ошибка отрисовки, проверьте, что фото зерна отображаются';
       } else if (error.message.includes('network')) {
-        errorMessage = '网络错误，请检查图片是否能正常加载';
+        errorMessage = 'Ошибка сети, проверьте, что фото загружаются';
       } else if (error.message.includes('timeout')) {
-        errorMessage = '图片加载超时，请重试';
+        errorMessage = 'Фото грузятся слишком долго, попробуйте ещё раз';
       }
     }
 

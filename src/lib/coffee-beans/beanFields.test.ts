@@ -56,12 +56,12 @@ describe('bean field configuration', () => {
       buildBean({
         blendComponents: [
           {
-            origin: '埃塞俄比亚',
-            country: '刚果',
-            region: '刚果',
-            estate: '博纳',
-            processingStation: '沃卡',
-            process: '水洗',
+            origin: 'Эфиопия',
+            country: 'Конго',
+            region: 'Конго',
+            estate: 'Бона',
+            processingStation: 'Вока',
+            process: 'Мытая',
             variety: '74158',
             altitude: '2100m',
             batch: '1931',
@@ -73,13 +73,13 @@ describe('bean field configuration', () => {
 
     expect(normalized.blendComponents).toEqual([
       {
-        origin: '埃塞俄比亚',
-        process: '水洗',
+        origin: 'Эфиопия',
+        process: 'Мытая',
         variety: '74158',
       },
     ]);
     expect(normalized.notes).toBe(
-      '产国：刚果 / 产区：刚果 / 庄园：博纳 / 处理站：沃卡 / 海拔：2100m / 批次：1931'
+      'Страна: Конго / Регион: Конго / Ферма: Бона / Станция обработки: Вока / Высота: 2100m / Партия: 1931'
     );
   });
 
@@ -88,9 +88,9 @@ describe('bean field configuration', () => {
       buildBean({
         blendComponents: [
           {
-            origin: '埃塞俄比亚',
-            estate: '博纳',
-            process: '水洗',
+            origin: 'Эфиопия',
+            estate: 'Бона',
+            process: 'Мытая',
           },
         ],
       }),
@@ -99,9 +99,9 @@ describe('bean field configuration', () => {
 
     expect(normalized.blendComponents).toEqual([
       {
-        origin: '埃塞俄比亚',
-        estate: '博纳',
-        process: '水洗',
+        origin: 'Эфиопия',
+        estate: 'Бона',
+        process: 'Мытая',
       },
     ]);
     expect(normalized.notes).toBeUndefined();
@@ -112,10 +112,10 @@ describe('bean field configuration', () => {
       buildBean({
         blendComponents: [
           {
-            country: '埃塞俄比亚',
-            estate: '博纳',
-            processingStation: '沃卡',
-            process: '水洗',
+            country: 'Эфиопия',
+            estate: 'Бона',
+            processingStation: 'Вока',
+            process: 'Мытая',
           },
         ],
       }),
@@ -129,10 +129,10 @@ describe('bean field configuration', () => {
 
     expect(normalized.blendComponents).toEqual([
       {
-        country: '埃塞俄比亚',
-        estate: '博纳',
-        processingStation: '沃卡',
-        process: '水洗',
+        country: 'Эфиопия',
+        estate: 'Бона',
+        processingStation: 'Вока',
+        process: 'Мытая',
       },
     ]);
     expect(normalized.notes).toBeUndefined();
@@ -141,19 +141,19 @@ describe('bean field configuration', () => {
   it('promotes explicitly labeled notes into enabled component fields', () => {
     const normalized = normalizeCoffeeBeanForFieldConfig(
       buildBean({
-        blendComponents: [{ country: '哥伦比亚', process: '蜜处理' }],
+        blendComponents: [{ country: 'Колумбия', process: 'Хани' }],
         notes:
-          '产国：哥伦比亚 / 产区：NARIÑO / 海拔：2200–2300 M.A.S.L / 处理法：蜜处理',
+          'Страна: Колумбия / Регион: NARIÑO / Высота: 2200–2300 M.A.S.L / Обработка: Хани',
       }),
       settingsWithEnabledFields(['country', 'region', 'altitude', 'process'])
     );
 
     expect(normalized.blendComponents).toEqual([
       {
-        country: '哥伦比亚',
+        country: 'Колумбия',
         region: 'NARIÑO',
         altitude: '2200-2300m',
-        process: '蜜处理',
+        process: 'Хани',
       },
     ]);
     expect(normalized.notes).toBeUndefined();
@@ -162,34 +162,34 @@ describe('bean field configuration', () => {
   it('uses component prefixes without guessing unprefixed multi-component notes', () => {
     const normalized = normalizeCoffeeBeanForFieldConfig(
       buildBean({
-        blendComponents: [{ process: '水洗' }, { process: '日晒' }],
-        notes: '成分1 产区：西达摩 / 产区：古吉',
+        blendComponents: [{ process: 'Мытая' }, { process: 'Натуральная' }],
+        notes: 'Компонент 1 Регион: Сидамо / Регион: Гуджи',
       }),
       settingsWithEnabledFields(['region', 'process'])
     );
 
     expect(normalized.blendComponents).toEqual([
-      { region: '西达摩', process: '水洗' },
-      { process: '日晒' },
+      { region: 'Сидамо', process: 'Мытая' },
+      { process: 'Натуральная' },
     ]);
-    expect(normalized.notes).toBe('产区：古吉');
+    expect(normalized.notes).toBe('Регион: Гуджи');
   });
 
   it('uses structured origin fields before legacy origin for display', () => {
     expect(
       getComponentOriginDisplay({
-        origin: '埃塞俄比亚 西达摩 博纳',
-        country: '埃塞俄比亚',
-        region: '西达摩',
-        estate: '博纳',
-        processingStation: '沃卡',
+        origin: 'Эфиопия Сидамо Бона',
+        country: 'Эфиопия',
+        region: 'Сидамо',
+        estate: 'Бона',
+        processingStation: 'Вока',
       })
-    ).toBe('埃塞俄比亚 · 西达摩 · 博纳 · 沃卡');
+    ).toBe('Эфиопия · Сидамо · Бона · Вока');
   });
 
   it('falls back to legacy origin when no structured origin fields exist', () => {
-    expect(getComponentOriginDisplay({ origin: '埃塞俄比亚 西达摩' })).toBe(
-      '埃塞俄比亚 西达摩'
+    expect(getComponentOriginDisplay({ origin: 'Эфиопия Сидамо' })).toBe(
+      'Эфиопия Сидамо'
     );
   });
 });
@@ -198,16 +198,16 @@ describe('getComponentFieldValue', () => {
   it('stringifies non-string process values without throwing', () => {
     expect(
       getComponentFieldValue(
-        { process: ['水洗', '日晒'] as unknown as string },
+        { process: ['Мытая', 'Натуральная'] as unknown as string },
         'process'
       )
-    ).toBe('水洗 / 日晒');
+    ).toBe('Мытая / Натуральная');
     expect(
       getComponentFieldValue({ process: 123 as unknown as string }, 'process')
     ).toBe('123');
     expect(
       getComponentFieldValue(
-        { process: { name: '水洗' } as unknown as string },
+        { process: { name: 'Мытая' } as unknown as string },
         'process'
       )
     ).toBe('');

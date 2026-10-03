@@ -101,7 +101,7 @@ const PageStackDrawer: React.FC<PageStackDrawerProps> = ({
   title,
   activeKey,
   canGoBack,
-  doneLabel = '完成',
+  doneLabel = 'Готово',
   doneActions,
   backLabel,
   doneDisabled = false,
@@ -180,7 +180,7 @@ const PageStackDrawer: React.FC<PageStackDrawerProps> = ({
         title: '',
         activeKey: '',
         canGoBack: false,
-        doneLabel: '完成',
+        doneLabel: 'Готово',
         doneActions: undefined,
         doneDisabled: false,
         children: null,
@@ -209,8 +209,8 @@ const PageStackDrawer: React.FC<PageStackDrawerProps> = ({
                 className="w-fit cursor-pointer rounded-full bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-600 transition active:scale-95 dark:bg-neutral-800 dark:text-neutral-300"
               >
                 {visibleSnapshot.canGoBack
-                  ? visibleSnapshot.backLabel || '返回'
-                  : '取消'}
+                  ? visibleSnapshot.backLabel || 'Назад'
+                  : 'Отмена'}
               </button>
               <Drawer.Title className="max-w-48 truncate px-3 text-center text-base font-semibold text-neutral-900 dark:text-neutral-50">
                 {visibleSnapshot.title}

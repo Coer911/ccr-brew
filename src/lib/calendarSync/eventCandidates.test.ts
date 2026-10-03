@@ -8,7 +8,7 @@ import {
 const baseBean: CoffeeBean = {
   id: 'bean-1',
   timestamp: 1,
-  name: '埃塞俄比亚 水洗',
+  name: 'Эфиопия мытая',
   roaster: 'Brew Guide',
   roastDate: '2026-05-01',
   startDay: 10,
@@ -37,7 +37,7 @@ describe('buildBeanCalendarEventCandidates', () => {
     expect(event).toEqual({
       stableId: 'bean-1',
       beanId: 'bean-1',
-      title: 'Brew Guide 埃塞俄比亚 水洗',
+      title: 'Brew Guide Эфиопия мытая',
       date: '2026-05-11',
     });
   });
@@ -45,10 +45,10 @@ describe('buildBeanCalendarEventCandidates', () => {
   it('does not duplicate roaster when the bean name already contains it', () => {
     const event = buildCandidate({
       ...baseBean,
-      name: 'Brew Guide 埃塞俄比亚 水洗',
+      name: 'Brew Guide Эфиопия мытая',
     });
 
-    expect(event?.title).toBe('Brew Guide 埃塞俄比亚 水洗');
+    expect(event?.title).toBe('Brew Guide Эфиопия мытая');
   });
 
   it('does not use default periods when bean-level period values are empty', () => {

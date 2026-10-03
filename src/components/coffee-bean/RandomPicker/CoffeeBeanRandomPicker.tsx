@@ -370,10 +370,10 @@ const RandomPickerSession: React.FC<RandomPickerSessionProps> = ({
           <div className="text-center">
             <div className="mb-4 text-6xl">☕</div>
             <h2 className="mb-2 text-xl font-medium text-neutral-800 dark:text-neutral-100">
-              暂无可选咖啡豆
+              Нет зерна для выбора
             </h2>
             <p className="text-sm text-neutral-600 dark:text-neutral-400">
-              请先添加咖啡豆或检查筛选条件
+              Сначала добавьте зерно или измените фильтры
             </p>
           </div>
         </div>
@@ -445,7 +445,7 @@ const RandomPickerSession: React.FC<RandomPickerSessionProps> = ({
                     className="rounded-full bg-neutral-800 px-8 py-3 text-white dark:bg-neutral-100 dark:text-neutral-900"
                     onClick={handleConfirm}
                   >
-                    使用
+                    Выбрать
                   </motion.button>
 
                   <motion.button
@@ -457,7 +457,7 @@ const RandomPickerSession: React.FC<RandomPickerSessionProps> = ({
                     className="rounded-full bg-neutral-100 px-8 py-3 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-100"
                     onClick={isSingleBean ? onClose : handleReshuffle}
                   >
-                    {isSingleBean ? '取消' : '重选'}
+                    {isSingleBean ? 'Отмена' : 'Ещё раз'}
                   </motion.button>
                 </>
               )}
@@ -508,7 +508,7 @@ const RandomPickerBeanImage: React.FC<{
   });
   const roasterName = getRoasterName(bean, roasterSettings);
   const roasterLogo = useRoasterLogo(
-    roasterName && roasterName !== '未知烘焙商' ? roasterName : null
+    roasterName && roasterName !== 'Неизвестный обжарщик' ? roasterName : null
   );
   const imageSource = beanImage || roasterLogo;
   const imageError = failedImageSource === imageSource;

@@ -9,14 +9,14 @@ export type ViewOption = (typeof VIEW_OPTIONS)[keyof typeof VIEW_OPTIONS];
 
 // 视图选项的显示名称
 export const VIEW_LABELS: Record<ViewOption, string> = {
-  [VIEW_OPTIONS.INVENTORY]: '咖啡豆库存',
-  [VIEW_OPTIONS.RANKING]: '个人榜单',
-  [VIEW_OPTIONS.STATS]: '统计视图',
+  [VIEW_OPTIONS.INVENTORY]: 'Запасы зерна',
+  [VIEW_OPTIONS.RANKING]: 'Мой рейтинг',
+  [VIEW_OPTIONS.STATS]: 'Статистика',
 };
 
 // 简化版视图选项显示名称
 export const SIMPLIFIED_VIEW_LABELS: Record<ViewOption, string> = {
-  [VIEW_OPTIONS.INVENTORY]: '库存',
-  [VIEW_OPTIONS.RANKING]: '榜单',
-  [VIEW_OPTIONS.STATS]: '统计',
+  [VIEW_OPTIONS.INVENTORY]: 'Запасы',
+  [VIEW_OPTIONS.RANKING]: 'Рейтинг',
+  [VIEW_OPTIONS.STATS]: 'Статистика',
 };

@@ -270,18 +270,18 @@ const RelatedNoteImageGallery = React.memo(function RelatedNoteImageGallery({
           style={singleImageFrame?.style}
           data-image-index={position}
           onClick={onImageClick}
-          aria-label={image ? `查看笔记图片 ${position + 1}` : '笔记图片加载中'}
+          aria-label={image ? `Открыть фото заметки ${position + 1}` : 'Фото заметки загружается'}
         >
           {noteImageError ? (
             <div className="flex h-full w-full items-center justify-center text-xs text-neutral-500 dark:text-neutral-400">
-              加载失败
+              Ошибка загрузки
             </div>
           ) : !image ? (
             <div className="h-full w-full bg-neutral-100 dark:bg-neutral-800/40" />
           ) : (
             <Image
               src={image}
-              alt={`笔记图片 ${position + 1}`}
+              alt={`Фото заметки ${position + 1}`}
               width={isSingleNoteImage ? singleImageFrame?.width : 96}
               height={isSingleNoteImage ? singleImageFrame?.height : 96}
               unoptimized
@@ -346,12 +346,12 @@ const ClassicBrewingRecordContent = React.memo(
               >
                 {noteImageError ? (
                   <div className="absolute inset-0 flex items-center justify-center text-xs text-neutral-500 dark:text-neutral-400">
-                    加载失败
+                    Ошибка загрузки
                   </div>
                 ) : (
                   <Image
                     src={noteImage}
-                    alt={bean?.name || '笔记图片'}
+                    alt={bean?.name || 'Фото заметки'}
                     height={48}
                     width={48}
                     unoptimized
@@ -494,7 +494,7 @@ const ModernBrewingRecordContent = React.memo(
               <>
                 {' · '}
                 {note.rating}
-                /5分
+                /5
               </>
             )}
           </div>
@@ -558,7 +558,7 @@ export const BrewingRecordItem: React.FC<{
         Boolean(
           note.equipment &&
           (note.equipment.toLowerCase().includes('espresso') ||
-            note.equipment.includes('意式'))
+            note.equipment.includes('Эспрессо'))
         ),
       [note.equipment]
     );
@@ -601,10 +601,10 @@ export const BrewingRecordItem: React.FC<{
         if (noteImage && !noteImageError) {
           openImageViewer({
             url: noteImage,
-            alt: '笔记图片 1',
+            alt: 'Фото заметки 1',
             items: noteImages.map((url, itemIndex) => ({
               url,
-              alt: `笔记图片 ${itemIndex + 1}`,
+              alt: `Фото заметки ${itemIndex + 1}`,
             })),
             index: 0,
             sourceElement: event.currentTarget,
@@ -649,10 +649,10 @@ export const BrewingRecordItem: React.FC<{
 
         openImageViewer({
           url: imageUrl,
-          alt: `笔记图片 ${index + 1}`,
+          alt: `Фото заметки ${index + 1}`,
           items: noteImages.map((url, itemIndex) => ({
             url,
-            alt: `笔记图片 ${itemIndex + 1}`,
+            alt: `Фото заметки ${itemIndex + 1}`,
           })),
           index,
           sourceElement: event.currentTarget,
@@ -702,7 +702,7 @@ export const BrewingRecordItem: React.FC<{
       <div className="relative block w-full space-y-3 text-left">
         <button
           type="button"
-          aria-label="查看冲煮记录详情"
+          aria-label="Открыть запись заваривания"
           className="absolute inset-0 z-0 cursor-pointer appearance-none rounded bg-transparent p-0"
           onClick={handleOpenNoteDetail}
         />

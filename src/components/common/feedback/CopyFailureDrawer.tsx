@@ -36,11 +36,11 @@ const CopyFailureDrawer: React.FC<CopyFailureDrawerProps> = ({
     >
       <ActionDrawer.Content>
         <p className="mb-4 text-neutral-500 dark:text-neutral-400">
-          自动复制失败，请
+          Не удалось скопировать автоматически,
           <span className="text-neutral-800 dark:text-neutral-200">
-            点击下方文本
+            нажмите на текст ниже,
           </span>
-          全选后手动复制
+          выделите всё и скопируйте вручную
         </p>
         <pre
           onClick={handleClick}
@@ -51,7 +51,7 @@ const CopyFailureDrawer: React.FC<CopyFailureDrawerProps> = ({
       </ActionDrawer.Content>
       <ActionDrawer.Actions>
         <ActionDrawer.SecondaryButton onClick={onClose} className="w-full">
-          关闭
+          Закрыть
         </ActionDrawer.SecondaryButton>
       </ActionDrawer.Actions>
     </ActionDrawer>

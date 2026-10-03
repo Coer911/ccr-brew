@@ -36,30 +36,30 @@ export interface BeanFieldDefinition {
 export const BEAN_FIELD_DEFINITIONS: BeanFieldDefinition[] = [
   {
     id: 'origin',
-    label: '产地',
-    noteLabel: '产地',
+    label: 'Происхождение',
+    noteLabel: 'Происхождение',
     group: 'origin',
     legacy: true,
   },
-  { id: 'country', label: '产国', noteLabel: '产国', group: 'origin' },
-  { id: 'region', label: '产区', noteLabel: '产区', group: 'origin' },
-  { id: 'estate', label: '庄园', noteLabel: '庄园', group: 'origin' },
+  { id: 'country', label: 'Страна', noteLabel: 'Страна', group: 'origin' },
+  { id: 'region', label: 'Регион', noteLabel: 'Регион', group: 'origin' },
+  { id: 'estate', label: 'Ферма', noteLabel: 'Ферма', group: 'origin' },
   {
     id: 'processingStation',
-    label: '处理站',
-    noteLabel: '处理站',
+    label: 'Станция обработки',
+    noteLabel: 'Станция обработки',
     group: 'origin',
   },
-  { id: 'altitude', label: '海拔', noteLabel: '海拔', group: 'origin' },
-  { id: 'process', label: '处理法', noteLabel: '处理法', group: 'processing' },
-  { id: 'batch', label: '批次', noteLabel: '批次', group: 'processing' },
-  { id: 'variety', label: '品种', noteLabel: '品种', group: 'variety' },
+  { id: 'altitude', label: 'Высота', noteLabel: 'Высота', group: 'origin' },
+  { id: 'process', label: 'Обработка', noteLabel: 'Обработка', group: 'processing' },
+  { id: 'batch', label: 'Партия', noteLabel: 'Партия', group: 'processing' },
+  { id: 'variety', label: 'Разновидность', noteLabel: 'Разновидность', group: 'variety' },
 ];
 
 export const BEAN_FIELD_GROUP_LABELS: Record<BeanFieldGroupId, string> = {
-  origin: '产地',
-  processing: '处理法',
-  variety: '品种',
+  origin: 'Происхождение',
+  processing: 'Обработка',
+  variety: 'Разновидность',
 };
 
 const FIELD_ORDER = new Map(
@@ -122,7 +122,7 @@ const formatFieldValue = (fieldId: BeanFieldId, value: unknown): string => {
   const formatted = stringifyFieldValue(value);
   if (fieldId !== 'altitude') return formatted;
   return formatted
-    .replace(/^海拔\s*[:：]?\s*/, '')
+    .replace(/^(?:海拔|Высота)\s*[:：]?\s*/, '')
     .replace(/[‐‑‒–—―−]/g, '-')
     .replace(/\s*-\s*/g, '-')
     .replace(/m\.?\s*a\.?\s*s\.?\s*l\.?/gi, 'm')
@@ -146,7 +146,7 @@ const parseFieldNote = (
   for (const definition of BEAN_FIELD_DEFINITIONS) {
     const match = note.match(
       new RegExp(
-        `^(?:成分\\s*(\\d+)\\s*)?${definition.noteLabel}\\s*(?:[:：]|\\s)\\s*(.+)$`
+        `^(?:(?:成分|Компонент)\\s*(\\d+)\\s*)?${definition.noteLabel}\\s*(?:[:：]|\\s)\\s*(.+)$`
       )
     );
     if (match) {
@@ -385,9 +385,9 @@ export function normalizeCoffeeBeanForFieldConfig<
           return;
         }
         const prefix =
-          components.length > 1 ? `成分${componentIndex + 1} ` : '';
+          components.length > 1 ? `Компонент${componentIndex + 1} ` : '';
         appendNote(
-          `${prefix}${getBeanFieldDefinition(fieldId).noteLabel}：${value}`
+          `${prefix}${getBeanFieldDefinition(fieldId).noteLabel}: ${value}`
         );
       });
       return nextComponent;

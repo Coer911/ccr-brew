@@ -263,8 +263,8 @@ export default function PWAUpdatePrompt() {
       mode="pwa"
       historyId="pwa-update-drawer"
       onPrimaryClick={applyUpdate}
-      primaryText={isUpdating ? '正在更新…' : '立即更新'}
-      secondaryText="稍后"
+      primaryText={isUpdating ? 'Обновляем…' : 'Обновить сейчас'}
+      secondaryText="Позже"
       primaryDisabled={isUpdating}
     />
   );

@@ -76,10 +76,10 @@ interface ParsedStage {
 }
 
 const compactMethodParamsPattern =
-  /^(\d+(?:\.\d+)?)g\s*\|\s*(1:(\d+(?:\.\d+)?))\s*\|\s*([^|\n]+)\s*\|\s*([^|\n]+)(?:\s*\|\s*意式)?$/m;
+  /^(\d+(?:\.\d+)?)g\s*\|\s*(1:(\d+(?:\.\d+)?))\s*\|\s*([^|\n]+)\s*\|\s*([^|\n]+)(?:\s*\|\s*(?:意式|Эспрессо))?$/m;
 
 const readableTextSectionSeparator = /\n[ \t]*---[ \t]*\n/;
-const coffeeBeanTextHeaderPattern = /【咖啡豆(?:信息)?】/;
+const coffeeBeanTextHeaderPattern = /【(?:咖啡豆(?:信息)?|Зерно|Информация о зерне)】/;
 
 function normalizeImportText(text: string): string {
   return text
@@ -91,7 +91,7 @@ function normalizeImportText(text: string): string {
 }
 
 function startsWithCoffeeBeanTextHeader(text: string): boolean {
-  return text.startsWith('【咖啡豆】') || text.startsWith('【咖啡豆信息】');
+  return text.startsWith('【Зерно】') || text.startsWith('【Информация о зерне】');
 }
 
 function splitCoffeeBeanTextSections(text: string): string[] {
@@ -199,7 +199,7 @@ export function extractJsonFromText(
     const originalText = normalizeImportText(text);
 
     // 检查是否是冲煮方案文本格式
-    if (originalText.startsWith('【冲煮方案】')) {
+    if (originalText.startsWith('【Рецепт】')) {
       // Log in development only
       if (process.env.NODE_ENV === 'development') {
         console.warn('检测到冲煮方案文本格式');
@@ -220,7 +220,7 @@ export function extractJsonFromText(
         // 批量导入：解析多个咖啡豆
         if (process.env.NODE_ENV === 'development') {
           console.warn(
-            `检测到批量咖啡豆文本格式，共 ${beanSections.length} 个`
+            `检测到批量咖啡豆文本格式，共 ${beanSections.length} шт.`
           );
         }
         const beans: Partial<CoffeeBean>[] = [];
@@ -238,7 +238,7 @@ export function extractJsonFromText(
     }
 
     // 检查是否是冲煮记录文本格式
-    if (originalText.startsWith('【冲煮记录】')) {
+    if (originalText.startsWith('【Запись заварки】')) {
       // Log in development only
       if (process.env.NODE_ENV === 'development') {
         console.warn('检测到冲煮记录文本格式');
@@ -289,7 +289,7 @@ export function extractJsonFromText(
 
       // 验证必要的字段
       if (!equipment.name) {
-        throw new Error('器具数据缺少名称');
+        throw new Error('У устройства нет названия');
       }
 
       if (
@@ -304,25 +304,25 @@ export function extractJsonFromText(
           'espresso',
         ].includes(equipment.animationType)
       ) {
-        throw new Error('无效的器具动画类型');
+        throw new Error('Неверный тип анимации устройства');
       }
 
       // 验证自定义SVG（如果是自定义类型且不是意式机）
       if (equipment.animationType === 'custom' && !equipment.customShapeSvg) {
-        throw new Error('自定义器具缺少形状SVG');
+        throw new Error('У своего устройства нет SVG формы');
       }
 
       // 如果有阀门，验证阀门SVG
       if (equipment.hasValve) {
         if (!equipment.customValveSvg || !equipment.customValveOpenSvg) {
-          throw new Error('带阀门的器具缺少阀门SVG');
+          throw new Error('У устройства с клапаном нет SVG клапана');
         }
       }
 
       // 验证methods数组（如果存在）
       if ('methods' in data && data.methods) {
         if (!Array.isArray(data.methods)) {
-          throw new Error('methods字段必须是数组');
+          throw new Error('Поле methods должно быть массивом');
         }
       }
 
@@ -381,16 +381,16 @@ export function parseMethodFromJson(jsonString: string): Method | null {
       parsedData.name ||
       parsedData.method ||
       parsedData.coffeeBeanInfo?.method ||
-      `${parsedData.equipment}优化方案`;
+      `${parsedData.equipment} — улучшенный рецепт`;
 
     if (!methodName && !parsedData.equipment) {
-      throw new Error('导入的JSON缺少必要字段 (name或method)');
+      throw new Error('В импортируемом JSON нет обязательных полей (name или method)');
     }
 
     // 检查是否是意式咖啡方案 - 改进识别逻辑
     const isEspresso =
       parsedData.equipment === 'Espresso' ||
-      parsedData.equipment === '意式咖啡机' ||
+      parsedData.equipment === 'Эспрессо-машина' ||
       parsedData.isEspresso === true ||
       (parsedData.params?.stages &&
         Array.isArray(parsedData.params.stages) &&
@@ -484,7 +484,7 @@ export function parseMethodFromJson(jsonString: string): Method | null {
 
     // 强制确保name字段不为空
     if (!method.name) {
-      method.name = `${parsedData.equipment || ''}优化冲煮方案`;
+      method.name = `${parsedData.equipment || ''} — улучшенный рецепт заварки`;
     }
 
     // 调试信息
@@ -508,42 +508,42 @@ export function parseMethodFromJson(jsonString: string): Method | null {
 function getExampleJson() {
   return `{
   "equipment": "V60",
-  "method": "改良分段式一刀流",
+  "method": "Улучшенный рецепт в несколько проливов",
   "coffeeBeanInfo": {
     "name": "",
-    "roastLevel": "中度烘焙",
+    "roastLevel": "Средняя обжарка",
     "roastDate": ""
   },
   "params": {
     "coffee": "15g",
     "water": "225g",
     "ratio": "1:15",
-    "grindSize": "中细",
+    "grindSize": "Средне-мелкий",
     "temp": "94°C",
     "videoUrl": "",
     "stages": [
       {
         "time": 30,
         "pourTime": 15,
-        "label": "螺旋焖蒸",
+        "label": "Блуминг спиралью",
         "water": "45g",
-        "detail": "加大注水搅拌力度，充分激活咖啡粉层",
+        "detail": "Лейте энергичнее, чтобы хорошо пропитать весь слой кофе",
         "pourType": "circle"
       },
       {
         "time": 60,
         "pourTime": 20,
-        "label": "快节奏中心注水",
+        "label": "Быстрый пролив в центр",
         "water": "90g",
-        "detail": "高水位快速注入加速可溶性物质释放",
+        "detail": "Высокий уровень воды и быстрый пролив ускоряют экстракцию",
         "pourType": "center"
       },
       {
         "time": 120,
         "pourTime": 30,
-        "label": "分层绕圈注水",
+        "label": "Круговой пролив слоями",
         "water": "225g",
-        "detail": "分三次间隔注水控制萃取节奏",
+        "detail": "Три пролива с паузами, чтобы управлять темпом экстракции",
         "pourType": "circle"
       }
     ]
@@ -659,11 +659,11 @@ export function beanToReadableText(
   options?: { includeMetadata?: boolean }
 ): string {
   const { includeMetadata = true } = options || {};
-  let text = `【咖啡豆信息】${bean.name}\n`;
+  let text = `【Информация о зерне】${bean.name}\n`;
 
   // 烘焙商信息
   if (bean.roaster) {
-    text += `烘焙商: ${bean.roaster}\n`;
+    text += `Обжарщик: ${bean.roaster}\n`;
   }
 
   // 确定豆子类型（单品/拼配）
@@ -674,32 +674,32 @@ export function beanToReadableText(
 
   // 如果有beanType字段（手冲/意式/全能），添加用途信息
   if (bean.beanType) {
-    text += `用途: ${
+    text += `Назначение: ${
       bean.beanType === 'filter'
-        ? '手冲'
+        ? 'Фильтр'
         : bean.beanType === 'espresso'
-          ? '意式'
+          ? 'Эспрессо'
           : bean.beanType === 'omni'
-            ? '全能'
-            : '未知'
+            ? 'Универсальная'
+            : 'Неизвестно'
     }\n`;
   }
 
   // 原始咖啡豆属性
   if (bean.price) {
-    text += `价格: ${bean.price}元\n`;
+    text += `Цена: ${bean.price}₽\n`;
   }
 
   if (bean.capacity) {
-    text += `容量: ${bean.capacity}g\n`;
+    text += `Вес: ${bean.capacity}g\n`;
   }
 
   if (bean.roastLevel) {
-    text += `烘焙度: ${bean.roastLevel}\n`;
+    text += `Обжарка: ${bean.roastLevel}\n`;
   }
 
   if (bean.roastDate) {
-    text += `烘焙日期: ${bean.roastDate}\n`;
+    text += `Дата обжарки: ${bean.roastDate}\n`;
   }
 
   // 显示成分信息（统一处理单品和拼配）
@@ -724,7 +724,7 @@ export function beanToReadableText(
       );
 
       if (hasValidBlendInfo) {
-        text += `拼配成分:\n`;
+        text += `Состав смеси:\n`;
         bean.blendComponents.forEach((component, index) => {
           const usesStructuredOrigin = hasStructuredOriginFields(component);
           const componentText = [
@@ -761,47 +761,47 @@ export function beanToReadableText(
           component.batch ||
           component.variety)
       ) {
-        text += `成分信息:\n`;
+        text += `Компоненты:\n`;
         if (hasStructuredOriginFields(component)) {
-          if (component.country) text += `产国: ${component.country}\n`;
-          if (component.region) text += `产区: ${component.region}\n`;
-          if (component.estate) text += `庄园: ${component.estate}\n`;
+          if (component.country) text += `Страна: ${component.country}\n`;
+          if (component.region) text += `Регион: ${component.region}\n`;
+          if (component.estate) text += `Ферма: ${component.estate}\n`;
           if (component.processingStation) {
-            text += `处理站: ${component.processingStation}\n`;
+            text += `Станция обработки: ${component.processingStation}\n`;
           }
-          if (component.altitude) text += `海拔: ${component.altitude}\n`;
+          if (component.altitude) text += `Высота: ${component.altitude}\n`;
         } else if (component.origin) {
-          text += `产地: ${component.origin}\n`;
-          if (component.estate) text += `庄园: ${component.estate}\n`;
+          text += `Происхождение: ${component.origin}\n`;
+          if (component.estate) text += `Ферма: ${component.estate}\n`;
           if (component.processingStation) {
-            text += `处理站: ${component.processingStation}\n`;
+            text += `Станция обработки: ${component.processingStation}\n`;
           }
-          if (component.altitude) text += `海拔: ${component.altitude}\n`;
+          if (component.altitude) text += `Высота: ${component.altitude}\n`;
         }
-        if (component.process) text += `处理法: ${component.process}\n`;
-        if (component.batch) text += `批次: ${component.batch}\n`;
-        if (component.variety) text += `品种: ${component.variety}\n`;
+        if (component.process) text += `Обработка: ${component.process}\n`;
+        if (component.batch) text += `Партия: ${component.batch}\n`;
+        if (component.variety) text += `Разновидность: ${component.variety}\n`;
       }
     }
   }
 
   // 风味和备注
   if (bean.flavor && Array.isArray(bean.flavor) && bean.flavor.length) {
-    text += `风味标签: ${bean.flavor.join(', ')}\n`;
+    text += `Вкусы: ${bean.flavor.join(', ')}\n`;
   }
 
   if (bean.startDay || bean.endDay) {
     if (bean.startDay) {
-      text += `养豆期: ${bean.startDay}天\n`;
+      text += `Отдых: ${bean.startDay}дн.\n`;
     }
 
     if (bean.endDay) {
-      text += `赏味期: ${bean.endDay}天\n`;
+      text += `Лучший период: ${bean.endDay}дн.\n`;
     }
   }
 
   if (bean.notes) {
-    text += `备注信息:\n${bean.notes}\n`;
+    text += `Заметка:\n${bean.notes}\n`;
   }
 
   // 元数据标记（可选）
@@ -857,12 +857,12 @@ function mapPourTypeName(
   customEquipment?: CustomEquipment
 ): string {
   const nameMap: Record<string, string> = {
-    中心注水: 'center',
-    绕圈注水: 'circle',
-    添加冰块: 'ice',
-    萃取浓缩: 'extraction',
-    饮料: 'beverage',
-    等待: 'wait',
+    'Пролив в центр': 'center',
+    'Пролив по кругу': 'circle',
+    'Добавить лёд': 'ice',
+    Экстракция: 'extraction',
+    Напиток: 'beverage',
+    Ожидание: 'wait',
     Bypass: 'bypass',
   };
 
@@ -896,9 +896,9 @@ export function methodToReadableText(
     );
 
   // 构建可读文本 - 简洁的头部信息
-  let text = `【冲煮方案】${name}\n`;
+  let text = `【Рецепт】${name}\n`;
   text += `${params.coffee} | ${params.ratio} | ${params.grindSize} | ${params.temp}`;
-  if (isEspresso) text += ' | 意式';
+  if (isEspresso) text += ' | Эспрессо';
   text += '\n\n';
 
   if (params.stages && params.stages.length > 0) {
@@ -916,12 +916,12 @@ export function methodToReadableText(
         // 系统默认名称
         if (!pourTypeName) {
           const typeMap: Record<string, string> = {
-            center: '中心注水',
-            circle: '绕圈注水',
-            ice: '添加冰块',
-            extraction: '萃取浓缩',
-            beverage: '饮料',
-            wait: '等待',
+            center: 'Пролив в центр',
+            circle: 'Пролив по кругу',
+            ice: 'Добавить лёд',
+            extraction: 'Экстракция',
+            beverage: 'Напиток',
+            wait: 'Ожидание',
             bypass: 'Bypass',
           };
           pourTypeName = typeMap[stage.pourType] || stage.pourType;
@@ -977,35 +977,35 @@ function brewingNoteToReadableText(note: BrewingNote): string {
     note;
 
   // 构建可读文本
-  let text = `【冲煮记录】\n`;
-  text += `设备: ${equipment || '未设置'}\n`;
-  text += `方法: ${method || '未设置'}\n`;
-  text += `咖啡豆: ${coffeeBeanInfo?.name || '未设置'}\n`;
-  text += `烘焙度: ${coffeeBeanInfo?.roastLevel || '未设置'}\n`;
+  let text = `【Запись заварки】\n`;
+  text += `Устройство: ${equipment || 'Не задано'}\n`;
+  text += `Метод: ${method || 'Не задано'}\n`;
+  text += `Зерно: ${coffeeBeanInfo?.name || 'Не задано'}\n`;
+  text += `Обжарка: ${coffeeBeanInfo?.roastLevel || 'Не задано'}\n`;
 
   if (params) {
-    text += `\n参数设置:\n`;
-    text += `咖啡粉量: ${params.coffee || '未设置'}\n`;
-    text += `水量: ${params.water || '未设置'}\n`;
-    text += `比例: ${params.ratio || '未设置'}\n`;
-    text += `研磨度: ${params.grindSize || '未设置'}\n`;
-    text += `水温: ${params.temp || '未设置'}\n`;
+    text += `\nПараметры:\n`;
+    text += `Доза кофе: ${params.coffee || 'Не задано'}\n`;
+    text += `Вода: ${params.water || 'Не задано'}\n`;
+    text += `Соотношение: ${params.ratio || 'Не задано'}\n`;
+    text += `Помол: ${params.grindSize || 'Не задано'}\n`;
+    text += `Темп. воды: ${params.temp || 'Не задано'}\n`;
   }
 
   if (taste) {
-    text += `\n风味评分:\n`;
-    text += `酸度: ${taste.acidity || 0}/5\n`;
-    text += `甜度: ${taste.sweetness || 0}/5\n`;
-    text += `苦度: ${taste.bitterness || 0}/5\n`;
-    text += `醇厚度: ${taste.body || 0}/5\n`;
+    text += `\nОценка вкуса:\n`;
+    text += `Кислотность: ${taste.acidity || 0}/5\n`;
+    text += `Сладость: ${taste.sweetness || 0}/5\n`;
+    text += `Горечь: ${taste.bitterness || 0}/5\n`;
+    text += `Тело: ${taste.body || 0}/5\n`;
   }
 
   if (rating) {
-    text += `\n综合评分: ${rating}/5\n`;
+    text += `\nОбщая оценка: ${rating}/5\n`;
   }
 
   if (notes) {
-    text += `\n笔记:\n${notes}\n`;
+    text += `\nЗаметка:\n${notes}\n`;
   }
 
   // 添加隐藏的序列化标识（不再包含JSON）
@@ -1024,31 +1024,31 @@ function parseCoffeeBeanText(text: string): Partial<CoffeeBean> | null {
 
   // 提取名称
   const nameMatch =
-    text.match(/【咖啡豆】(.*?)(?:\n|$)/) ||
-    text.match(/【咖啡豆信息】(.*?)(?:\n|$)/);
+    text.match(/【(?:咖啡豆|Зерно)】(.*?)(?:\n|$)/) ||
+    text.match(/【(?:咖啡豆信息|Информация о зерне)】(.*?)(?:\n|$)/);
   if (nameMatch && nameMatch[1]) {
     bean.name = nameMatch[1].trim();
   }
 
   // 提取烘焙商
-  const roasterMatch = text.match(/烘焙商:\s*(.*?)(?:\n|$)/);
+  const roasterMatch = text.match(/(?:烘焙商|Обжарщик):\s*(.*?)(?:\n|$)/);
   if (roasterMatch && roasterMatch[1] && roasterMatch[1].trim() !== '') {
     bean.roaster = roasterMatch[1].trim();
   }
 
   // 提取容量和剩余容量
-  const capacityMatch = text.match(/容量:\s*(\d+)\/(\d+)g/);
+  const capacityMatch = text.match(/(?:容量|Вес):\s*(\d+)\/(\d+)g/);
   if (capacityMatch && capacityMatch[1] && capacityMatch[2]) {
     bean.remaining = capacityMatch[1];
     bean.capacity = capacityMatch[2];
   } else {
     // 兼容旧格式
-    const oldCapacityMatch = text.match(/容量:\s*(\d+)g/);
+    const oldCapacityMatch = text.match(/(?:容量|Вес):\s*(\d+)g/);
     if (oldCapacityMatch && oldCapacityMatch[1]) {
       bean.capacity = oldCapacityMatch[1];
 
       // 尝试提取旧格式的剩余容量
-      const oldRemainingMatch = text.match(/剩余(\d+)g/);
+      const oldRemainingMatch = text.match(/(?:剩余|[Оо]сталось\s*)(\d+)g/);
       if (oldRemainingMatch && oldRemainingMatch[1]) {
         bean.remaining = oldRemainingMatch[1];
       } else {
@@ -1059,32 +1059,32 @@ function parseCoffeeBeanText(text: string): Partial<CoffeeBean> | null {
   }
 
   // 提取烘焙度
-  const roastMatch = text.match(/烘焙度:\s*(.*?)(?:\n|$)/);
+  const roastMatch = text.match(/(?:烘焙度|Обжарка):\s*(.*?)(?:\n|$)/);
   if (
     roastMatch &&
     roastMatch[1] &&
-    roastMatch[1] !== '未知' &&
+    roastMatch[1] !== 'Неизвестно' &&
     roastMatch[1].trim() !== ''
   ) {
     bean.roastLevel = roastMatch[1].trim();
   }
 
   // 提取烘焙日期
-  const dateMatch = text.match(/烘焙日期:\s*(.*?)(?:\n|$)/);
+  const dateMatch = text.match(/(?:烘焙日期|Дата обжарки):\s*(.*?)(?:\n|$)/);
   if (dateMatch && dateMatch[1]) {
     bean.roastDate = dateMatch[1].trim();
   }
 
   // 提取单品豆的成分信息
-  const originMatch = text.match(/产地:\s*(.*?)(?:\n|$)/);
-  const countryMatch = text.match(/产国:\s*(.*?)(?:\n|$)/);
-  const regionMatch = text.match(/产区:\s*(.*?)(?:\n|$)/);
-  const estateMatch = text.match(/庄园:\s*(.*?)(?:\n|$)/);
-  const processingStationMatch = text.match(/处理站:\s*(.*?)(?:\n|$)/);
-  const altitudeMatch = text.match(/海拔:\s*(.*?)(?:\n|$)/);
-  const processMatch = text.match(/处理法:\s*(.*?)(?:\n|$)/);
-  const batchMatch = text.match(/批次:\s*(.*?)(?:\n|$)/);
-  const varietyMatch = text.match(/品种:\s*(.*?)(?:\n|$)/);
+  const originMatch = text.match(/(?:产地|Происхождение):\s*(.*?)(?:\n|$)/);
+  const countryMatch = text.match(/(?:产国|Страна):\s*(.*?)(?:\n|$)/);
+  const regionMatch = text.match(/(?:产区|Регион):\s*(.*?)(?:\n|$)/);
+  const estateMatch = text.match(/(?:庄园|Ферма):\s*(.*?)(?:\n|$)/);
+  const processingStationMatch = text.match(/(?:处理站|Станция обработки):\s*(.*?)(?:\n|$)/);
+  const altitudeMatch = text.match(/(?:海拔|Высота):\s*(.*?)(?:\n|$)/);
+  const processMatch = text.match(/(?:处理法|(?<!Станция )Обработка):\s*(.*?)(?:\n|$)/);
+  const batchMatch = text.match(/(?:批次|Партия):\s*(.*?)(?:\n|$)/);
+  const varietyMatch = text.match(/(?:品种|Разновидность):\s*(.*?)(?:\n|$)/);
 
   // 如果有任何成分信息，创建blendComponents
   if (
@@ -1115,37 +1115,37 @@ function parseCoffeeBeanText(text: string): Partial<CoffeeBean> | null {
   }
 
   // 提取用途
-  const usageMatch = text.match(/用途:\s*(.*?)(?:\n|$)/);
+  const usageMatch = text.match(/(?:用途|Назначение):\s*(.*?)(?:\n|$)/);
   if (usageMatch && usageMatch[1]) {
-    if (usageMatch[1].includes('手冲')) {
+    if (usageMatch[1].includes('Фильтр')) {
       bean.beanType = 'filter';
-    } else if (usageMatch[1].includes('意式')) {
+    } else if (usageMatch[1].includes('Эспрессо')) {
       bean.beanType = 'espresso';
-    } else if (usageMatch[1].includes('全能')) {
+    } else if (usageMatch[1].includes('Универсальная')) {
       bean.beanType = 'omni';
     }
   }
 
   // 提取价格 - 改进价格提取逻辑
-  const priceMatch = text.match(/价格:\s*(\d+(?:\.\d+)?)元(?:\/g)?/);
+  const priceMatch = text.match(/(?:价格|Цена):\s*(\d+(?:\.\d+)?)\s*(?:元|₽)(?:\/g)?/);
   if (priceMatch && priceMatch[1]) {
     bean.price = priceMatch[1];
   }
 
   // 提取养豆期
-  const startDayMatch = text.match(/养豆期:\s*(\d+)天/);
+  const startDayMatch = text.match(/(?:养豆期|Отдых):\s*(\d+)\s*(?:天|дн\.)/);
   if (startDayMatch && startDayMatch[1]) {
     bean.startDay = parseInt(startDayMatch[1]);
   }
 
   // 提取赏味期
-  const endDayMatch = text.match(/赏味期:\s*(\d+)天/);
+  const endDayMatch = text.match(/(?:赏味期|Лучший период):\s*(\d+)\s*(?:天|дн\.)/);
   if (endDayMatch && endDayMatch[1]) {
     bean.endDay = parseInt(endDayMatch[1]);
   }
 
   // 提取风味
-  const flavorMatch = text.match(/风味标签:\s*(.*?)(?:\n|$)/);
+  const flavorMatch = text.match(/(?:风味标签|Вкусы):\s*(.*?)(?:\n|$)/);
   if (flavorMatch && flavorMatch[1] && flavorMatch[1].trim() !== '') {
     bean.flavor = flavorMatch[1]
       .split(',')
@@ -1154,9 +1154,9 @@ function parseCoffeeBeanText(text: string): Partial<CoffeeBean> | null {
   }
 
   // 提取备注（支持多行）
-  if (text.includes('备注信息:')) {
+  if (text.includes('Заметка:')) {
     // 备注信息可能是多行的，获取备注信息部分直到下一个区域标识符
-    const notesSection = text.split('备注信息:')[1];
+    const notesSection = text.split('Заметка:')[1];
     // 截取到 "---" 或文档结尾
     const endIndex = notesSection.indexOf('\n---');
     const noteContent =
@@ -1166,22 +1166,22 @@ function parseCoffeeBeanText(text: string): Partial<CoffeeBean> | null {
     bean.notes = noteContent;
   } else {
     // 兼容旧格式的单行备注
-    const notesMatch = text.match(/备注:\s*(.*?)(?:\n|$)/);
+    const notesMatch = text.match(/(?:备注|Примечание):\s*(.*?)(?:\n|$)/);
     if (notesMatch && notesMatch[1]) {
       bean.notes = notesMatch[1].trim();
     }
   }
 
   // 提取拼配成分（如果有）
-  if (text.includes('拼配成分:')) {
+  if (text.includes('Состав смеси:')) {
     bean.blendComponents = [];
-    const blendSection = text.split('拼配成分:')[1];
+    const blendSection = text.split('Состав смеси:')[1];
     // 找到拼配成分部分的结束位置（下一个主要部分或文档结尾）
     const endIndex = Math.min(
       ...[
-        blendSection.indexOf('\n风味标签:'),
-        blendSection.indexOf('\n备注信息:'),
-        blendSection.indexOf('\n备注:'),
+        blendSection.indexOf('\nВкусы:'),
+        blendSection.indexOf('\nЗаметка:'),
+        blendSection.indexOf('\nПримечание:'),
         blendSection.indexOf('\n---'),
       ].filter(idx => idx !== -1)
     );
@@ -1271,7 +1271,7 @@ function parseMethodText(
   };
 
   // 提取名称
-  const nameMatch = text.match(/【冲煮方案】(.*?)(?:\n|$)/);
+  const nameMatch = text.match(/【(?:冲煮方案|Рецепт)】(.*?)(?:\n|$)/);
   if (nameMatch && nameMatch[1]) {
     method.name = nameMatch[1].trim();
   }
@@ -1281,42 +1281,42 @@ function parseMethodText(
     Object.assign(method.params, compactParams);
   } else {
     // 兼容旧格式：逐行提取参数
-    const coffeeMatch = text.match(/咖啡粉量:\s*(.*?)(?:\n|$)/);
-    if (coffeeMatch && coffeeMatch[1] && coffeeMatch[1] !== '未设置') {
+    const coffeeMatch = text.match(/(?:咖啡粉量|Доза кофе):\s*(.*?)(?:\n|$)/);
+    if (coffeeMatch && coffeeMatch[1] && coffeeMatch[1] !== 'Не задано') {
       method.params.coffee = coffeeMatch[1].trim();
     }
 
-    const waterMatch = text.match(/水量:\s*(.*?)(?:\n|$)/);
-    if (waterMatch && waterMatch[1] && waterMatch[1] !== '未设置') {
+    const waterMatch = text.match(/(?:水量|Вода):\s*(.*?)(?:\n|$)/);
+    if (waterMatch && waterMatch[1] && waterMatch[1] !== 'Не задано') {
       method.params.water = waterMatch[1].trim();
     }
 
-    const ratioMatch = text.match(/(?:比例|粉水比):\s*(.*?)(?:\n|$)/);
-    if (ratioMatch && ratioMatch[1] && ratioMatch[1] !== '未设置') {
+    const ratioMatch = text.match(/(?:比例|粉水比|Соотношение):\s*(.*?)(?:\n|$)/);
+    if (ratioMatch && ratioMatch[1] && ratioMatch[1] !== 'Не задано') {
       method.params.ratio = ratioMatch[1].trim();
     }
 
-    const grindMatch = text.match(/研磨度:\s*(.*?)(?:\n|$)/);
-    if (grindMatch && grindMatch[1] && grindMatch[1] !== '未设置') {
+    const grindMatch = text.match(/(?:研磨度|Помол):\s*(.*?)(?:\n|$)/);
+    if (grindMatch && grindMatch[1] && grindMatch[1] !== 'Не задано') {
       method.params.grindSize = grindMatch[1].trim();
     }
 
-    const tempMatch = text.match(/水温:\s*(.*?)(?:\n|$)/);
-    if (tempMatch && tempMatch[1] && tempMatch[1] !== '未设置') {
+    const tempMatch = text.match(/(?:水温|Темп\. воды):\s*(.*?)(?:\n|$)/);
+    if (tempMatch && tempMatch[1] && tempMatch[1] !== 'Не задано') {
       method.params.temp = tempMatch[1].trim();
     }
   }
 
   // 检查是否是意式咖啡方案 - 改进判断逻辑
   const isEspresso =
-    text.includes('器具类型: 意式咖啡机') ||
+    text.includes('Тип устройства: эспрессо-машина') ||
     customEquipment?.animationType === 'espresso' ||
-    text.includes('[萃取浓缩]') ||
+    text.includes('[Экстракция]') ||
     text.includes('[extraction]') ||
     text.includes('[beverage]');
 
   // 检测是否为新格式文本（包含 "用时" 而非 "注水"）
-  const isNewFormat = text.includes('(用时') || text.includes('[等待]');
+  const isNewFormat = text.includes('(время ') || text.includes('[Ожидание]');
 
   // 尝试提取ID（如果有）
   const idMatch = text.match(/@METHOD_ID:(method-[a-zA-Z0-9-]+)@/);
@@ -1326,8 +1326,8 @@ function parseMethodText(
 
   // 提取冲煮步骤 - 支持有无 "冲煮步骤:" 标题
   let stagesSection = '';
-  if (text.includes('冲煮步骤:')) {
-    stagesSection = text.split('冲煮步骤:')[1].split('@DATA_TYPE')[0];
+  if (text.includes('Этапы заварки:')) {
+    stagesSection = text.split('Этапы заварки:')[1].split('@DATA_TYPE')[0];
   } else {
     // v2 简洁格式：直接从参数行后提取步骤（以数字开头的行）
     const lines = text.split('\n');
@@ -1368,26 +1368,26 @@ function parseMethodText(
 
         // 兼容旧 v2 格式：1. [绕圈注水] 焖蒸注水 60g 12秒
         const v2OldPattern =
-          /^\d+\.\s*\[(.*?)\]\s*(.*?)\s+(\d+)g\s+(\d+)秒(?:\n|$)/;
+          /^\d+\.\s*\[(.*?)\]\s*(.*?)\s+(\d+)g\s+(\d+)\s*(?:秒|с)(?:\n|$)/;
 
         // 兼容旧 v2 无水量格式：1. [等待] 焖蒸等待 18秒
         const v2OldNoWaterPattern =
-          /^\d+\.\s*\[(.*?)\]\s*(.*?)\s+(\d+)秒(?:\n|$)/;
+          /^\d+\.\s*\[(.*?)\]\s*(.*?)\s+(\d+)\s*(?:秒|с)(?:\n|$)/;
 
         // 旧新格式匹配：1. (用时10秒) [绕圈注水] 焖蒸 - 30g
         const oldNewFormatPattern =
-          /^\d+\.\s*(?:\[(\d+)分(\d+)秒\])?\s*(?:\(用时(\d+)秒\))?\s*(?:\[(.*?)\])?\s*(.*?)\s*(?:-\s*(.*?))?(?:\n|$)/;
+          /^\d+\.\s*(?:\[(\d+)\s*(?:分|м)\s*(\d+)\s*(?:秒|с)\])?\s*(?:\((?:用时|время )(\d+)\s*(?:秒|с)\))?\s*(?:\[(.*?)\])?\s*(.*?)\s*(?:-\s*(.*?))?(?:\n|$)/;
 
         // 旧格式匹配：1. [0分25秒] (注水10秒) [绕圈注水] 焖蒸 - 30g
         const legacyFormatPattern =
-          /^\d+\.\s*\[(\d+)分(\d+)秒\](?:\s*\(注水(\d+)秒\))?(?:\s*\[(.*?)\])?\s*(.*?)\s*-\s*(.*?)(?:\n|$)/;
+          /^\d+\.\s*\[(\d+)\s*(?:分|м)\s*(\d+)\s*(?:秒|с)\](?:\s*\((?:注水|пролив )(\d+)\s*(?:秒|с)\))?(?:\s*\[(.*?)\])?\s*(.*?)\s*-\s*(.*?)(?:\n|$)/;
 
         // 匹配不带时间的格式：1. [饮料] 加入牛奶 - 120g
         const noTimePattern = /^\d+\.\s*\[(.*?)\]\s*(.*?)\s*-\s*(.*?)(?:\n|$)/;
 
         // 检测是否为传统旧格式行（包含 [X分X秒] 累计时间格式）
         // 这类行需要走 legacyFormatPattern 处理，不能被 v2 格式错误匹配
-        const isLegacyLine = /^\d+\.\s*\[\d+分\d+秒\]/.test(line);
+        const isLegacyLine = /^\d+\.\s*\[\d+\s*(?:分|м)\s*\d+\s*(?:秒|с)\]/.test(line);
 
         // 先尝试 v2 格式（新：时间在前用″）- 仅当不是传统旧格式时
         if (!isLegacyLine) {
@@ -1603,16 +1603,16 @@ function parseMethodText(
 
             // 处理pourType
             if (pourTypeText) {
-              if (pourTypeText === '萃取浓缩') {
+              if (pourTypeText === 'Экстракция') {
                 legacyStage.pourType = 'extraction';
-              } else if (pourTypeText === '饮料') {
+              } else if (pourTypeText === 'Напиток') {
                 legacyStage.pourType = 'beverage';
                 legacyStage.time = 0;
-              } else if (pourTypeText === '中心注水') {
+              } else if (pourTypeText === 'Пролив в центр') {
                 legacyStage.pourType = 'center';
-              } else if (pourTypeText === '绕圈注水') {
+              } else if (pourTypeText === 'Пролив по кругу') {
                 legacyStage.pourType = 'circle';
-              } else if (pourTypeText === '添加冰块') {
+              } else if (pourTypeText === 'Добавить лёд') {
                 legacyStage.pourType = 'ice';
               } else {
                 legacyStage.pourType = findCustomPourTypeIdByName(
@@ -1647,9 +1647,9 @@ function parseMethodText(
                 detail: '',
               };
 
-              if (pourTypeText === '饮料') {
+              if (pourTypeText === 'Напиток') {
                 legacyStage.pourType = 'beverage';
-              } else if (pourTypeText === '萃取浓缩') {
+              } else if (pourTypeText === 'Экстракция') {
                 legacyStage.pourType = 'extraction';
               } else {
                 legacyStage.pourType = findCustomPourTypeIdByName(
@@ -1715,83 +1715,83 @@ function parseBrewingNoteText(text: string): BrewingNote | null {
   };
 
   // 提取设备
-  const equipmentMatch = text.match(/设备:\s*(.*?)(?:\n|$)/);
-  if (equipmentMatch && equipmentMatch[1] && equipmentMatch[1] !== '未设置') {
+  const equipmentMatch = text.match(/(?:设备|Устройство):\s*(.*?)(?:\n|$)/);
+  if (equipmentMatch && equipmentMatch[1] && equipmentMatch[1] !== 'Не задано') {
     note.equipment = equipmentMatch[1].trim();
   }
 
   // 提取方法
-  const methodMatch = text.match(/方法:\s*(.*?)(?:\n|$)/);
-  if (methodMatch && methodMatch[1] && methodMatch[1] !== '未设置') {
+  const methodMatch = text.match(/(?:方法|Метод):\s*(.*?)(?:\n|$)/);
+  if (methodMatch && methodMatch[1] && methodMatch[1] !== 'Не задано') {
     note.methodName = methodMatch[1].trim();
   }
 
   // 提取咖啡豆信息
-  const beanMatch = text.match(/咖啡豆:\s*(.*?)(?:\n|$)/);
-  if (beanMatch && beanMatch[1] && beanMatch[1] !== '未设置') {
+  const beanMatch = text.match(/(?:咖啡豆|^Зерно):\s*(.*?)(?:\n|$)/m);
+  if (beanMatch && beanMatch[1] && beanMatch[1] !== 'Не задано') {
     note.beanId = beanMatch[1].trim();
   }
 
   // 提取参数
-  if (text.includes('参数设置:')) {
-    const coffeeMatch = text.match(/咖啡粉量:\s*(.*?)(?:\n|$)/);
-    if (coffeeMatch && coffeeMatch[1] && coffeeMatch[1] !== '未设置') {
+  if (text.includes('Параметры:')) {
+    const coffeeMatch = text.match(/(?:咖啡粉量|Доза кофе):\s*(.*?)(?:\n|$)/);
+    if (coffeeMatch && coffeeMatch[1] && coffeeMatch[1] !== 'Не задано') {
       note.params.coffee = coffeeMatch[1].trim();
     }
 
-    const waterMatch = text.match(/水量:\s*(.*?)(?:\n|$)/);
-    if (waterMatch && waterMatch[1] && waterMatch[1] !== '未设置') {
+    const waterMatch = text.match(/(?:水量|Вода):\s*(.*?)(?:\n|$)/);
+    if (waterMatch && waterMatch[1] && waterMatch[1] !== 'Не задано') {
       note.params.water = waterMatch[1].trim();
     }
 
-    const ratioMatch = text.match(/比例:\s*(.*?)(?:\n|$)/);
-    if (ratioMatch && ratioMatch[1] && ratioMatch[1] !== '未设置') {
+    const ratioMatch = text.match(/(?:比例|Соотношение):\s*(.*?)(?:\n|$)/);
+    if (ratioMatch && ratioMatch[1] && ratioMatch[1] !== 'Не задано') {
       note.params.ratio = ratioMatch[1].trim();
     }
 
-    const grindMatch = text.match(/研磨度:\s*(.*?)(?:\n|$)/);
-    if (grindMatch && grindMatch[1] && grindMatch[1] !== '未设置') {
+    const grindMatch = text.match(/(?:研磨度|Помол):\s*(.*?)(?:\n|$)/);
+    if (grindMatch && grindMatch[1] && grindMatch[1] !== 'Не задано') {
       note.params.grindSize = grindMatch[1].trim();
     }
 
-    const tempMatch = text.match(/水温:\s*(.*?)(?:\n|$)/);
-    if (tempMatch && tempMatch[1] && tempMatch[1] !== '未设置') {
+    const tempMatch = text.match(/(?:水温|Темп\. воды):\s*(.*?)(?:\n|$)/);
+    if (tempMatch && tempMatch[1] && tempMatch[1] !== 'Не задано') {
       note.params.temp = tempMatch[1].trim();
     }
   }
 
   // 提取风味评分
-  if (text.includes('风味评分:')) {
-    const acidityMatch = text.match(/酸度:\s*(\d+(?:\.\d+)?)\/5/);
+  if (text.includes('Оценка вкуса:')) {
+    const acidityMatch = text.match(/(?:酸度|Кислотность):\s*(\d+(?:\.\d+)?)\/5/);
     if (acidityMatch && acidityMatch[1]) {
       note.taste.acidity = parseFloat(acidityMatch[1]);
     }
 
-    const sweetnessMatch = text.match(/甜度:\s*(\d+(?:\.\d+)?)\/5/);
+    const sweetnessMatch = text.match(/(?:甜度|Сладость):\s*(\d+(?:\.\d+)?)\/5/);
     if (sweetnessMatch && sweetnessMatch[1]) {
       note.taste.sweetness = parseFloat(sweetnessMatch[1]);
     }
 
-    const bitternessMatch = text.match(/苦度:\s*(\d+(?:\.\d+)?)\/5/);
+    const bitternessMatch = text.match(/(?:苦度|Горечь):\s*(\d+(?:\.\d+)?)\/5/);
     if (bitternessMatch && bitternessMatch[1]) {
       note.taste.bitterness = parseFloat(bitternessMatch[1]);
     }
 
-    const bodyMatch = text.match(/醇厚度:\s*(\d+(?:\.\d+)?)\/5/);
+    const bodyMatch = text.match(/(?:醇厚度|Тело):\s*(\d+(?:\.\d+)?)\/5/);
     if (bodyMatch && bodyMatch[1]) {
       note.taste.body = parseFloat(bodyMatch[1]);
     }
   }
 
   // 提取综合评分
-  const ratingMatch = text.match(/综合评分:\s*(\d+(?:\.\d+)?)\/5/);
+  const ratingMatch = text.match(/(?:综合评分|Общая оценка):\s*(\d+(?:\.\d+)?)\/5/);
   if (ratingMatch && ratingMatch[1]) {
     note.rating = parseFloat(ratingMatch[1]);
   }
 
   // 提取笔记
-  if (text.includes('笔记:')) {
-    const notesSection = text.split('笔记:')[1].split('\n---')[0];
+  if (text.includes('Заметка:')) {
+    const notesSection = text.split('Заметка:')[1].split('\n---')[0];
     note.notes = notesSection.trim();
   }
 

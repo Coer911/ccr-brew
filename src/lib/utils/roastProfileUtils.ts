@@ -1,10 +1,10 @@
 export const ROAST_LEVELS = [
-  '极浅烘焙',
-  '浅度烘焙',
-  '中浅烘焙',
-  '中度烘焙',
-  '中深烘焙',
-  '深度烘焙',
+  'Очень светлая обжарка',
+  'Светлая обжарка',
+  'Светло-средняя обжарка',
+  'Средняя обжарка',
+  'Средне-тёмная обжарка',
+  'Тёмная обжарка',
 ] as const;
 
 export type RoastLevel = (typeof ROAST_LEVELS)[number];
@@ -35,11 +35,11 @@ export const inferRoastLevelFromMoistureLoss = (
   moistureLoss: number
 ): RoastLevel | '' => {
   if (!Number.isFinite(moistureLoss)) return '';
-  if (moistureLoss >= 8 && moistureLoss <= 10) return '极浅烘焙';
-  if (moistureLoss > 10 && moistureLoss <= 13) return '浅度烘焙';
-  if (moistureLoss > 13 && moistureLoss <= 16) return '中度烘焙';
-  if (moistureLoss > 16 && moistureLoss < 18) return '中深烘焙';
-  if (moistureLoss >= 18) return '深度烘焙';
+  if (moistureLoss >= 8 && moistureLoss <= 10) return 'Очень светлая обжарка';
+  if (moistureLoss > 10 && moistureLoss <= 13) return 'Светлая обжарка';
+  if (moistureLoss > 13 && moistureLoss <= 16) return 'Средняя обжарка';
+  if (moistureLoss > 16 && moistureLoss < 18) return 'Средне-тёмная обжарка';
+  if (moistureLoss >= 18) return 'Тёмная обжарка';
   return '';
 };
 

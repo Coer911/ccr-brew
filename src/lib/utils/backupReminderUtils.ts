@@ -309,11 +309,11 @@ export class BackupReminderUtils {
     const settings = await this.getSettings();
 
     if (!settings.enabled) {
-      return '备份提醒已禁用';
+      return 'Напоминания о копии выключены';
     }
 
     if (!settings.nextReminderDate) {
-      return '无下次提醒';
+      return 'Следующего напоминания нет';
     }
 
     const nextDate = new Date(settings.nextReminderDate);
@@ -338,11 +338,11 @@ export class BackupReminderUtils {
     const dateStr = nextDate.toLocaleDateString('zh-CN', dateOptions);
 
     if (diffDays <= 0) {
-      return '应该提醒';
+      return 'Пора напомнить';
     } else if (diffDays === 1) {
-      return `明天（${dateStr}）`;
+      return `Завтра (${dateStr}）`;
     } else if (diffDays <= 7) {
-      return `${diffDays}天后（${dateStr}）`;
+      return `${diffDays} дн. спустя (${dateStr}）`;
     } else {
       return dateStr;
     }
@@ -354,15 +354,15 @@ export class BackupReminderUtils {
   static getIntervalText(interval: BackupReminderInterval): string {
     switch (interval) {
       case BACKUP_REMINDER_INTERVALS.WEEKLY:
-        return '每周';
+        return 'Раз в неделю';
       case BACKUP_REMINDER_INTERVALS.BIWEEKLY:
-        return '每两周';
+        return 'Раз в две недели';
       case BACKUP_REMINDER_INTERVALS.MONTHLY:
-        return '每月';
+        return 'Раз в месяц';
       case BACKUP_REMINDER_INTERVALS.NEVER:
-        return '从不';
+        return 'Никогда';
       default:
-        return '自定义';
+        return 'Своё';
     }
   }
 

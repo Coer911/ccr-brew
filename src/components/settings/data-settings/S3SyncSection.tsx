@@ -117,16 +117,16 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
   };
 
   const getEffectiveStatusText = () => {
-    if (!enabled) return '点击启用';
+    if (!enabled) return 'Нажмите, чтобы включить';
     switch (effectiveStatus) {
       case 'connected':
-        return '已连接';
+        return 'Подключено';
       case 'connecting':
-        return '连接中...';
+        return 'Подключаемся...';
       case 'error':
-        return '连接失败';
+        return 'Ошибка подключения';
       default:
-        return '未配置';
+        return 'Не настроено';
     }
   };
 
@@ -140,7 +140,7 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
       !settings.secretAccessKey ||
       !settings.bucketName
     ) {
-      setError('请填写完整的S3配置信息');
+      setError('Заполните все настройки S3');
       setStatus('error');
       return;
     }
@@ -170,19 +170,19 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
         setError(
           manager.getLastError() ||
             (settings.endpoint
-              ? '连接失败：无法访问存储桶或缺少写入权限'
-              : '连接失败：请检查 Bucket 名称和 Region 是否正确')
+              ? 'Ошибка подключения: нет доступа к бакету или прав на запись'
+              : 'Ошибка подключения: проверьте название бакета (Bucket) и регион (Region)')
         );
       }
     } catch (err) {
       setStatus('error');
-      setError(`连接失败: ${err instanceof Error ? err.message : '未知错误'}`);
+      setError(`Ошибка подключения: ${err instanceof Error ? err.message : 'Неизвестная ошибка'}`);
     }
   };
 
   const performSync = async (direction: 'upload' | 'download') => {
     if (isSyncing) {
-      setError('同步正在进行中');
+      setError('Синхронизация уже идёт');
       return;
     }
 
@@ -209,7 +209,7 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
         );
         if (!connected) {
           setStatus('error');
-          setError(manager.getLastError() || '连接失败，请检查配置');
+          setError(manager.getLastError() || 'Ошибка подключения, проверьте настройки');
           setIsSyncing(false);
           return;
         }
@@ -238,7 +238,7 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
           setDebugLogs(result.debugLogs);
           setShowDebugDrawer(true);
         }
-        setError('数据冲突：本地和云端数据都已更改。');
+        setError('Конфликт данных: изменились и локальные, и облачные данные.');
         return;
       }
 
@@ -253,7 +253,7 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
         if (result.uploadedFiles > 0) {
           showToast({
             type: 'success',
-            title: `已上传 ${result.uploadedFiles} 项到云端`,
+            title: `Загружено: ${result.uploadedFiles} шт. в облако`,
             duration: 2500,
           });
         } else {
@@ -262,13 +262,13 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
             setShowDebugDrawer(true);
             showToast({
               type: 'warning',
-              title: `${direction === 'upload' ? '上传' : '下载'}完成但未传输任何文件，请查看详细日志`,
+              title: `${direction === 'upload' ? 'Загрузить в облако' : 'Скачать из облака'} завершено, но файлы не переданы — посмотрите подробный журнал`,
               duration: 3000,
             });
           } else {
             showToast({
               type: 'info',
-              title: '数据已是最新，无需同步',
+              title: 'Данные актуальны, синхронизация не нужна',
               duration: 2000,
             });
           }
@@ -281,19 +281,19 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
           setDebugLogs(result.debugLogs);
           setShowDebugDrawer(true);
         }
-        setError(result.message || '同步失败');
+        setError(result.message || 'Ошибка синхронизации');
         showToast({
           type: 'error',
-          title: result.message || '同步失败',
+          title: result.message || 'Ошибка синхронизации',
           duration: 3000,
         });
       }
     } catch (err) {
       console.error('同步失败:', err);
-      setError(`同步失败: ${err instanceof Error ? err.message : '未知错误'}`);
+      setError(`Ошибка синхронизации: ${err instanceof Error ? err.message : 'Неизвестная ошибка'}`);
       showToast({
         type: 'error',
-        title: `同步失败: ${err instanceof Error ? err.message : '未知错误'}`,
+        title: `Ошибка синхронизации: ${err instanceof Error ? err.message : 'Неизвестная ошибка'}`,
         duration: 3000,
       });
     } finally {
@@ -320,7 +320,7 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
           true
         );
         if (!connected) {
-          showToast({ type: 'error', title: '连接失败', duration: 2000 });
+          showToast({ type: 'error', title: 'Ошибка подключения', duration: 2000 });
           return;
         }
         setSyncManager(manager);
@@ -342,13 +342,13 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
       if (success) {
         showToast({
           type: 'success',
-          title: '恢复成功，即将重启...',
+          title: 'Восстановлено, перезапускаем...',
           duration: 2000,
         });
         setTimeout(() => window.location.reload(), 2000);
         return true;
       } else {
-        showToast({ type: 'error', title: '恢复失败', duration: 2000 });
+        showToast({ type: 'error', title: 'Не удалось восстановить', duration: 2000 });
         return false;
       }
     } finally {
@@ -384,7 +384,7 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
           {/* 服务地址 (Endpoint) */}
           <div>
             <label className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-400">
-              服务地址 (Endpoint)
+              Адрес сервиса (Endpoint)
             </label>
             <input
               type="url"
@@ -398,7 +398,7 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
           {/* 区域 (Region) */}
           <div>
             <label className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-400">
-              区域 (Region)
+              Регион (Region)
             </label>
             <input
               type="text"
@@ -435,7 +435,7 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
                 onChange={e =>
                   onSettingChange('secretAccessKey', e.target.value)
                 }
-                placeholder="密钥"
+                placeholder="Ключ"
                 className="w-full rounded-md border border-neutral-200/50 bg-neutral-50 px-3 py-2 pr-10 text-sm focus:ring-1 focus:ring-neutral-500 focus:outline-none dark:border-neutral-700 dark:bg-neutral-800"
               />
               <button
@@ -455,7 +455,7 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
           {/* 存储桶 (Bucket) */}
           <div>
             <label className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-400">
-              存储桶 (Bucket)
+              Бакет (Bucket)
             </label>
             <input
               type="text"
@@ -469,7 +469,7 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
           {/* 文件前缀 */}
           <div>
             <label className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-400">
-              文件前缀（可选）
+              Префикс файлов (необязательно)
             </label>
             <input
               type="text"
@@ -494,7 +494,7 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
             disabled={effectiveStatus === 'connecting'}
             className="w-full rounded-md bg-neutral-800 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-900 disabled:bg-neutral-400 dark:bg-neutral-700 dark:hover:bg-neutral-600"
           >
-            {effectiveStatus === 'connecting' ? '连接中...' : '测试连接'}
+            {effectiveStatus === 'connecting' ? 'Подключаемся...' : 'Проверить подключение'}
           </button>
         </div>
       )}
@@ -528,7 +528,7 @@ export const S3SyncSection: React.FC<S3SyncSectionProps> = ({
         copySuccess={copySuccess}
         onCopy={handleCopyLogs}
         onSelectAll={handleSelectAll}
-        title="S3 同步日志"
+        title="Журнал синхронизации S3"
       />
     </div>
   );

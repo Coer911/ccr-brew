@@ -118,7 +118,7 @@ const FlavorFieldEditor: React.FC<FlavorFieldEditorProps> = ({
   return (
     <InlineTextArea
       value={value}
-      placeholder="风味描述"
+      placeholder="Вкусовой профиль"
       onValueChange={handleChange}
     />
   );
@@ -264,9 +264,9 @@ export const FieldEditorPanel: React.FC<FieldEditorPanelProps> = ({
           <div className="space-y-2">
             <InlineTextArea
               field="roaster"
-              label="烘焙商"
+              label="Обжарщик"
               value={content.roaster}
-              placeholder="默认使用咖啡豆中的烘焙商，可手动修改"
+              placeholder="По умолчанию — обжарщик из карточки зерна, можно поменять"
               onUpdateField={updateTextField}
             />
             <InlineTextArea
@@ -278,13 +278,13 @@ export const FieldEditorPanel: React.FC<FieldEditorPanelProps> = ({
             {config.template === 'detailed' && (
               <div className="space-y-1.5">
                 <FieldOptionSwitch
-                  label="显示分隔线"
+                  label="Показывать разделитель"
                   field="nameSeparator"
                   checked={config.fields.nameSeparator}
                   onToggleField={onToggleField}
                 />
                 <FieldOptionSwitch
-                  label="内容贴底"
+                  label="Прижать к низу"
                   field="contentBottomAligned"
                   checked={config.fields.contentBottomAligned}
                   onToggleField={onToggleField}
@@ -300,7 +300,7 @@ export const FieldEditorPanel: React.FC<FieldEditorPanelProps> = ({
               <DatePicker
                 date={parseLocalDateString(content.roastDate)}
                 onDateChange={handleDateChange}
-                placeholder="选择日期"
+                placeholder="Выберите дату"
                 locale="zh-CN"
                 className="min-w-0 flex-1"
                 triggerClassName={DATE_PICKER_TRIGGER_CLASS}
@@ -308,7 +308,7 @@ export const FieldEditorPanel: React.FC<FieldEditorPanelProps> = ({
               />
             </div>
             <FieldOptionSwitch
-              label="分装日期"
+              label="Дата фасовки"
               field="packDate"
               checked={config.fields.packDate}
               onToggleField={handleTogglePackDate}
@@ -318,7 +318,7 @@ export const FieldEditorPanel: React.FC<FieldEditorPanelProps> = ({
                 <DatePicker
                   date={parseLocalDateString(content.packDate)}
                   onDateChange={handlePackDateChange}
-                  placeholder="选择分装日期"
+                  placeholder="Выберите дату фасовки"
                   locale="zh-CN"
                   className="min-w-0 flex-1"
                   triggerClassName={DATE_PICKER_TRIGGER_CLASS}
@@ -340,7 +340,7 @@ export const FieldEditorPanel: React.FC<FieldEditorPanelProps> = ({
           <InlineTextArea
             field="notes"
             value={content.notes}
-            placeholder="备注信息"
+            placeholder="Заметка"
             rows={3}
             multiline
             textAreaClassName="min-h-[56px] py-1"

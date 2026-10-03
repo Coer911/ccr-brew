@@ -42,7 +42,7 @@ export const SyncHeaderButton: React.FC<SyncHeaderButtonProps> = ({
     >
       <div className="flex items-center gap-2">
         <div className={`h-2 w-2 rounded-full ${statusColor}`}></div>
-        <span>{serviceName} 云同步配置</span>
+        <span>{serviceName} Настройка облачной синхронизации</span>
       </div>
       <div className="flex items-center gap-2">
         <span className="text-xs text-neutral-500 dark:text-neutral-400">

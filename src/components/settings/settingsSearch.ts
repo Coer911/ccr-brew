@@ -100,22 +100,22 @@ const makeSettingSearchIdSet = (labels: string[]) =>
   new Set(labels.map(makeSettingRowSearchId));
 
 const BEAN_NOTE_DETAIL_SEARCH_IDS = makeSettingSearchIdSet([
-  '风味',
-  '备注内容',
-  '备注行数限制',
+  'Вкусы',
+  'Текст заметки',
+  'Строк заметки',
 ]);
 const BEAN_FIELD_SEARCH_IDS = makeSettingSearchIdSet([
-  '烘焙商',
-  '烘焙商分隔符',
+  'Обжарщик',
+  'Разделитель обжарщика',
   ...BEAN_FIELD_DEFINITIONS.map(definition =>
-    definition.id === 'origin' ? '产地' : definition.label
+    definition.id === 'origin' ? 'Происхождение' : definition.label
   ),
 ]);
 const GREEN_BEAN_DETAIL_SEARCH_IDS = makeSettingSearchIdSet([
-  '启用"全部烘焙"选项',
-  '启用自定义烘焙量输入',
-  '预设快捷烘焙量',
-  '熟豆转生豆',
+  'Включить «Обжарить всё»',
+  'Разрешить свой вес обжарки',
+  'Быстрые веса обжарки',
+  'Обжаренное → зелёное',
 ]);
 
 export interface BeanSettingsSearchRevealState {
@@ -128,12 +128,12 @@ export interface BeanSettingsSearchRevealState {
 export const getBeanSettingsSearchRevealState = (
   highlightedSettingId: string | null
 ): BeanSettingsSearchRevealState => ({
-  priceDetails: highlightedSettingId === makeSettingRowSearchId('总价'),
+  priceDetails: highlightedSettingId === makeSettingRowSearchId('Общая цена'),
   noteDetails: Boolean(
     highlightedSettingId &&
     BEAN_NOTE_DETAIL_SEARCH_IDS.has(highlightedSettingId)
   ),
-  ratingDetails: highlightedSettingId === makeSettingRowSearchId('十分位制'),
+  ratingDetails: highlightedSettingId === makeSettingRowSearchId('Десятибалльная шкала'),
   beanFields: Boolean(
     highlightedSettingId && BEAN_FIELD_SEARCH_IDS.has(highlightedSettingId)
   ),
@@ -280,52 +280,52 @@ export const buildSettingsSearchItems = ({
   grinders,
 }: BuildSettingsSearchItemsOptions): SettingsSearchItem[] => {
   const items: SettingsSearchItem[] = [
-    ...createRowItems('display-settings', '外观', [
-      '外观模式',
-      '字体',
-      '显示菜单栏图标',
-      '顶部边距',
-      '底部边距',
+    ...createRowItems('display-settings', 'Внешний вид', [
+      'Тема',
+      'Шрифт',
+      'Показывать иконки в меню',
+      'Отступ сверху',
+      'Отступ снизу',
     ]),
-    ...createRowItems('data-settings', '数据与备份', [
-      '同步服务',
-      '备份服务',
-      '持久化存储',
-      '备份提醒',
-      '提醒频率',
-      '下拉上传',
-      '引导式配置',
-      '数据管理',
-      '导入数据',
-      '导出数据',
-      '重置数据',
-      '图片补压',
+    ...createRowItems('data-settings', 'Данные и копии', [
+      'Сервис синхронизации',
+      'Сервис копий',
+      'Постоянное хранилище',
+      'Напоминание о копии',
+      'Как часто',
+      'Потяните, чтобы загрузить',
+      'Пошаговая настройка',
+      'Управление данными',
+      'Импорт данных',
+      'Выгрузить данные',
+      'Сброс данных',
+      'Сжать фото',
     ]),
-    ...createRowItems('about-settings', '关于', [
-      '隐私政策',
-      '开源致谢',
-      '相关链接',
+    ...createRowItems('about-settings', 'О приложении', [
+      'Политика конфиденциальности',
+      'Благодарности открытому ПО',
+      'Ссылки',
     ]),
   ];
 
   if (hasVisibleNotificationSettings) {
     items.push(
-      ...createRowItems('notification-settings', '提醒通知', [
-        '提示音',
-        '震动反馈',
-        '更新提示',
-        '提醒弹窗',
-        '同步日历',
+      ...createRowItems('notification-settings', 'Уведомления', [
+        'Звук',
+        'Вибрация',
+        'Сообщать об обновлениях',
+        'Всплывающие напоминания',
+        'Синхронизация с календарём',
       ])
     );
   }
 
   items.push(
-    ...createRowItems('navigation-settings', '应用功能', [
-      '简化标签名称',
-      '启用的功能',
-      '视图显示',
-      '固定视图',
+    ...createRowItems('navigation-settings', 'Функции приложения', [
+      'Короткие подписи',
+      'Включённые функции',
+      'Виды',
+      'Закреплённые виды',
     ])
   );
 
@@ -335,11 +335,11 @@ export const buildSettingsSearchItems = ({
         pageId: 'navigation-settings',
         settingId: makeDynamicSettingSearchId('navigation-tab', tab),
         label: getMainNavigationTabLabel(tab, settings.simplifiedViewLabels),
-        groupLabel: '启用的功能',
+        groupLabel: 'Включённые функции',
         keywords: [
           getMainNavigationTabLabel(tab, false),
           getMainNavigationTabLabel(tab, true),
-          '应用功能',
+          'Функции приложения',
         ],
       })
     );
@@ -353,7 +353,7 @@ export const buildSettingsSearchItems = ({
       const keywords = [
         VIEW_LABELS[view],
         SIMPLIFIED_VIEW_LABELS[view],
-        '视图',
+        'Вид',
       ];
 
       items.push(
@@ -364,15 +364,15 @@ export const buildSettingsSearchItems = ({
             view
           ),
           label,
-          groupLabel: '视图显示',
+          groupLabel: 'Виды',
           keywords,
         }),
         createItem({
           pageId: 'navigation-settings',
           settingId: makeDynamicSettingSearchId('navigation-view-pin', view),
           label,
-          groupLabel: '固定视图',
-          keywords: [...keywords, '固定'],
+          groupLabel: 'Закреплённые виды',
+          keywords: [...keywords, 'Закрепить'],
         })
       );
     });
@@ -380,72 +380,72 @@ export const buildSettingsSearchItems = ({
 
   if (isModuleVisible(visibleModules, 'brewing')) {
     items.push(
-      ...createRowItems('brewing-settings', '冲煮', ['咖啡豆选择步骤']),
-      ...createRowItems('timer-settings', '计时器', [
-        '显示流速',
-        '可视化冲煮',
-        '进度条高度',
-        '数据显示字体大小',
-        '步骤时间显示',
+      ...createRowItems('brewing-settings', 'Заварка', ['Шаг выбора зерна']),
+      ...createRowItems('timer-settings', 'Таймер', [
+        'Показывать скорость пролива',
+        'Визуализация заварки',
+        'Высота шкалы прогресса',
+        'Размер шрифта данных',
+        'Время этапа',
       ])
     );
   }
 
   if (isModuleVisible(visibleModules, 'coffeeBean')) {
     items.push(
-      ...createRowItems('bean-settings', '咖啡豆', [
-        '日期模式',
-        '价格',
-        '总价',
-        '状态点',
-        '备注',
-        '风味',
-        '备注内容',
-        '备注行数限制',
-        '标签打印',
-        '评分',
-        '十分位制',
-        '沉浸式表单',
-        '自动填充图片',
-        '烘焙商',
-        '烘焙商分隔符',
-        '咖啡豆字段',
-        '产地',
-        '产国',
-        '产区',
-        '庄园',
-        '处理站',
-        '海拔',
-        '处理法',
-        '批次',
-        '品种',
+      ...createRowItems('bean-settings', 'Зерно', [
+        'Формат даты',
+        'Цена',
+        'Общая цена',
+        'Точка состояния',
+        'Заметка',
+        'Вкусы',
+        'Текст заметки',
+        'Строк заметки',
+        'Печать этикеток',
+        'Оценка',
+        'Десятибалльная шкала',
+        'Форма на весь экран',
+        'Автозаполнение фото',
+        'Обжарщик',
+        'Разделитель обжарщика',
+        'Поля зерна',
+        'Происхождение',
+        'Страна',
+        'Регион',
+        'Ферма',
+        'Станция обработки',
+        'Высота',
+        'Обработка',
+        'Партия',
+        'Разновидность',
       ]),
-      ...createRowItems('stock-settings', '库存扣除', [
-        '启用“全部扣除”选项',
-        '启用自定义扣除输入',
-        '预设快捷扣除量',
+      ...createRowItems('stock-settings', 'Списание запасов', [
+        'Включить «Списать всё»',
+        'Разрешить свой вес списания',
+        'Быстрые веса списания',
       ]),
-      ...createRowItems('green-bean-settings', '生豆库', [
-        '启用生豆库',
-        '启用"全部烘焙"选项',
-        '启用自定义烘焙量输入',
-        '预设快捷烘焙量',
-        '熟豆转生豆',
+      ...createRowItems('green-bean-settings', 'Зелёное зерно', [
+        'Включить учёт зелёного зерна',
+        'Включить «Обжарить всё»',
+        'Разрешить свой вес обжарки',
+        'Быстрые веса обжарки',
+        'Обжаренное → зелёное',
       ]),
-      ...createRowItems('flavor-period-settings', '赏味期', [
-        '浅烘',
-        '中烘',
-        '深烘',
+      ...createRowItems('flavor-period-settings', 'Лучший период', [
+        'Светлая',
+        'Средняя',
+        'Тёмная',
       ]),
-      ...createRowItems('random-coffee-bean-settings', '随机咖啡豆', [
-        '长按随机不同类型咖啡豆',
-        '长按时随机的类型',
-        '养豆期',
-        '赏味期',
-        '衰退期',
-        '冷冻',
-        '在途',
-        '未知状态',
+      ...createRowItems('random-coffee-bean-settings', 'Случайное зерно', [
+        'Долгое нажатие — случайное зерно другого типа',
+        'Тип при долгом нажатии',
+        'Отдых',
+        'Лучший период',
+        'Угасание',
+        'Заморожено',
+        'В пути',
+        'Неизвестное состояние',
       ])
     );
 
@@ -456,9 +456,9 @@ export const buildSettingsSearchItems = ({
             pageId: 'coffee-bean-group-settings',
             settingId: makeDynamicSettingSearchId('group', group.id),
             label: group.name,
-            value: `${group.beanIds.length} 个豆子`,
-            groupLabel: '分组',
-            keywords: ['咖啡豆分组', '分组'],
+            value: `${group.beanIds.length} шт. зерна`,
+            groupLabel: 'Группы',
+            keywords: ['Группы зерна', 'Группы'],
           })
         );
       }
@@ -479,9 +479,9 @@ export const buildSettingsSearchItems = ({
       items.push(
         createItem({
           pageId: 'flavor-period-settings',
-          label: '烘焙商特定预设',
-          groupLabel: '赏味期',
-          keywords: ['烘焙商', '赏味期', '预设'],
+          label: 'Настройки для обжарщиков',
+          groupLabel: 'Лучший период',
+          keywords: ['Обжарщик', 'Лучший период', 'Шаблон'],
         })
       );
     }
@@ -496,9 +496,9 @@ export const buildSettingsSearchItems = ({
           pageId: 'roaster-logo-settings',
           settingId: makeDynamicSettingSearchId('roaster', roaster),
           label: roaster,
-          value: hasLogo ? '已设置图标' : undefined,
-          groupLabel: '烘焙商图标',
-          keywords: ['烘焙商', '图标', 'logo', 'roaster'],
+          value: hasLogo ? 'Логотип задан' : undefined,
+          groupLabel: 'Логотип обжарщика',
+          keywords: ['Обжарщик', 'Логотип', 'logo', 'roaster'],
         })
       );
     });
@@ -506,20 +506,20 @@ export const buildSettingsSearchItems = ({
 
   if (isModuleVisible(visibleModules, 'notes')) {
     items.push(
-      ...createRowItems('note-settings', '笔记', [
-        '经典列表样式',
-        '评分维度入口',
-        '价格',
-        '养豆',
-        '风味',
-        '时间',
-        '评分',
-        '使用滑块评分',
-        '风味评分',
-        '半分制',
-        '十分位制',
-        '初始值跟随总评',
-        '容量调整记录',
+      ...createRowItems('note-settings', 'Заметки', [
+        'Классический список',
+        'Вход в критерии оценки',
+        'Цена',
+        'Отдых',
+        'Вкусы',
+        'Время',
+        'Оценка',
+        'Оценивать ползунком',
+        'Оценка вкуса',
+        'Шаг 0,5',
+        'Десятибалльная шкала',
+        'Начальное значение = общая оценка',
+        'Записи об изменении остатка',
       ])
     );
 
@@ -529,9 +529,9 @@ export const buildSettingsSearchItems = ({
           pageId: 'flavor-dimension-settings',
           settingId: makeDynamicSettingSearchId('dimension', dimension.id),
           label: dimension.label,
-          value: dimension.isDefault ? '默认维度' : '自定义维度',
-          groupLabel: '评分维度',
-          keywords: ['风味评分', '评分维度'],
+          value: dimension.isDefault ? 'Стандартные критерии' : 'Свои критерии',
+          groupLabel: 'Критерии оценки',
+          keywords: ['Оценка вкуса', 'Критерии оценки'],
         })
       );
     });
@@ -542,10 +542,10 @@ export const buildSettingsSearchItems = ({
     isModuleVisible(visibleModules, 'notes')
   ) {
     items.push(
-      ...createRowItems('grinder-settings', '磨豆机', [
-        '添加磨豆机',
+      ...createRowItems('grinder-settings', 'Кофемолки', [
+        'Добавить кофемолку',
       ]),
-      ...createRowItems('equipment-method-settings', '器具和方案', ['添加器具'])
+      ...createRowItems('equipment-method-settings', 'Устройства и рецепты', ['Добавить устройство'])
     );
 
     grinders.forEach(grinder => {
@@ -555,8 +555,8 @@ export const buildSettingsSearchItems = ({
           settingId: makeDynamicSettingSearchId('grinder', grinder.id),
           label: grinder.name,
           value: grinder.currentGrindSize,
-          groupLabel: '磨豆机',
-          keywords: ['磨豆机', '研磨度', '刻度'],
+          groupLabel: 'Кофемолки',
+          keywords: ['Кофемолки', 'Помол', 'Шкала'],
         })
       );
     });
@@ -573,10 +573,10 @@ export const buildSettingsSearchItems = ({
             settings.equipmentNameOverrides?.[equipment.id]?.trim() ||
             equipment.name,
           value: settings.hiddenEquipments?.includes(equipment.id)
-            ? '已隐藏'
+            ? 'Скрыто'
             : undefined,
-          groupLabel: '预设器具',
-          keywords: ['器具', '方案'],
+          groupLabel: 'Стандартные устройства',
+          keywords: ['Устройства', 'Рецепт'],
         })
       );
     });
@@ -586,8 +586,8 @@ export const buildSettingsSearchItems = ({
           pageId: 'equipment-method-settings',
           settingId: makeDynamicSettingSearchId('equipment', equipment.id),
           label: equipment.name,
-          groupLabel: '自定义器具',
-          keywords: ['器具', '方案'],
+          groupLabel: 'Своё устройство',
+          keywords: ['Устройства', 'Рецепт'],
         })
       );
     });
@@ -610,8 +610,8 @@ export const buildSettingsSearchItems = ({
               ),
               label: method.name,
               value: equipmentName,
-              groupLabel: '自定义方案',
-              keywords: ['冲煮方案', '方案', equipmentName],
+              groupLabel: 'Свой рецепт',
+              keywords: ['Рецепты заварки', 'Рецепт', equipmentName],
             })
           );
         });
@@ -636,8 +636,8 @@ export const buildSettingsSearchItems = ({
             ),
             label: method.name,
             value: equipmentName,
-            groupLabel: '预设方案',
-            keywords: ['冲煮方案', '方案', equipmentName],
+            groupLabel: 'Готовые рецепты',
+            keywords: ['Рецепты заварки', 'Рецепт', equipmentName],
           })
         );
       });
@@ -646,37 +646,37 @@ export const buildSettingsSearchItems = ({
 
   if (isModuleVisible(visibleModules, 'coffeeBean')) {
     items.push(
-      ...createRowItems('experimental-settings', '实验性功能', [
-        '设置全局搜索',
-        '最大显示容量',
-        '分享导入压缩包',
-        '自定义识别咖啡豆 API',
+      ...createRowItems('experimental-settings', 'Экспериментальные функции', [
+        'Глобальный поиск в настройках',
+        'Максимум для показа',
+        'Импорт архивов через «Поделиться»',
+        'Свой API распознавания зерна',
       ])
     );
   } else {
     items.push(
-      ...createRowItems('experimental-settings', '实验性功能', ['设置全局搜索'])
+      ...createRowItems('experimental-settings', 'Экспериментальные функции', ['Глобальный поиск в настройках'])
     );
   }
 
   if (isModuleVisible(visibleModules, 'coffeeBean')) {
     if (settings.enableBeanSummaryCapacityLimit) {
       items.push(
-        ...createRowItems('experimental-settings', '实验性功能', [
-          '超过上限循环显示',
-          '显示上限',
+        ...createRowItems('experimental-settings', 'Экспериментальные функции', [
+          'Циклический показ сверх лимита',
+          'Лимит показа',
         ])
       );
     }
 
     if (settings.experimentalBeanRecognitionEnabled) {
       items.push(
-        ...createRowItems('experimental-settings', '自定义识别咖啡豆 API', [
+        ...createRowItems('experimental-settings', 'Свой API распознавания зерна', [
           'API URL',
           'API Key',
           'Model',
           'System Prompt',
-          '测试连接',
+          'Проверить подключение',
         ])
       );
     }
@@ -684,9 +684,9 @@ export const buildSettingsSearchItems = ({
 
   if (isModuleVisible(visibleModules, 'notes')) {
     items.push(
-      ...createRowItems('experimental-settings', '实验性功能', [
-        '同步筛选日期',
-        '快捷扣除',
+      ...createRowItems('experimental-settings', 'Экспериментальные функции', [
+        'Синхронизировать дату фильтра',
+        'Быстрое списание',
       ])
     );
   }

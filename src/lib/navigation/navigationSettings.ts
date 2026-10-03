@@ -38,8 +38,8 @@ const MAIN_NAVIGATION_TAB_LABELS: Record<
   Exclude<MainNavigationTab, 'coffeeBean'>,
   string
 > = {
-  brewing: '冲煮',
-  notes: '笔记',
+  brewing: 'Заварка',
+  notes: 'Заметки',
 };
 
 export const getMainNavigationTabLabel = (

@@ -40,7 +40,7 @@ const NameStep: React.FC<NameStepProps> = ({ name, onChange, isEdit }) => {
     >
       <div className="max-w-sm space-y-8 text-center">
         <h2 className="text-xl font-medium text-neutral-800 dark:text-neutral-200">
-          {isEdit ? '编辑你的冲煮方案名称' : '给你的冲煮方案起个名字'}
+          {isEdit ? 'Измените название рецепта' : 'Придумайте название рецепта'}
         </h2>
         <div className="relative flex justify-center">
           <div className="relative inline-block">
@@ -49,7 +49,7 @@ const NameStep: React.FC<NameStepProps> = ({ name, onChange, isEdit }) => {
               type="text"
               value={name}
               onChange={e => onChange(e.target.value)}
-              placeholder="叫做..."
+              placeholder="Например..."
               autoFocus
               className={`bg-transparent py-2 text-center text-lg outline-hidden focus:border-neutral-800/50 dark:focus:border-neutral-400`}
             />

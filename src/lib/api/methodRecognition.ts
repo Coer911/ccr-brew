@@ -44,14 +44,14 @@ export async function recognizeMethodImage(imageFile: File): Promise<unknown> {
         rawText: rawText.slice(0, 300),
       });
       throw new Error(
-        error.error || error.message || `请求失败: ${response.status}`
+        error.error || error.message || `Ошибка запроса: ${response.status}`
       );
     }
 
     const result = await response.json();
 
     if (!result.success) {
-      throw new Error(result.error || '识别失败');
+      throw new Error(result.error || 'Не распознано');
     }
 
     return result.data;
@@ -61,11 +61,11 @@ export async function recognizeMethodImage(imageFile: File): Promise<unknown> {
     if (error instanceof Error) {
       const message = error.message;
       if (isTimeoutError(error)) {
-        throw new Error('请求超时，请稍后重试');
+        throw new Error('Время запроса истекло, попробуйте позже');
       }
       throw new Error(normalizeRecognitionErrorMessage(message));
     }
 
-    throw new Error('未知错误');
+    throw new Error('Неизвестная ошибка');
   }
 }

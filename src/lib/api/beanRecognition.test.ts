@@ -18,31 +18,31 @@ describe('normalizeRecognizedBeanPayload', () => {
 
   it('deduplicates variety-only blend components', () => {
     const payload = normalizeRecognizedBeanPayload({
-      name: '2026 瑰夏村 金标 Oma 157',
+      name: '2026 Деревня Гейша, Gold Label, Oma 157',
       blendComponents: [
-        { origin: '瑰夏村', process: '水洗', variety: 'Oma 157' },
+        { origin: 'Деревня Гейша', process: 'Мытая', variety: 'Oma 157' },
         { variety: 'Oma 157 Oma 157' },
       ],
     });
 
     expect(payload).toEqual({
-      name: '2026 瑰夏村 金标 Oma 157',
+      name: '2026 Деревня Гейша, Gold Label, Oma 157',
       blendComponents: [
-        { origin: '瑰夏村', process: '水洗', variety: 'Oma 157' },
+        { origin: 'Деревня Гейша', process: 'Мытая', variety: 'Oma 157' },
       ],
     });
   });
 
   it('prefers a named variety over a short batch number', () => {
     const payload = normalizeRecognizedBeanPayload({
-      name: '2026 瑰夏村 金标 Oma 157',
-      blendComponents: [{ origin: '瑰夏村', process: '水洗', variety: '1931' }],
+      name: '2026 Деревня Гейша, Gold Label, Oma 157',
+      blendComponents: [{ origin: 'Деревня Гейша', process: 'Мытая', variety: '1931' }],
     });
 
     expect(payload).toEqual({
-      name: '2026 瑰夏村 金标 Oma 157',
+      name: '2026 Деревня Гейша, Gold Label, Oma 157',
       blendComponents: [
-        { origin: '瑰夏村', process: '水洗', variety: 'Oma 157' },
+        { origin: 'Деревня Гейша', process: 'Мытая', variety: 'Oma 157' },
       ],
     });
   });
@@ -50,13 +50,13 @@ describe('normalizeRecognizedBeanPayload', () => {
   it('applies field settings after recognition normalization', () => {
     const payload = normalizeRecognizedBeanPayload(
       {
-        name: '博纳 水洗',
+        name: 'Бона мытая',
         blendComponents: [
           {
-            origin: '埃塞俄比亚',
-            estate: '博纳',
-            processingStation: '沃卡',
-            process: '水洗',
+            origin: 'Эфиопия',
+            estate: 'Бона',
+            processingStation: 'Вока',
+            process: 'Мытая',
             altitude: '2100m',
             batch: 'A12',
           },
@@ -74,28 +74,28 @@ describe('normalizeRecognizedBeanPayload', () => {
     );
 
     expect(payload).toEqual({
-      name: '博纳 水洗',
-      blendComponents: [{ origin: '埃塞俄比亚', process: '水洗' }],
-      notes: '庄园：博纳 / 处理站：沃卡 / 海拔：2100m / 批次：A12',
+      name: 'Бона мытая',
+      blendComponents: [{ origin: 'Эфиопия', process: 'Мытая' }],
+      notes: 'Ферма: Бона / Станция обработки: Вока / Высота: 2100m / Партия: A12',
     });
   });
 
   it('normalizes the Obraje sample from an experimental API response', async () => {
     const modelPayload = {
-      name: 'OBRAJE 哥伦比亚奥博拉赫庄园',
+      name: 'OBRAJE Колумбия ферма Обрахе',
       roaster: 'MEOW COFFEE',
-      flavor: ['橙花', '凤梨软糖', '成熟菠萝', '血橙汁'],
+      flavor: ['Флёрдоранж', 'Ананасовый мармелад', 'Спелый ананас', 'Сок красного апельсина'],
       blendComponents: [
         {
-          country: '哥伦比亚',
+          country: 'Колумбия',
           region: 'NARIÑO',
-          estate: '奥博拉赫庄园',
-          process: '蜜处理',
-          variety: '绿顶瑰夏',
+          estate: 'Обрахе',
+          process: 'Хани',
+          variety: 'Гейша с зелёной верхушкой',
         },
       ],
       notes:
-        '产国：哥伦比亚 / 产区：Narino / 庄园：奥博拉赫庄园 / 海拔：2200–2300 M.A.S.L / 处理法：蜜处理 / 品种：绿顶瑰夏',
+        'Страна: Колумбия / Регион: Narino / Ферма: Обрахе / Высота: 2200–2300 M.A.S.L / Обработка: Хани / Разновидность: Гейша с зелёной верхушкой',
     };
     class MockFileReader {
       result = 'data:image/jpeg;base64,/9j/4A==';

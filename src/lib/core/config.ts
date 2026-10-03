@@ -246,7 +246,7 @@ export const equipmentList: Equipment[] = [
   },
   {
     id: 'CleverDripper',
-    name: '聪明杯',
+    name: 'Clever',
   },
   {
     id: 'Kalita',
@@ -263,7 +263,7 @@ export const equipmentList: Equipment[] = [
   },
   {
     id: 'Espresso',
-    name: '意式咖啡机',
+    name: 'Эспрессо-машина',
   },
   // 可以在这里添加更多器具
 ];
@@ -272,39 +272,39 @@ export const equipmentList: Equipment[] = [
 export const brewingMethods: BrewingMethods = {
   V60: [
     {
-      name: '一刀流',
+      name: 'Иттоурю',
       params: {
         coffee: '15g',
         water: '225g',
         ratio: '1:15',
-        grindSize: '中细',
+        grindSize: 'Средне-мелкий',
         temp: '92°C',
         stages: [
           // 原: time=25, pourTime=10, water=30g → duration=10, wait=15
           {
             pourType: 'circle',
-            label: '焖蒸(绕圈注水)',
+            label: 'Блуминг (пролив по кругу)',
             water: '30',
             duration: 10,
-            detail: '中心向外绕圈，确保均匀萃取',
+            detail: 'Круги от центра наружу для равномерной экстракции',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 15,
             detail: '',
           },
           // 原: time=120, pourTime=65, water=225g → duration=65, wait=30, stageWater=195
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '195',
             duration: 65,
-            detail: '中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: 'Медленные круги от центра наружу, равномерная экстракция',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 30,
             detail: '',
           },
@@ -312,47 +312,47 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '三段式',
+      name: 'Три пролива',
       params: {
         coffee: '15g',
         water: '225g',
         ratio: '1:15',
-        grindSize: '中细',
+        grindSize: 'Средне-мелкий',
         temp: '92°C',
         stages: [
           // 原: time=25, pourTime=10, water=30g → duration=10, wait=15
           {
             pourType: 'circle',
-            label: '焖蒸(绕圈注水)',
+            label: 'Блуминг (пролив по кругу)',
             water: '30',
             duration: 10,
-            detail: '中心向外绕圈，确保均匀萃取',
+            detail: 'Круги от центра наружу для равномерной экстракции',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 15,
             detail: '',
           },
           // 原: time=50, pourTime=25, water=140g → duration=25, stageWater=110
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '110',
             duration: 25,
-            detail: '中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: 'Медленные круги от центра наружу, равномерная экстракция',
           },
           // 原: time=120, pourTime=40, water=225g → duration=40, wait=30, stageWater=85
           {
             pourType: 'center',
-            label: '中心注水',
+            label: 'Пролив в центр',
             water: '85',
             duration: 40,
-            detail: '中心定点注水，降低萃取率',
+            detail: 'Пролив точно в центр, экстракция ниже',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 30,
             detail: '',
           },
@@ -360,81 +360,81 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '粕谷哲4:6法',
+      name: 'Метод 4:6 Тэцу Касуи',
       params: {
         coffee: '20g',
         water: '300g',
         ratio: '1:15',
-        grindSize: '中细偏粗',
+        grindSize: 'Средне-мелкий, ближе к среднему',
         temp: '96°C',
         stages: [
           // 原: time=45, pourTime=10, water=50g → duration=10, wait=35
           {
             pourType: 'circle',
-            label: '绕圈注水 (1/2)',
+            label: 'Пролив по кругу (1/2)',
             water: '50',
             duration: 10,
-            detail: '甜度控制，中心圆形注水，确保均匀浸润',
+            detail: 'Контроль сладости: круги в центре для равномерного смачивания',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 35,
             detail: '',
           },
           // 原: time=90, pourTime=7, water=120g → duration=7, wait=38, stageWater=70
           {
             pourType: 'circle',
-            label: '绕圈注水 (2/2)',
+            label: 'Пролив по кругу (2/2)',
             water: '70',
             duration: 7,
-            detail: '甜度控制，大水流中心圆形注水',
+            detail: 'Контроль сладости: сильная струя кругами в центре',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 38,
             detail: '',
           },
           // 原: time=130, pourTime=4, water=180g → duration=4, wait=36, stageWater=60
           {
             pourType: 'circle',
-            label: '绕圈注水 (1/3)',
+            label: 'Пролив по кругу (1/3)',
             water: '60',
             duration: 4,
-            detail: '酸度控制，大水流中心向外螺旋注水',
+            detail: 'Контроль кислотности: сильная струя спиралью от центра',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 36,
             detail: '',
           },
           // 原: time=165, pourTime=4, water=240g → duration=4, wait=31, stageWater=60
           {
             pourType: 'circle',
-            label: '绕圈注水 (2/3)',
+            label: 'Пролив по кругу (2/3)',
             water: '60',
             duration: 4,
-            detail: '酸度控制，大水流中心向外螺旋注水',
+            detail: 'Контроль кислотности: сильная струя спиралью от центра',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 31,
             detail: '',
           },
           // 原: time=210, pourTime=4, water=300g → duration=4, wait=41, stageWater=60
           {
             pourType: 'circle',
-            label: '绕圈注水 (3/3)',
+            label: 'Пролив по кругу (3/3)',
             water: '60',
             duration: 4,
-            detail: '酸度控制，大水流中心向外螺旋注水',
+            detail: 'Контроль кислотности: сильная струя спиралью от центра',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 41,
             detail: '',
           },
@@ -442,48 +442,48 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '队长无差别冲煮法',
+      name: 'Универсальный рецепт капитана',
       params: {
         coffee: '15g',
         water: '225g',
         ratio: '1:15',
-        grindSize: '中细偏粗',
+        grindSize: 'Средне-мелкий, ближе к среднему',
         temp: '92°C',
         stages: [
           // 原: time=30, pourTime=10, water=30g → duration=10, wait=20
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '30',
             duration: 10,
-            detail: '（1:2）中心向外绕圈，确保均匀萃取',
+            detail: '(1:2) Круги от центра наружу для равномерной экстракции',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 20,
             detail: '',
           },
           // 原: time=60, pourTime=30, water=120g → duration=30, stageWater=90
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '90',
             duration: 30,
-            detail: '（1:6）中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: '(1:6) Медленные круги от центра наружу для равномерной экстракции',
           },
           // 原: time=100, pourTime=30, water=225g → duration=30, wait=10, stageWater=105
           {
             pourType: 'center',
-            label: '中心注水',
+            label: 'Пролив в центр',
             water: '105',
             duration: 30,
             detail:
-              '（1:X）中心定点注水，初始X值建议5(1:5)，可根据风味调整：过淡用4(1:4)，过浓用6(1:6)',
+              '(1:X) Пролив точно в центр; начните с X=5 (1:5) и подстройте по вкусу: слабо — 4 (1:4), крепко — 6 (1:6)',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 10,
             detail: '',
           },
@@ -491,55 +491,55 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '温水细粉慢冲LtFS',
+      name: 'Тёплая вода, мелкий помол, медленно (LtFS)',
       params: {
         coffee: '12g',
         water: '200g',
         ratio: '1:16.7',
-        grindSize: '细（摩卡壶研磨度）',
+        grindSize: 'Мелкий (как для гейзерной кофеварки)',
         temp: '45°C',
         stages: [
           // 原: time=90, pourTime=20, water=36g → duration=20, wait=70
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '36',
             duration: 20,
             detail:
-              '平铺表面，相当于闷蒸 - 快速湿润与尽量不搅动粉层的方式来进行类闷蒸处理',
+              'Разровняйте поверхность — это как блуминг: быстро смочите кофе, стараясь не перемешивать слой',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 70,
             detail: '',
           },
           // 原: time=240, pourTime=42, water=116g → duration=42, wait=108, stageWater=80
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '80',
             duration: 42,
-            detail: '第一段注水后等液面降至粉下后，再进行第二段注水',
+            detail: 'После первого пролива дождитесь, пока вода уйдёт ниже кофе, затем второй пролив',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 108,
             detail: '',
           },
           // 原: time=360, pourTime=60, water=200g → duration=60, wait=60, stageWater=84
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '84',
             duration: 60,
             detail:
-              '第二段注水后等液面降至粉下后，再进行第三段注水。注水完成后等待滴落状态至滴水时，即完成，之后可依据习惯添加水至喜欢的浓淡即可',
+              'После второго пролива дождитесь, пока вода уйдёт ниже кофе, затем третий. Когда пойдут отдельные капли — готово, дальше можно долить воды по вкусу',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 60,
             detail: '',
           },
@@ -547,67 +547,67 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '张师傅1:2:3冲煮法',
+      name: 'Метод мастера Чжана 1:2:3',
       params: {
         coffee: '16g',
         water: '240g',
         ratio: '1:15',
-        grindSize: '中细',
+        grindSize: 'Средне-мелкий',
         temp: '92°C',
         stages: [
           // 原: time=25, pourTime=15, water=40g → duration=15, wait=10
           {
             pourType: 'circle',
-            label: '焖蒸（绕圈注水）',
+            label: 'Блуминг (пролив по кругу)',
             water: '40',
             duration: 15,
-            detail: '中心向外绕圈，确保均匀萃取',
+            detail: 'Круги от центра наружу для равномерной экстракции',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 10,
             detail: '',
           },
           // 原: time=55, pourTime=20, water=120g → duration=20, wait=10, stageWater=80
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '80',
             duration: 20,
-            detail: '中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: 'Медленные круги от центра наружу, равномерная экстракция',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 10,
             detail: '',
           },
           // 原: time=70, pourTime=10, water=190g → duration=10, wait=5, stageWater=70
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '70',
             duration: 10,
-            detail: '中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: 'Медленные круги от центра наружу, равномерная экстракция',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 5,
             detail: '',
           },
           // 原: time=95, pourTime=5, water=240g → duration=5, wait=20, stageWater=50
           {
             pourType: 'center',
-            label: '中心注水',
+            label: 'Пролив в центр',
             water: '50',
             duration: 5,
-            detail: '中心定点大水流注水',
+            detail: 'Сильная струя точно в центр',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 20,
             detail: '',
           },
@@ -615,53 +615,53 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '冰手冲',
+      name: 'Айс-пуровер',
       params: {
         coffee: '20g',
         water: '200g',
         ratio: '1:10',
-        grindSize: '中细',
+        grindSize: 'Средне-мелкий',
         temp: '96°C',
         stages: [
           // 原: time=40, pourTime=10, water=40g → duration=10, wait=30
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '40',
             duration: 10,
-            detail: '(分享壶中预先放入50g冰块) 绕圈注水，确保均匀萃取',
+            detail: '(в сервер заранее положите 50 г льда) пролив по кругу для равномерной экстракции',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 30,
             detail: '',
           },
           // 原: time=70, pourTime=10, water=120g → duration=10, wait=20, stageWater=80
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '80',
             duration: 10,
-            detail: '绕圈注水，继续萃取',
+            detail: 'Пролив по кругу, продолжаем экстракцию',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 20,
             detail: '',
           },
           // 原: time=120, pourTime=10, water=200g → duration=10, wait=40, stageWater=80
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '80',
             duration: 10,
-            detail: '绕圈注水至边缘，完成后杯中加满新鲜冰块',
+            detail: 'Пролив по кругу до края, затем доверху засыпьте свежий лёд',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 40,
             detail: '',
           },
@@ -669,20 +669,20 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '夏季八冲',
+      name: 'Летние восемь проливов',
       params: {
         coffee: '0g',
         water: '0g',
         ratio: '1:0',
-        grindSize: '(略)',
+        grindSize: '(пропущено)',
         temp: '0°C',
         stages: [
           {
             pourType: 'other',
-            label: '(略)',
+            label: '(пропущено)',
             water: '0',
             duration: 0,
-            detail: '(略)',
+            detail: '(пропущено)',
           },
         ],
       },
@@ -690,56 +690,56 @@ export const brewingMethods: BrewingMethods = {
   ],
   CleverDripper: [
     {
-      name: '简单冲煮方案',
+      name: 'Простой рецепт',
       params: {
         coffee: '16g',
         water: '240g',
         ratio: '1:15',
-        grindSize: '中细',
+        grindSize: 'Средне-мелкий',
         temp: '97°C',
         stages: [
           // 原: time=180, pourTime=10, water=240g → duration=10, wait=170
           {
             pourType: 'circle',
-            label: '[关阀]加水',
+            label: '[клапан закрыт]залить воду',
             water: '240',
             duration: 10,
-            detail: '关闭阀门，加入热水',
+            detail: 'Закройте клапан и залейте горячую воду',
             valveStatus: 'closed',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 170,
             detail: '',
           },
           // 原: time=240, pourTime=0, water=240g → duration=60 (开阀等待过滤)
           {
             pourType: 'other',
-            label: '[开阀]等待过滤完成',
+            label: '[клапан открыт]дождаться фильтрации',
             water: '0',
             duration: 60,
-            detail: '打开阀门，等待过滤完成即可饮用',
+            detail: 'Откройте клапан, дождитесь, пока всё стечёт, — и можно пить',
             valveStatus: 'open',
           },
         ],
       },
     },
     {
-      name: '夏季八冲',
+      name: 'Летние восемь проливов',
       params: {
         coffee: '0g',
         water: '0g',
         ratio: '1:0',
-        grindSize: '(略)',
+        grindSize: '(пропущено)',
         temp: '0°C',
         stages: [
           {
             pourType: 'other',
-            label: '(略)',
+            label: '(пропущено)',
             water: '0',
             duration: 0,
-            detail: '(略)',
+            detail: '(пропущено)',
             valveStatus: 'open',
           },
         ],
@@ -748,53 +748,53 @@ export const brewingMethods: BrewingMethods = {
   ],
   Kalita: [
     {
-      name: '三段式',
+      name: 'Три пролива',
       params: {
         coffee: '15g',
         water: '225g',
         ratio: '1:15',
-        grindSize: '中细',
+        grindSize: 'Средне-мелкий',
         temp: '92°C',
         stages: [
           // 原: time=30, pourTime=10, water=30g → duration=10, wait=20
           {
             pourType: 'circle',
-            label: '焖蒸(绕圈注水)',
+            label: 'Блуминг (пролив по кругу)',
             water: '30',
             duration: 10,
-            detail: '中心向外绕圈，确保均匀萃取',
+            detail: 'Круги от центра наружу для равномерной экстракции',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 20,
             detail: '',
           },
           // 原: time=70, pourTime=10, water=140g → duration=10, wait=30, stageWater=110
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '110',
             duration: 10,
-            detail: '中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: 'Медленные круги от центра наружу, равномерная экстракция',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 30,
             detail: '',
           },
           // 原: time=120, pourTime=40, water=225g → duration=40, wait=10, stageWater=85
           {
             pourType: 'center',
-            label: '中心注水',
+            label: 'Пролив в центр',
             water: '85',
             duration: 40,
-            detail: '中心定点注水，降低萃取率',
+            detail: 'Пролив точно в центр, экстракция ниже',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 10,
             detail: '',
           },
@@ -802,55 +802,55 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '温水细粉慢冲LtFS',
+      name: 'Тёплая вода, мелкий помол, медленно (LtFS)',
       params: {
         coffee: '12g',
         water: '200g',
         ratio: '1:16.7',
-        grindSize: '细（摩卡壶研磨度）',
+        grindSize: 'Мелкий (как для гейзерной кофеварки)',
         temp: '45°C',
         stages: [
           // 原: time=90, pourTime=20, water=36g → duration=20, wait=70
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '36',
             duration: 20,
             detail:
-              '平铺表面，相当于闷蒸 - 快速湿润与尽量不搅动粉层的方式来进行类闷蒸处理',
+              'Разровняйте поверхность — это как блуминг: быстро смочите кофе, стараясь не перемешивать слой',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 70,
             detail: '',
           },
           // 原: time=240, pourTime=42, water=116g → duration=42, wait=108, stageWater=80
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '80',
             duration: 42,
-            detail: '第一段注水后等液面降至粉下后，再进行第二段注水',
+            detail: 'После первого пролива дождитесь, пока вода уйдёт ниже кофе, затем второй пролив',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 108,
             detail: '',
           },
           // 原: time=360, pourTime=60, water=200g → duration=60, wait=60, stageWater=84
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '84',
             duration: 60,
             detail:
-              '第二段注水后等液面降至粉下后，再进行第三段注水。注水完成后等待滴落状态至滴水时，即完成，之后可依据习惯添加水至喜欢的浓淡即可',
+              'После второго пролива дождитесь, пока вода уйдёт ниже кофе, затем третий. Когда пойдут отдельные капли — готово, дальше можно долить воды по вкусу',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 60,
             detail: '',
           },
@@ -858,48 +858,48 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '队长无差别冲煮法',
+      name: 'Универсальный рецепт капитана',
       params: {
         coffee: '15g',
         water: '225g',
         ratio: '1:15',
-        grindSize: '中细偏粗',
+        grindSize: 'Средне-мелкий, ближе к среднему',
         temp: '92°C',
         stages: [
           // 原: time=30, pourTime=10, water=30g → duration=10, wait=20
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '30',
             duration: 10,
-            detail: '（1:2）中心向外绕圈，确保均匀萃取',
+            detail: '(1:2) Круги от центра наружу для равномерной экстракции',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 20,
             detail: '',
           },
           // 原: time=60, pourTime=30, water=120g → duration=30, stageWater=90
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '90',
             duration: 30,
-            detail: '（1:6）中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: '(1:6) Медленные круги от центра наружу для равномерной экстракции',
           },
           // 原: time=100, pourTime=30, water=225g → duration=30, wait=10, stageWater=105
           {
             pourType: 'center',
-            label: '中心注水',
+            label: 'Пролив в центр',
             water: '105',
             duration: 30,
             detail:
-              '（1:X）中心定点注水，初始X值建议5(1:5)，可根据风味调整：过淡用4(1:4)，过浓用6(1:6)',
+              '(1:X) Пролив точно в центр; начните с X=5 (1:5) и подстройте по вкусу: слабо — 4 (1:4), крепко — 6 (1:6)',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 10,
             detail: '',
           },
@@ -907,20 +907,20 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '夏季八冲',
+      name: 'Летние восемь проливов',
       params: {
         coffee: '0g',
         water: '0g',
         ratio: '1:0',
-        grindSize: '(略)',
+        grindSize: '(пропущено)',
         temp: '0°C',
         stages: [
           {
             pourType: 'other',
-            label: '(略)',
+            label: '(пропущено)',
             water: '0',
             duration: 0,
-            detail: '(略)',
+            detail: '(пропущено)',
           },
         ],
       },
@@ -928,53 +928,53 @@ export const brewingMethods: BrewingMethods = {
   ],
   Origami: [
     {
-      name: '三段式',
+      name: 'Три пролива',
       params: {
         coffee: '15g',
         water: '225g',
         ratio: '1:15',
-        grindSize: '中细',
+        grindSize: 'Средне-мелкий',
         temp: '92°C',
         stages: [
           // 原: time=30, pourTime=10, water=30g → duration=10, wait=20
           {
             pourType: 'circle',
-            label: '焖蒸(绕圈注水)',
+            label: 'Блуминг (пролив по кругу)',
             water: '30',
             duration: 10,
-            detail: '中心向外绕圈，确保均匀萃取',
+            detail: 'Круги от центра наружу для равномерной экстракции',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 20,
             detail: '',
           },
           // 原: time=70, pourTime=15, water=140g → duration=15, wait=25, stageWater=110
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '110',
             duration: 15,
-            detail: '中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: 'Медленные круги от центра наружу, равномерная экстракция',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 25,
             detail: '',
           },
           // 原: time=120, pourTime=20, water=225g → duration=20, wait=30, stageWater=85
           {
             pourType: 'center',
-            label: '中心注水',
+            label: 'Пролив в центр',
             water: '85',
             duration: 20,
-            detail: '中心定点注水，降低萃取率',
+            detail: 'Пролив точно в центр, экстракция ниже',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 30,
             detail: '',
           },
@@ -982,55 +982,55 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '温水细粉慢冲LtFS',
+      name: 'Тёплая вода, мелкий помол, медленно (LtFS)',
       params: {
         coffee: '12g',
         water: '200g',
         ratio: '1:16.7',
-        grindSize: '细（摩卡壶研磨度）',
+        grindSize: 'Мелкий (как для гейзерной кофеварки)',
         temp: '45°C',
         stages: [
           // 原: time=90, pourTime=20, water=36g → duration=20, wait=70
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '36',
             duration: 20,
             detail:
-              '平铺表面，相当于闷蒸 - 快速湿润与尽量不搅动粉层的方式来进行类闷蒸处理',
+              'Разровняйте поверхность — это как блуминг: быстро смочите кофе, стараясь не перемешивать слой',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 70,
             detail: '',
           },
           // 原: time=240, pourTime=42, water=116g → duration=42, wait=108, stageWater=80
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '80',
             duration: 42,
-            detail: '第一段注水后等液面降至粉下后，再进行第二段注水',
+            detail: 'После первого пролива дождитесь, пока вода уйдёт ниже кофе, затем второй пролив',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 108,
             detail: '',
           },
           // 原: time=360, pourTime=60, water=200g → duration=60, wait=60, stageWater=84
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '84',
             duration: 60,
             detail:
-              '第二段注水后等液面降至粉下后，再进行第三段注水。注水完成后等待滴落状态至滴水时，即完成，之后可依据习惯添加水至喜欢的浓淡即可',
+              'После второго пролива дождитесь, пока вода уйдёт ниже кофе, затем третий. Когда пойдут отдельные капли — готово, дальше можно долить воды по вкусу',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 60,
             detail: '',
           },
@@ -1038,48 +1038,48 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '队长无差别冲煮法',
+      name: 'Универсальный рецепт капитана',
       params: {
         coffee: '15g',
         water: '225g',
         ratio: '1:15',
-        grindSize: '中细偏粗',
+        grindSize: 'Средне-мелкий, ближе к среднему',
         temp: '92°C',
         stages: [
           // 原: time=30, pourTime=10, water=30g → duration=10, wait=20
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '30',
             duration: 10,
-            detail: '（1:2）中心向外绕圈，确保均匀萃取',
+            detail: '(1:2) Круги от центра наружу для равномерной экстракции',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 20,
             detail: '',
           },
           // 原: time=60, pourTime=30, water=120g → duration=30, stageWater=90
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '90',
             duration: 30,
-            detail: '（1:6）中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: '(1:6) Медленные круги от центра наружу для равномерной экстракции',
           },
           // 原: time=100, pourTime=30, water=225g → duration=30, wait=10, stageWater=105
           {
             pourType: 'center',
-            label: '中心注水',
+            label: 'Пролив в центр',
             water: '105',
             duration: 30,
             detail:
-              '（1:X）中心定点注水，初始X值建议5(1:5)，可根据风味调整：过淡用4(1:4)，过浓用6(1:6)',
+              '(1:X) Пролив точно в центр; начните с X=5 (1:5) и подстройте по вкусу: слабо — 4 (1:4), крепко — 6 (1:6)',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 10,
             detail: '',
           },
@@ -1087,20 +1087,20 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '夏季八冲',
+      name: 'Летние восемь проливов',
       params: {
         coffee: '0g',
         water: '0g',
         ratio: '1:0',
-        grindSize: '(略)',
+        grindSize: '(пропущено)',
         temp: '0°C',
         stages: [
           {
             pourType: 'other',
-            label: '(略)',
+            label: '(пропущено)',
             water: '0',
             duration: 0,
-            detail: '(略)',
+            detail: '(пропущено)',
           },
         ],
       },
@@ -1108,63 +1108,63 @@ export const brewingMethods: BrewingMethods = {
   ],
   Orea: [
     {
-      name: '杜嘉宁十克萃',
+      name: 'Ду Цзянин 10 г',
       params: {
         coffee: '10g',
         water: '150g',
         ratio: '1:15',
-        grindSize: '中细',
+        grindSize: 'Средне-мелкий',
         temp: '93°C',
         stages: [
           {
             pourType: 'circle',
-            label: '大力绕圈',
+            label: 'Энергичные круги',
             water: '40',
             duration: 5,
-            detail: '充分搅拌，激发风味强度',
+            detail: 'Тщательно перемешайте, чтобы раскрыть вкус',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 15,
             detail: '',
           },
           {
             pourType: 'circle',
-            label: '大力绕圈',
+            label: 'Энергичные круги',
             water: '40',
             duration: 5,
-            detail: '充分搅拌，激发风味强度',
+            detail: 'Тщательно перемешайте, чтобы раскрыть вкус',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 15,
             detail: '',
           },
           {
             pourType: 'circle',
-            label: '缓慢绕圈',
+            label: 'Медленные круги',
             water: '40',
             duration: 5,
-            detail: '温柔搅拌，保证咖啡触感',
+            detail: 'Аккуратно перемешайте, чтобы сохранить текстуру',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 15,
             detail: '',
           },
           {
             pourType: 'center',
-            label: '中心注水',
+            label: 'Пролив в центр',
             water: '30',
             duration: 5,
-            detail: '注入剩余水量，可在150-160ml之间',
+            detail: 'Влейте остаток воды, 150–160 мл',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 65,
             detail: '',
           },
@@ -1172,63 +1172,63 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '十二克四段式',
+      name: '12 г, четыре пролива',
       params: {
         coffee: '12g',
         water: '200g',
         ratio: '1:16.7',
-        grindSize: '中细',
+        grindSize: 'Средне-мелкий',
         temp: '94°C',
         stages: [
           {
             pourType: 'circle',
-            label: '焖蒸(绕圈注水)',
+            label: 'Блуминг (пролив по кругу)',
             water: '40',
             duration: 8,
-            detail: '中心向外绕圈，确保均匀萃取，每段5g/s',
+            detail: 'Круги от центра наружу для равномерной экстракции, 5 г/с на каждый пролив',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 32,
             detail: '',
           },
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '50',
             duration: 10,
-            detail: '中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: 'Медленные круги от центра наружу, равномерная экстракция',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 30,
             detail: '',
           },
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '60',
             duration: 12,
-            detail: '中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: 'Медленные круги от центра наружу, равномерная экстракция',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 18,
             detail: '',
           },
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '50',
             duration: 10,
-            detail: '中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: 'Медленные круги от центра наружу, равномерная экстракция',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 20,
             detail: '',
           },
@@ -1236,63 +1236,63 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '十五克四段式',
+      name: '15 г, четыре пролива',
       params: {
         coffee: '15g',
         water: '225g',
         ratio: '1:15',
-        grindSize: '中细',
+        grindSize: 'Средне-мелкий',
         temp: '93°C',
         stages: [
           {
             pourType: 'circle',
-            label: '焖蒸(绕圈注水)',
+            label: 'Блуминг (пролив по кругу)',
             water: '60',
             duration: 10,
-            detail: '中心向外绕圈，确保均匀萃取',
+            detail: 'Круги от центра наружу для равномерной экстракции',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 10,
             detail: '',
           },
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '60',
             duration: 10,
-            detail: '中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: 'Медленные круги от центра наружу, равномерная экстракция',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 10,
             detail: '',
           },
           {
             pourType: 'center',
-            label: '中心注水',
+            label: 'Пролив в центр',
             water: '60',
             duration: 10,
-            detail: '中心定点注水，降低萃取率',
+            detail: 'Пролив точно в центр, экстракция ниже',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 10,
             detail: '',
           },
           {
             pourType: 'center',
-            label: '中心注水',
+            label: 'Пролив в центр',
             water: '45',
             duration: 8,
-            detail: '中心定点注水，降低萃取率',
+            detail: 'Пролив точно в центр, экстракция ниже',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 62,
             detail: '',
           },
@@ -1300,76 +1300,76 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '十六克五段式',
+      name: '16 г, пять проливов',
       params: {
         coffee: '16g',
         water: '260g',
         ratio: '1:16.25',
-        grindSize: '中细偏粗',
+        grindSize: 'Средне-мелкий, ближе к среднему',
         temp: '96°C',
         stages: [
           {
             pourType: 'circle',
-            label: '焖蒸(绕圈注水)',
+            label: 'Блуминг (пролив по кругу)',
             water: '60',
             duration: 12,
-            detail: '中心向外绕圈，确保均匀萃取，每段5g/s',
+            detail: 'Круги от центра наружу для равномерной экстракции, 5 г/с на каждый пролив',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 28,
             detail: '',
           },
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '50',
             duration: 10,
-            detail: '中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: 'Медленные круги от центра наружу, равномерная экстракция',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 20,
             detail: '',
           },
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '50',
             duration: 10,
-            detail: '中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: 'Медленные круги от центра наружу, равномерная экстракция',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 20,
             detail: '',
           },
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '50',
             duration: 10,
-            detail: '中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: 'Медленные круги от центра наружу, равномерная экстракция',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 20,
             detail: '',
           },
           {
             pourType: 'circle',
-            label: '绕圈注水',
+            label: 'Пролив по кругу',
             water: '50',
             duration: 10,
-            detail: '中心向外缓慢画圈注水，均匀萃取咖啡风味',
+            detail: 'Медленные круги от центра наружу, равномерная экстракция',
           },
           {
             pourType: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             duration: 20,
             detail: '',
           },
@@ -1377,20 +1377,20 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '夏季八冲',
+      name: 'Летние восемь проливов',
       params: {
         coffee: '0g',
         water: '0g',
         ratio: '1:0',
-        grindSize: '(略)',
+        grindSize: '(пропущено)',
         temp: '0°C',
         stages: [
           {
             pourType: 'other',
-            label: '(略)',
+            label: '(пропущено)',
             water: '0',
             duration: 0,
-            detail: '(略)',
+            detail: '(пропущено)',
           },
         ],
       },
@@ -1398,43 +1398,43 @@ export const brewingMethods: BrewingMethods = {
   ],
   Espresso: [
     {
-      name: '浓缩',
+      name: 'Эспрессо',
       params: {
         coffee: '18g',
         water: '36g',
         ratio: '1:2',
-        grindSize: '意式',
+        grindSize: 'Эспрессо',
         temp: '93°C',
         stages: [
           {
             pourType: 'extraction',
-            label: '萃取浓缩',
+            label: 'Экстракция',
             water: '36',
             duration: 25,
-            detail: '标准意式浓缩，风味平衡',
+            detail: 'Классический эспрессо, сбалансированный вкус',
           },
         ],
       },
     },
     {
-      name: '美式',
+      name: 'Американо',
       params: {
         coffee: '18g',
         water: '36g',
         ratio: '1:2',
-        grindSize: '意式',
+        grindSize: 'Эспрессо',
         temp: '93°C',
         stages: [
           {
             pourType: 'extraction',
-            label: '萃取浓缩',
+            label: 'Экстракция',
             water: '36',
             duration: 25,
-            detail: '标准意式浓缩',
+            detail: 'Классический эспрессо',
           },
           {
             pourType: 'beverage',
-            label: '加入饮用水',
+            label: 'Добавить воду',
             water: '160',
             detail: '',
           },
@@ -1442,24 +1442,24 @@ export const brewingMethods: BrewingMethods = {
       },
     },
     {
-      name: '拿铁',
+      name: 'Латте',
       params: {
         coffee: '18g',
         water: '36g',
         ratio: '1:2',
-        grindSize: '意式',
+        grindSize: 'Эспрессо',
         temp: '93°C',
         stages: [
           {
             pourType: 'extraction',
-            label: '萃取浓缩',
+            label: 'Экстракция',
             water: '36',
             duration: 25,
-            detail: '标准意式浓缩',
+            detail: 'Классический эспрессо',
           },
           {
             pourType: 'beverage',
-            label: '加入牛奶',
+            label: 'Добавить молоко',
             water: '160',
             detail: '',
           },
@@ -1491,7 +1491,7 @@ export function createEditableMethodFromCommon(
 ): Method {
   return {
     id: `method-${Date.now()}`,
-    name: namePrefix ? `${namePrefix}${method.name}` : `${method.name}(自定义)`,
+    name: namePrefix ? `${namePrefix}${method.name}` : `${method.name} (свой)`,
     params: JSON.parse(JSON.stringify(method.params)), // 深拷贝参数
     timestamp: Date.now(),
   };

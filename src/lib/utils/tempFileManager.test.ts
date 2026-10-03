@@ -64,7 +64,7 @@ describe('TempFileManager image saving', () => {
     expect(share).toHaveBeenCalledOnce();
     expect(share).toHaveBeenCalledWith({
       files: [expect.any(File)],
-      title: 'Brew Guide 图片',
+      title: 'Фото Cultura Brew',
     });
     expect(downloadClick).not.toHaveBeenCalled();
     expect(outcome).toBe('shared');
@@ -187,9 +187,9 @@ describe('TempFileManager image sharing', () => {
       'data:image/png;base64,iVBORw0KGgo=',
       'brew-notes',
       {
-        title: '我的咖啡冲煮笔记',
-        text: '我的咖啡冲煮笔记',
-        dialogTitle: '分享我的咖啡冲煮笔记',
+        title: 'Мои заметки о заварке кофе',
+        text: 'Мои заметки о заварке кофе',
+        dialogTitle: 'Делюсь своими заметками о заварке кофе',
       }
     );
 
@@ -237,9 +237,9 @@ describe('TempFileManager image sharing', () => {
       'data:image/png;base64,iVBORw0KGgo=',
       'brew-notes',
       {
-        title: '我的咖啡冲煮笔记',
-        text: '我的咖啡冲煮笔记',
-        dialogTitle: '分享我的咖啡冲煮笔记',
+        title: 'Мои заметки о заварке кофе',
+        text: 'Мои заметки о заварке кофе',
+        dialogTitle: 'Делюсь своими заметками о заварке кофе',
       }
     );
 
@@ -287,9 +287,9 @@ describe('TempFileManager binary sharing', () => {
       new Blob(['zip'], { type: 'application/zip' }),
       'coffee-beans.zip',
       {
-        title: '分享咖啡豆',
-        text: '2 款咖啡豆',
-        dialogTitle: '分享咖啡豆',
+        title: 'Поделиться зерном',
+        text: '2 шт. зерна',
+        dialogTitle: 'Поделиться зерном',
       }
     );
 
@@ -330,9 +330,9 @@ describe('TempFileManager JSON saving', () => {
       '{"beans":[]}',
       'brew-guide-data.json',
       {
-        title: '导出数据',
-        text: '请选择保存位置',
-        dialogTitle: '导出数据',
+        title: 'Выгрузить данные',
+        text: 'Выберите, куда сохранить',
+        dialogTitle: 'Выгрузить данные',
       }
     );
 
@@ -395,7 +395,7 @@ describe('TempFileManager JSON saving', () => {
         jsonData: '{"beans":[]}',
         fileName: 'brew-guide-data',
       })
-    ).rejects.toThrow('分享需要再次点击');
+    ).rejects.toThrow('Чтобы поделиться, нажмите ещё раз');
 
     await expect(
       exportJsonFile({

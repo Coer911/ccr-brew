@@ -27,7 +27,7 @@ const ensureJsonFileName = (fileName: string): string => {
   const trimmedFileName = fileName.trim();
 
   if (!trimmedFileName) {
-    throw new Error('导出文件名不能为空');
+    throw new Error('Имя файла экспорта не может быть пустым');
   }
 
   return trimmedFileName.endsWith(JSON_EXTENSION)
@@ -38,9 +38,9 @@ const ensureJsonFileName = (fileName: string): string => {
 export async function exportJsonFile({
   jsonData,
   fileName,
-  title = '导出数据',
-  text = '请选择保存位置',
-  dialogTitle = '导出数据',
+  title = 'Выгрузить данные',
+  text = 'Выберите, куда сохранить',
+  dialogTitle = 'Выгрузить данные',
   returnIncompleteResult = false,
 }: JsonExportOptions): Promise<JsonExportResult> {
   const normalizedFileName = ensureJsonFileName(fileName);
@@ -51,11 +51,11 @@ export async function exportJsonFile({
   });
 
   if (!returnIncompleteResult && mode === 'activation-required') {
-    throw new Error('分享需要再次点击');
+    throw new Error('Чтобы поделиться, нажмите ещё раз');
   }
 
   if (!returnIncompleteResult && mode === 'cancelled') {
-    throw new Error('已取消分享');
+    throw new Error('Отправка отменена');
   }
 
   return {

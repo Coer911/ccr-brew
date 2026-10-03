@@ -65,7 +65,7 @@ const NoteFormHeader: React.FC<NoteFormHeaderProps> = ({
     <div className="flex w-full items-center justify-between">
       <div className="flex items-baseline">
         <span className="text-xs font-medium tracking-widest text-neutral-500 dark:text-neutral-400">
-          新建记录 ·
+          Новая запись ·
         </span>
 
         {/* 可点击的日期部分 */}

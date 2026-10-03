@@ -95,9 +95,9 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
   };
   const currentBean = isAddMode ? tempBean : bean;
   const isGreenBeanType = currentBean?.beanState === 'green';
-  const merchantLabel = isGreenBeanType ? '生豆商' : '烘焙商';
-  const fullNameInputLabel = `${merchantLabel}和咖啡豆名称`;
-  const fullNameInputHint = `格式：${merchantLabel} 咖啡豆名称`;
+  const merchantLabel = isGreenBeanType ? 'Поставщик' : 'Обжарщик';
+  const fullNameInputLabel = `${merchantLabel} и название зерна`;
+  const fullNameInputHint = `Формат: ${merchantLabel} название зерна`;
   const flavorInfo = getFlavorInfo(bean);
   const blendComponentSuggestions = useBlendComponentSuggestions();
   const roasterSuggestions = useRoasterSuggestions(!!roasterFieldEnabled);
@@ -107,7 +107,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
 
   // 日期相关
   const dateField = isGreenBeanType ? 'purchaseDate' : 'roastDate';
-  const dateLabel = isGreenBeanType ? '购买日期' : '烘焙日期';
+  const dateLabel = isGreenBeanType ? 'Дата покупки' : 'Дата обжарки';
   const dateValue = isGreenBeanType
     ? currentBean?.purchaseDate
     : currentBean?.roastDate;
@@ -199,7 +199,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
               onChange={value => {
                 void handleUpdateField({ roaster: value });
               }}
-              placeholder={`${merchantLabel}名称`}
+              placeholder={`${merchantLabel} название`}
               suggestions={roasterSuggestions.suggestions}
               clearable
               inputMode="text"
@@ -213,7 +213,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
               type="text"
               value={tempBean.name || ''}
               onChange={e => handleNameChange(e.target.value)}
-              placeholder="咖啡豆名称"
+              placeholder="Название зерна"
               className="min-w-0 border-b border-dashed border-neutral-300 bg-transparent pb-1 text-sm font-medium text-neutral-800 outline-none placeholder:text-neutral-400 focus:border-neutral-500 dark:border-neutral-600 dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:border-neutral-400"
             />
           </div>
@@ -223,7 +223,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
             type="text"
             value={tempBean.name || ''}
             onChange={e => handleNameChange(e.target.value)}
-            placeholder={`输入${merchantLabel} 咖啡豆名称`}
+            placeholder={`Введите ${merchantLabel} название зерна`}
             aria-label={fullNameInputLabel}
             title={fullNameInputHint}
             className="w-full border-b border-dashed border-neutral-300 bg-transparent pb-1 text-sm font-medium text-neutral-800 outline-none placeholder:text-neutral-400 focus:border-neutral-500 dark:border-neutral-600 dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:border-neutral-400"
@@ -248,7 +248,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         {(isAddMode || (currentBean?.capacity && currentBean?.remaining)) && (
           <div className="flex items-start">
             <div className="w-16 shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-              容量
+              Вес
             </div>
             <div
               className={`flex min-h-4 items-center ${detailValueGapClass} text-xs leading-4 font-medium`}
@@ -296,7 +296,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                   {currentBean?.remaining
                     ? formatNumber(currentBean.remaining)
                     : isAddMode
-                      ? '剩余'
+                      ? 'Осталось'
                       : '0'}
                 </span>
               )}
@@ -341,11 +341,11 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                   {currentBean?.capacity
                     ? formatNumber(currentBean.capacity)
                     : isAddMode
-                      ? '总量'
+                      ? 'Всего'
                       : '0'}
                 </span>
               )}
-              <span className="text-neutral-800 dark:text-neutral-100">克</span>
+              <span className="text-neutral-800 dark:text-neutral-100">г</span>
 
               {isEditMode && onRepurchase && (
                 <>
@@ -354,9 +354,9 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                     type="button"
                     onClick={onRepurchase}
                     className="cursor-pointer bg-neutral-100/50 px-1.5 py-0.5 text-xs font-medium whitespace-nowrap text-neutral-400 transition-colors hover:text-neutral-600 dark:bg-neutral-800/50 dark:text-neutral-500 dark:hover:text-neutral-300"
-                    title="续购"
+                    title="Докупить"
                   >
-                    续购
+                    Докупить
                   </button>
                 </>
               )}
@@ -368,7 +368,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         {(isAddMode || currentBean?.price) && (
           <div className="flex items-start">
             <div className="w-16 shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-              价格
+              Цена
             </div>
             <div className="flex items-center gap-1 text-xs font-medium">
               {editingPrice ? (
@@ -399,14 +399,14 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                       : 'text-neutral-400 dark:text-neutral-500'
                   }`}
                 >
-                  {currentBean?.price || (isAddMode ? '输入' : '')}
+                  {currentBean?.price || (isAddMode ? 'Введите' : '')}
                 </span>
               )}
               {(isAddMode || currentBean?.price) && (
                 <span className="text-neutral-800 dark:text-neutral-100">
-                  元
+                  ₽
                   {hasValidUnitPrice &&
-                    ` (${(priceNumber / capacityNumber).toFixed(2)} 元/克)`}
+                    ` (${(priceNumber / capacityNumber).toFixed(2)} ₽/г)`}
                 </span>
               )}
             </div>
@@ -426,7 +426,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                 <DatePicker
                   date={undefined}
                   onDateChange={date => handleDateChange(date, dateField)}
-                  placeholder="在途"
+                  placeholder="В пути"
                   className="w-auto leading-4 [&_button]:h-4 [&_button]:w-auto [&_button]:items-center [&_button]:justify-start [&_button]:border-0 [&_button]:py-0 [&_button]:text-xs [&_button]:leading-4 [&_button]:font-medium [&_button>span]:leading-4 [&_button>span]:text-neutral-800 dark:[&_button>span]:text-neutral-100"
                   displayFormat="yyyy-MM-dd"
                 />
@@ -435,13 +435,13 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                   <DatePicker
                     date={parseDateString(dateValue)}
                     onDateChange={date => handleDateChange(date, dateField)}
-                    placeholder={`选择${dateLabel}`}
+                    placeholder={`Выберите ${dateLabel}`}
                     className="w-auto leading-4 [&_button]:h-4 [&_button]:w-auto [&_button]:items-center [&_button]:justify-start [&_button]:border-0 [&_button]:py-0 [&_button]:text-xs [&_button]:leading-4 [&_button]:font-medium [&_button>span]:leading-4"
                     displayFormat="yyyy-MM-dd"
                   />
                   {agingDays !== null && agingDays > 0 && (
                     <span className="whitespace-nowrap text-neutral-800 dark:text-neutral-100">
-                      {`(已养豆 ${agingDays} 天)`}
+                      {`(отдых ${agingDays} дн.)`}
                     </span>
                   )}
                   {/* 添加模式：在途状态选项 */}
@@ -452,7 +452,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                         onClick={() => handleUpdateField({ isInTransit: true })}
                         className="cursor-pointer bg-neutral-100/50 px-1.5 py-0.5 text-xs font-medium whitespace-nowrap text-neutral-400 dark:bg-neutral-800/50 dark:text-neutral-500"
                       >
-                        在途
+                        В пути
                       </span>
                     </>
                   )}
@@ -466,12 +466,12 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         {!isGreenBeanType &&
           !isOutOfStock &&
           flavorInfo &&
-          flavorInfo.phase !== '未知' &&
-          flavorInfo.phase !== '在途' &&
+          flavorInfo.phase !== 'Неизвестно' &&
+          flavorInfo.phase !== 'В пути' &&
           !isAddMode && (
             <div className="flex items-start">
               <div className="w-16 shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                赏味期
+                Лучший период
               </div>
               <div className="text-xs font-medium text-neutral-800 dark:text-neutral-100">
                 {flavorInfo.status}

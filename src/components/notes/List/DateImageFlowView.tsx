@@ -33,9 +33,9 @@ const formatChineseDate = (
   const day = date.getDate();
 
   if (showYear) {
-    return `${year}年${month}月${day}日`;
+    return `${year} г. ${month}.${day}`;
   } else {
-    return `${month}月${day}日`;
+    return `${month}.${day}`;
   }
 };
 
@@ -133,7 +133,7 @@ const DateImageFlowView: React.FC<DateImageFlowViewProps> = ({
                 formatNoteBeanDisplayName(note.coffeeBeanInfo, {
                   roasterFieldEnabled,
                   roasterSeparator,
-                }) || '未知豆子';
+                }) || 'Неизвестное зерно';
               const isSelected = selectedNotes.includes(note.id);
 
               return (

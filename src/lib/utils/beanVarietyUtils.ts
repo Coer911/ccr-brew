@@ -508,12 +508,12 @@ export enum FlavorPeriodStatus {
  * 赏味期状态显示名称
  */
 export const FLAVOR_PERIOD_LABELS: Record<FlavorPeriodStatus, string> = {
-  [FlavorPeriodStatus.AGING]: '养豆期',
-  [FlavorPeriodStatus.OPTIMAL]: '赏味期',
-  [FlavorPeriodStatus.DECLINE]: '衰退期',
-  [FlavorPeriodStatus.FROZEN]: '冷冻',
-  [FlavorPeriodStatus.IN_TRANSIT]: '在途',
-  [FlavorPeriodStatus.UNKNOWN]: '未知',
+  [FlavorPeriodStatus.AGING]: 'Отдых',
+  [FlavorPeriodStatus.OPTIMAL]: 'Лучший период',
+  [FlavorPeriodStatus.DECLINE]: 'Угасание',
+  [FlavorPeriodStatus.FROZEN]: 'Заморожено',
+  [FlavorPeriodStatus.IN_TRANSIT]: 'В пути',
+  [FlavorPeriodStatus.UNKNOWN]: 'Неизвестно',
 };
 
 /**
@@ -529,15 +529,15 @@ export const getBeanFlavorPeriodStatus = (
 
   // 将阶段名称映射到枚举值
   switch (flavorInfo.phase) {
-    case '在途':
+    case 'В пути':
       return FlavorPeriodStatus.IN_TRANSIT;
-    case '冷冻':
+    case 'Заморожено':
       return FlavorPeriodStatus.FROZEN;
-    case '养豆期':
+    case 'Отдых':
       return FlavorPeriodStatus.AGING;
-    case '赏味期':
+    case 'Лучший период':
       return FlavorPeriodStatus.OPTIMAL;
-    case '衰退期':
+    case 'Угасание':
       return FlavorPeriodStatus.DECLINE;
     default:
       return FlavorPeriodStatus.UNKNOWN;
@@ -730,7 +730,7 @@ export const beanHasRoaster = (
 export const getBeanDisplayInitial = (
   bean: { name?: string; roaster?: string } | null | undefined
 ): string => {
-  if (!bean) return '豆';
+  if (!bean) return 'Зерно';
 
   // 优先使用烘焙商首字母
   const roaster = getBeanRoasterName(bean);
@@ -743,7 +743,7 @@ export const getBeanDisplayInitial = (
     return bean.name.trim().charAt(0);
   }
 
-  return '豆';
+  return 'Зерно';
 };
 
 /**

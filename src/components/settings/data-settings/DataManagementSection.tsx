@@ -77,8 +77,8 @@ export const DataManagementSection: React.FC<DataManagementSectionProps> = ({
           type: 'info',
           message:
             exportResult.mode === 'activation-required'
-              ? '数据已准备好，请再次点击导出数据'
-              : '已取消导出，可再次点击导出数据',
+              ? 'Данные готовы, нажмите «Экспорт» ещё раз'
+              : 'Экспорт отменён, можно нажать ещё раз',
         });
         return;
       }
@@ -87,12 +87,12 @@ export const DataManagementSection: React.FC<DataManagementSectionProps> = ({
       if (exportResult.mode === 'native-share') {
         setStatus({
           type: 'success',
-          message: '数据导出完成',
+          message: 'Экспорт завершён',
         });
       } else if (exportResult.mode === 'android-document') {
-        setStatus({ type: 'success', message: '数据导出成功，文件已保存' });
+        setStatus({ type: 'success', message: 'Данные экспортированы, файл сохранён' });
       } else {
-        setStatus({ type: 'success', message: '数据导出成功，文件已下载' });
+        setStatus({ type: 'success', message: 'Данные экспортированы, файл скачан' });
       }
 
       try {
@@ -110,7 +110,7 @@ export const DataManagementSection: React.FC<DataManagementSectionProps> = ({
       );
       setStatus({
         type: 'error',
-        message: `导出失败: ${(_error as Error).message}`,
+        message: `Ошибка экспорта: ${(_error as Error).message}`,
       });
     } finally {
       setIsExporting(false);
@@ -145,7 +145,7 @@ export const DataManagementSection: React.FC<DataManagementSectionProps> = ({
         } catch (_error) {
           setStatus({
             type: 'error',
-            message: `导入失败: ${(_error as Error).message}`,
+            message: `Ошибка импорта: ${(_error as Error).message}`,
           });
         } finally {
           if (fileInputRef.current) {
@@ -155,14 +155,14 @@ export const DataManagementSection: React.FC<DataManagementSectionProps> = ({
       };
 
       reader.onerror = () => {
-        setStatus({ type: 'error', message: '读取文件失败' });
+        setStatus({ type: 'error', message: 'Не удалось прочитать файл' });
       };
 
       reader.readAsText(file);
     } catch (_error) {
       setStatus({
         type: 'error',
-        message: `导入失败: ${(_error as Error).message}`,
+        message: `Ошибка импорта: ${(_error as Error).message}`,
       });
     }
   };
@@ -183,7 +183,7 @@ export const DataManagementSection: React.FC<DataManagementSectionProps> = ({
     } catch (_error) {
       setStatus({
         type: 'error',
-        message: `重置失败: ${(_error as Error).message}`,
+        message: `Ошибка сброса: ${(_error as Error).message}`,
       });
     } finally {
       setShowConfirmReset(false);
@@ -194,7 +194,7 @@ export const DataManagementSection: React.FC<DataManagementSectionProps> = ({
     if (isRecompressing) return;
 
     setIsRecompressing(true);
-    setStatus({ type: 'info', message: '正在补压图片...', scope: 'image' });
+    setStatus({ type: 'info', message: 'Сжимаем фото...', scope: 'image' });
     try {
       const { recompressOversizedAppImages } =
         await import('@/lib/images/recompressAppImages');
@@ -205,21 +205,21 @@ export const DataManagementSection: React.FC<DataManagementSectionProps> = ({
         scope: 'image',
         message:
           stats.failedCount > 0
-            ? `补压完成，${stats.failedCount} 张失败`
+            ? `Досжатие готово, ${stats.failedCount} не удалось`
             : stats.compressedCount > 0
-              ? `已补压 ${stats.compressedCount} 张图片`
-              : '没有需要补压的图片',
+              ? `Досжато: ${stats.compressedCount} фото`
+              : 'Нет фото для досжатия',
       });
     } catch (_error) {
       console.error('图片补压失败:', _error);
-      setStatus({ type: 'error', message: '图片补压失败', scope: 'image' });
+      setStatus({ type: 'error', message: 'Не удалось досжать фото', scope: 'image' });
     } finally {
       setIsRecompressing(false);
     }
   };
 
   const recompressImageLabel =
-    isRecompressing || status.scope === 'image' ? status.message : '图片补压';
+    isRecompressing || status.scope === 'image' ? status.message : 'Сжать фото';
   const highlightedSettingId = useScrollToHighlightedSetting(
     `${showConfirmReset}:${isExporting}:${isRecompressing}`
   );
@@ -234,11 +234,11 @@ export const DataManagementSection: React.FC<DataManagementSectionProps> = ({
   return (
     <>
       <div
-        data-settings-search-id={makeSettingRowSearchId('数据管理')}
-        className={`px-6 py-4 transition-colors ${getSearchHighlightClass('数据管理')}`}
+        data-settings-search-id={makeSettingRowSearchId('Управление данными')}
+        className={`px-6 py-4 transition-colors ${getSearchHighlightClass('Управление данными')}`}
       >
         <h3 className="mb-3 text-sm font-medium tracking-wider text-neutral-500 uppercase dark:text-neutral-400">
-          数据管理
+          Управление данными
         </h3>
 
         {status.type && status.scope !== 'image' && (
@@ -258,13 +258,13 @@ export const DataManagementSection: React.FC<DataManagementSectionProps> = ({
         <div className="space-y-3">
           <button
             type="button"
-            data-settings-search-id={makeSettingRowSearchId('导出数据')}
+            data-settings-search-id={makeSettingRowSearchId('Выгрузить данные')}
             onClick={handleExport}
             disabled={isExporting}
-            className={`flex w-full items-center justify-between rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${getSearchHighlightClass('导出数据')}`}
+            className={`flex w-full items-center justify-between rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${getSearchHighlightClass('Выгрузить данные')}`}
           >
             <span>
-              {isExporting ? '导出中...' : '导出数据'}
+              {isExporting ? 'Экспортируем...' : 'Выгрузить данные'}
             </span>
             <ChevronRight className="size-4 text-neutral-400" />
           </button>
@@ -272,17 +272,17 @@ export const DataManagementSection: React.FC<DataManagementSectionProps> = ({
           <div>
             <button
               type="button"
-              data-settings-search-id={makeSettingRowSearchId('导入数据')}
+              data-settings-search-id={makeSettingRowSearchId('Импорт данных')}
               onClick={handleImportClick}
-              className={`flex w-full items-center justify-between rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${getSearchHighlightClass('导入数据')}`}
+              className={`flex w-full items-center justify-between rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${getSearchHighlightClass('Импорт данных')}`}
             >
-              <span>导入数据</span>
+              <span>Импорт данных</span>
               <ChevronRight className="size-4 text-neutral-400" />
             </button>
             <input
               ref={fileInputRef}
               type="file"
-              aria-label="导入数据文件"
+              aria-label="Импорт файла данных"
               accept=".json"
               onChange={handleFileChange}
               className="hidden"
@@ -292,20 +292,20 @@ export const DataManagementSection: React.FC<DataManagementSectionProps> = ({
           {!showConfirmReset ? (
             <button
               type="button"
-              data-settings-search-id={makeSettingRowSearchId('重置数据')}
+              data-settings-search-id={makeSettingRowSearchId('Сброс данных')}
               onClick={() => setShowConfirmReset(true)}
-              className={`flex w-full items-center justify-between rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${getSearchHighlightClass('重置数据')}`}
+              className={`flex w-full items-center justify-between rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${getSearchHighlightClass('Сброс данных')}`}
             >
-              <span>重置数据</span>
+              <span>Сбросить данные</span>
               <ChevronRight className="size-4 text-neutral-400" />
             </button>
           ) : (
             <div
-              data-settings-search-id={makeSettingRowSearchId('重置数据')}
-              className={`space-y-3 rounded bg-neutral-100 p-4 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('重置数据')}`}
+              data-settings-search-id={makeSettingRowSearchId('Сброс данных')}
+              className={`space-y-3 rounded bg-neutral-100 p-4 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('Сброс данных')}`}
             >
               <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
-                确认重置数据？此操作无法撤销
+                Сбросить данные? Это действие нельзя отменить
               </p>
               <div className="flex gap-2">
                 <button
@@ -313,14 +313,14 @@ export const DataManagementSection: React.FC<DataManagementSectionProps> = ({
                   onClick={handleReset}
                   className="flex-1 rounded bg-neutral-200 px-3 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-300 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-600"
                 >
-                  确认重置
+                  Сбросить
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowConfirmReset(false)}
                   className="flex-1 rounded bg-neutral-800 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-900 dark:bg-neutral-600 dark:hover:bg-neutral-500"
                 >
-                  取消
+                  Отмена
                 </button>
               </div>
             </div>
@@ -330,15 +330,15 @@ export const DataManagementSection: React.FC<DataManagementSectionProps> = ({
 
       <div className="px-6 py-4">
         <h3 className="mb-3 text-sm font-medium tracking-wider text-neutral-500 uppercase dark:text-neutral-400">
-          数据操作
+          Действия с данными
         </h3>
 
         <button
           type="button"
-          data-settings-search-id={makeSettingRowSearchId('图片补压')}
+          data-settings-search-id={makeSettingRowSearchId('Сжать фото')}
           onClick={handleRecompressImages}
           disabled={isRecompressing}
-          className={`flex w-full items-center justify-between rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${getSearchHighlightClass('图片补压')}`}
+          className={`flex w-full items-center justify-between rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${getSearchHighlightClass('Сжать фото')}`}
         >
           <span>{recompressImageLabel}</span>
           <ChevronRight className="size-4 text-neutral-400" />

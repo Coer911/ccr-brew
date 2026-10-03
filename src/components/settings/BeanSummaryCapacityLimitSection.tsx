@@ -56,17 +56,17 @@ const BeanSummaryCapacityLimitSection: React.FC<
 
   return (
     <SettingSection
-      title="咖啡豆"
+      title="Зерно"
       footer={
         !settings.enableBeanSummaryCapacityLimit
-          ? '限制咖啡豆概要中的剩余容量显示上限。超过上限时，将以 1 kg+ 这类形式展示。'
+          ? 'Ограничивает показ остатка в кратком обзоре. Сверх лимита показывается как «1 кг+».'
           : !settings.enableBeanSummaryOverflowWrap
-            ? '开启循环显示后，超过上限将从 0 重新累计（不显示 +）。'
+            ? 'С циклическим показом сверх лимита счёт начнётся с 0 (без «+»).'
             : undefined
       }
     >
       <SettingRow
-        label="最大显示容量"
+        label="Максимум для показа"
         isLast={!settings.enableBeanSummaryCapacityLimit}
       >
         <SettingToggle
@@ -78,7 +78,7 @@ const BeanSummaryCapacityLimitSection: React.FC<
       </SettingRow>
       {settings.enableBeanSummaryCapacityLimit && (
         <>
-          <SettingRow label="超过上限循环显示" isSubSetting>
+          <SettingRow label="Циклический показ сверх лимита" isSubSetting>
             <SettingToggle
               checked={settings.enableBeanSummaryOverflowWrap || false}
               onChange={checked =>
@@ -86,12 +86,12 @@ const BeanSummaryCapacityLimitSection: React.FC<
               }
             />
           </SettingRow>
-          <SettingRow label="显示上限" isSubSetting isLast>
+          <SettingRow label="Лимит показа" isSubSetting isLast>
             <SettingPillInput
               value={capacityInput}
               inputMode="numeric"
               suffix="g"
-              placeholder="克数"
+              placeholder="Граммы"
               onChange={value => {
                 const sanitizedValue = value.replace(/\D/g, '');
                 setCapacityInput(sanitizedValue);

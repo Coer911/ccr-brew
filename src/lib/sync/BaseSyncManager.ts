@@ -87,14 +87,14 @@ export abstract class BaseSyncManager {
    */
   async sync(options: SyncOptions = {}): Promise<SyncResult> {
     if (this.syncInProgress) {
-      return this.createErrorResult('同步正在进行中', [
-        '同步正在进行中，请稍后再试',
+      return this.createErrorResult('Синхронизация уже идёт', [
+        'Синхронизация уже идёт, попробуйте позже',
       ]);
     }
 
     if (!this.client || !this.metadataManager) {
-      return this.createErrorResult('同步管理器未初始化', [
-        `${this.getServiceName()} 同步管理器未正确初始化`,
+      return this.createErrorResult('Менеджер синхронизации не инициализирован', [
+        `${this.getServiceName()} — менеджер синхронизации инициализирован неправильно`,
       ]);
     }
 
@@ -121,7 +121,7 @@ export abstract class BaseSyncManager {
 
     try {
       this.client.clearDiagnostic?.();
-      addLog(`开始同步，方向: ${options.preferredDirection || 'auto'}`);
+      addLog(`Начинаем синхронизацию, направление: ${options.preferredDirection || 'auto'}`);
 
       // 获取远程元数据（用于备份历史）
       const remoteMetadata = await this.metadataManager.getRemoteMetadata();
@@ -131,17 +131,17 @@ export abstract class BaseSyncManager {
       } else if (options.preferredDirection === 'download') {
         await this.performDownload(result, remoteMetadata, addLog);
       } else {
-        result.message = '请指定同步方向（上传或下载）';
-        result.errors.push('未指定同步方向');
+        result.message = 'Укажите направление синхронизации (загрузить или скачать)';
+        result.errors.push('Направление синхронизации не указано');
       }
 
       this.appendResultDiagnostics(result, addLogLines);
       result.debugLogs = debugLogs;
     } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : '未知错误';
-      addLog(`同步异常: ${errorMsg}`);
-      result.errors.push(`同步失败: ${errorMsg}`);
-      result.message = '同步失败';
+      const errorMsg = error instanceof Error ? error.message : 'Неизвестная ошибка';
+      addLog(`Ошибка синхронизации: ${errorMsg}`);
+      result.errors.push(`Ошибка синхронизации: ${errorMsg}`);
+      result.message = 'Ошибка синхронизации';
       this.appendResultDiagnostics(result, addLogLines);
       result.debugLogs = debugLogs;
     } finally {
@@ -160,13 +160,13 @@ export abstract class BaseSyncManager {
     remoteMetadata: SyncMetadataV2 | null,
     addLog: (msg: string) => void
   ): Promise<void> {
-    addLog('执行强制上传');
+    addLog('Принудительная загрузка');
 
     // 获取本地数据
     const content = await this.getFileContent('brew-guide-data.json');
     if (!content) {
-      result.message = '上传失败：本地没有可上传的数据';
-      result.errors.push('获取本地数据失败');
+      result.message = 'Ошибка загрузки: на устройстве нет данных';
+      result.errors.push('Не удалось получить данные с устройства');
       return;
     }
 
@@ -174,24 +174,24 @@ export abstract class BaseSyncManager {
     const hash = await calculateHash(content);
 
     // 1. 先上传主文件
-    addLog('正在上传主文件...');
+    addLog('Загружаем основной файл...');
     const uploadResult = await this.client!.uploadFile(
       'brew-guide-data.json',
       content
     );
     if (uploadResult !== true) {
       const errorDetail =
-        typeof uploadResult === 'object' ? uploadResult.error : '未知错误';
-      const errorMsg = `上传 brew-guide-data.json 失败: ${errorDetail}`;
+        typeof uploadResult === 'object' ? uploadResult.error : 'Неизвестная ошибка';
+      const errorMsg = `Ошибка загрузки brew-guide-data.json: ${errorDetail}`;
       result.errors.push(errorMsg);
       result.message = errorMsg;
       return;
     }
     result.uploadedFiles = 1;
-    addLog('主文件上传成功');
+    addLog('Основной файл загружен');
 
     // 2. 通过服务器端复制创建备份（不消耗客户端带宽）
-    addLog('正在创建备份（服务器端复制）...');
+    addLog('Создаём копию (на сервере)...');
     const lastBackupHash = remoteMetadata?.backupHistory?.slice(-1)[0]?.hash;
     const backupCreated =
       await this.getBackupManager().performBackupAfterUpload(
@@ -201,7 +201,7 @@ export abstract class BaseSyncManager {
         lastBackupHash
       );
     if (!backupCreated) {
-      const warning = '备份创建失败，主文件已上传，将继续更新同步元数据';
+      const warning = 'Не удалось создать копию; основной файл загружен, продолжаем обновлять метаданные';
       result.warnings = [...(result.warnings ?? []), warning];
       addLog(warning);
     }
@@ -213,16 +213,16 @@ export abstract class BaseSyncManager {
       addLog
     );
     if (!metadataUpdated) {
-      result.message = '上传失败：主文件已上传，但同步元数据更新失败';
+      result.message = 'Ошибка: основной файл загружен, но метаданные синхронизации не обновились';
       result.errors.push(
-        '同步元数据更新失败，云端主文件可能已写入，请查看请求诊断后重试上传'
+        'Метаданные синхронизации не обновились; основной файл в облаке, возможно, уже записан — посмотрите диагностику и загрузите снова'
       );
       return;
     }
-    addLog('元数据更新完成');
+    addLog('Метаданные обновлены');
 
     result.success = true;
-    result.message = `已上传 ${result.uploadedFiles} 个文件`;
+    result.message = `Загружено: ${result.uploadedFiles} файлов`;
   }
 
   /**
@@ -233,10 +233,10 @@ export abstract class BaseSyncManager {
     remoteMetadata: SyncMetadataV2 | null,
     addLog: (msg: string) => void
   ): Promise<void> {
-    addLog('执行强制下载');
+    addLog('Принудительное скачивание');
 
     if (!remoteMetadata || Object.keys(remoteMetadata.files).length === 0) {
-      result.message = '下载失败：云端没有数据';
+      result.message = 'Ошибка скачивания: в облаке нет данных';
       result.success = false;
       return;
     }
@@ -244,18 +244,18 @@ export abstract class BaseSyncManager {
     // 下载文件
     for (const [key] of Object.entries(remoteMetadata.files)) {
       try {
-        addLog(`正在下载: ${key}`);
+        addLog(`Скачиваем: ${key}`);
         const content = await this.client!.downloadFile(key);
         if (!content) {
-          result.errors.push(`下载 ${key} 失败`);
+          result.errors.push(`Скачать ${key} — ошибка`);
           continue;
         }
         await this.saveFileContent(key, content);
         result.downloadedFiles++;
-        addLog(`下载成功: ${key}`);
+        addLog(`Скачано: ${key}`);
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : String(error);
-        result.errors.push(`下载 ${key} 失败: ${errorMsg}`);
+        result.errors.push(`Скачать ${key} ошибка: ${errorMsg}`);
       }
     }
 
@@ -265,15 +265,15 @@ export abstract class BaseSyncManager {
       addLog
     );
     if (metadataUpdated) {
-      addLog('元数据更新完成');
+      addLog('Метаданные обновлены');
     } else {
-      result.errors.push('同步元数据更新失败，本地数据已写入但同步状态未保存');
+      result.errors.push('Метаданные синхронизации не обновились: данные записаны, но состояние синхронизации не сохранено');
     }
 
     result.success = result.errors.length === 0;
     result.message = result.success
-      ? `已下载 ${result.downloadedFiles} 个文件`
-      : `下载完成但有 ${result.errors.length} 个错误`;
+      ? `Скачано ${result.downloadedFiles} файлов`
+      : `Скачивание завершено, но ошибок: ${result.errors.length} `;
   }
 
   /**
@@ -300,7 +300,7 @@ export abstract class BaseSyncManager {
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       console.error(`❌ [${this.getServiceName()}] 更新元数据失败:`, error);
-      addLog?.(`元数据更新失败: ${errorMsg}`);
+      addLog?.(`Ошибка обновления метаданных: ${errorMsg}`);
       return false;
     }
   }
@@ -383,13 +383,13 @@ export abstract class BaseSyncManager {
     addLogLines: (lines: string[]) => void
   ): void {
     if (!result.success && result.message) {
-      addLogLines(['', '--- 同步结果 ---', result.message]);
+      addLogLines(['', '--- Итог синхронизации ---', result.message]);
     }
 
     if (result.errors.length > 0) {
       addLogLines([
         '',
-        `--- 错误详情 (${result.errors.length} 项) ---`,
+        `--- Ошибки (${result.errors.length} шт.) ---`,
         ...result.errors.map((error, index) => `${index + 1}. ${error}`),
       ]);
     }
@@ -397,7 +397,7 @@ export abstract class BaseSyncManager {
     if (result.warnings && result.warnings.length > 0) {
       addLogLines([
         '',
-        `--- 警告 (${result.warnings.length} 项) ---`,
+        `--- Предупреждения (${result.warnings.length} шт.) ---`,
         ...result.warnings.map((warning, index) => `${index + 1}. ${warning}`),
       ]);
     }

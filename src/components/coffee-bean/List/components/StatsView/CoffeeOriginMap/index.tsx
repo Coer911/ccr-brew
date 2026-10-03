@@ -549,7 +549,7 @@ const CoffeeOriginMap: React.FC<CoffeeOriginMapProps> = memo(
                 }}
                 className="absolute top-2 right-2 rounded-full bg-neutral-200/50 px-2 py-1 text-xs font-medium whitespace-nowrap text-neutral-800 transition-colors dark:bg-neutral-600/50 dark:text-neutral-200"
               >
-                重置
+                Сбросить
               </motion.button>
             )}
           </AnimatePresence>

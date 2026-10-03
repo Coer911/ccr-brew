@@ -42,7 +42,7 @@ export const formatDateString = (dateStr: string): string => {
       return formattedDate;
     }
 
-    return `${formattedDate} (已养豆 ${daysSinceRoast} 天)`;
+    return `${formattedDate} (отдых ${daysSinceRoast} дн.)`;
   } catch {
     return dateStr;
   }
@@ -74,12 +74,12 @@ export const getDaysSinceDateString = (dateStr: string): number | null => {
 
 // 工具函数：计算赏味期信息
 export const getFlavorInfo = (bean: CoffeeBean | null) => {
-  if (!bean) return { phase: '未知', status: '未知状态' };
+  if (!bean) return { phase: 'Неизвестно', status: 'Неизвестное состояние' };
 
   const flavorInfo = calculateFlavorInfo(bean);
   return {
     phase: flavorInfo.phase,
-    status: flavorInfo.status || '未知状态',
+    status: flavorInfo.status || 'Неизвестное состояние',
   };
 };
 

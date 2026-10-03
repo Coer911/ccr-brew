@@ -86,34 +86,34 @@ export const BackupHistoryDrawer: React.FC<BackupHistoryDrawerProps> = ({
           <>
             <ActionDrawer.Content>
               <p className="text-neutral-500 dark:text-neutral-400">
-                确定要恢复此备份吗？
+                Восстановить эту копию?
               </p>
               <p className="text-neutral-500 dark:text-neutral-400">
-                当前数据将被备份中的数据
+                Текущие данные будут
                 <span className="text-neutral-800 dark:text-neutral-200">
-                  覆盖
+                  заменены
                 </span>
               </p>
             </ActionDrawer.Content>
             <ActionDrawer.Actions>
               <ActionDrawer.SecondaryButton onClick={handleCancel}>
-                取消
+                Отмена
               </ActionDrawer.SecondaryButton>
               <ActionDrawer.PrimaryButton
                 onClick={handleConfirmRestore}
                 disabled={isRestoring}
               >
-                {isRestoring ? '恢复中...' : '确认恢复'}
+                {isRestoring ? 'Восстанавливаем...' : 'Восстановить'}
               </ActionDrawer.PrimaryButton>
             </ActionDrawer.Actions>
           </>
         ) : (
           <>
             <ActionDrawer.Content>
-              <p className="text-neutral-800 dark:text-neutral-200">备份历史</p>
+              <p className="text-neutral-800 dark:text-neutral-200">История копий</p>
               {backups.length === 0 ? (
                 <p className="py-4 text-center text-neutral-500">
-                  暂无备份记录
+                  Копий пока нет
                 </p>
               ) : (
                 <div className="relative">
@@ -140,7 +140,7 @@ export const BackupHistoryDrawer: React.FC<BackupHistoryDrawerProps> = ({
                             {formatDate(backup.timestamp)}
                           </div>
                           <div className="text-xs text-neutral-500">
-                            {index === 0 ? '最新' : `${index + 1} 个版本前`}
+                            {index === 0 ? 'Сначала новые' : `${index + 1} версий назад`}
                           </div>
                         </div>
                         <button
@@ -150,7 +150,7 @@ export const BackupHistoryDrawer: React.FC<BackupHistoryDrawerProps> = ({
                           className="flex items-center gap-1 rounded-md bg-neutral-200 px-3 py-1.5 text-xs font-medium transition-colors hover:bg-neutral-300 disabled:opacity-50 dark:bg-neutral-700 dark:hover:bg-neutral-600"
                         >
                           <RotateCcw className="h-3 w-3" />
-                          恢复
+                          Восстановить
                         </button>
                       </div>
                     ))}
@@ -158,12 +158,12 @@ export const BackupHistoryDrawer: React.FC<BackupHistoryDrawerProps> = ({
                 </div>
               )}
               <p className="text-xs text-neutral-400">
-                每次上传前自动备份，最多保留 5 个历史版本
+                Перед каждой загрузкой делается копия, хранится до 5 последних версий
               </p>
             </ActionDrawer.Content>
             <ActionDrawer.Actions>
               <ActionDrawer.SecondaryButton onClick={handleClose}>
-                关闭
+                Закрыть
               </ActionDrawer.SecondaryButton>
             </ActionDrawer.Actions>
           </>

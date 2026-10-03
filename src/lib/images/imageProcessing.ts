@@ -75,7 +75,7 @@ export interface ImageBatchProcessingResult {
 }
 
 function formatBytes(bytes: number) {
-  if (!Number.isFinite(bytes)) return '未知';
+  if (!Number.isFinite(bytes)) return 'Неизвестно';
 
   const units = ['B', 'KB', 'MB', 'GB'];
   let value = bytes;
@@ -102,14 +102,14 @@ function getRuntimeLabel() {
 
 function getErrorReason(error: unknown) {
   if (typeof DOMException !== 'undefined' && error instanceof DOMException) {
-    return `${error.name}: ${error.message || '无详细信息'}`;
+    return `${error.name}: ${error.message || 'Нет подробностей'}`;
   }
 
   if (error instanceof Error) {
     return `${error.name}: ${error.message}`;
   }
 
-  return typeof error === 'string' ? error : '未知错误';
+  return typeof error === 'string' ? error : 'Неизвестная ошибка';
 }
 
 function getImageFailureDiagnostics(
@@ -117,8 +117,8 @@ function getImageFailureDiagnostics(
   error: unknown
 ): ImageFailureDiagnostics {
   return {
-    fileName: file.name || '未命名文件',
-    declaredType: file.type || '空',
+    fileName: file.name || 'Файл без названия',
+    declaredType: file.type || 'Пусто',
     size: formatBytes(file.size),
     runtime: getRuntimeLabel(),
     reason: getErrorReason(error),
@@ -129,8 +129,8 @@ function createImageReadFailedError(file: File, error: unknown) {
   const diagnostics = getImageFailureDiagnostics(file, error);
   return new ImageProcessingError(
     [
-      '图片读取失败，请重试',
-      `诊断信息：文件=${diagnostics.fileName}，类型=${diagnostics.declaredType}，大小=${diagnostics.size}，平台=${diagnostics.runtime}，原因=${diagnostics.reason}`,
+      'Не удалось прочитать фото, попробуйте ещё раз',
+      `Диагностика: файл=${diagnostics.fileName}, тип=${diagnostics.declaredType}, размер=${diagnostics.size}, платформа=${diagnostics.runtime}, причина=${diagnostics.reason}`,
     ].join('\n'),
     'read-failed',
     file,
@@ -149,7 +149,7 @@ export async function processImageFile(
 
   if (!isSupportedSourceImageFile(file)) {
     throw new ImageProcessingError(
-      '请上传 JPG、PNG、WebP、GIF 或 HEIF/HEIC 格式的图片',
+      'Загрузите фото в формате JPG, PNG, WebP, GIF или HEIF/HEIC',
       'unsupported-type',
       file
     );
@@ -157,7 +157,7 @@ export async function processImageFile(
 
   if (file.size > maxFileSizeBytes) {
     throw new ImageProcessingError(
-      '图片文件过大，请选择小于50MB的图片',
+      'Файл слишком большой, выберите фото меньше 50 МБ',
       'too-large',
       file
     );
@@ -180,8 +180,8 @@ export async function processImageFile(
     return await compressBase64Image(dataUrl, compression);
   } catch (error) {
     const message = isHeifImageMimeType(mimeType)
-      ? '当前浏览器无法解码 HEIF/HEIC 图片，请在系统相册中转换为 JPG 或 PNG 后再添加'
-      : '图片解码或压缩失败，请更换图片后重试';
+      ? 'Этот браузер не открывает HEIF/HEIC — переведите фото в JPG или PNG в галерее и добавьте снова'
+      : 'Не удалось открыть или сжать фото, попробуйте другое';
     throw new ImageProcessingError(message, 'decode-failed', file, error);
   }
 }
@@ -204,7 +204,7 @@ export async function processImageFiles(
         error instanceof ImageProcessingError
           ? error
           : new ImageProcessingError(
-              '图片处理失败，请更换图片后重试',
+              'Не удалось обработать фото, попробуйте другое',
               'decode-failed',
               file
             )

@@ -19,23 +19,23 @@ const DEFAULT_ESPRESSO_EXTRACTION_DURATION = 25;
 
 const SYSTEM_STAGE_DEFAULTS: Record<string, StageTextDefaults> = {
   circle: {
-    label: '绕圈注水',
-    detail: '中心向外缓慢画圈注水，均匀萃取咖啡风味',
+    label: 'Пролив по кругу',
+    detail: 'Медленные круги от центра наружу, равномерная экстракция',
   },
   center: {
-    label: '中心注水',
-    detail: '中心定点注水，降低萃取率',
+    label: 'Пролив в центр',
+    detail: 'Пролив точно в центр, экстракция ниже',
   },
   ice: {
-    label: '添加冰块',
-    detail: '添加冰块，降低温度进行冷萃',
+    label: 'Добавить лёд',
+    detail: 'Добавьте лёд, чтобы охладить напиток',
   },
   bypass: {
     label: 'Bypass',
-    detail: '冲煮完成后添加到咖啡液中，调节浓度和口感',
+    detail: 'Добавляется в напиток после заварки, регулирует крепость и вкус',
   },
   wait: {
-    label: '等待',
+    label: 'Ожидание',
     detail: '',
   },
   other: {
@@ -44,9 +44,9 @@ const SYSTEM_STAGE_DEFAULTS: Record<string, StageTextDefaults> = {
   },
 };
 
-const LEGACY_STAGE_LABELS = ['注水'];
-const LEGACY_STAGE_DETAILS = ['注水'];
-const ESPRESSO_DEFAULT_STAGE_LABELS = ['萃取浓缩', '饮料', '其他', ''];
+const LEGACY_STAGE_LABELS = ['Пролив'];
+const LEGACY_STAGE_DETAILS = ['Пролив'];
+const ESPRESSO_DEFAULT_STAGE_LABELS = ['Экстракция', 'Напиток', 'Другое', ''];
 
 const parseGramValue = (value?: string): number => {
   if (!value) return 0;
@@ -74,7 +74,7 @@ const getCustomAnimationDefault = (
 
   return {
     label: animation.name,
-    detail: `使用${animation.name}注水`,
+    detail: `Пролив: ${animation.name}`,
   };
 };
 
@@ -98,7 +98,7 @@ export const getStageTextDefaults = (
   }
 
   return {
-    label: '注水',
+    label: 'Пролив',
     detail: '',
   };
 };
@@ -132,7 +132,7 @@ export const getManagedStageDetails = (
 
   customEquipment.customPourAnimations?.forEach(animation => {
     if (animation.name) {
-      details.add(`使用${animation.name}注水`);
+      details.add(`Пролив: ${animation.name}`);
     }
   });
 
@@ -302,8 +302,8 @@ export const createInitialRegularStages = (
   );
 
   if (defaultPourType === 'circle') {
-    firstStage.label = '焖蒸(绕圈注水)';
-    firstStage.detail = '中心向外绕圈，确保均匀萃取';
+    firstStage.label = 'Блуминг (пролив по кругу)';
+    firstStage.detail = 'Круги от центра наружу для равномерной экстракции';
   }
 
   return [

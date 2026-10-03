@@ -177,7 +177,7 @@ export const PrintIconLayer: React.FC<PrintIconLayerProps> = ({
         role="button"
         tabIndex={0}
         data-print-icon-src={icon}
-        aria-label="调整打印图标位置和大小"
+        aria-label="Положение и размер логотипа при печати"
         onKeyDown={handleKeyDown}
         style={{
           position: 'absolute',

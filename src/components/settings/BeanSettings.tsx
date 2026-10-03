@@ -135,7 +135,7 @@ const BeanSettings: React.FC<BeanSettingsProps> = ({
   }, []);
 
   return (
-    <SettingPage title="咖啡豆" isVisible={isVisible} onClose={handleClose}>
+    <SettingPage title="Зерно" isVisible={isVisible} onClose={handleClose}>
       {/* 预览区域 */}
       <BeanPreview settings={settings} />
 
@@ -144,16 +144,16 @@ const BeanSettings: React.FC<BeanSettingsProps> = ({
         handleChange={handleChange}
       />
 
-      <SettingSection title="列表">
-        <SettingRow label="日期模式">
+      <SettingSection title="Список">
+        <SettingRow label="Формат даты">
           <SettingSelector
             value={settings.dateDisplayMode || 'date'}
             options={[
-              { value: 'date', label: '日期' },
-              { value: 'flavorPeriod', label: '赏味期' },
-              { value: 'agingDays', label: '养豆天数' },
+              { value: 'date', label: 'Дата' },
+              { value: 'flavorPeriod', label: 'Лучший период' },
+              { value: 'agingDays', label: 'Дней отдыха' },
             ]}
-            ariaLabel="日期模式"
+            ariaLabel="Формат даты"
             onChange={value =>
               handleChange(
                 'dateDisplayMode',
@@ -163,7 +163,7 @@ const BeanSettings: React.FC<BeanSettingsProps> = ({
           />
         </SettingRow>
 
-        <SettingRow label="价格">
+        <SettingRow label="Цена">
           <SettingToggle
             checked={settings.showPrice !== false}
             onChange={checked => handleChange('showPrice', checked)}
@@ -171,7 +171,7 @@ const BeanSettings: React.FC<BeanSettingsProps> = ({
         </SettingRow>
 
         {showPriceDetails && (
-          <SettingRow label="总价" isSubSetting>
+          <SettingRow label="Общая цена" isSubSetting>
             <SettingToggle
               checked={settings.showTotalPrice || false}
               onChange={checked => handleChange('showTotalPrice', checked)}
@@ -179,14 +179,14 @@ const BeanSettings: React.FC<BeanSettingsProps> = ({
           </SettingRow>
         )}
 
-        <SettingRow label="状态点">
+        <SettingRow label="Точка состояния">
           <SettingToggle
             checked={settings.showStatusDots || false}
             onChange={checked => handleChange('showStatusDots', checked)}
           />
         </SettingRow>
 
-        <SettingRow label="备注" isLast={!showNoteDetails}>
+        <SettingRow label="Заметка" isLast={!showNoteDetails}>
           <SettingToggle
             checked={settings.showBeanNotes !== false}
             onChange={checked => handleChange('showBeanNotes', checked)}
@@ -195,20 +195,20 @@ const BeanSettings: React.FC<BeanSettingsProps> = ({
 
         {showNoteDetails && (
           <>
-            <SettingRow label="风味" isSubSetting>
+            <SettingRow label="Вкусы" isSubSetting>
               <SettingToggle
                 checked={settings.showFlavorInfo || false}
                 onChange={checked => handleChange('showFlavorInfo', checked)}
               />
             </SettingRow>
-            <SettingRow label="备注内容" isSubSetting>
+            <SettingRow label="Текст заметки" isSubSetting>
               <SettingToggle
                 checked={settings.showNoteContent !== false}
                 onChange={checked => handleChange('showNoteContent', checked)}
               />
             </SettingRow>
             <SettingRow
-              label="备注行数限制"
+              label="Строк заметки"
               isLast={!settings.limitNotesLines}
               isSubSetting
             >
@@ -225,8 +225,8 @@ const BeanSettings: React.FC<BeanSettingsProps> = ({
                   step={1}
                   value={settings.notesMaxLines || 3}
                   onChange={val => handleChange('notesMaxLines', val)}
-                  minLabel="1行"
-                  maxLabel="5行"
+                  minLabel="1 строка"
+                  maxLabel="5 строк"
                   showTicks
                 />
               </SettingRow>
@@ -235,21 +235,21 @@ const BeanSettings: React.FC<BeanSettingsProps> = ({
         )}
       </SettingSection>
 
-      <SettingSection title="详情页">
-        <SettingRow label="标签打印">
+      <SettingSection title="Карточка">
+        <SettingRow label="Печать этикеток">
           <SettingToggle
             checked={settings.enableBeanPrint || false}
             onChange={checked => handleChange('enableBeanPrint', checked)}
           />
         </SettingRow>
-        <SettingRow label="评分" isLast={!showRatingDetails}>
+        <SettingRow label="Оценка" isLast={!showRatingDetails}>
           <SettingToggle
             checked={settings.showBeanRating || false}
             onChange={checked => handleChange('showBeanRating', checked)}
           />
         </SettingRow>
         {showRatingDetails && (
-          <SettingRow label="十分位制" isSubSetting isLast>
+          <SettingRow label="Десятибалльная шкала" isSubSetting isLast>
             <SettingToggle
               checked={settings.beanRatingTenthStep || false}
               onChange={handleBeanRatingTenthStepChange}
@@ -258,14 +258,14 @@ const BeanSettings: React.FC<BeanSettingsProps> = ({
         )}
       </SettingSection>
 
-      <SettingSection title="添加">
-        <SettingRow label="沉浸式表单">
+      <SettingSection title="Добавление">
+        <SettingRow label="Форма на весь экран">
           <SettingToggle
             checked={settings.immersiveAdd || false}
             onChange={checked => handleChange('immersiveAdd', checked)}
           />
         </SettingRow>
-        <SettingRow label="自动填充图片" isLast>
+        <SettingRow label="Автозаполнение фото" isLast>
           <SettingToggle
             checked={settings.autoFillRecognitionImage || false}
             onChange={checked =>
@@ -276,7 +276,7 @@ const BeanSettings: React.FC<BeanSettingsProps> = ({
       </SettingSection>
 
       <SettingSection>
-        <SettingRow label="咖啡豆字段" isLast onClick={openBeanFieldsDrawer}>
+        <SettingRow label="Поля зерна" isLast onClick={openBeanFieldsDrawer}>
           <ChevronRight className="h-4 w-4 text-neutral-400" />
         </SettingRow>
       </SettingSection>

@@ -37,7 +37,7 @@ export const SyncDebugDrawer: React.FC<SyncDebugDrawerProps> = ({
   copySuccess,
   onCopy,
   onSelectAll,
-  title = '同步日志',
+  title = 'Журнал синхронизации',
 }) => {
   return (
     <ActionDrawer isOpen={isOpen} onClose={onClose} historyId="sync-debug-logs">
@@ -46,9 +46,9 @@ export const SyncDebugDrawer: React.FC<SyncDebugDrawerProps> = ({
         <p className="mb-3 text-neutral-500 dark:text-neutral-400">
           {title} -
           <span className="text-neutral-800 dark:text-neutral-200">
-            详细日志
+            Подробный журнал
           </span>
-          ，可以帮助诊断问题。点击文本框可全选内容。
+          поможет найти проблему. Нажмите на поле, чтобы выделить всё.
         </p>
         <textarea
           ref={textAreaRef}
@@ -60,10 +60,10 @@ export const SyncDebugDrawer: React.FC<SyncDebugDrawerProps> = ({
       </ActionDrawer.Content>
       <ActionDrawer.Actions>
         <ActionDrawer.SecondaryButton onClick={onClose}>
-          关闭
+          Закрыть
         </ActionDrawer.SecondaryButton>
         <ActionDrawer.PrimaryButton onClick={onCopy}>
-          {copySuccess ? '已复制' : '复制日志'}
+          {copySuccess ? 'Скопировано' : 'Скопировать журнал'}
         </ActionDrawer.PrimaryButton>
       </ActionDrawer.Actions>
     </ActionDrawer>

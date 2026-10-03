@@ -128,14 +128,14 @@ const StockSettings: React.FC<StockSettingsProps> = ({
     decrementPresets.join(',')
   );
   const isPresetSectionHighlighted =
-    highlightedSettingId === makeSettingRowSearchId('预设快捷扣除量');
+    highlightedSettingId === makeSettingRowSearchId('Быстрые веса списания');
 
   return (
-    <SettingPage title="库存扣除" isVisible={isVisible} onClose={handleClose}>
-      <SettingSection title="熟豆库存扣除" className="-mt-4">
+    <SettingPage title="Списание запасов" isVisible={isVisible} onClose={handleClose}>
+      <SettingSection title="Списание обжаренного зерна" className="-mt-4">
         <SettingRow
-          label="启用“全部扣除”选项"
-          description="显示ALL按钮，可一次性扣除剩余库存"
+          label="Включить «Списать всё»"
+          description="Показывать кнопку ALL, чтобы списать весь остаток сразу"
         >
           <SettingToggle
             checked={settings.enableAllDecrementOption}
@@ -145,8 +145,8 @@ const StockSettings: React.FC<StockSettingsProps> = ({
           />
         </SettingRow>
         <SettingRow
-          label="启用自定义扣除输入"
-          description="允许用户在快捷扣除框中输入任意数字"
+          label="Разрешить свой вес списания"
+          description="Можно вводить любое число в окне быстрого списания"
           isLast
         >
           <SettingToggle
@@ -158,9 +158,9 @@ const StockSettings: React.FC<StockSettingsProps> = ({
         </SettingRow>
       </SettingSection>
 
-      <SettingSection title="预设快捷扣除量">
+      <SettingSection title="Быстрые веса списания">
         <div
-          data-settings-search-id={makeSettingRowSearchId('预设快捷扣除量')}
+          data-settings-search-id={makeSettingRowSearchId('Быстрые веса списания')}
           className={`p-4 transition-colors ${
             isPresetSectionHighlighted
               ? 'bg-neutral-200/70 dark:bg-neutral-700/45'
@@ -203,7 +203,7 @@ const StockSettings: React.FC<StockSettingsProps> = ({
                     addDecrementPreset();
                   }
                 }}
-                placeholder="克数"
+                placeholder="Граммы"
                 className="w-16 rounded-l rounded-r-none bg-neutral-200 px-2 py-1.5 text-sm focus:ring-1 focus:ring-neutral-500 focus:outline-hidden dark:bg-neutral-700"
               />
               <button
@@ -221,7 +221,7 @@ const StockSettings: React.FC<StockSettingsProps> = ({
             </div>
           </div>
           <p className="text-xs text-neutral-500 dark:text-neutral-400">
-            点击预设值可以删除，输入克数后按回车或点击「+」可以添加新的预设值。
+            Нажмите на вес, чтобы удалить его; введите граммы и нажмите Enter или «+», чтобы добавить.
           </p>
         </div>
       </SettingSection>

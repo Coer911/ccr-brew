@@ -1,6 +1,6 @@
 {
-  "name": "Brew Guide",
-  "short_name": "Brew Guide",
+  "name": "Cultura Brew",
+  "short_name": "Cultura Brew",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
@@ -8,7 +8,7 @@
   "theme_color": "#fafafa",
   "background_color": "#ffffff",
   "categories": ["food", "lifestyle", "utilities"],
-  "lang": "zh-CN",
+  "lang": "ru",
   "icons": [
     {
       "src": "images/icons/app/icon-192x192-opaque.png",

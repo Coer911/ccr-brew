@@ -86,24 +86,24 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({
   }, []);
 
   return (
-    <SettingPage title="计时器" isVisible={isVisible} onClose={handleClose}>
+    <SettingPage title="Таймер" isVisible={isVisible} onClose={handleClose}>
       {/* 预览区域 */}
       <TimerPreview settings={settings} />
 
-      <SettingSection title="显示" className="mt-6">
-        <SettingRow label="显示流速">
+      <SettingSection title="Отображение" className="mt-6">
+        <SettingRow label="Показывать скорость пролива">
           <SettingToggle
             checked={settings.showFlowRate || false}
             onChange={checked => handleChange('showFlowRate', checked)}
           />
         </SettingRow>
-        <SettingRow label="可视化冲煮">
+        <SettingRow label="Визуализация заварки">
           <SettingToggle
             checked={settings.showBrewingVisualizer ?? true}
             onChange={checked => handleChange('showBrewingVisualizer', checked)}
           />
         </SettingRow>
-        <SettingRow label="进度条高度" vertical>
+        <SettingRow label="Высота шкалы прогресса" vertical>
           <SettingSlider
             min={4}
             max={20}
@@ -116,20 +116,20 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({
               };
               handleChange('layoutSettings', newLayoutSettings);
             }}
-            minLabel="细"
-            maxLabel="粗"
+            minLabel="Тонкая"
+            maxLabel="Толстая"
             showTicks
           />
         </SettingRow>
-        <SettingRow label="数据显示字体大小" isLast>
+        <SettingRow label="Размер шрифта данных" isLast>
           <SettingSelector
             value={settings.layoutSettings?.dataFontSize || '2xl'}
             options={[
-              { value: '2xl', label: '标准' },
-              { value: '3xl', label: '大' },
-              { value: '4xl', label: '特大' },
+              { value: '2xl', label: 'Обычный' },
+              { value: '3xl', label: 'Крупный' },
+              { value: '4xl', label: 'Очень крупный' },
             ]}
-            ariaLabel="数据显示字体大小"
+            ariaLabel="Размер шрифта данных"
             onChange={value => {
               const newLayoutSettings = {
                 ...settings.layoutSettings,
@@ -141,16 +141,16 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({
         </SettingRow>
       </SettingSection>
 
-      <SettingSection title="列表">
-        <SettingRow label="步骤时间显示" isLast>
+      <SettingSection title="Список">
+        <SettingRow label="Время этапа" isLast>
           <SettingSelector
             value={settings.layoutSettings?.stepDisplayMode || 'cumulative'}
             options={[
-              { value: 'independent', label: '独立' },
-              { value: 'cumulative', label: '累计' },
-              { value: 'time', label: '时间' },
+              { value: 'independent', label: 'Отдельно' },
+              { value: 'cumulative', label: 'Нарастающим итогом' },
+              { value: 'time', label: 'Время' },
             ]}
-            ariaLabel="步骤时间显示"
+            ariaLabel="Время этапа"
             onChange={value => {
               const newLayoutSettings = {
                 ...settings.layoutSettings,

@@ -71,7 +71,7 @@ export const buildBlendComponentDisplayRows = (
         ...fieldRows,
         {
           field: 'percentage',
-          label: '比例',
+          label: 'Доля',
           editable: false,
           entries: percentageEntries,
         },

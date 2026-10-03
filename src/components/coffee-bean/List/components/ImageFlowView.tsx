@@ -134,8 +134,8 @@ const ImageFlowView: React.FC<ImageFlowViewProps> = ({
     return (
       <div className="flex h-32 items-center justify-center text-[10px] tracking-widest text-neutral-500 dark:text-neutral-400">
         {!areImageIdsLoaded
-          ? '[ 正在加载咖啡豆图片 ]'
-          : '[ 没有找到带图片的咖啡豆 ]'}
+          ? '[ Загружаем фото зерна ]'
+          : '[ Нет зерна с фото ]'}
       </div>
     );
   }
@@ -231,11 +231,11 @@ const ImageFlowBeanImage = React.memo(function ImageFlowBeanImage({
         isEmpty ? 'opacity-40' : ''
       }`}
       onClick={openBeanDetail}
-      aria-label={`查看 ${bean.name || '咖啡豆'} 详情`}
+      aria-label={`Открыть ${bean.name || 'Зерно'} подробнее`}
     >
       <Image
         src={source.src}
-        alt={bean.name || '咖啡豆图片'}
+        alt={bean.name || 'Фото зерна'}
         width={source.dimensions.width}
         height={source.dimensions.height}
         className="block h-auto w-full"

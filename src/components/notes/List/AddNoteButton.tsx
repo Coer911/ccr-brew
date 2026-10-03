@@ -10,7 +10,7 @@ const AddNoteButton: React.FC<AddNoteButtonProps> = ({ onAddNote }) => {
       buttons={[
         {
           icon: '+',
-          text: '手动添加',
+          text: 'Добавить вручную',
           onClick: () => onAddNote(),
         },
       ]}

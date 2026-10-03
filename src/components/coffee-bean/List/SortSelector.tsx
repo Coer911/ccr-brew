@@ -225,21 +225,21 @@ export const convertToRankingSortOption = (
 
 // 排序选项的显示名称
 const SORT_LABELS: Record<SortOption, string> = {
-  [SORT_OPTIONS.REMAINING_DAYS_ASC]: '赏味期',
-  [SORT_OPTIONS.REMAINING_DAYS_DESC]: '赏味期',
-  [SORT_OPTIONS.NAME_ASC]: '名称',
-  [SORT_OPTIONS.NAME_DESC]: '名称',
-  [SORT_OPTIONS.RATING_ASC]: '评分',
-  [SORT_OPTIONS.RATING_DESC]: '评分',
-  [SORT_OPTIONS.ORIGINAL]: '原始',
-  [SORT_OPTIONS.REMAINING_AMOUNT_ASC]: '剩余量',
-  [SORT_OPTIONS.REMAINING_AMOUNT_DESC]: '剩余量',
-  [SORT_OPTIONS.ROAST_DATE_ASC]: '烘焙日期',
-  [SORT_OPTIONS.ROAST_DATE_DESC]: '烘焙日期',
-  [SORT_OPTIONS.PRICE_ASC]: '克价',
-  [SORT_OPTIONS.PRICE_DESC]: '克价',
-  [SORT_OPTIONS.LAST_MODIFIED_ASC]: '最近变动',
-  [SORT_OPTIONS.LAST_MODIFIED_DESC]: '最近变动',
+  [SORT_OPTIONS.REMAINING_DAYS_ASC]: 'Лучший период',
+  [SORT_OPTIONS.REMAINING_DAYS_DESC]: 'Лучший период',
+  [SORT_OPTIONS.NAME_ASC]: 'Название',
+  [SORT_OPTIONS.NAME_DESC]: 'Название',
+  [SORT_OPTIONS.RATING_ASC]: 'Оценка',
+  [SORT_OPTIONS.RATING_DESC]: 'Оценка',
+  [SORT_OPTIONS.ORIGINAL]: 'Как добавлено',
+  [SORT_OPTIONS.REMAINING_AMOUNT_ASC]: 'Остаток',
+  [SORT_OPTIONS.REMAINING_AMOUNT_DESC]: 'Остаток',
+  [SORT_OPTIONS.ROAST_DATE_ASC]: 'Дата обжарки',
+  [SORT_OPTIONS.ROAST_DATE_DESC]: 'Дата обжарки',
+  [SORT_OPTIONS.PRICE_ASC]: 'Цена грамма',
+  [SORT_OPTIONS.PRICE_DESC]: 'Цена грамма',
+  [SORT_OPTIONS.LAST_MODIFIED_ASC]: 'Последние изменения',
+  [SORT_OPTIONS.LAST_MODIFIED_DESC]: 'Последние изменения',
 };
 
 // 排序图标定义
@@ -322,14 +322,14 @@ export type SortOrder = (typeof SORT_ORDERS)[keyof typeof SORT_ORDERS];
 
 // 排序方式的显示名称
 export const SORT_TYPE_LABELS: Record<SortType, string> = {
-  [SORT_TYPES.REMAINING_DAYS]: '赏味期',
-  [SORT_TYPES.NAME]: '名称',
-  [SORT_TYPES.RATING]: '评分',
-  [SORT_TYPES.ORIGINAL]: '原始',
-  [SORT_TYPES.REMAINING_AMOUNT]: '剩余量',
-  [SORT_TYPES.ROAST_DATE]: '烘焙日期',
-  [SORT_TYPES.PRICE]: '克价',
-  [SORT_TYPES.LAST_MODIFIED]: '最近变动',
+  [SORT_TYPES.REMAINING_DAYS]: 'Лучший период',
+  [SORT_TYPES.NAME]: 'Название',
+  [SORT_TYPES.RATING]: 'Оценка',
+  [SORT_TYPES.ORIGINAL]: 'Как добавлено',
+  [SORT_TYPES.REMAINING_AMOUNT]: 'Остаток',
+  [SORT_TYPES.ROAST_DATE]: 'Дата обжарки',
+  [SORT_TYPES.PRICE]: 'Цена грамма',
+  [SORT_TYPES.LAST_MODIFIED]: 'Последние изменения',
 };
 
 // 根据 beanState 获取排序方式的显示名称
@@ -340,7 +340,7 @@ export const getSortTypeLabelByState = (
   // 生豆特殊处理
   if (beanState === 'green') {
     if (type === SORT_TYPES.ROAST_DATE) {
-      return '购买日期';
+      return 'Дата покупки';
     }
   }
   return SORT_TYPE_LABELS[type];
@@ -352,11 +352,11 @@ const SORT_ORDER_LABELS: Record<
   { label: string; icon: React.ReactNode }
 > = {
   [SORT_ORDERS.ASC]: {
-    label: '升序',
+    label: 'По возрастанию',
     icon: SORT_ICONS.DESC,
   },
   [SORT_ORDERS.DESC]: {
-    label: '降序',
+    label: 'По убыванию',
     icon: SORT_ICONS.ASC,
   },
 };
@@ -457,28 +457,28 @@ export const getSortOption = (type: SortType, order: SortOrder): SortOption => {
 export const getSortOrderLabel = (type: SortType, order: SortOrder): string => {
   if (type === SORT_TYPES.REMAINING_DAYS) {
     // 赏味期对应的排序顺序标签
-    return order === SORT_ORDERS.ASC ? '从少到多' : '从多到少';
+    return order === SORT_ORDERS.ASC ? 'От меньшего к большему' : 'От большего к меньшему';
   } else if (type === SORT_TYPES.NAME) {
     // 名称对应的排序顺序标签
-    return order === SORT_ORDERS.ASC ? '从A到Z' : '从Z到A';
+    return order === SORT_ORDERS.ASC ? 'От А до Я' : 'От Я до А';
   } else if (type === SORT_TYPES.RATING) {
     // 评分对应的排序顺序标签
-    return order === SORT_ORDERS.ASC ? '从低到高' : '从高到低';
+    return order === SORT_ORDERS.ASC ? 'От низкой к высокой' : 'От высокой к низкой';
   } else if (type === SORT_TYPES.REMAINING_AMOUNT) {
     // 剩余量对应的排序顺序标签
-    return order === SORT_ORDERS.ASC ? '从少到多' : '从多到少';
+    return order === SORT_ORDERS.ASC ? 'От меньшего к большему' : 'От большего к меньшему';
   } else if (type === SORT_TYPES.ROAST_DATE) {
     // 烘焙日期对应的排序顺序标签
-    return order === SORT_ORDERS.ASC ? '从早到晚' : '从晚到早';
+    return order === SORT_ORDERS.ASC ? 'От старых к новым' : 'От новых к старым';
   } else if (type === SORT_TYPES.PRICE) {
     // 价格对应的排序顺序标签
-    return order === SORT_ORDERS.ASC ? '从低到高' : '从高到低';
+    return order === SORT_ORDERS.ASC ? 'От низкой к высокой' : 'От высокой к низкой';
   } else if (type === SORT_TYPES.LAST_MODIFIED) {
     // 最近变动对应的排序顺序标签
-    return order === SORT_ORDERS.ASC ? '从早到晚' : '从晚到早';
+    return order === SORT_ORDERS.ASC ? 'От старых к новым' : 'От новых к старым';
   }
   // 默认标签
-  return order === SORT_ORDERS.ASC ? '升序' : '降序';
+  return order === SORT_ORDERS.ASC ? 'По возрастанию' : 'По убыванию';
 };
 
 // 根据排序类型获取排序顺序的显示顺序
@@ -621,7 +621,7 @@ const SortSelector: React.FC<SortSelectorProps> = ({
       >
         <div className="py-1">
           <div className="px-2 py-1.5 text-xs text-neutral-500 dark:text-neutral-400">
-            排序方式
+            Сортировать по
           </div>
           {getAvailableSortTypes(viewMode).map(type => (
             <CustomSelectItem
@@ -653,7 +653,7 @@ const SortSelector: React.FC<SortSelectorProps> = ({
             <div className="border-t border-neutral-200/50 dark:border-neutral-800/50" />
             <div className="py-1">
               <div className="px-2 py-1.5 text-xs text-neutral-500 dark:text-neutral-400">
-                排序顺序
+                Порядок
               </div>
               {getSortOrdersForType(currentType).map(order => (
                 <CustomSelectItem

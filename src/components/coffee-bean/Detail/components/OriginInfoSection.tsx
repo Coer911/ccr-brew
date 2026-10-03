@@ -106,7 +106,7 @@ const InlineRoastLevelSelect: React.FC<InlineRoastLevelSelectProps> = ({
           <button
             type="button"
             onClick={handleClear}
-            aria-label="清除烘焙度"
+            aria-label="Сбросить обжарку"
             className="text-neutral-400 transition-colors hover:text-neutral-600 dark:hover:text-neutral-300"
           >
             <X className="size-3.5" />
@@ -371,7 +371,7 @@ const OriginInfoSection: React.FC<OriginInfoSectionProps> = ({
       {isAddMode && (
         <div className="flex items-start">
           <div className="w-16 shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-            类型
+            Тип
           </div>
           <div className="flex items-center gap-2">
             {BEAN_TYPES.map(type => (
@@ -400,55 +400,55 @@ const OriginInfoSection: React.FC<OriginInfoSectionProps> = ({
       )}
 
       {renderEditableInfoRow({
-        label: '产地',
+        label: 'Происхождение',
         value: legacyOrigin,
         fieldRef: originRef,
         onBlur: handleOriginInput,
       })}
       {renderEditableInfoRow({
-        label: '产国',
+        label: 'Страна',
         value: country,
         fieldRef: countryRef,
         onBlur: handleCountryInput,
       })}
       {renderEditableInfoRow({
-        label: '产区',
+        label: 'Регион',
         value: region,
         fieldRef: regionRef,
         onBlur: handleRegionInput,
       })}
       {renderEditableInfoRow({
-        label: '庄园',
+        label: 'Ферма',
         value: estate,
         fieldRef: estateRef,
         onBlur: handleEstateInput,
       })}
       {renderEditableInfoRow({
-        label: '处理站',
+        label: 'Станция обработки',
         value: processingStation,
         fieldRef: processingStationRef,
         onBlur: handleProcessingStationInput,
       })}
       {renderEditableInfoRow({
-        label: '海拔',
+        label: 'Высота',
         value: altitude,
         fieldRef: altitudeRef,
         onBlur: handleAltitudeInput,
       })}
       {renderEditableInfoRow({
-        label: '处理法',
+        label: 'Обработка',
         value: process,
         fieldRef: processRef,
         onBlur: handleProcessInput,
       })}
       {renderEditableInfoRow({
-        label: '批次',
+        label: 'Партия',
         value: batch,
         fieldRef: batchRef,
         onBlur: handleBatchInput,
       })}
       {renderEditableInfoRow({
-        label: '品种',
+        label: 'Разновидность',
         value: variety,
         fieldRef: varietyRef,
         onBlur: handleVarietyInput,
@@ -458,13 +458,13 @@ const OriginInfoSection: React.FC<OriginInfoSectionProps> = ({
       {(isAddMode || roastLevel) && (
         <div className="flex items-start">
           <div className="w-16 shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-            烘焙度
+            Обжарка
           </div>
           <InlineRoastLevelSelect
             value={roastLevel}
             clearable={isAddMode}
             onChange={handleRoastLevelSelect}
-            placeholder="选择烘焙度"
+            placeholder="Выберите обжарку"
             suggestions={roastLevelSuggestions.suggestions}
           />
         </div>
@@ -474,7 +474,7 @@ const OriginInfoSection: React.FC<OriginInfoSectionProps> = ({
       {isAddMode && (
         <div className="flex items-center">
           <div className="w-16 shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-            赏味期
+            Лучший период
           </div>
           <div className="flex items-center gap-2">
             {currentBean?.isFrozen ? (
@@ -482,7 +482,7 @@ const OriginInfoSection: React.FC<OriginInfoSectionProps> = ({
                 onClick={() => handleUpdateField({ isFrozen: false })}
                 className="cursor-pointer bg-neutral-100 px-1.5 py-0.5 text-xs font-medium whitespace-nowrap text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
               >
-                冷冻
+                Заморожено
               </span>
             ) : (
               <>
@@ -496,7 +496,7 @@ const OriginInfoSection: React.FC<OriginInfoSectionProps> = ({
                   onChange={e =>
                     handleFlavorPeriodDayChange('startDay', e.target.value)
                   }
-                  placeholder="天数"
+                  placeholder="Дней"
                   className={flavorPeriodDayInputClass}
                 />
                 <span className="text-xs text-neutral-400">~</span>
@@ -508,16 +508,16 @@ const OriginInfoSection: React.FC<OriginInfoSectionProps> = ({
                   onChange={e =>
                     handleFlavorPeriodDayChange('endDay', e.target.value)
                   }
-                  placeholder="天数"
+                  placeholder="Дней"
                   className={flavorPeriodDayInputClass}
                 />
-                <span className="text-xs text-neutral-400">天</span>
+                <span className="text-xs text-neutral-400">дн.</span>
                 <div className="mx-1 h-3 w-px bg-neutral-200 dark:bg-neutral-700" />
                 <span
                   onClick={() => handleUpdateField({ isFrozen: true })}
                   className="cursor-pointer bg-neutral-100/70 px-1.5 py-0.5 text-xs font-medium whitespace-nowrap text-neutral-400 dark:bg-neutral-800/70 dark:text-neutral-500"
                 >
-                  冷冻
+                  Заморожено
                 </span>
               </>
             )}

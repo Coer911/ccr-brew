@@ -68,7 +68,7 @@ interface BrewingNoteFormModalProps {
 
 const EMPTY_COFFEE_BEAN_INFO = {
   name: '',
-  roastLevel: '中度烘焙',
+  roastLevel: 'Средняя обжарка',
   roastDate: '',
   roaster: undefined,
 };
@@ -81,7 +81,7 @@ const buildCoffeeBeanInfo = (
     const bean = coffeeBean as CoffeeBean;
     return {
       name: coffeeBean.name || '',
-      roastLevel: bean.roastLevel || '中度烘焙',
+      roastLevel: bean.roastLevel || 'Средняя обжарка',
       roastDate: bean.roastDate || '',
       roaster: bean.roaster,
     };
@@ -678,7 +678,7 @@ const BrewingNoteFormModal: React.FC<BrewingNoteFormModalProps> = ({
           );
         } catch (error) {
           console.error('创建咖啡豆失败:', error);
-          alert('创建咖啡豆失败，请重试');
+          alert('Не удалось создать зерно, попробуйте ещё раз');
           return;
         }
       } else if (
@@ -801,7 +801,7 @@ const BrewingNoteFormModal: React.FC<BrewingNoteFormModalProps> = ({
         ? [
             {
               id: 'coffeeBean',
-              label: '选择咖啡豆',
+              label: 'Выберите зерно',
               content: (
                 <CoffeeBeanSelector
                   coffeeBeans={availableCoffeeBeans}
@@ -821,7 +821,7 @@ const BrewingNoteFormModal: React.FC<BrewingNoteFormModalProps> = ({
         : []),
       {
         id: 'method',
-        label: '选择方案',
+        label: 'Выберите рецепт',
         content: (
           <div>
             <EquipmentCategoryBar
@@ -866,7 +866,7 @@ const BrewingNoteFormModal: React.FC<BrewingNoteFormModalProps> = ({
       },
       {
         id: 'note-form',
-        label: '冲煮笔记',
+        label: 'Заметка о заварке',
         content: (
           <BrewingNoteForm
             id={initialNote?.id}
@@ -942,11 +942,11 @@ const BrewingNoteFormModal: React.FC<BrewingNoteFormModalProps> = ({
       >
         <ActionDrawer.Content>
           <p className="text-neutral-500 dark:text-neutral-400">
-            当前内容尚未完成，你可以先
+            Данные ещё не заполнены. Можно
             <span className="text-neutral-800 dark:text-neutral-200">
-              保存为草稿
+              сохранить черновик
             </span>
-            ，稍后继续；也可以直接离开。
+            и продолжить позже или просто выйти.
           </p>
         </ActionDrawer.Content>
         <ActionDrawer.Actions>
@@ -954,13 +954,13 @@ const BrewingNoteFormModal: React.FC<BrewingNoteFormModalProps> = ({
             onClick={() => closeModal()}
             className="text-neutral-500 dark:text-neutral-400"
           >
-            离开
+            Выйти
           </ActionDrawer.SecondaryButton>
           <ActionDrawer.PrimaryButton
             onClick={handleSaveDraft}
             className="bg-neutral-200 text-neutral-800 dark:bg-neutral-700 dark:text-neutral-100"
           >
-            保存草稿
+            Сохранить черновик
           </ActionDrawer.PrimaryButton>
         </ActionDrawer.Actions>
       </ActionDrawer>

@@ -61,7 +61,7 @@ interface UseCopyResult {
  * ```
  */
 export function useCopy(options: UseCopyOptions = {}): UseCopyResult {
-  const { hapticFeedback = false, successMessage = '已复制到剪贴板' } = options;
+  const { hapticFeedback = false, successMessage = 'Скопировано в буфер обмена' } = options;
 
   const [showFailureDrawer, setShowFailureDrawer] = useState(false);
   const [failureContent, setFailureContent] = useState<string | null>(null);

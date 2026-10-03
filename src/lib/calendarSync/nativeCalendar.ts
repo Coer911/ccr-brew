@@ -2,7 +2,7 @@ import { Capacitor } from '@capacitor/core';
 import type { CalendarEventCandidate } from './eventCandidates';
 import { loadCalendarId, saveCalendarId } from './linkStore';
 
-const BREW_GUIDE_CALENDAR_TITLE = 'Brew Guide';
+const BREW_GUIDE_CALENDAR_TITLE = 'Cultura Brew';
 const BREW_GUIDE_CALENDAR_COLOR = '#6F4E37';
 const ANDROID_LOCAL_ACCOUNT = 'brew-guide.local';
 

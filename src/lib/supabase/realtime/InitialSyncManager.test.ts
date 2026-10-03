@@ -194,13 +194,13 @@ describe('InitialSyncManager settings sync', () => {
 
     useSyncStatusStore.getState().startSupabaseSyncProgress(
       'background-sync',
-      '正在同步 Supabase 数据',
+      'Синхронизируем данные Supabase',
       [
-        { id: SYNC_TABLES.COFFEE_BEANS, label: '咖啡豆' },
-        { id: SYNC_TABLES.BREWING_NOTES, label: '笔记' },
-        { id: SYNC_TABLES.CUSTOM_EQUIPMENTS, label: '自定义器具' },
-        { id: SYNC_TABLES.CUSTOM_METHODS, label: '自定义方案' },
-        { id: SYNC_TABLES.USER_SETTINGS, label: '设置' },
+        { id: SYNC_TABLES.COFFEE_BEANS, label: 'Зерно' },
+        { id: SYNC_TABLES.BREWING_NOTES, label: 'Заметки' },
+        { id: SYNC_TABLES.CUSTOM_EQUIPMENTS, label: 'Своё устройство' },
+        { id: SYNC_TABLES.CUSTOM_METHODS, label: 'Свой рецепт' },
+        { id: SYNC_TABLES.USER_SETTINGS, label: 'Настройки' },
       ]
     );
 
@@ -233,13 +233,13 @@ describe('InitialSyncManager settings sync', () => {
 
     useSyncStatusStore.getState().startSupabaseSyncProgress(
       'background-sync',
-      '正在同步 Supabase 数据',
+      'Синхронизируем данные Supabase',
       [
-        { id: SYNC_TABLES.COFFEE_BEANS, label: '咖啡豆' },
-        { id: SYNC_TABLES.BREWING_NOTES, label: '笔记' },
-        { id: SYNC_TABLES.CUSTOM_EQUIPMENTS, label: '自定义器具' },
-        { id: SYNC_TABLES.CUSTOM_METHODS, label: '自定义方案' },
-        { id: SYNC_TABLES.USER_SETTINGS, label: '设置' },
+        { id: SYNC_TABLES.COFFEE_BEANS, label: 'Зерно' },
+        { id: SYNC_TABLES.BREWING_NOTES, label: 'Заметки' },
+        { id: SYNC_TABLES.CUSTOM_EQUIPMENTS, label: 'Своё устройство' },
+        { id: SYNC_TABLES.CUSTOM_METHODS, label: 'Свой рецепт' },
+        { id: SYNC_TABLES.USER_SETTINGS, label: 'Настройки' },
       ]
     );
 
@@ -248,7 +248,7 @@ describe('InitialSyncManager settings sync', () => {
       settingsDirty: true,
     });
 
-    await expect(manager.performSync()).rejects.toThrow('失败项目 1 个');
+    await expect(manager.performSync()).rejects.toThrow('ошибок: 1');
     expect(setLastSyncTime).not.toHaveBeenCalled();
 
     const settingsTask =
@@ -290,7 +290,7 @@ describe('InitialSyncManager settings sync', () => {
 
     expect(settingsTask).toMatchObject({
       status: 'success',
-      detail: '已上传 1 项设置',
+      detail: 'Загружено: 1 настроек',
       uploaded: 1,
     });
   });

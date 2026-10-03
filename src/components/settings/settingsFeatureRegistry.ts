@@ -78,7 +78,7 @@ const SETTINGS_FEATURE_GROUP_ORDER: SettingsFeatureGroup[] = [
 const SETTINGS_FEATURES: SettingsFeatureDefinition[] = [
   {
     id: 'brewing-settings',
-    label: '冲煮',
+    label: 'Заварка',
     icon: Play,
     settingId: 'brewing-settings',
     onClick: 'onOpenBrewingSettings',
@@ -87,7 +87,7 @@ const SETTINGS_FEATURES: SettingsFeatureDefinition[] = [
   },
   {
     id: 'timer-settings',
-    label: '计时器',
+    label: 'Таймер',
     icon: Timer,
     settingId: 'timer-settings',
     onClick: 'onOpenTimerSettings',
@@ -96,7 +96,7 @@ const SETTINGS_FEATURES: SettingsFeatureDefinition[] = [
   },
   {
     id: 'grinder-settings',
-    label: '磨豆机',
+    label: 'Кофемолки',
     icon: Settings2,
     settingId: 'grinder-settings',
     onClick: 'onOpenGrinderSettings',
@@ -105,7 +105,7 @@ const SETTINGS_FEATURES: SettingsFeatureDefinition[] = [
   },
   {
     id: 'equipment-method-settings',
-    label: '器具和方案',
+    label: 'Устройства и рецепты',
     icon: LibraryBig,
     settingId: 'equipment-method-settings',
     onClick: 'onOpenEquipmentMethodSettings',
@@ -114,7 +114,7 @@ const SETTINGS_FEATURES: SettingsFeatureDefinition[] = [
   },
   {
     id: 'bean-settings',
-    label: '咖啡豆',
+    label: 'Зерно',
     icon: List,
     settingId: 'bean-settings',
     onClick: 'onOpenBeanSettings',
@@ -123,7 +123,7 @@ const SETTINGS_FEATURES: SettingsFeatureDefinition[] = [
   },
   {
     id: 'coffee-bean-group-settings',
-    label: '分组',
+    label: 'Группы',
     icon: Folder,
     settingId: 'coffee-bean-group-settings',
     onClick: 'onOpenCoffeeBeanGroupSettings',
@@ -131,12 +131,12 @@ const SETTINGS_FEATURES: SettingsFeatureDefinition[] = [
     placements: [{ group: 'coffeeBean', module: 'coffeeBean' }],
     getValue: settings =>
       settings.coffeeBeanGroups && settings.coffeeBeanGroups.length > 0
-        ? `${settings.coffeeBeanGroups.length} 组`
+        ? `${settings.coffeeBeanGroups.length} гр.`
         : undefined,
   },
   {
     id: 'green-bean-settings',
-    label: '生豆库',
+    label: 'Зелёное зерно',
     icon: Box,
     settingId: 'green-bean-settings',
     onClick: 'onOpenGreenBeanSettings',
@@ -145,7 +145,7 @@ const SETTINGS_FEATURES: SettingsFeatureDefinition[] = [
   },
   {
     id: 'stock-settings',
-    label: '库存扣除',
+    label: 'Списание запасов',
     icon: Archive,
     settingId: 'stock-settings',
     onClick: 'onOpenStockSettings',
@@ -154,7 +154,7 @@ const SETTINGS_FEATURES: SettingsFeatureDefinition[] = [
   },
   {
     id: 'flavor-period-settings',
-    label: '赏味期',
+    label: 'Лучший период',
     icon: CalendarDays,
     settingId: 'flavor-period-settings',
     onClick: 'onOpenFlavorPeriodSettings',
@@ -163,7 +163,7 @@ const SETTINGS_FEATURES: SettingsFeatureDefinition[] = [
   },
   {
     id: 'roaster-logo-settings',
-    label: '烘焙商图标',
+    label: 'Логотип обжарщика',
     icon: ImagePlus,
     settingId: 'roaster-logo-settings',
     onClick: 'onOpenRoasterLogoSettings',
@@ -172,7 +172,7 @@ const SETTINGS_FEATURES: SettingsFeatureDefinition[] = [
   },
   {
     id: 'note-settings',
-    label: '笔记',
+    label: 'Заметки',
     icon: Notebook,
     settingId: 'note-settings',
     onClick: 'onOpenNoteSettings',
@@ -181,7 +181,7 @@ const SETTINGS_FEATURES: SettingsFeatureDefinition[] = [
   },
   {
     id: 'flavor-dimension-settings',
-    label: '评分维度',
+    label: 'Критерии оценки',
     icon: Palette,
     settingId: 'flavor-dimension-settings',
     onClick: 'onOpenFlavorDimensionSettings',
@@ -190,7 +190,7 @@ const SETTINGS_FEATURES: SettingsFeatureDefinition[] = [
   },
   {
     id: 'random-coffee-bean-settings',
-    label: '随机咖啡豆',
+    label: 'Случайное зерно',
     icon: Shuffle,
     settingId: 'random-coffee-bean-settings',
     onClick: 'onOpenRandomCoffeeBeanSettings',
@@ -202,7 +202,7 @@ const SETTINGS_FEATURES: SettingsFeatureDefinition[] = [
   },
   {
     id: 'experimental-settings',
-    label: '实验性功能',
+    label: 'Экспериментальные функции',
     icon: FlaskConical,
     settingId: 'experimental-settings',
     onClick: 'onOpenExperimentalSettings',

@@ -26,7 +26,7 @@ const loadImage = (src: string, file: File): Promise<HTMLImageElement> =>
     image.onerror = () =>
       reject(
         new ImageProcessingError(
-          '图标解码失败，请更换图片后重试',
+          'Не удалось прочитать логотип, попробуйте другое изображение',
           'decode-failed',
           file
         )
@@ -215,7 +215,7 @@ const applyThermalDither = (imageData: ImageData): void => {
 export const processThermalPrintIcon = async (file: File): Promise<string> => {
   if (typeof document === 'undefined') {
     throw new ImageProcessingError(
-      '当前环境无法处理图标',
+      'Здесь нельзя обработать логотип',
       'decode-failed',
       file
     );
@@ -235,7 +235,7 @@ export const processThermalPrintIcon = async (file: File): Promise<string> => {
 
   if (sourceWidth <= 0 || sourceHeight <= 0) {
     throw new ImageProcessingError(
-      '图标尺寸无效，请更换图片后重试',
+      'Неверный размер логотипа, попробуйте другое изображение',
       'decode-failed',
       file
     );
@@ -245,7 +245,7 @@ export const processThermalPrintIcon = async (file: File): Promise<string> => {
   const sourceContext = sourceCanvas.getContext('2d');
   if (!sourceContext) {
     throw new ImageProcessingError(
-      '图标处理失败，请更换图片后重试',
+      'Не удалось обработать логотип, попробуйте другое изображение',
       'decode-failed',
       file
     );
@@ -270,7 +270,7 @@ export const processThermalPrintIcon = async (file: File): Promise<string> => {
 
   if (!outputContext) {
     throw new ImageProcessingError(
-      '图标处理失败，请更换图片后重试',
+      'Не удалось обработать логотип, попробуйте другое изображение',
       'decode-failed',
       file
     );

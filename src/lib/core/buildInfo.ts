@@ -6,7 +6,7 @@ const APP_BUILD_TIME = process.env.NEXT_PUBLIC_APP_BUILD_TIME || 'unknown';
 function formatBuildTime(rawTime: string): string {
   const time = new Date(rawTime);
   if (Number.isNaN(time.getTime())) {
-    return '未知时间';
+    return 'Неизвестное время';
   }
 
   const year = time.getFullYear();
@@ -30,5 +30,5 @@ export function getVersionLabel(): string {
 }
 
 export function getWebBuildDetail(): string {
-  return `main@${BUILD_INFO.gitShaShort} · 构建于 ${BUILD_INFO.buildTimeLabel}`;
+  return `main@${BUILD_INFO.gitShaShort} · собрано ${BUILD_INFO.buildTimeLabel}`;
 }

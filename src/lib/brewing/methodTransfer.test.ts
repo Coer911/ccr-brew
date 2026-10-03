@@ -11,7 +11,7 @@ const v60: CustomEquipment = {
 
 const clever: CustomEquipment = {
   id: 'CleverDripper',
-  name: '聪明杯',
+  name: 'Clever',
   animationType: 'clever',
   isCustom: true,
   hasValve: true,
@@ -19,7 +19,7 @@ const clever: CustomEquipment = {
 
 const espresso: CustomEquipment = {
   id: 'Espresso',
-  name: '意式咖啡机',
+  name: 'Эспрессо-машина',
   animationType: 'espresso',
   isCustom: true,
 };
@@ -37,12 +37,12 @@ const makeCustomEquipment = (
 
 const makeMethod = (stages: Method['params']['stages']): Method => ({
   id: 'method-1',
-  name: '测试方案',
+  name: 'Тестовый рецепт',
   params: {
     coffee: '15g',
     water: '225g',
     ratio: '1:15',
-    grindSize: '中细',
+    grindSize: 'Средне-мелкий',
     temp: '92°C',
     stages,
   },
@@ -51,7 +51,7 @@ const makeMethod = (stages: Method['params']['stages']): Method => ({
 describe('canTransferMethod', () => {
   it('rejects espresso methods on pour-over equipment', () => {
     const method = makeMethod([
-      { pourType: 'extraction', label: '萃取浓缩', duration: 25, detail: '' },
+      { pourType: 'extraction', label: 'Экстракция', duration: 25, detail: '' },
     ]);
 
     expect(canTransferMethod(method, espresso, v60)).toBe(false);
@@ -61,7 +61,7 @@ describe('canTransferMethod', () => {
     const method = makeMethod([
       {
         pourType: 'circle',
-        label: '绕圈注水',
+        label: 'Пролив по кругу',
         water: '30',
         duration: 10,
         detail: '',
@@ -77,12 +77,12 @@ describe('transferMethodToEquipment', () => {
     const method = makeMethod([
       {
         pourType: 'circle',
-        label: '绕圈注水',
+        label: 'Пролив по кругу',
         water: '30',
         duration: 10,
         detail: '',
       },
-      { pourType: 'wait', label: '等待', duration: 15, detail: '' },
+      { pourType: 'wait', label: 'Ожидание', duration: 15, detail: '' },
     ]);
 
     const transferred = transferMethodToEquipment(method, v60, clever);
@@ -96,16 +96,16 @@ describe('transferMethodToEquipment', () => {
 
   it('maps custom pour animations to the target animation with the same name', () => {
     const source = makeCustomEquipment('custom-a', [
-      { id: 'pour-1', name: '螺旋注水', customAnimationSvg: '' },
+      { id: 'pour-1', name: 'Спиральный пролив', customAnimationSvg: '' },
     ]);
     const target = makeCustomEquipment('custom-b', [
-      { id: 'pour-2', name: '花洒注水', customAnimationSvg: '' },
-      { id: 'pour-3', name: '螺旋注水', customAnimationSvg: '' },
+      { id: 'pour-2', name: 'Пролив через рассекатель', customAnimationSvg: '' },
+      { id: 'pour-3', name: 'Спиральный пролив', customAnimationSvg: '' },
     ]);
     const method = makeMethod([
       {
         pourType: 'pour-1',
-        label: '螺旋注水',
+        label: 'Спиральный пролив',
         water: '30',
         duration: 10,
         detail: '',
@@ -119,15 +119,15 @@ describe('transferMethodToEquipment', () => {
 
   it('falls back to the target default pour type when nothing matches', () => {
     const source = makeCustomEquipment('custom-a', [
-      { id: 'pour-1', name: '螺旋注水', customAnimationSvg: '' },
+      { id: 'pour-1', name: 'Спиральный пролив', customAnimationSvg: '' },
     ]);
     const target = makeCustomEquipment('custom-b', [
-      { id: 'pour-2', name: '花洒注水', customAnimationSvg: '' },
+      { id: 'pour-2', name: 'Пролив через рассекатель', customAnimationSvg: '' },
     ]);
     const method = makeMethod([
       {
         pourType: 'pour-1',
-        label: '螺旋注水',
+        label: 'Спиральный пролив',
         water: '30',
         duration: 10,
         detail: '',
@@ -143,7 +143,7 @@ describe('transferMethodToEquipment', () => {
     const method = makeMethod([
       {
         pourType: 'circle',
-        label: '绕圈注水',
+        label: 'Пролив по кругу',
         water: '30',
         duration: 10,
         detail: '',

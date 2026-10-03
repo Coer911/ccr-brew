@@ -78,7 +78,7 @@ const DimensionEditorDrawer: React.FC<DimensionEditorDrawerProps> = ({
   return (
     <PageStackDrawer
       isOpen={Boolean(draft)}
-      title={draft?.id ? '编辑维度' : '新建维度'}
+      title={draft?.id ? 'Изменить критерий' : 'Новый критерий'}
       activeKey={draft?.id || 'new'}
       canGoBack={false}
       doneDisabled={!draft?.label.trim()}
@@ -88,7 +88,7 @@ const DimensionEditorDrawer: React.FC<DimensionEditorDrawerProps> = ({
       historyId="flavor-dimension-editor-drawer"
     >
       <div>
-        <SettingSection title="维度名称">
+        <SettingSection title="Название критерия">
           <SettingRow vertical>
             <input
               ref={inputRef}
@@ -99,7 +99,7 @@ const DimensionEditorDrawer: React.FC<DimensionEditorDrawerProps> = ({
                   onDone();
                 }
               }}
-              placeholder="输入评分维度名称"
+              placeholder="Введите название критерия оценки"
               className="w-full bg-transparent text-sm text-neutral-900 outline-none placeholder:text-neutral-400 dark:text-neutral-50 dark:placeholder:text-neutral-500"
               autoComplete="off"
               id="flavor-dimension-name-input"
@@ -108,13 +108,13 @@ const DimensionEditorDrawer: React.FC<DimensionEditorDrawerProps> = ({
         </SettingSection>
 
         {draft?.id && !draft.isDefault && (
-          <SettingSection title="操作">
+          <SettingSection title="Действия">
             <button
               type="button"
               onClick={onDelete}
               className="flex w-full cursor-pointer items-center px-3.5 py-3.5 text-left text-sm font-medium text-neutral-600 transition active:bg-black/5 dark:text-neutral-300 dark:active:bg-white/5"
             >
-              删除维度
+              Удалить критерий
             </button>
           </SettingSection>
         )}
@@ -225,7 +225,7 @@ const FlavorDimensionSettings: React.FC<FlavorDimensionSettingsProps> = ({
         draft.id ? '更新评分维度失败:' : '添加评分维度失败:',
         error
       );
-      alert(draft.id ? '更新评分维度失败，请重试' : '添加评分维度失败，请重试');
+      alert(draft.id ? 'Не удалось обновить критерий, попробуйте ещё раз' : 'Не удалось добавить критерий, попробуйте ещё раз');
     }
   }, [closeEditor, draft, loadDimensions, triggerLightHaptic]);
 
@@ -249,7 +249,7 @@ const FlavorDimensionSettings: React.FC<FlavorDimensionSettingsProps> = ({
       triggerLightHaptic();
     } catch (error) {
       console.error('删除评分维度失败:', error);
-      alert('删除评分维度失败，请重试');
+      alert('Не удалось удалить критерий, попробуйте ещё раз');
     }
   }, [closeEditor, deleteTarget, loadDimensions, triggerLightHaptic]);
 
@@ -264,7 +264,7 @@ const FlavorDimensionSettings: React.FC<FlavorDimensionSettingsProps> = ({
       }
     } catch (error) {
       console.error('重置评分维度失败:', error);
-      alert('重置评分维度失败，请重试');
+      alert('Не удалось сбросить критерии, попробуйте ещё раз');
     }
   }, [loadDimensions, settings.hapticFeedback]);
 
@@ -276,7 +276,7 @@ const FlavorDimensionSettings: React.FC<FlavorDimensionSettingsProps> = ({
         triggerLightHaptic();
       } catch (error) {
         console.error('重新排序失败:', error);
-        alert('重新排序失败，请重试');
+        alert('Не удалось изменить порядок, попробуйте ещё раз');
         loadDimensions();
       }
     },
@@ -291,7 +291,7 @@ const FlavorDimensionSettings: React.FC<FlavorDimensionSettingsProps> = ({
   const dimensionSectionTitle = (
     <div className="flex items-center justify-between pl-3.5">
       <h3 className="text-sm font-semibold tracking-wider text-neutral-500 uppercase dark:text-neutral-400">
-        当前维度
+        Текущие критерии
       </h3>
       {dimensions.length > 1 && (
         <button
@@ -299,7 +299,7 @@ const FlavorDimensionSettings: React.FC<FlavorDimensionSettingsProps> = ({
           onClick={toggleReorderMode}
           className="flex cursor-pointer items-center rounded-full px-3 text-sm font-medium text-neutral-600 transition-transform active:scale-[0.96] dark:text-neutral-300"
         >
-          {isReorderMode ? '完成' : '编辑'}
+          {isReorderMode ? 'Готово' : 'Изменить'}
         </button>
       )}
     </div>
@@ -309,7 +309,7 @@ const FlavorDimensionSettings: React.FC<FlavorDimensionSettingsProps> = ({
 
   return (
     <>
-      <SettingPage title="评分维度" isVisible={isVisible} onClose={handleClose}>
+      <SettingPage title="Критерии оценки" isVisible={isVisible} onClose={handleClose}>
         <SettingSection title={dimensionSectionTitle} className="-mt-4">
           {dimensions.length === 0 ? (
             <button
@@ -318,7 +318,7 @@ const FlavorDimensionSettings: React.FC<FlavorDimensionSettingsProps> = ({
               className="flex w-full cursor-pointer items-center px-3.5 py-3.5 text-left transition active:bg-black/5 dark:active:bg-white/5"
             >
               <span className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                新建维度
+                Новый критерий
               </span>
             </button>
           ) : (
@@ -330,7 +330,7 @@ const FlavorDimensionSettings: React.FC<FlavorDimensionSettingsProps> = ({
                   className="flex w-full cursor-pointer items-center border-b border-black/5 py-3.5 text-left transition active:opacity-70 dark:border-white/5"
                 >
                   <span className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                    新建维度
+                    Новый критерий
                   </span>
                 </button>
               </div>
@@ -361,13 +361,13 @@ const FlavorDimensionSettings: React.FC<FlavorDimensionSettingsProps> = ({
           )}
         </SettingSection>
 
-        <SettingSection title="操作">
+        <SettingSection title="Действия">
           <button
             type="button"
             onClick={() => setShowResetConfirm(true)}
             className="flex w-full cursor-pointer items-center px-3.5 py-3.5 text-left text-sm font-medium text-neutral-600 transition active:bg-black/5 dark:text-neutral-300 dark:active:bg-white/5"
           >
-            重置为默认维度
+            Вернуть стандартные критерии
           </button>
         </SettingSection>
       </SettingPage>
@@ -389,7 +389,7 @@ const FlavorDimensionSettings: React.FC<FlavorDimensionSettingsProps> = ({
           void executeDeleteDimension();
         }}
         itemName={deleteTarget?.label || ''}
-        itemType="评分维度"
+        itemType="Критерии оценки"
         onExitComplete={() => setDeleteTarget(null)}
       />
 
@@ -399,15 +399,15 @@ const FlavorDimensionSettings: React.FC<FlavorDimensionSettingsProps> = ({
         onConfirm={() => {
           void executeResetToDefault();
         }}
-        confirmText="重置"
+        confirmText="Сбросить"
         isDanger
         message={
           <>
-            确认将评分维度恢复为默认配置吗？
+            Вернуть стандартные критерии оценки?
             <span className="text-neutral-800 dark:text-neutral-200">
-              所有自定义维度都会被移除
+              Все свои критерии будут удалены
             </span>
-            ，此操作不可撤销。
+            , отменить это нельзя.
           </>
         }
       />

@@ -13,12 +13,12 @@ describe('getCommonMethodsForEquipment', () => {
   it('uses the current custom equipment type instead of the old id hint', () => {
     const methods = getCommonMethodsForEquipment(solo.id, [solo]);
 
-    expect(methods[0]?.name).toBe('杜嘉宁十克萃');
+    expect(methods[0]?.name).toBe('Ду Цзянин 10 г');
   });
 
   it('keeps built-in equipment lookup boring', () => {
     const methods = getCommonMethodsForEquipment('V60', []);
 
-    expect(methods[0]?.name).toBe('一刀流');
+    expect(methods[0]?.name).toBe('Иттоурю');
   });
 });

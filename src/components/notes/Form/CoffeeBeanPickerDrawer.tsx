@@ -93,7 +93,7 @@ const CoffeeBeanPickerDrawer: React.FC<CoffeeBeanPickerDrawerProps> = ({
         setIsLongPressRandom(isLongPress);
         setShowRandomPicker(true);
       } else {
-        showToast({ type: 'info', title: '没有可用的咖啡豆', duration: 2000 });
+        showToast({ type: 'info', title: 'Нет доступного зерна', duration: 2000 });
       }
     },
     [allBeans, triggerHaptic]

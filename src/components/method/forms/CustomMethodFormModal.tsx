@@ -57,7 +57,7 @@ const CustomMethodFormModal: React.FC<CustomMethodFormModalProps> = ({
   const [currentFormStep, setCurrentFormStep] = useState(1);
   const defaultDrawerChrome = useMemo(
     () => ({
-      doneLabel: '下一步',
+      doneLabel: 'Далее',
       doneDisabled: false,
       canGoBack: false,
     }),
@@ -137,12 +137,12 @@ const CustomMethodFormModal: React.FC<CustomMethodFormModalProps> = ({
       try {
         // 检查必要字段
         if (!method.name) {
-          setValidationError('请输入方案名称');
+          setValidationError('Введите название рецепта');
           return null;
         }
 
         if (!method.params?.coffee || !method.params?.water) {
-          setValidationError('请输入咖啡粉量和水量');
+          setValidationError('Укажите дозу кофе и количество воды');
           return null;
         }
 
@@ -166,7 +166,7 @@ const CustomMethodFormModal: React.FC<CustomMethodFormModalProps> = ({
         return methodWithId.id;
       } catch (error) {
         console.error('保存方案失败:', error);
-        setValidationError('保存失败，请重试');
+        setValidationError('Не удалось сохранить, попробуйте ещё раз');
         return null;
       }
     },
@@ -196,7 +196,7 @@ const CustomMethodFormModal: React.FC<CustomMethodFormModalProps> = ({
 
     return [
       {
-        label: '跳过',
+        label: 'Пропустить',
         onClick: handleSkipStages,
       },
       {
@@ -223,10 +223,10 @@ const CustomMethodFormModal: React.FC<CustomMethodFormModalProps> = ({
     <>
       <PageStackDrawer
         isOpen={isCustomMethodDrawerOpen}
-        title={editingMethod ? '编辑方案' : '添加方案'}
+        title={editingMethod ? 'Изменить рецепт' : 'Добавить рецепт'}
         activeKey={`custom-method-form-${currentFormStep}`}
         canGoBack={drawerChrome.canGoBack}
-        backLabel="上一步"
+        backLabel="Назад"
         doneLabel={drawerChrome.doneLabel}
         doneActions={drawerDoneActions}
         doneDisabled={drawerChrome.doneDisabled}

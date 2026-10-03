@@ -955,7 +955,7 @@ const AppModals: React.FC<AppModalsProps> = ({
               if (result.success) {
                 showToast({
                   type: 'success',
-                  title: '已复制到剪贴板',
+                  title: 'Скопировано в буфер обмена',
                   duration: 2000,
                 });
                 if (settings.hapticFeedback) {
@@ -966,7 +966,7 @@ const AppModals: React.FC<AppModalsProps> = ({
               } else {
                 showToast({
                   type: 'error',
-                  title: '复制失败',
+                  title: 'Не удалось скопировать',
                   duration: 2000,
                 });
               }
@@ -1020,7 +1020,7 @@ const AppModals: React.FC<AppModalsProps> = ({
                     if (!preview.success || !preview.preview) {
                       showToast({
                         type: 'error',
-                        title: preview.error || '无法转换',
+                        title: preview.error || 'Невозможно преобразовать',
                         duration: 3000,
                       });
                       return;
@@ -1059,7 +1059,7 @@ const AppModals: React.FC<AppModalsProps> = ({
                       await import('@/components/common/feedback/LightToast');
                     showToast({
                       type: 'error',
-                      title: '转换失败',
+                      title: 'Не удалось преобразовать',
                       duration: 2000,
                     });
                   }
@@ -1233,7 +1233,7 @@ const AppModals: React.FC<AppModalsProps> = ({
         onClose={() => setShowDeleteConfirm(false)}
         onConfirm={() => deleteConfirmData?.onConfirm()}
         itemName={deleteConfirmData?.itemName || ''}
-        itemType={deleteConfirmData?.itemType || '项目'}
+        itemType={deleteConfirmData?.itemType || 'элемент'}
         onExitComplete={() => setDeleteConfirmData(null)}
       />
 
@@ -1243,7 +1243,7 @@ const AppModals: React.FC<AppModalsProps> = ({
         onClose={() => setShowConfirmDrawer(false)}
         onConfirm={() => confirmDrawerData?.onConfirm()}
         message={confirmDrawerData?.message || ''}
-        confirmText={confirmDrawerData?.confirmText || '确认'}
+        confirmText={confirmDrawerData?.confirmText || 'Подтвердить'}
         onExitComplete={() => setConfirmDrawerData(null)}
       />
 

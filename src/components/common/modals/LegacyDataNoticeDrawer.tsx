@@ -55,26 +55,26 @@ const LegacyDataNoticeDrawer: React.FC<LegacyDataNoticeDrawerProps> = ({
       className="inline cursor-pointer font-medium text-neutral-900 underline underline-offset-4 dark:text-neutral-100"
       data-vaul-no-drag
     >
-      开发者
+      разработчиком
     </button>
   );
 
   const noticeContent =
     exportStatus === 'success' ? (
-      <>数据已导出，请联系{developerButton}处理。</>
+      <>Данные выгружены, свяжитесь с{developerButton}.</>
     ) : exportStatus === 'error' ? (
-      <>导出失败，请稍后重试。</>
+      <>Не удалось выгрузить, попробуйте позже.</>
     ) : (
       <>
-        检测到
+        Найдены
         <span className="font-medium text-neutral-900 dark:text-neutral-100">
-          旧版数据
+          данные старой версии
         </span>
-        。为保护本地数据，应用
+        . Чтобы не потерять их, приложение
         <span className="font-medium text-neutral-900 dark:text-neutral-100">
-          不会自动迁移
+          не переносит их автоматически
         </span>
-        ，请导出数据后联系{developerButton}处理。
+        . Выгрузите данные и свяжитесь с{developerButton}.
       </>
     );
 
@@ -88,21 +88,15 @@ const LegacyDataNoticeDrawer: React.FC<LegacyDataNoticeDrawerProps> = ({
         {activeView === 'developer-code' ? (
           <>
             <ActionDrawer.Content className="flex flex-col items-center">
-              <div className="overflow-hidden rounded-lg border border-neutral-400/10 bg-white p-2">
-                <Image
-                  src="/images/content/chu-code.jpg"
-                  alt="开发者二维码"
-                  width={200}
-                  height={200}
-                  className="h-auto w-50"
-                />
-              </div>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                Напишите в поддержку Cultura Coffee и приложите выгруженный файл.
+              </p>
             </ActionDrawer.Content>
             <ActionDrawer.Actions>
               <ActionDrawer.SecondaryButton
                 onClick={() => setActiveView('notice')}
               >
-                返回
+                Назад
               </ActionDrawer.SecondaryButton>
             </ActionDrawer.Actions>
           </>
@@ -119,13 +113,13 @@ const LegacyDataNoticeDrawer: React.FC<LegacyDataNoticeDrawerProps> = ({
                 onClick={handleClose}
                 disabled={isExporting}
               >
-                关闭
+                Закрыть
               </ActionDrawer.SecondaryButton>
               <ActionDrawer.PrimaryButton
                 onClick={handleExport}
                 disabled={isExporting}
               >
-                {isExporting ? '正在导出' : '导出数据'}
+                {isExporting ? 'Выгружаем' : 'Выгрузить данные'}
               </ActionDrawer.PrimaryButton>
             </ActionDrawer.Actions>
           </>

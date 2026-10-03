@@ -10,42 +10,42 @@ describe('bean print content', () => {
     const bean: CoffeeBean = {
       id: 'bean',
       timestamp: 1,
-      name: '奇拉卡',
+      name: 'Чирака',
       blendComponents: [
         {
-          origin: '埃塞俄比亚 西达摩 博纳',
-          country: '埃塞俄比亚',
-          region: '西达摩',
-          estate: '博纳',
-          processingStation: '沃卡',
-          process: '水洗',
+          origin: 'Эфиопия Сидамо Бона',
+          country: 'Эфиопия',
+          region: 'Сидамо',
+          estate: 'Бона',
+          processingStation: 'Вока',
+          process: 'Мытая',
         },
       ],
     };
 
     const content = createInitialContent(bean, {});
 
-    expect(content.origin).toBe('埃塞俄比亚 西达摩 博纳');
-    expect(content.country).toBe('埃塞俄比亚');
-    expect(content.region).toBe('西达摩');
-    expect(content.estate).toBe('博纳');
-    expect(content.processingStation).toBe('沃卡');
+    expect(content.origin).toBe('Эфиопия Сидамо Бона');
+    expect(content.country).toBe('Эфиопия');
+    expect(content.region).toBe('Сидамо');
+    expect(content.estate).toBe('Бона');
+    expect(content.processingStation).toBe('Вока');
   });
 
   it('shows configured component fields and keeps fields with existing bean data', () => {
     const content: EditableContent = {
-      name: '奇拉卡',
+      name: 'Чирака',
       roaster: '',
       origin: '',
-      country: '埃塞俄比亚',
-      region: '西达摩',
+      country: 'Эфиопия',
+      region: 'Сидамо',
       estate: '',
       processingStation: '',
       altitude: '',
       roastLevel: '',
       roastDate: '',
       packDate: '',
-      process: '水洗',
+      process: 'Мытая',
       batch: '1931',
       variety: '',
       flavor: [],

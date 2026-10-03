@@ -75,7 +75,7 @@ export function useEquipmentList<
       setAllEquipments(finalEquipments as T[]);
     } catch (err) {
       console.error('加载器具排序失败:', err);
-      setError(err instanceof Error ? err.message : '加载失败');
+      setError(err instanceof Error ? err.message : 'Ошибка загрузки');
 
       // 使用默认排序作为回退
       const defaultEquipments =
@@ -119,7 +119,7 @@ export function useEquipmentList<
       setAllEquipments(finalEquipments as T[]);
     } catch (err) {
       console.error('更新器具排序失败:', err);
-      setError(err instanceof Error ? err.message : '更新失败');
+      setError(err instanceof Error ? err.message : 'Ошибка обновления');
     }
   }, [customEquipments, settings, transformItems]);
 

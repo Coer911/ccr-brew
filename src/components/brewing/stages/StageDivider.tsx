@@ -13,7 +13,7 @@ const StageDivider: React.FC<StageDividerProps> = ({ stageNumber }) => {
       {/* 阶段标识 - 调整垂直对齐 */}
       <div className="absolute -top-px left-1/2 inline-flex -translate-x-1/2 translate-y-[-50%] transform items-center justify-center bg-neutral-50 px-3 dark:bg-neutral-900">
         <span className="text-[10px] leading-tight font-light text-neutral-600 opacity-70 dark:text-neutral-400">
-          {stageNumber} 阶段
+          Этап {stageNumber}
         </span>
       </div>
     </div>

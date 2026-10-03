@@ -151,7 +151,7 @@ const getCupPriceDisplay = (
   const coffeeWeight = coffeeMatch ? parseFloat(coffeeMatch[0]) : 0;
   const cupPrice = coffeeWeight * unitPrice;
 
-  return `${cupPrice.toFixed(2)}元（${unitPrice.toFixed(2)}元/克）`;
+  return `${cupPrice.toFixed(2)} ₽ (${unitPrice.toFixed(2)} ₽/г)`;
 };
 
 interface BeanTitleLinkProps {
@@ -176,8 +176,8 @@ const BeanTitleLink: React.FC<BeanTitleLinkProps> = ({
       type="button"
       onClick={() => onOpenBeanDetail(bean)}
       className={`${className} cursor-pointer transition-colors hover:text-neutral-950 dark:hover:text-white`}
-      title="查看咖啡豆详情"
-      aria-label={`${title}，查看咖啡豆详情`}
+      title="Открыть карточку зерна"
+      aria-label={`${title}, открыть карточку зерна`}
     >
       {title}
     </button>
@@ -301,16 +301,16 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
       return null;
     }
 
-    return roasterName && roasterName !== '未知烘焙商' ? roasterName : null;
+    return roasterName && roasterName !== 'Неизвестный обжарщик' ? roasterName : null;
   }, [beanFrontImage, beanInfo, roasterName]);
   const roasterLogo = useRoasterLogo(roasterLogoName);
   const beanDisplayImage = beanFrontImage || roasterLogo;
   const isBeanDisplayImageFromBean = Boolean(beanFrontImage);
   const beanDisplayImageAlt = isBeanDisplayImageFromBean
-    ? beanName || '咖啡豆图片'
+    ? beanName || 'Фото зерна'
     : roasterName
-      ? `${roasterName} 烘焙商图标`
-      : '烘焙商图标';
+      ? `${roasterName} логотип обжарщика`
+      : 'Логотип обжарщика';
   const getOriginalBeanImage = useCallback(
     async (
       side: CoffeeBeanImageSide,
@@ -375,7 +375,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
 
     if (
       note.equipment?.toLowerCase().includes('espresso') ||
-      note.equipment?.includes('意式')
+      note.equipment?.includes('Эспрессо')
     ) {
       return [
         normalizedParams.coffee,
@@ -441,10 +441,10 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
 
       openImageViewer({
         url: selectedImage,
-        alt: `笔记图片 ${index + 1}`,
+        alt: `Фото заметки ${index + 1}`,
         items: images.map((url, itemIndex) => ({
           url,
-          alt: `笔记图片 ${itemIndex + 1}`,
+          alt: `Фото заметки ${itemIndex + 1}`,
         })),
         index,
         sourceElement,
@@ -724,7 +724,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
       note
         ? getNoteDeleteDisplay(note, coffeeBeanLookup)
         : {
-            itemName: '此笔记',
+            itemName: 'эту заметку',
             itemSuffix: undefined,
           },
     [note, coffeeBeanLookup]
@@ -750,7 +750,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
     if (onDelete) {
       items.push({
         id: 'delete',
-        label: '删除',
+        label: 'Удалить',
         onClick: () => {
           setShowDeleteConfirm(true);
         },
@@ -761,7 +761,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
     if (onShare) {
       items.push({
         id: 'share',
-        label: '分享',
+        label: 'Поделиться',
         onClick: () => {
           onShare(note.id);
           onClose();
@@ -773,7 +773,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
     if (onCopy) {
       items.push({
         id: 'copy',
-        label: '复制',
+        label: 'Копировать',
         onClick: () => {
           onCopy(note.id);
           onClose();
@@ -785,7 +785,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
     if (onEdit) {
       items.push({
         id: 'edit',
-        label: '编辑',
+        label: 'Изменить',
         onClick: () => {
           onEdit(note);
           // 不关闭详情页，让编辑表单叠加在上面
@@ -905,7 +905,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                     <div className="relative h-32 overflow-hidden bg-neutral-100 dark:bg-neutral-800">
                       {hasBeanDisplayImageError ? (
                         <div className="absolute inset-0 flex items-center justify-center text-xs text-neutral-500 dark:text-neutral-400">
-                          加载失败
+                          Ошибка загрузки
                         </div>
                       ) : (
                         <Image
@@ -940,7 +940,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                         <div className="relative h-20 shrink-0 overflow-hidden bg-neutral-100 dark:bg-neutral-800">
                           {hasBeanDisplayImageError ? (
                             <div className="absolute inset-0 flex items-center justify-center text-xs text-neutral-500 dark:text-neutral-400">
-                              加载失败
+                              Ошибка загрузки
                             </div>
                           ) : (
                             <Image
@@ -972,12 +972,12 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                       <div className="relative h-32 overflow-hidden bg-neutral-100 dark:bg-neutral-800">
                         {hasPrimaryNoteImageError ? (
                           <div className="absolute inset-0 flex items-center justify-center px-8 text-sm text-neutral-500 dark:text-neutral-400">
-                            加载失败
+                            Ошибка загрузки
                           </div>
                         ) : (
                           <Image
                             src={primaryNoteImage}
-                            alt={beanName || '笔记图片'}
+                            alt={beanName || 'Фото заметки'}
                             height={192}
                             width={192}
                             className="h-full w-auto object-cover"
@@ -1093,13 +1093,13 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                           >
                             {multiImageErrors.has(index) ? (
                               <div className="flex h-full w-full items-center justify-center text-xs text-neutral-500 dark:text-neutral-400">
-                                加载失败
+                                Ошибка загрузки
                               </div>
                             ) : (
                               /* eslint-disable-next-line @next/next/no-img-element */
                               <img
                                 src={img}
-                                alt={`笔记图片 ${index + 1}`}
+                                alt={`Фото заметки ${index + 1}`}
                                 className="block h-full w-full object-cover"
                                 onError={() => {
                                   setMultiImageErrorState(prev => {
@@ -1151,7 +1151,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                     content: (
                       <>
                         {cupPriceDisplay && (
-                          <InfoRow label="价格">
+                          <InfoRow label="Цена">
                             <div className="text-xs font-medium text-neutral-800 dark:text-neutral-100">
                               {cupPriceDisplay}
                             </div>
@@ -1159,15 +1159,15 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                         )}
 
                         {beanAgingDays !== null && (
-                          <InfoRow label="养豆">
+                          <InfoRow label="Отдых">
                             <div className="text-xs font-medium text-neutral-800 dark:text-neutral-100">
-                              {beanAgingDays} 天
+                              {beanAgingDays} дн.
                             </div>
                           </InfoRow>
                         )}
 
                         {beanFlavorTags.length > 0 && (
-                          <InfoRow label="风味">
+                          <InfoRow label="Вкусы">
                             <div className="-mt-0.5 flex flex-wrap items-center gap-1">
                               {beanFlavorTags.map(flavor => (
                                 <span
@@ -1189,7 +1189,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                     content: (
                       <>
                         {schemeParts.length > 0 && (
-                          <InfoRow label="方案">
+                          <InfoRow label="Рецепт">
                             <div className="space-x-1 text-xs font-medium text-neutral-800 dark:text-neutral-100">
                               {schemeParts.map((part, index) => (
                                 <React.Fragment key={`scheme-${part}`}>
@@ -1206,7 +1206,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                         )}
 
                         {paramParts.length > 0 && (
-                          <InfoRow label="参数">
+                          <InfoRow label="Параметры">
                             <div className="flex flex-col">
                               <div className="space-x-1 text-xs font-medium text-neutral-800 dark:text-neutral-100">
                                 {paramParts.map((param, index) => (
@@ -1225,7 +1225,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                         )}
 
                         {hasTasteRatings && (
-                          <InfoRow label="评分">
+                          <InfoRow label="Оценка">
                             {validTasteRatings.length > 4 ? (
                               <button
                                 type="button"
@@ -1259,7 +1259,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                         )}
 
                         {note.rating > 0 && (
-                          <InfoRow label="总评">
+                          <InfoRow label="Итог">
                             <span className="-mt-0.5 bg-neutral-100 px-1.5 py-0.5 text-xs font-medium text-neutral-700 dark:bg-neutral-800/40 dark:text-neutral-300">
                               {note.rating}/5
                             </span>
@@ -1274,7 +1274,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                     content: (
                       <>
                         {showNoteTimeInNote && (
-                          <InfoRow label="时间">
+                          <InfoRow label="Время">
                             <div className="text-xs font-medium text-neutral-800 dark:text-neutral-100">
                               {formatNoteDetailDateTime(note.timestamp)}
                             </div>
@@ -1282,7 +1282,7 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
                         )}
 
                         {note.notes && (
-                          <InfoRow label="笔记">
+                          <InfoRow label="Заметки">
                             <div
                               ref={notesRef}
                               contentEditable
@@ -1318,9 +1318,9 @@ const NoteDetailModal: React.FC<NoteDetailModalProps> = ({
           }
         }}
         itemName={deleteDisplay.itemName}
-        itemType="笔记"
+        itemType="Заметки"
         itemSuffix={deleteDisplay.itemSuffix}
-        extraWarning="删除后咖啡豆库存将恢复。"
+        extraWarning="После удаления остаток зерна восстановится."
       />
 
       {/* 评分雷达图抽屉 */}

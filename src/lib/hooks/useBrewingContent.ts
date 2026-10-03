@@ -52,17 +52,17 @@ export function useBrewingContent({
   customEquipments = [], // 设置默认值为空数组
 }: UseBrewingContentProps) {
   const initialContent: Content = {
-    咖啡豆: {
+    Зерно: {
       steps: [],
     },
-    方案: {
+    Рецепт: {
       steps: [],
       type: 'common',
     },
-    注水: {
+    Пролив: {
       steps: [],
     },
-    记录: {
+    Записать: {
       steps: [],
     },
   };
@@ -147,9 +147,9 @@ export function useBrewingContent({
               title: method.name,
               methodId: method.id,
               items: [
-                `水粉比 ${method.params.ratio}`,
-                `水量 ${method.params.water}`,
-                `研磨度 ${method.params.grindSize}`,
+                `Соотношение ${method.params.ratio}`,
+                `Вода ${method.params.water}`,
+                `Помол ${method.params.grindSize}`,
               ],
               note: '',
               isNoStageMethod: true,
@@ -201,16 +201,16 @@ export function useBrewingContent({
               stage => stage.pourType === 'extraction'
             );
             items = [
-              `粉量 ${method.params.coffee}`,
-              `液重 ${extractionStage?.water || method.params.water}`,
-              `萃取时间 ${formatTime(totalTime, true)}`,
+              `Доза ${method.params.coffee}`,
+              `Выход ${extractionStage?.water || method.params.water}`,
+              `Время экстракции ${formatTime(totalTime, true)}`,
             ];
           } else {
             // 传统方案显示: 水粉比、总时长、研磨度
             items = [
-              `水粉比 ${method.params.ratio}`,
-              `总时长 ${formatTime(totalTime, true)}`,
-              `研磨度 ${method.params.grindSize}`,
+              `Соотношение ${method.params.ratio}`,
+              `Общее время ${formatTime(totalTime, true)}`,
+              `Помол ${method.params.grindSize}`,
             ];
           }
 
@@ -275,7 +275,7 @@ export function useBrewingContent({
                   items: [],
                   note: '',
                   isDivider: true,
-                  dividerText: '无步骤方案',
+                  dividerText: 'Рецепт без этапов',
                   defaultCollapsed: true,
                 },
               ]
@@ -289,7 +289,7 @@ export function useBrewingContent({
                   items: [],
                   note: '',
                   isDivider: true,
-                  dividerText: '通用方案',
+                  dividerText: 'Общие рецепты',
                 },
               ]
             : [];
@@ -304,7 +304,7 @@ export function useBrewingContent({
 
         const result = {
           ...prev,
-          方案: {
+          Рецепт: {
             // 由于已经合并了两种方案，这里的type不再那么重要
             // 但为了兼容性，保留此属性
             type: methodType,
@@ -359,7 +359,7 @@ export function useBrewingContent({
         if (stage.pourType === 'extraction') {
           return {
             ...baseStep,
-            note: `${stageDuration}秒`, // 萃取类型显示时间
+            note: `${stageDuration} с`, // 萃取类型显示时间
             type: 'pour' as const, // 使用有效的类型
             startTime: 0, // 萃取从0开始
             endTime: stageDuration, // 萃取结束时间
@@ -379,7 +379,7 @@ export function useBrewingContent({
       // 更新content的注水部分
       setContent(prev => ({
         ...prev,
-        注水: {
+        Пролив: {
           steps: espressoSteps,
         },
       }));
@@ -458,7 +458,7 @@ export function useBrewingContent({
 
         expandedStages.push({
           type: 'wait',
-          label: stage.label || '等待',
+          label: stage.label || 'Ожидание',
           water: String(cumulativeWater),
           independentWater: '0',
           cumulativeWater: String(cumulativeWater),
@@ -476,7 +476,7 @@ export function useBrewingContent({
 
         expandedStages.push({
           type: 'pour',
-          label: stage.label || `阶段 ${stageIndex + 1}`,
+          label: stage.label || `Этап ${stageIndex + 1}`,
           water: String(cumulativeWater),
           independentWater: stage.water || '0',
           cumulativeWater: String(cumulativeWater),
@@ -498,7 +498,7 @@ export function useBrewingContent({
     // 更新content的注水部分
     setContent(prev => ({
       ...prev,
-      注水: {
+      Пролив: {
         steps: expandedStages.map(stage => ({
           title: stage.label,
           items: [appendGramUnit(stage.water), stage.detail],
@@ -506,7 +506,7 @@ export function useBrewingContent({
             independent: appendGramUnit(stage.independentWater),
             cumulative: appendGramUnit(stage.cumulativeWater),
           },
-          note: stage.pourType === 'bypass' ? '' : stage.time + '秒',
+          note: stage.pourType === 'bypass' ? '' : stage.time + 'с',
           type: stage.type,
           originalIndex: stage.originalIndex,
           startTime: stage.startTime,
@@ -612,7 +612,7 @@ export function useBrewingContent({
           // 创建等待阶段
           expandedStages.push({
             type: 'wait',
-            label: '等待',
+            label: 'Ожидание',
             water: stage.water || '0', // 水量与前一阶段相同
             independentWater: '0',
             cumulativeWater: String(currentCumulativeWater),
@@ -629,7 +629,7 @@ export function useBrewingContent({
         // 如果没有注水时间，只添加一个等待阶段
         expandedStages.push({
           type: 'wait',
-          label: '等待',
+          label: 'Ожидание',
           water: stage.water || '0',
           independentWater: '0',
           cumulativeWater: stage.water || '0',
@@ -647,7 +647,7 @@ export function useBrewingContent({
     // 更新content的注水部分
     setContent(prev => ({
       ...prev,
-      注水: {
+      Пролив: {
         steps: expandedStages.map(stage => ({
           title: stage.label,
           items: [appendGramUnit(stage.water), stage.detail],
@@ -658,7 +658,7 @@ export function useBrewingContent({
           note:
             stage.pourType === 'bypass'
               ? '' // Bypass 步骤不显示时间
-              : stage.endTime - stage.startTime + '秒', // 显示当前阶段的时长
+              : stage.endTime - stage.startTime + 'с', // 显示当前阶段的时长
           type: stage.type, // 添加类型标记
           originalIndex: stage.originalIndex, // 保留原始索引以便于参考
           startTime: stage.startTime, // 保存开始时间

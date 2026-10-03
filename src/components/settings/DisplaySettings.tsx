@@ -35,9 +35,9 @@ type SafeAreaPreviewState = NonNullable<SettingsOptions['safeAreaMargins']> & {
 };
 
 const APPEARANCE_OPTIONS = [
-  { value: 'light', label: '浅色' },
-  { value: 'dark', label: '深色' },
-  { value: 'system', label: '系统' },
+  { value: 'light', label: 'Светлая' },
+  { value: 'dark', label: 'Тёмная' },
+  { value: 'system', label: 'Как в системе' },
 ];
 
 function isTauri() {
@@ -303,26 +303,26 @@ function DisplaySettings({ onClose }: DisplaySettingsProps) {
   );
 
   return (
-    <SettingPage title="外观" isVisible={isVisible} onClose={handleClose}>
+    <SettingPage title="Внешний вид" isVisible={isVisible} onClose={handleClose}>
       {safeAreaPreview !== null ? (
         <SafeAreaMarginPreview preview={safeAreaPreview} />
       ) : null}
 
-      <SettingSection title="外观" className="-mt-4">
-        <SettingRow label="外观模式" isLast>
+      <SettingSection title="Внешний вид" className="-mt-4">
+        <SettingRow label="Тема" isLast>
           <SettingSelector
             value={theme ?? 'system'}
             options={APPEARANCE_OPTIONS}
-            ariaLabel="外观模式"
+            ariaLabel="Тема"
             onChange={handleThemeChange}
           />
         </SettingRow>
       </SettingSection>
 
       {isFontZoomEnabled ? (
-        <SettingSection title="字体">
+        <SettingSection title="Шрифт">
           <SettingRow
-            settingId={makeSettingRowSearchId('字体')}
+            settingId={makeSettingRowSearchId('Шрифт')}
             isLast
             vertical
           >
@@ -332,8 +332,8 @@ function DisplaySettings({ onClose }: DisplaySettingsProps) {
               max={1.2}
               step={0.1}
               onChange={handleFontZoomChange}
-              minLabel="小"
-              maxLabel="大"
+              minLabel="Мал."
+              maxLabel="Бол."
               showTicks
             />
           </SettingRow>
@@ -341,8 +341,8 @@ function DisplaySettings({ onClose }: DisplaySettingsProps) {
       ) : null}
 
       {isTauriEnv ? (
-        <SettingSection title="菜单栏">
-          <SettingRow label="显示菜单栏图标" isLast>
+        <SettingSection title="Панель меню">
+          <SettingRow label="Показывать иконки в меню" isLast>
             <SettingToggle
               checked={showMenuBarIcon !== false}
               onChange={handleMenuBarIconChange}
@@ -351,28 +351,28 @@ function DisplaySettings({ onClose }: DisplaySettingsProps) {
         </SettingSection>
       ) : null}
 
-      <SettingSection title="安全区域边距">
-        <SettingRow label="顶部边距" vertical>
+      <SettingSection title="Отступы безопасной зоны">
+        <SettingRow label="Отступ сверху" vertical>
           <SettingSlider
             value={resolveSafeAreaMargins(safeAreaMargins).top}
             min={SAFE_AREA_MARGIN_MIN}
             max={SAFE_AREA_MARGIN_MAX}
             step={SAFE_AREA_MARGIN_STEP}
             onChange={handleTopSafeAreaChange}
-            minLabel="小"
-            maxLabel="大"
+            minLabel="Мал."
+            maxLabel="Бол."
           />
         </SettingRow>
 
-        <SettingRow label="底部边距" isLast vertical>
+        <SettingRow label="Отступ снизу" isLast vertical>
           <SettingSlider
             value={resolveSafeAreaMargins(safeAreaMargins).bottom}
             min={SAFE_AREA_MARGIN_MIN}
             max={SAFE_AREA_MARGIN_MAX}
             step={SAFE_AREA_MARGIN_STEP}
             onChange={handleBottomSafeAreaChange}
-            minLabel="小"
-            maxLabel="大"
+            minLabel="Мал."
+            maxLabel="Бол."
           />
         </SettingRow>
       </SettingSection>

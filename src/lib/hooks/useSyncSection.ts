@@ -124,16 +124,16 @@ export function useSyncSection(
   }, [enabled, status]);
 
   const getStatusText = useCallback(() => {
-    if (!enabled) return '点击启用';
+    if (!enabled) return 'Нажмите, чтобы включить';
     switch (status) {
       case 'connected':
-        return '已连接';
+        return 'Подключено';
       case 'connecting':
-        return '连接中...';
+        return 'Подключаемся...';
       case 'error':
-        return '连接失败';
+        return 'Ошибка подключения';
       default:
-        return '未配置';
+        return 'Не настроено';
     }
   }, [enabled, status]);
 

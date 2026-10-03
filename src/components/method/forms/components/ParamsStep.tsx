@@ -68,14 +68,14 @@ const ParamsStep: React.FC<ParamsStepProps> = ({
         {/* 咖啡粉量 */}
         <div className="space-y-2">
           <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-            咖啡粉量
+            Доза кофе
           </label>
           <div className="relative">
             <input
               type="number"
               min="0"
               step="0.1"
-              placeholder={isEspresso ? '例如：18' : '例如：15'}
+              placeholder={isEspresso ? 'Например: 18' : 'Например: 15'}
               value={params.coffee.replace('g', '')}
               onChange={onCoffeeChange}
               onFocus={e => e.target.select()}
@@ -90,7 +90,7 @@ const ParamsStep: React.FC<ParamsStepProps> = ({
         {/* 水粉比 */}
         <div className="space-y-2">
           <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-            水粉比
+            Соотношение
           </label>
           <div className="relative">
             <span className="absolute bottom-2 left-0 text-neutral-500 dark:text-neutral-400">
@@ -100,7 +100,7 @@ const ParamsStep: React.FC<ParamsStepProps> = ({
               type="number"
               min="0"
               step="0.1"
-              placeholder={isEspresso ? '例如：2' : '例如：15'}
+              placeholder={isEspresso ? 'Например: 2' : 'Например: 15'}
               value={params.ratio.replace('1:', '')}
               onChange={onRatioChange}
               onFocus={e => e.target.select()}
@@ -113,14 +113,14 @@ const ParamsStep: React.FC<ParamsStepProps> = ({
         {isEspresso && showExtractionTime && (
           <div className="space-y-2">
             <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-              萃取时间
+              Время экстракции
             </label>
             <div className="relative">
               <input
                 type="number"
                 min="0"
                 step="1"
-                placeholder="例如：25"
+                placeholder="Например: 25"
                 value={params.extractionTime || ''}
                 onChange={e => {
                   if (onExtractionTimeChange) {
@@ -131,7 +131,7 @@ const ParamsStep: React.FC<ParamsStepProps> = ({
                 className="w-full border-b border-neutral-300 bg-transparent py-2 outline-hidden focus:border-neutral-800/50 dark:border-neutral-700 dark:focus:border-neutral-400"
               />
               <span className="absolute right-0 bottom-2 text-neutral-500 dark:text-neutral-400">
-                秒
+                с
               </span>
             </div>
           </div>
@@ -141,14 +141,14 @@ const ParamsStep: React.FC<ParamsStepProps> = ({
         {isEspresso && (
           <div className="space-y-2">
             <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-              液重
+              Выход напитка
             </label>
             <div className="relative">
               <input
                 type="number"
                 min="0"
                 step="0.1"
-                placeholder="例如：36"
+                placeholder="Например: 36"
                 value={(params.liquidWeight || params.water).replace('g', '')}
                 onChange={e => {
                   if (onLiquidWeightChange) {
@@ -168,13 +168,13 @@ const ParamsStep: React.FC<ParamsStepProps> = ({
         {/* 研磨度 */}
         <div className="space-y-2">
           <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-            研磨度
+            Помол
           </label>
           <GrindSizeInput
             value={params.grindSize || ''}
             onChange={onGrindSizeChange}
             placeholder={
-              isEspresso ? '例如：特细、浓缩咖啡级' : '例如：中细、特细、中粗等'
+              isEspresso ? 'Например: очень мелкий, под эспрессо' : 'Например: средне-мелкий, очень мелкий, средне-крупный'
             }
             inputClassName="w-full border-b border-neutral-300 bg-transparent py-2 outline-hidden focus:border-neutral-800/50 dark:border-neutral-700 dark:focus:border-neutral-400"
             defaultSyncEnabled={false}
@@ -185,7 +185,7 @@ const ParamsStep: React.FC<ParamsStepProps> = ({
         {!isEspresso && (
           <div className="space-y-2">
             <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-              水温
+              Температура воды
             </label>
             <div className="relative">
               <input
@@ -193,7 +193,7 @@ const ParamsStep: React.FC<ParamsStepProps> = ({
                 min="0"
                 max="100"
                 step="0.1"
-                placeholder="例如：92"
+                placeholder="Например: 92"
                 value={params.temp ? params.temp.replace('°C', '') : ''}
                 onChange={onTempChange}
                 onFocus={e => e.target.select()}

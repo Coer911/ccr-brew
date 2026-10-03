@@ -190,13 +190,13 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
       'image/heif',
     ];
     if (!allowedTypes.includes(file.type)) {
-      alert('请上传 JPG、PNG 或 WebP 格式的图片');
+      alert('Загрузите картинку JPG, PNG или WebP');
       return;
     }
 
     // 验证文件大小（最大5MB）
     if (file.size > 5 * 1024 * 1024) {
-      alert('图片文件不能超过5MB');
+      alert('Картинка не должна быть больше 5 МБ');
       return;
     }
 
@@ -217,7 +217,7 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
       }
     } catch (error) {
       console.error('Upload error:', error);
-      alert('添加失败：' + (error as Error).message);
+      alert('Не удалось добавить: ' + (error as Error).message);
       if (hapticFeedback) {
         hapticsUtils.error();
       }
@@ -268,12 +268,12 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
     ) => {
       openImageViewer({
         url: logoData,
-        alt: `${roasterName} 图标`,
+        alt: `${roasterName} — логотип`,
         sourceElement,
         action: {
-          label: '保存到相册',
-          loadingLabel: '保存中...',
-          ariaLabel: `保存 ${roasterName} 图标到相册`,
+          label: 'Сохранить в галерею',
+          loadingLabel: 'Сохраняем...',
+          ariaLabel: `Сохранить логотип ${roasterName} в галерею`,
           onClick: async () => {
             try {
               const outcome =
@@ -281,7 +281,7 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
               if (outcome === 'saved' || outcome === 'downloaded') {
                 showToast({
                   type: 'success',
-                  title: outcome === 'saved' ? '已保存到相册' : '图片已保存',
+                  title: outcome === 'saved' ? 'Сохранено в галерею' : 'Картинка сохранена',
                 });
                 if (hapticFeedback) {
                   hapticsUtils.success();
@@ -289,7 +289,7 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
               }
             } catch (error) {
               console.error('Save roaster logo error:', error);
-              showToast({ type: 'error', title: '保存失败' });
+              showToast({ type: 'error', title: 'Не удалось сохранить' });
               if (hapticFeedback) {
                 hapticsUtils.error();
               }
@@ -432,7 +432,7 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
       }
     } catch (error) {
       console.error('Rename roasters error:', error);
-      alert('保存失败：' + (error as Error).message);
+      alert('Не удалось сохранить: ' + (error as Error).message);
       if (hapticFeedback) {
         hapticsUtils.error();
       }
@@ -460,10 +460,10 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <ImagePlus className="mb-2 size-10 text-neutral-300 dark:text-neutral-600" />
             <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
-              暂无烘焙商
+              Обжарщиков пока нет
             </p>
             <p className="mt-1 text-xs text-neutral-400 dark:text-neutral-500">
-              添加咖啡豆后，烘焙商会自动出现在这里
+              Обжарщики появятся здесь автоматически, когда вы добавите зерно
             </p>
           </div>
         ) : (
@@ -471,7 +471,7 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
             {/* 烘焙商列表标题 */}
             <div className="flex items-center justify-between gap-3 pl-3.5">
               <h3 className="text-sm font-medium tracking-wider text-neutral-500 uppercase tabular-nums dark:text-neutral-400">
-                烘焙商列表 ({filteredRoasters.length})
+                Обжарщики ({filteredRoasters.length})
               </h3>
 
               {isEditingRoasters ? (
@@ -482,7 +482,7 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
                     disabled={isSavingRoasters}
                     className="flex cursor-pointer items-center rounded-full px-3 text-sm font-medium text-neutral-500 transition-transform active:scale-[0.96] disabled:cursor-default disabled:opacity-40 disabled:active:scale-100 dark:text-neutral-400"
                   >
-                    取消
+                    Отмена
                   </button>
                   <button
                     type="button"
@@ -494,7 +494,7 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
                     }
                     className="flex cursor-pointer items-center rounded-full px-3 text-sm font-medium text-neutral-800 transition-transform active:scale-[0.96] disabled:cursor-default disabled:opacity-40 disabled:active:scale-100 dark:text-neutral-100"
                   >
-                    {isSavingRoasters ? '保存中' : '保存'}
+                    {isSavingRoasters ? 'Сохраняем' : 'Сохранить'}
                   </button>
                 </div>
               ) : (
@@ -504,21 +504,21 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
                     onClick={handleOpenImport}
                     className="flex cursor-pointer items-center rounded-full px-3 text-sm font-medium text-neutral-500 transition-transform active:scale-[0.96] dark:text-neutral-400"
                   >
-                    导入
+                    Импорт
                   </button>
                   <button
                     type="button"
                     onClick={handleOpenExport}
                     className="flex cursor-pointer items-center rounded-full px-3 text-sm font-medium text-neutral-500 transition-transform active:scale-[0.96] dark:text-neutral-400"
                   >
-                    导出
+                    Экспорт
                   </button>
                   <button
                     type="button"
                     onClick={handleStartEditRoasters}
                     className="flex cursor-pointer items-center rounded-full px-3 text-sm font-medium text-neutral-600 transition-transform active:scale-[0.96] dark:text-neutral-300"
                   >
-                    编辑
+                    Изменить
                   </button>
                 </div>
               )}
@@ -528,7 +528,7 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
             <div className="space-y-2">
               {filteredRoasters.length === 0 ? (
                 <div className="rounded bg-neutral-100 px-4 py-6 text-sm text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400">
-                  没有找到匹配的烘焙商
+                  Обжарщик не найден
                 </div>
               ) : (
                 filteredRoasters.map(roaster => {
@@ -579,8 +579,8 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
                             }
                             disabled={isUploading}
                             className={`${logoPreviewClassName} cursor-zoom-in p-0 transition-transform focus-visible:ring-2 focus-visible:ring-neutral-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 focus-visible:outline-none active:scale-[0.96] disabled:cursor-default disabled:opacity-60 disabled:active:scale-100 dark:focus-visible:ring-neutral-500/60 dark:focus-visible:ring-offset-neutral-900`}
-                            title="放大图标"
-                            aria-label={`放大 ${roaster} 的图标`}
+                            title="Увеличить логотип"
+                            aria-label={`Увеличить ${roaster} — логотип`}
                           >
                             <Image
                               src={logoData}
@@ -632,7 +632,7 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
                                   ? 'pointer-events-none opacity-0'
                                   : 'opacity-100'
                               }`}
-                              aria-label={`编辑 ${roaster} 的烘焙商名称`}
+                              aria-label={`Изменить ${roaster} — название обжарщика`}
                               autoComplete="off"
                               spellCheck={false}
                             />
@@ -643,7 +643,7 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
                                 onMouseDown={e => e.preventDefault()}
                                 onClick={() => focusRoasterNameInput(roaster)}
                                 className="roaster-rename-preview absolute inset-0 flex min-w-0 cursor-text items-center gap-2 text-left"
-                                aria-label={`继续编辑 ${roaster}，当前目标名称为 ${normalizedDraftName}`}
+                                aria-label={`Продолжить правку ${roaster}, сейчас новое название: ${normalizedDraftName}`}
                               >
                                 <span className="roaster-rename-preview-old relative max-w-[42%] min-w-0 truncate text-sm leading-5 font-medium text-neutral-500/60 dark:text-neutral-400/60">
                                   {roaster}
@@ -683,7 +683,7 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
                             onClick={e => handleDeleteLogo(roaster, e)}
                             disabled={isUploading}
                             className="rounded p-1.5 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-red-500 disabled:opacity-50 dark:hover:bg-neutral-700"
-                            title="删除图标"
+                            title="Удалить логотип"
                           >
                             <X className="size-4" />
                           </button>
@@ -695,7 +695,7 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
                           disabled={isUploading}
                           className="rounded px-2.5 py-1 text-xs font-medium text-neutral-600 transition-colors hover:bg-neutral-100 disabled:opacity-50 dark:text-neutral-400 dark:hover:bg-neutral-700"
                         >
-                          {isUploading ? '添加中...' : hasLogo ? '更换' : '添加'}
+                          {isUploading ? 'Добавляем...' : hasLogo ? 'Заменить' : 'Добавить'}
                         </button>
 
                         {/* 隐藏的文件输入 */}
@@ -734,7 +734,7 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
       <SettingsSearchBar
         query={searchQuery}
         firstResult={null}
-        placeholder="搜索烘焙商"
+        placeholder="Поиск обжарщика"
         position="fixed"
         onQueryChange={setSearchQuery}
         onSelect={() => {}}
@@ -749,7 +749,7 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
             executeDeleteLogo(deleteRoasterName);
           }
         }}
-        itemName={`${deleteRoasterName || ''} 的图标`}
+        itemName={`${deleteRoasterName || ''} — логотип`}
         itemType=""
         onExitComplete={() => setDeleteRoasterName(null)}
       />
@@ -761,15 +761,15 @@ const RoasterLogoSettings: React.FC<RoasterLogoSettingsProps> = ({
           void executeSaveRoasters();
         }}
         icon={DataAlertIcon}
-        confirmText="确认"
+        confirmText="Подтвердить"
         message={
           <>
-            本次会统一修改
+            Будет изменено сразу
             <span className="text-neutral-800 dark:text-neutral-200">
               {' '}
-              {pendingRenameCount} 个烘焙商名称{' '}
+              {pendingRenameCount} названий обжарщиков{' '}
             </span>
-            ，并同步更新咖啡豆、冲煮记录快照、烘焙商图标配置等。保存后无法还原。
+            , вместе с зерном, снимками в записях заварок и логотипами. После сохранения вернуть нельзя.
           </>
         }
       />

@@ -64,7 +64,7 @@ const FlavorNotesSection: React.FC<FlavorNotesSectionProps> = ({
     handleUpdateField({ flavor: nextFlavors });
   };
 
-  const placeholder = currentFlavors.length === 0 ? '输入风味，逗号分隔' : '+ ';
+  const placeholder = currentFlavors.length === 0 ? 'Вкусы, через запятую' : '+ ';
 
   return (
     <>
@@ -72,7 +72,7 @@ const FlavorNotesSection: React.FC<FlavorNotesSectionProps> = ({
       {(isAddMode || (bean?.flavor && bean.flavor.length > 0)) && (
         <div className="flex items-start">
           <div className="w-16 shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-            风味
+            Вкус
           </div>
           <div className="-mt-0.5 flex flex-1 flex-wrap items-center gap-1">
             {/* 已有的风味标签 */}
@@ -120,7 +120,7 @@ const FlavorNotesSection: React.FC<FlavorNotesSectionProps> = ({
       {(isAddMode || bean?.notes) && (
         <div className="flex items-start">
           <div className="w-16 shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-            备注
+            Заметка
           </div>
           <div className="relative flex-1">
             {isAddMode && !tempBean.notes && (
@@ -128,7 +128,7 @@ const FlavorNotesSection: React.FC<FlavorNotesSectionProps> = ({
                 className="pointer-events-none absolute top-0 left-0 text-xs font-medium text-neutral-400 dark:text-neutral-500"
                 data-placeholder="notes"
               >
-                输入备注
+                Введите заметку
               </span>
             )}
             <div

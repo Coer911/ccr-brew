@@ -30,9 +30,9 @@ export async function exportDataAsJsonFile(
   return exportJsonFile({
     jsonData,
     fileName: createDataExportFileName(),
-    title: '导出数据',
-    text: '请选择保存位置',
-    dialogTitle: '导出数据',
+    title: 'Выгрузить данные',
+    text: 'Выберите, куда сохранить',
+    dialogTitle: 'Выгрузить данные',
     returnIncompleteResult: options.returnIncompleteResult,
   });
 }

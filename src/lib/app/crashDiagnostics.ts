@@ -351,8 +351,8 @@ const buildInferredReport = (
     : session.fatalError
       ? `${session.fatalError.phase}: ${session.fatalError.message}`
       : session.activeOperation
-        ? `应用在执行「${session.activeOperation.name}」时中断，可能是内存压力、WebView 崩溃或系统强杀`
-        : '应用在启动完成前中断，可能是内存压力、WebView 崩溃或系统强杀',
+        ? `Приложение прервалось во время «${session.activeOperation.name}» — возможно, не хватило памяти, упал WebView или система закрыла приложение`
+        : 'Приложение прервалось до завершения запуска — возможно, не хватило памяти, упал WebView или система закрыла приложение',
   session,
   detectedAt: nowIso(),
 });
@@ -706,19 +706,19 @@ export const formatCrashDiagnosticReport = (
 ): string => {
   const { session } = report;
   const header = [
-    `检测时间: ${report.detectedAt}`,
-    `来源: ${report.source}`,
-    `推断原因: ${report.inferredReason}`,
-    `会话 ID: ${session.sessionId}`,
-    `启动状态: ${session.startupState}`,
-    `开始时间: ${session.startedAt}`,
-    `最后更新时间: ${session.updatedAt}`,
+    `Время обнаружения: ${report.detectedAt}`,
+    `Источник: ${report.source}`,
+    `Вероятная причина: ${report.inferredReason}`,
+    `ID сессии: ${session.sessionId}`,
+    `Состояние запуска: ${session.startupState}`,
+    `Начало: ${session.startedAt}`,
+    `Последнее обновление: ${session.updatedAt}`,
   ];
 
   const lastCheckpoint = session.lastCheckpoint
     ? [
         '',
-        '最后检查点:',
+        'Последняя контрольная точка:',
         `${session.lastCheckpoint.name} @ ${session.lastCheckpoint.at}`,
         session.lastCheckpoint.meta
           ? safelyStringify(session.lastCheckpoint.meta)
@@ -729,14 +729,14 @@ export const formatCrashDiagnosticReport = (
   const activeOperation = session.activeOperation
     ? [
         '',
-        '中断操作:',
+        'Прерванное действие:',
         `${session.activeOperation.name} @ ${session.activeOperation.startedAt}`,
-        `更新时间: ${session.activeOperation.updatedAt}`,
+        `Обновлено: ${session.activeOperation.updatedAt}`,
         session.activeOperation.meta
           ? safelyStringify(session.activeOperation.meta)
           : '',
         session.activeOperation.lastStep
-          ? `最后步骤: ${session.activeOperation.lastStep.name} @ ${session.activeOperation.lastStep.at}`
+          ? `Последний шаг: ${session.activeOperation.lastStep.name} @ ${session.activeOperation.lastStep.at}`
           : '',
         session.activeOperation.lastStep?.meta
           ? safelyStringify(session.activeOperation.lastStep.meta)
@@ -747,7 +747,7 @@ export const formatCrashDiagnosticReport = (
   const fatalError = session.fatalError
     ? [
         '',
-        '致命错误:',
+        'Критическая ошибка:',
         `${session.fatalError.name}: ${session.fatalError.message}`,
         `Phase: ${session.fatalError.phase}`,
         session.fatalError.stack || '',
@@ -755,13 +755,13 @@ export const formatCrashDiagnosticReport = (
     : [];
 
   const nativeCrash = session.nativeCrash
-    ? ['', '原生崩溃记录:', safelyStringify(session.nativeCrash)]
+    ? ['', 'Запись о падении:', safelyStringify(session.nativeCrash)]
     : [];
 
   const checkpoints = session.checkpoints.length
     ? [
         '',
-        '最近检查点:',
+        'Последние контрольные точки:',
         ...session.checkpoints.map(
           checkpoint =>
             `${checkpoint.at} ${checkpoint.name}${

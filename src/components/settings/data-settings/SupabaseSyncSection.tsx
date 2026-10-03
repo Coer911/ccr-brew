@@ -42,17 +42,17 @@ interface SupabaseSyncSectionProps {
 }
 
 const TASK_STATUS_LABELS: Record<SupabaseSyncTaskStatus, string> = {
-  pending: '等待',
-  preparing: '准备',
-  fetching: '检查',
-  uploading: '上传',
-  downloading: '下载',
-  writing: '写入',
-  verifying: '校验',
-  queued: '已排队',
-  success: '完成',
-  warning: '待处理',
-  error: '失败',
+  pending: 'Ожидание',
+  preparing: 'Подготовка',
+  fetching: 'Проверка',
+  uploading: 'Загрузить в облако',
+  downloading: 'Скачать из облака',
+  writing: 'Запись',
+  verifying: 'Сверка',
+  queued: 'В очереди',
+  success: 'Готово',
+  warning: 'Ожидает',
+  error: 'Ошибка',
 };
 
 function getTaskProgressPercent(task: SupabaseSyncTask): number | null {
@@ -118,12 +118,12 @@ const SupabaseSyncProgressPanel: React.FC<{
     ? getOverallProgressPercent(visibleProgressTasks)
     : null;
   const panelTitle = progress.active
-    ? `同步进度${overallPercent !== null ? ` ${overallPercent}%` : ''}`
+    ? `Синхронизация ${overallPercent !== null ? ` ${overallPercent}%` : ''}`
     : pendingChangesCount > 0
-      ? '待同步变更'
-      : '上次同步未完成';
+      ? 'Изменения к синхронизации'
+      : 'Прошлая синхронизация не завершилась';
   const panelMessage = progress.active
-    ? `${progress.message || '正在同步 Supabase 数据'}，请不要离开应用或关闭窗口。`
+    ? `${progress.message || 'Синхронизируем данные Supabase'}, не уходите из приложения и не закрывайте окно.`
     : progress.message;
 
   if (!showProgressPanel) return null;
@@ -189,7 +189,7 @@ const SupabaseSyncProgressPanel: React.FC<{
 
       {pendingChangesCount > 0 && !hasOfflineQueueTask && (
         <p className="mt-3 rounded-md bg-neutral-50 p-2 text-xs text-neutral-600 dark:bg-neutral-950/40 dark:text-neutral-400">
-          {pendingChangesCount} 个变更待同步
+          {pendingChangesCount} изменений ждут синхронизации
         </p>
       )}
     </div>
@@ -253,20 +253,20 @@ export const SupabaseSyncSection: React.FC<SupabaseSyncSectionProps> = ({
   const getStatusText = () => {
     switch (status) {
       case 'connected':
-        return '已连接';
+        return 'Подключено';
       case 'connecting':
-        return '连接中...';
+        return 'Подключаемся...';
       case 'error':
-        return '连接失败';
+        return 'Ошибка подключения';
       default:
-        return '未连接';
+        return 'Не подключено';
     }
   };
 
   // 连接/重连实时同步服务
   const connectRealtimeSync = async () => {
     if (!settings.url || !settings.anonKey) {
-      setError('请填写完整的配置信息');
+      setError('Заполните все настройки');
       return;
     }
 
@@ -285,10 +285,10 @@ export const SupabaseSyncSection: React.FC<SupabaseSyncSectionProps> = ({
         onSettingChange('lastConnectionSuccess', true);
         triggerHaptic('medium');
       } else {
-        setError('连接失败：请检查配置和网络，并确保已执行 SQL 初始化脚本');
+        setError('Ошибка подключения: проверьте настройки и сеть и что SQL-скрипт инициализации выполнен');
       }
     } catch (err) {
-      setError(`连接失败: ${err instanceof Error ? err.message : '未知错误'}`);
+      setError(`Ошибка подключения: ${err instanceof Error ? err.message : 'Неизвестная ошибка'}`);
     } finally {
       setIsConnecting(false);
     }
@@ -383,7 +383,7 @@ export const SupabaseSyncSection: React.FC<SupabaseSyncSectionProps> = ({
             onClick={() => setShowSQLDrawer(true)}
             className="flex w-full items-center justify-between rounded-md border border-neutral-200/50 bg-neutral-50 px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
           >
-            <span>查看初始化 SQL 脚本</span>
+            <span>Показать SQL-скрипт инициализации</span>
             <ExternalLink className="h-4 w-4" />
           </button>
 
@@ -410,11 +410,11 @@ export const SupabaseSyncSection: React.FC<SupabaseSyncSectionProps> = ({
         <ActionDrawer.Icon icon={DataAlertIcon} />
         <ActionDrawer.Content>
           <p className="mb-3 text-neutral-500 dark:text-neutral-400">
-            请在 Supabase 项目的{' '}
+            Выполните в проекте Supabase в разделе{' '}
             <span className="text-neutral-800 dark:text-neutral-200">
               SQL Editor
             </span>{' '}
-            中执行以下脚本来创建所需的数据表。
+            этот скрипт — он создаст нужные таблицы.
           </p>
           <textarea
             ref={textAreaRef}
@@ -426,10 +426,10 @@ export const SupabaseSyncSection: React.FC<SupabaseSyncSectionProps> = ({
         </ActionDrawer.Content>
         <ActionDrawer.Actions>
           <ActionDrawer.SecondaryButton onClick={() => setShowSQLDrawer(false)}>
-            关闭
+            Закрыть
           </ActionDrawer.SecondaryButton>
           <ActionDrawer.PrimaryButton onClick={handleCopySQL}>
-            {copySuccess ? '已复制' : '复制脚本'}
+            {copySuccess ? 'Скопировано' : 'Скопировать скрипт'}
           </ActionDrawer.PrimaryButton>
         </ActionDrawer.Actions>
       </ActionDrawer>

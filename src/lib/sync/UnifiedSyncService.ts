@@ -133,12 +133,12 @@ class UnifiedSyncService {
     onProgress?: (p: SyncProgress) => void
   ): Promise<ISyncResult> {
     const provider = this.getManualProvider(settings);
-    if (provider === 'none') return createFailureResult('未配置云同步服务');
+    if (provider === 'none') return createFailureResult('Облачная синхронизация не настроена');
 
     const manager = await this.getManager(settings, provider, {
       skipConnectionTest: true,
     });
-    if (!manager) return createFailureResult('同步服务初始化失败');
+    if (!manager) return createFailureResult('Не удалось запустить синхронизацию');
 
     return manager.sync({ direction, onProgress } as ISyncOptions);
   }

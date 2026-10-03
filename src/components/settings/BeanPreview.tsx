@@ -14,22 +14,22 @@ const createSampleBeans = (): ExtendedCoffeeBean[] => [
   {
     id: 'preview-bean-1',
     timestamp: Date.now() - 1000,
-    name: '蓝山一号 精选批次',
+    name: 'Блю Маунтин №1, отборная партия',
     beanType: 'filter',
     price: '298',
     capacity: '225g',
     remaining: '156g',
-    roastLevel: '中浅烘焙',
+    roastLevel: 'Светло-средняя обжарка',
     roastDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
       .toISOString()
       .split('T')[0],
-    flavor: ['柑橘', '蜂蜜', '花香', '坚果'],
-    notes: '这是一款来自牙买加蓝山的精选咖啡豆，口感层次丰富，酸度明亮。',
+    flavor: ['Цитрусовые', 'Мёд', 'Цветочные', 'Орехи'],
+    notes: 'Отборное зерно с Голубых гор Ямайки: многослойный вкус и яркая кислотность.',
     blendComponents: [
       {
-        origin: '牙买加蓝山',
-        process: '水洗',
-        variety: '铁皮卡',
+        origin: 'Ямайка Блю Маунтин',
+        process: 'Мытая',
+        variety: 'Типика',
         percentage: 100,
       },
     ],
@@ -41,22 +41,22 @@ const createSampleBeans = (): ExtendedCoffeeBean[] => [
   {
     id: 'preview-bean-2',
     timestamp: Date.now(),
-    name: '耶加雪菲 果丁丁',
+    name: 'Иргачефф Гокиоко',
     beanType: 'filter',
     price: '168',
     capacity: '200g',
     remaining: '95g',
-    roastLevel: '浅烘焙',
+    roastLevel: 'Светлая обжарка',
     roastDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)
       .toISOString()
       .split('T')[0],
-    flavor: ['柠檬', '茉莉花', '柑橘'],
-    notes: '明亮的酸度，花香浓郁',
+    flavor: ['Лимон', 'Цветы жасмина', 'Цитрусовые'],
+    notes: 'Яркая кислотность, насыщенный цветочный аромат',
     blendComponents: [
       {
-        origin: '埃塞俄比亚',
-        process: '水洗',
-        variety: '当地原生种',
+        origin: 'Эфиопия',
+        process: 'Мытая',
+        variety: 'Местные разновидности',
         percentage: 100,
       },
     ],
@@ -68,22 +68,22 @@ const createSampleBeans = (): ExtendedCoffeeBean[] => [
   {
     id: 'preview-bean-3',
     timestamp: Date.now() + 1000,
-    name: '哥伦比亚 慧兰',
+    name: 'Колумбия Уила',
     beanType: 'espresso',
     price: '185',
     capacity: '250g',
     remaining: '203g',
-    roastLevel: '中深烘焙',
+    roastLevel: 'Средне-тёмная обжарка',
     roastDate: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000)
       .toISOString()
       .split('T')[0],
-    flavor: ['巧克力', '焦糖', '坚果'],
-    notes: '醇厚回甘，适合意式浓缩',
+    flavor: ['Шоколад', 'Карамель', 'Орехи'],
+    notes: 'Плотное тело, сладкое послевкусие — для эспрессо',
     blendComponents: [
       {
-        origin: '哥伦比亚',
-        process: '水洗',
-        variety: '卡杜拉',
+        origin: 'Колумбия',
+        process: 'Мытая',
+        variety: 'Катурра',
         percentage: 100,
       },
     ],
@@ -174,9 +174,9 @@ const BeanPreviewItem: React.FC<{
       const daysSinceRoast = Math.ceil(
         (today.getTime() - roastDate.getTime()) / (1000 * 60 * 60 * 24)
       );
-      return `养豆${daysSinceRoast}天`;
+      return `Отдых${daysSinceRoast} дн.`;
     } catch {
-      return '养豆0天';
+      return 'Отдых 0 дн.';
     }
   };
 
@@ -188,15 +188,15 @@ const BeanPreviewItem: React.FC<{
     const pricePerGram = (priceNum / capacityNum).toFixed(2);
 
     if (showTotalPrice) {
-      return `${priceNum}元(${pricePerGram}元/克)`;
+      return `${priceNum} ₽ (${pricePerGram} ₽/г)`;
     } else {
-      return `${pricePerGram}元/克`;
+      return `${pricePerGram} ₽/г`;
     }
   };
 
   const getFlavorPeriodStatus = (): string => {
     // 简化的赏味期计算，用于预览
-    if (!bean.roastDate) return '未知状态';
+    if (!bean.roastDate) return 'Неизвестное состояние';
     const startDay = bean.startDay || 0;
     const endDay = bean.endDay || 0;
 
@@ -207,12 +207,12 @@ const BeanPreviewItem: React.FC<{
 
     if (startDay > 0 && daysSinceRoast < startDay) {
       const remainingDays = startDay - daysSinceRoast;
-      return `养豆 ${remainingDays}天`;
+      return `Отдых ${remainingDays} дн.`;
     } else if (endDay > 0 && daysSinceRoast <= endDay) {
       const remainingDays = endDay - daysSinceRoast;
-      return `赏味 ${remainingDays}天`;
+      return `Лучший период ${remainingDays} дн.`;
     } else if (endDay > 0) {
-      return '已衰退';
+      return 'Выдохлось';
     }
 
     return getAgingDaysText(bean.roastDate);
@@ -317,7 +317,7 @@ const BeanPreviewItem: React.FC<{
                 <span className="border-b border-dashed border-neutral-400 dark:border-neutral-600">
                   {formatNumber(bean.remaining)}
                 </span>
-                /{formatNumber(bean.capacity)}克
+                /{formatNumber(bean.capacity)}г
                 {showPrice && bean.price && bean.capacity && (
                   <span className="mx-2 text-neutral-400 dark:text-neutral-600">
                     ·

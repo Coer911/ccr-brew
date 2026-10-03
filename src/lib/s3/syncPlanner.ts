@@ -437,8 +437,8 @@ export class SyncPlanner {
       const deletePercent = deleteCount / totalFiles;
       if (deletePercent > maxDeletePercent) {
         warnings.push(
-          `⚠️ 将删除 ${deleteCount} 个文件（${(deletePercent * 100).toFixed(1)}%），` +
-            `超过安全阈值 ${(maxDeletePercent * 100).toFixed(0)}%`
+          `⚠️ Будет удалено ${deleteCount} файлов (${(deletePercent * 100).toFixed(1)}%），` +
+            `Больше безопасного порога ${(maxDeletePercent * 100).toFixed(0)}%`
         );
       }
     }
@@ -446,14 +446,14 @@ export class SyncPlanner {
     // 检查删除数量
     if (deleteCount > maxDeleteCount) {
       warnings.push(
-        `⚠️ 将删除 ${deleteCount} 个文件，超过安全阈值 ${maxDeleteCount} 个`
+        `⚠️ Будет удалено ${deleteCount} файлов, больше безопасного порога ${maxDeleteCount} шт.`
       );
     }
 
     // 检查冲突
     if (plan.conflicts.length > 0) {
       warnings.push(
-        `⚠️ 发现 ${plan.conflicts.length} 个冲突文件，需要手动解决`
+        `⚠️ Найдено ${plan.conflicts.length} конфликтующих файлов, нужно решить вручную`
       );
     }
 
@@ -470,24 +470,24 @@ export class SyncPlanner {
     const parts: string[] = [];
 
     if (plan.upload.length > 0) {
-      parts.push(`上传 ${plan.upload.length} 个文件`);
+      parts.push(`Загрузить ${plan.upload.length} файлов`);
     }
     if (plan.download.length > 0) {
-      parts.push(`下载 ${plan.download.length} 个文件`);
+      parts.push(`Скачать ${plan.download.length} файлов`);
     }
     if (plan.deleteLocal.length > 0) {
-      parts.push(`本地删除 ${plan.deleteLocal.length} 个`);
+      parts.push(`Удалить на устройстве ${plan.deleteLocal.length} шт.`);
     }
     if (plan.deleteRemote.length > 0) {
-      parts.push(`远程删除 ${plan.deleteRemote.length} 个`);
+      parts.push(`Удалить в облаке ${plan.deleteRemote.length} шт.`);
     }
     if (plan.conflicts.length > 0) {
-      parts.push(`${plan.conflicts.length} 个冲突`);
+      parts.push(`${plan.conflicts.length} конфликтов`);
     }
     if (plan.unchanged.length > 0) {
-      parts.push(`${plan.unchanged.length} 个未变更`);
+      parts.push(`${plan.unchanged.length} без изменений`);
     }
 
-    return parts.length > 0 ? parts.join('，') : '无需同步';
+    return parts.length > 0 ? parts.join('，') : 'Синхронизация не нужна';
   }
 }

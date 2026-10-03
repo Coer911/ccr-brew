@@ -62,7 +62,7 @@ export class TempFileManager {
   private static createImageFile(imageData: string, fileName: string): File {
     const match = imageData.match(/^data:([^;,]+);base64,(.+)$/);
     if (!match) {
-      throw new Error('图片数据格式无效');
+      throw new Error('Неверный формат фото');
     }
 
     const [, mimeType, base64Data] = match;
@@ -85,13 +85,13 @@ export class TempFileManager {
       reader.onload = () => {
         const result = reader.result;
         if (typeof result !== 'string') {
-          reject(new Error('文件数据读取失败'));
+          reject(new Error('Не удалось прочитать файл'));
           return;
         }
 
         resolve(result.includes(',') ? result.split(',')[1] : result);
       };
-      reader.onerror = () => reject(new Error('文件数据读取失败'));
+      reader.onerror = () => reject(new Error('Не удалось прочитать файл'));
       reader.readAsDataURL(blob);
     });
   }
@@ -215,10 +215,10 @@ export class TempFileManager {
     return this.shareFileInIOSPWA(
       this.createImageFile(imageData, fileName),
       {
-        title: 'Brew Guide 图片',
+        title: 'Фото Cultura Brew',
         text: '',
       },
-      '当前设备不支持分享图片文件'
+      'Это устройство не умеет делиться фото'
     );
   }
 
@@ -230,7 +230,7 @@ export class TempFileManager {
     const outcome = await this.shareFileInIOSPWA(
       this.createJsonFile(jsonData, fileName),
       shareOptions,
-      '当前设备不支持分享数据文件'
+      'Это устройство не умеет делиться файлами данных'
     );
 
     return outcome === 'shared' ? 'native-share' : outcome;
@@ -317,7 +317,7 @@ export class TempFileManager {
             });
           } else {
             // 最后尝试：不指定相册直接保存（可能保存到默认位置）
-            throw new Error('无法找到或创建相册，尝试其他方式');
+            throw new Error('Не удалось найти или создать альбом, пробуем иначе');
           }
         } catch (error) {
           console.error('Android 相册保存失败:', error);
@@ -437,7 +437,7 @@ export class TempFileManager {
       return this.shareFileInIOSPWA(
         this.createImageFile(imageData, downloadFileName),
         shareOptions,
-        '当前设备不支持分享图片文件',
+        'Это устройство не умеет делиться фото',
         true
       );
     }
@@ -512,7 +512,7 @@ export class TempFileManager {
       return this.shareFileInIOSPWA(
         file,
         shareOptions,
-        '当前设备不支持分享文件',
+        'Это устройство не умеет делиться файлами',
         true
       );
     }
@@ -548,9 +548,9 @@ export class TempFileManager {
     jsonData: string,
     fileName: string,
     shareOptions: ShareOptions = {
-      title: '导出数据',
-      text: '请选择保存位置',
-      dialogTitle: '导出数据',
+      title: 'Выгрузить данные',
+      text: 'Выберите, куда сохранить',
+      dialogTitle: 'Выгрузить данные',
     }
   ): Promise<JsonFileSaveMode> {
     if (!Capacitor.isNativePlatform()) {

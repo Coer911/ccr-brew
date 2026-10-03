@@ -69,7 +69,7 @@ export function buildBeanRecognitionPrompt(
   const disabledFields = BEAN_FIELD_DEFINITIONS.filter(
     definition => !enabledFieldSet.has(definition.id)
   );
-  const allowedFields = enabledFieldIds.join('/') || '无';
+  const allowedFields = enabledFieldIds.join('/') || 'Нет';
   const allowedFieldLabels = enabledFieldIds
     .map(id => `${id}=${getBeanFieldDefinition(id).label}`)
     .join('；');
@@ -91,7 +91,7 @@ export function buildBeanRecognitionPrompt(
   return `${basePrompt.trim()}
 
 最终咖啡豆字段约束（必须优先于上文和用户自定义提示词）：
-- blendComponents 每个对象只允许输出这些成分字段：${allowedFields}；字段含义：${allowedFieldLabels || '无'}。
+- blendComponents 每个对象只允许输出这些成分字段：${allowedFields}；字段含义：${allowedFieldLabels || 'Нет'}。
 - 不在允许列表里的成分信息不要写入 blendComponents；如果图片中明确可见，写入 notes，例如 ${disabledFieldLabels ? `${disabledFieldLabels} 写入 notes` : '未启用字段写入 notes'}。
 - origin 是未结构化的“产地概括”，只有允许 origin 时才输出；不要把 origin 当成产国。
 - ${enabledStructuredOriginLabels ? `已启用精细产地字段：${enabledStructuredOriginLabels}；能明确区分时分别写入对应字段。` : '未启用精细产地字段；产国、产区、庄园、处理站、海拔不要写入 blendComponents。'}
@@ -115,12 +115,12 @@ async function fileToDataUrl(file: File): Promise<string> {
     reader.onload = () => {
       const data = reader.result;
       if (typeof data !== 'string' || !data.startsWith('data:')) {
-        reject(new Error('图片读取失败'));
+        reject(new Error('Не удалось прочитать фото'));
         return;
       }
       resolve(data);
     };
-    reader.onerror = () => reject(new Error('图片读取失败'));
+    reader.onerror = () => reject(new Error('Не удалось прочитать фото'));
     reader.readAsDataURL(file);
   });
 }
@@ -305,10 +305,10 @@ async function recognizeBeanImageWithCustomAPI(
   try {
     const baseUrl = customConfig.apiBaseUrl.trim().replace(/\/+$/, '');
     if (!baseUrl) {
-      throw new Error('实验性识别已启用，但未配置 API 地址');
+      throw new Error('Экспериментальное распознавание включено, но адрес API не задан');
     }
     if (!/^https?:\/\//i.test(baseUrl)) {
-      throw new Error('实验性 API 地址必须以 http:// 或 https:// 开头');
+      throw new Error('Адрес экспериментального API должен начинаться с http:// или https://');
     }
     const model = resolveBeanRecognitionModel(customConfig.model);
 
@@ -351,7 +351,7 @@ async function recognizeBeanImageWithCustomAPI(
     if (!response.ok) {
       const errorText = await response.text().catch(() => '');
       throw new Error(
-        `实验性识别请求失败 (${response.status})${errorText ? `: ${errorText.slice(0, 140)}` : ''}`
+        `Ошибка запроса экспериментального распознавания (${response.status})${errorText ? `: ${errorText.slice(0, 140)}` : ''}`
       );
     }
 
@@ -385,11 +385,11 @@ async function recognizeBeanImageWithCustomAPI(
       return normalizeRecognizedBeanPayload(result, fieldSettings);
     }
 
-    throw new Error('实验性识别返回格式不支持，请检查 API 兼容性');
+    throw new Error('Экспериментальное распознавание вернуло неподдерживаемый формат, проверьте совместимость API');
   } catch (error) {
     if (isTimeoutError(error)) {
       throw new Error(
-        `实验性识别超时（>${Math.floor(API_CONFIG.timeoutMs / 1000)}s），可更换模型或稍后重试`
+        `Экспериментальное распознавание не успело (>${Math.floor(API_CONFIG.timeoutMs / 1000)} с), смените модель или попробуйте позже`
       );
     }
     if (error instanceof Error) {
@@ -438,33 +438,33 @@ export async function recognizeBeanImage(
     });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: '请求失败' }));
-      throw new Error(error.error || `请求失败: ${response.status}`);
+      const error = await response.json().catch(() => ({ error: 'Ошибка запроса' }));
+      throw new Error(error.error || `Ошибка запроса: ${response.status}`);
     }
 
     // 非流式响应处理
     const result = await response.json();
 
     if (!result.success) {
-      throw new Error(result.error || '识别失败');
+      throw new Error(result.error || 'Не распознано');
     }
 
     return normalizeRecognizedBeanPayload(result.data, fieldSettings);
   } catch (error) {
     if (error instanceof Error && error.message.includes('404')) {
-      throw new Error('API 服务未配置，请检查 EdgeOne Functions 部署状态');
+      throw new Error('Сервис API не настроен');
     }
 
     if (
       error instanceof TypeError &&
       error.message.includes('Failed to fetch')
     ) {
-      throw new Error('请求失败，请检查网络连接或尝试更新应用');
+      throw new Error('Ошибка запроса, проверьте интернет или обновите приложение');
     }
 
     if (isTimeoutError(error)) {
       throw new Error(
-        `识别超时（>${Math.floor(API_CONFIG.timeoutMs / 1000)}s），请稍后重试`
+        `Распознавание не успело (>${Math.floor(API_CONFIG.timeoutMs / 1000)} с), попробуйте позже`
       );
     }
 
@@ -482,10 +482,10 @@ export async function testCustomBeanRecognitionConfig(
   try {
     const baseUrl = customConfig.apiBaseUrl.trim().replace(/\/+$/, '');
     if (!baseUrl) {
-      throw new Error('请先填写 API Base URL');
+      throw new Error('Сначала укажите API Base URL');
     }
     if (!/^https?:\/\//i.test(baseUrl)) {
-      throw new Error('API 地址需以 http:// 或 https:// 开头');
+      throw new Error('Адрес API должен начинаться с http:// или https://');
     }
     const model = resolveBeanRecognitionModel(customConfig.model);
 
@@ -507,7 +507,7 @@ export async function testCustomBeanRecognitionConfig(
     if (!modelsResponse.ok) {
       const errorText = await modelsResponse.text().catch(() => '');
       throw new Error(
-        `连接测试失败 (${modelsResponse.status})${errorText ? `: ${errorText.slice(0, 140)}` : ''}`
+        `Проверка подключения не прошла (${modelsResponse.status})${errorText ? `: ${errorText.slice(0, 140)}` : ''}`
       );
     }
 
@@ -524,8 +524,8 @@ export async function testCustomBeanRecognitionConfig(
         .slice(0, 3);
       throw new Error(
         recommendations.length > 0
-          ? `模型不存在：${model}，可尝试：${recommendations.join(' / ')}`
-          : `模型不存在：${model}`
+          ? `Модель не найдена: ${model}, попробуйте: ${recommendations.join(' / ')}`
+          : `Модель не найдена: ${model}`
       );
     }
 
@@ -556,20 +556,20 @@ export async function testCustomBeanRecognitionConfig(
     if (!response.ok) {
       const errorText = await response.text().catch(() => '');
       throw new Error(
-        `模型调用测试失败 (${response.status})${errorText ? `: ${errorText.slice(0, 140)}` : ''}`
+        `Проверка вызова модели не прошла (${response.status})${errorText ? `: ${errorText.slice(0, 140)}` : ''}`
       );
     }
 
     const data = await response.json().catch(() => null);
     const hasChoices = Array.isArray(data?.choices) && data.choices.length > 0;
     if (!hasChoices) {
-      throw new Error('模型调用返回异常：缺少 choices 字段');
+      throw new Error('Модель вернула ошибку: нет поля choices');
     }
 
     return { endpoint, model, durationMs };
   } catch (error) {
     if (isTimeoutError(error)) {
-      throw new Error('测试超时：请检查网络、API 网关可用性，或稍后重试');
+      throw new Error('Время проверки истекло: проверьте сеть и доступность API-шлюза или попробуйте позже');
     }
     if (error instanceof Error) {
       throw new Error(normalizeRecognitionErrorMessage(error.message));

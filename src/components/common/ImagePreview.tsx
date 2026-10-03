@@ -107,7 +107,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
               className="absolute bottom-8 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-red-500/90 px-4 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-red-600"
             >
               <Trash2 className="h-4 w-4" />
-              移除
+              Убрать
             </motion.button>
           )}
         </motion.div>

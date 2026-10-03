@@ -166,9 +166,9 @@ const RelatedRecordsSection: React.FC<RelatedRecordsSectionProps> = React.memo(
       setShowGreenBeanRecords(true);
     }, [setShowChangeRecords, setShowGreenBeanRecords]);
 
-    const primaryLabel = isGreenBean ? '烘焙记录' : '冲煮记录';
-    const secondaryLabel = '变动记录';
-    const greenBeanLabel = '生豆记录';
+    const primaryLabel = isGreenBean ? 'Обжарки' : 'записи заваривания';
+    const secondaryLabel = 'Изменения';
+    const greenBeanLabel = 'Зелёное зерно';
 
     const recordTabs = useMemo<RelatedRecordTabPage[]>(() => {
       const tabs: RelatedRecordTabPage[] = [];
@@ -268,7 +268,7 @@ const RelatedRecordsSection: React.FC<RelatedRecordsSectionProps> = React.memo(
           <div
             className="flex items-center gap-2"
             role="tablist"
-            aria-label="关联记录分类"
+            aria-label="Категории связанных записей"
           >
             {recordTabs.map(tab => (
               <button

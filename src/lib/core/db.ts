@@ -61,10 +61,10 @@ export interface FlavorDimension {
  * 默认风味评分维度
  */
 export const DEFAULT_FLAVOR_DIMENSIONS: FlavorDimension[] = [
-  { id: 'acidity', label: '酸度', order: 0, isDefault: true },
-  { id: 'sweetness', label: '甜度', order: 1, isDefault: true },
-  { id: 'bitterness', label: '苦度', order: 2, isDefault: true },
-  { id: 'body', label: '口感', order: 3, isDefault: true },
+  { id: 'acidity', label: 'Кислотность', order: 0, isDefault: true },
+  { id: 'sweetness', label: 'Сладость', order: 1, isDefault: true },
+  { id: 'bitterness', label: 'Горечь', order: 2, isDefault: true },
+  { id: 'body', label: 'Тело', order: 3, isDefault: true },
 ];
 
 /**
@@ -896,7 +896,7 @@ export const dbUtils = {
 
       if (migratedBeanCount > 0) {
         console.warn(
-          `已拆分 ${migratedBeanCount} 条咖啡豆图片记录，当前图片记录 ${imageRecordCount} 条`
+          `已拆分 ${migratedBeanCount} 条咖啡豆图片记录，当前图片记录 ${imageRecordCount} шт.`
         );
       }
     } catch (error) {

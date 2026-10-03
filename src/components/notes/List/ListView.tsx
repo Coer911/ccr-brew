@@ -78,7 +78,7 @@ const NotesVirtuosoFooter = ({
           >
             <div className="grow border-t border-neutral-200/50 dark:border-neutral-800/50"></div>
             <span className="mx-3 flex items-center justify-center rounded-sm px-2 py-0.5 text-xs font-medium tracking-wide text-neutral-600 transition-colors dark:text-neutral-400">
-              {changeRecordNotes.length}条变动记录
+              {changeRecordNotes.length}записей об изменениях
               <svg
                 className={`ml-1 h-3 w-3 transition-transform duration-200 ${showQuickDecrementNotes ? 'rotate-180' : ''}`}
                 viewBox="0 0 24 24"
@@ -320,10 +320,10 @@ const NotesListView: React.FC<NotesListViewProps> = ({
   if (notes.length === 0) {
     const fallbackEmptyStateMessage =
       isSearching && searchQuery.trim()
-        ? `[ 没有找到匹配"${searchQuery.trim()}"的冲煮记录 ]`
+        ? `[ Ничего не найдено по «${searchQuery.trim()}» нет ]`
         : selectedEquipment && filterMode === 'equipment'
-          ? `[ 没有使用${equipmentNames[selectedEquipment] || selectedEquipment}的冲煮记录 ]`
-          : '[ 暂无冲煮记录，请点击下方按钮添加 ]';
+          ? `[ Нет заварок с ${equipmentNames[selectedEquipment] || selectedEquipment} ]`
+          : '[ Заварок пока нет, добавьте кнопкой ниже ]';
 
     return emptyStateMessage === null ? null : (
       <div className="flex h-32 items-center justify-center text-[10px] tracking-widest text-neutral-500 dark:text-neutral-400">

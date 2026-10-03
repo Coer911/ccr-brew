@@ -66,31 +66,31 @@ const getEmptyStateMessage = ({
   showEmptyBeans: boolean;
   isGreenBean: boolean;
 }): string => {
-  const beanLabel = isGreenBean ? '生豆' : '咖啡豆';
+  const beanLabel = isGreenBean ? 'Зелёное зерно' : 'Зерно';
 
   if (searchQuery.trim()) {
-    return `[ 没有找到匹配"${searchQuery.trim()}"的${beanLabel} ]`;
+    return `[ Ничего не найдено по «${searchQuery.trim()}» среди ${beanLabel} ]`;
   }
 
   if (selectedVariety) {
-    return `[ 没有${selectedVariety}品种的${beanLabel} ]`;
+    return `[ Нет зерна сорта ${selectedVariety} среди ${beanLabel} ]`;
   }
 
   if (selectedBeanType !== 'all') {
     const typeLabel =
       selectedBeanType === 'espresso'
-        ? '意式'
+        ? 'Эспрессо'
         : selectedBeanType === 'filter'
-          ? '手冲'
-          : '全能';
-    return `[ 没有${typeLabel}${beanLabel} ]`;
+          ? 'Фильтр'
+          : 'Универсальная';
+    return `[ Нет зерна сорта ${typeLabel}${beanLabel} ]`;
   }
 
   if (hasEmptyBeansInCurrentState && !showEmptyBeans) {
-    return `[ 所有${beanLabel}已用完，点击"已用完"查看 ]`;
+    return `[ Всё ${beanLabel} закончилось, нажмите «Закончилось», чтобы посмотреть ]`;
   }
 
-  return `[ 暂无${beanLabel}，请点击下方按钮添加 ]`;
+  return `[ Раздел «${beanLabel}» пока пуст — добавьте кнопкой ниже ]`;
 };
 
 interface InventoryViewProps {
@@ -242,21 +242,21 @@ const InventoryView: React.FC<InventoryViewProps> = ({
       } else if (result.error) {
         // 显示错误提示
         const isGreenBean = bean?.beanState === 'green';
-        const errorMessage = result.error.message || '操作失败，请重试';
+        const errorMessage = result.error.message || 'Не получилось, попробуйте ещё раз';
         showToast({
           type: 'error',
           title: isGreenBean
-            ? `烘焙失败: ${errorMessage}`
-            : `扣除失败: ${errorMessage}`,
+            ? `Ошибка обжарки: ${errorMessage}`
+            : `Не удалось списать: ${errorMessage}`,
           duration: 3000,
         });
       }
     } catch (error) {
       console.error('快捷减量失败:', error);
-      const errorMessage = error instanceof Error ? error.message : '未知错误';
+      const errorMessage = error instanceof Error ? error.message : 'Неизвестная ошибка';
       showToast({
         type: 'error',
-        title: `操作失败: ${errorMessage}`,
+        title: `Ошибка: ${errorMessage}`,
         duration: 3000,
       });
     }
@@ -361,7 +361,7 @@ const InventoryView: React.FC<InventoryViewProps> = ({
                       <div className="w-full border-t border-neutral-200/50 dark:border-neutral-800/50"></div>
                     </div>
                     <div className="relative bg-neutral-50 px-4 text-xs font-medium text-neutral-400 dark:bg-neutral-900 dark:text-neutral-700">
-                      用完的咖啡豆
+                      Закончившееся зерно
                     </div>
                   </div>
                 );

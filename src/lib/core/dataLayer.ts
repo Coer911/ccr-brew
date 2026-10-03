@@ -103,7 +103,7 @@ export async function initializeDataLayer(): Promise<void> {
     console.log('✅ 数据层初始化完成');
   } catch (error) {
     console.error('❌ 数据层初始化失败:', error);
-    initState.error = error instanceof Error ? error.message : '初始化失败';
+    initState.error = error instanceof Error ? error.message : 'Ошибка инициализации';
     throw error;
   } finally {
     initState.isInitializing = false;

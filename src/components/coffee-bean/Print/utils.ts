@@ -99,7 +99,7 @@ export const getBottomInfoLine = (
     parts.push(formatDate(c.roastDate));
   }
   if (config.fields.roastDate && config.fields.packDate && c.packDate.trim()) {
-    parts.push(`分装 ${formatDate(c.packDate)}`);
+    parts.push(`Фасовка ${formatDate(c.packDate)}`);
   }
   if (isPrintFieldVisible('process', config, c)) {
     parts.push(c.process.trim());
@@ -255,7 +255,7 @@ const waitForImages = async (element: HTMLElement): Promise<void> => {
               if (image.naturalWidth > 0) {
                 resolve();
               } else {
-                reject(new Error('图片加载失败'));
+                reject(new Error('Не удалось загрузить картинку'));
               }
               return;
             }
@@ -270,7 +270,7 @@ const waitForImages = async (element: HTMLElement): Promise<void> => {
             };
             const handleError = () => {
               cleanup();
-              reject(new Error('图片加载失败'));
+              reject(new Error('Не удалось загрузить картинку'));
             };
 
             image.addEventListener('load', handleLoad);
@@ -283,7 +283,7 @@ const waitForImages = async (element: HTMLElement): Promise<void> => {
             new Promise<void>((resolve, reject) => {
               const image = new Image();
               image.onload = () => resolve();
-              image.onerror = () => reject(new Error('图片加载失败'));
+              image.onerror = () => reject(new Error('Не удалось загрузить картинку'));
               image.src = src;
             })
         )
@@ -361,7 +361,7 @@ export async function savePreviewAsImage(
   preparedImageData?: string
 ): Promise<{ outcome: ImageSaveOutcome; imageData: string }> {
   const el = document.getElementById(elementId);
-  if (!el) throw new Error('预览元素未找到');
+  if (!el) throw new Error('Не найден элемент предпросмотра');
 
   if (preparedImageData) {
     const outcome = await TempFileManager.saveImageToGallery(preparedImageData);
@@ -448,15 +448,15 @@ export async function savePreviewAsImage(
         const outcome = await TempFileManager.saveImageToGallery(imageData);
         const { showToast } =
           await import('@/components/common/feedback/LightToast');
-        showToast({ type: 'success', title: '已保存到相册' });
+        showToast({ type: 'success', title: 'Сохранено в галерею' });
         return { outcome, imageData };
       } catch (error) {
         console.error('保存到相册失败:', error);
-        const fileName = `${bean?.name || '咖啡豆标签'}-${new Date().toISOString().split('T')[0]}`;
+        const fileName = `${bean?.name || 'Этикетка зерна'}-${new Date().toISOString().split('T')[0]}`;
         await TempFileManager.shareImageFile(imageData, fileName, {
-          title: '咖啡豆标签',
-          text: `${bean?.name || '咖啡豆'}标签图片`,
-          dialogTitle: '保存标签图片',
+          title: 'Этикетка зерна',
+          text: `${bean?.name || 'Зерно'} — этикетка`,
+          dialogTitle: 'Сохранить этикетку',
         });
         return { outcome: 'shared', imageData };
       }
@@ -466,7 +466,7 @@ export async function savePreviewAsImage(
     if (outcome === 'downloaded') {
       const { showToast } =
         await import('@/components/common/feedback/LightToast');
-      showToast({ type: 'success', title: '图片已保存' });
+      showToast({ type: 'success', title: 'Картинка сохранена' });
     }
     return { outcome, imageData };
   } catch (error) {

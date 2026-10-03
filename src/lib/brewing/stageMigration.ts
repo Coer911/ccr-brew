@@ -148,7 +148,7 @@ export function migrateStages(legacyStages: LegacyStage[]): Stage[] {
     if (waitTime > 0 && !isBypassOrBeverage) {
       newStages.push({
         pourType: 'wait',
-        label: '等待',
+        label: 'Ожидание',
         duration: waitTime,
         detail: '',
       });
@@ -203,7 +203,7 @@ export function toLegacyFormat(stages: Stage[]): LegacyStage[] {
         legacyStages.push({
           time: cumulativeTime,
           pourTime: 0,
-          label: stage.label || '等待',
+          label: stage.label || 'Ожидание',
           water: `${cumulativeWater}g`,
           detail: stage.detail || '',
           pourType: 'other',

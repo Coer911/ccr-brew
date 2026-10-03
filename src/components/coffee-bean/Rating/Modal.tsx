@@ -181,19 +181,19 @@ const CoffeeBeanRatingModal: React.FC<CoffeeBeanRatingModalProps> = ({
             <ActionDrawer.Icon icon={DeleteIcon} />
             <ActionDrawer.Content>
               <p className="text-neutral-500 dark:text-neutral-400">
-                确认删除
+                Удалить
                 <span className="text-neutral-800 dark:text-neutral-200">
                   「{beanDisplayName}」
                 </span>
-                的评分吗？此操作不可撤销。
+                — оценку? Это действие нельзя отменить.
               </p>
             </ActionDrawer.Content>
             <ActionDrawer.Actions>
               <ActionDrawer.SecondaryButton onClick={handleCancel}>
-                取消
+                Отмена
               </ActionDrawer.SecondaryButton>
               <ActionDrawer.DangerButton onClick={handleDelete}>
-                确认删除
+                Удалить
               </ActionDrawer.DangerButton>
             </ActionDrawer.Actions>
           </>
@@ -202,23 +202,23 @@ const CoffeeBeanRatingModal: React.FC<CoffeeBeanRatingModalProps> = ({
             {/* 总体评分 */}
             <div className="flex flex-col gap-3">
               <p className="font-medium text-neutral-500 dark:text-neutral-400">
-                为
+                для
                 <span className="mx-1 text-neutral-800 dark:text-neutral-200">
                   {beanDisplayName}
                 </span>
-                评分
+                Оценка
               </p>
               {beanRatingTenthStep ? (
                 <div data-vaul-no-drag>
                   <ElasticSlider
-                    label="评分"
+                    label="Оценка"
                     min={0}
                     max={5}
                     step={0.1}
                     value={overallRating}
                     onValueChange={setOverallRating}
                     formatValue={formatRatingValue}
-                    aria-label="评分"
+                    aria-label="Оценка"
                   />
                 </div>
               ) : (
@@ -257,14 +257,14 @@ const CoffeeBeanRatingModal: React.FC<CoffeeBeanRatingModalProps> = ({
             </div>
             <div className="mt-4 mb-8 flex flex-col gap-3">
               <p className="font-medium text-neutral-500 dark:text-neutral-400">
-                写点你的想法？
+                Что вы думаете?
               </p>
               {/* 评价备注 */}
               <textarea
                 ref={textareaRef}
                 value={ratingNotes}
                 onChange={e => setRatingNotes(e.target.value)}
-                placeholder="写点什么..."
+                placeholder="Напишите что-нибудь..."
                 className="w-full resize-none rounded-2xl bg-neutral-100 px-4 py-3 text-sm text-neutral-800 placeholder:text-neutral-400 focus:ring-2 focus:ring-neutral-300 focus:outline-none dark:bg-neutral-800 dark:text-white dark:placeholder:text-neutral-500 dark:focus:ring-neutral-600"
                 rows={1}
               />
@@ -276,14 +276,14 @@ const CoffeeBeanRatingModal: React.FC<CoffeeBeanRatingModalProps> = ({
                 onClick={handleCancel}
                 className="flex-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300"
               >
-                取消
+                Отмена
               </motion.button>
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 onClick={handleSave}
                 className="flex-1 rounded-full bg-neutral-800 px-4 py-3 text-sm font-medium text-white transition-colors dark:bg-white dark:text-neutral-900"
               >
-                保存
+                Сохранить
               </motion.button>
             </div>
 
@@ -294,7 +294,7 @@ const CoffeeBeanRatingModal: React.FC<CoffeeBeanRatingModalProps> = ({
                 className="mt-2 flex items-center self-start px-1 py-1 text-xs font-medium text-red-500 transition-colors hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
               >
                 <CornerDownRight className="mr-1 h-3.5 w-3.5" />
-                删除评分
+                Удалить оценку
               </button>
             )}
           </div>

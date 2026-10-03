@@ -15,10 +15,6 @@ import {
   postponeUpdateCheck,
 } from '@/lib/utils/versionCheck';
 import { getPlatform, isBundledNativeApp } from '@/lib/app/capacitor';
-import {
-  getOfflineAndroidDownloadUrl,
-  getOfflineIosDownloadUrl,
-} from '@/lib/utils/downloadUrls';
 import { Capacitor } from '@capacitor/core';
 import UpdateDrawer from './UpdateDrawer';
 import SettingGroup, { type SettingItemData } from './SettingItem';
@@ -170,11 +166,11 @@ function groupByFirstLetter(names: string[]) {
 }
 
 const settingsFeatureGroupLabels: Record<string, string> = {
-  brewing: '冲煮',
-  brewingEquipment: '器具',
-  coffeeBean: '咖啡豆',
-  notes: '笔记',
-  experimental: '实验',
+  brewing: 'Заварка',
+  brewingEquipment: 'Устройства',
+  coffeeBean: 'Зерно',
+  notes: 'Заметки',
+  experimental: 'Эксперименты',
 };
 
 // 赞助者名单组件
@@ -411,19 +407,11 @@ const Settings: React.FC<SettingsProps> = ({
   const bundledNativeApp =
     typeof window !== 'undefined' ? isBundledNativeApp() : false;
 
-  const getNativeUpdateDownloadUrl = useCallback((version: string) => {
-    const platform = getPlatform();
-
-    if (platform === 'ios') {
-      return getOfflineIosDownloadUrl(version);
-    }
-
-    if (platform === 'android') {
-      return getOfflineAndroidDownloadUrl(version);
-    }
-
-    return null;
-  }, []);
+  // Cultura Brew: сборок под App Store/APK нет — ссылки на загрузку отключены.
+  const getNativeUpdateDownloadUrl = useCallback(
+    (_version: string): string | null => null,
+    []
+  );
 
   useEffect(() => {
     if (!isOpen) return;
@@ -628,7 +616,7 @@ const Settings: React.FC<SettingsProps> = ({
       >
         <ChevronLeft className="-ml-1 size-5" />
         <h2 className="pl-2.5 text-xl font-medium text-neutral-800 dark:text-neutral-200">
-          设置
+          Настройки
         </h2>
       </button>
 
@@ -701,13 +689,13 @@ const Settings: React.FC<SettingsProps> = ({
   const interfaceSettingsItems: SettingItemData[] = [
     {
       icon: Monitor,
-      label: '外观',
+      label: 'Внешний вид',
       settingId: 'display-settings',
       onClick: subSettingsHandlers.onOpenDisplaySettings,
     },
     {
       icon: Blocks,
-      label: '应用功能',
+      label: 'Функции приложения',
       settingId: 'navigation-settings',
       onClick: subSettingsHandlers.onOpenNavigationSettings,
     },
@@ -716,7 +704,7 @@ const Settings: React.FC<SettingsProps> = ({
   if (hasVisibleNotificationSettings) {
     interfaceSettingsItems.push({
       icon: Bell,
-      label: '提醒通知',
+      label: 'Уведомления',
       settingId: 'notification-settings',
       onClick: subSettingsHandlers.onOpenNotificationSettings,
     });
@@ -725,9 +713,9 @@ const Settings: React.FC<SettingsProps> = ({
   const dataSettingsItems: SettingItemData[] = [
     {
       icon: User,
-      label: '用户名',
+      label: 'Имя',
       value: settings.username,
-      placeholder: '点击输入',
+      placeholder: 'Нажмите, чтобы ввести',
       editable: true,
       onSave: value => {
         handleChange('username', value);
@@ -738,7 +726,7 @@ const Settings: React.FC<SettingsProps> = ({
     },
     {
       icon: Database,
-      label: '数据与备份',
+      label: 'Данные и копии',
       settingId: 'data-settings',
       onClick: subSettingsHandlers.onOpenDataSettings,
     },
@@ -746,7 +734,7 @@ const Settings: React.FC<SettingsProps> = ({
   const aboutSettingsItems: SettingItemData[] = [
     {
       icon: Info,
-      label: '关于',
+      label: 'О приложении',
       settingId: 'about-settings',
       value: getVersionLabel(),
       onClick: subSettingsHandlers.onOpenAboutSettings,
@@ -754,7 +742,7 @@ const Settings: React.FC<SettingsProps> = ({
   ];
   const settingsEntryGroups = [
     {
-      groupLabel: '显示与界面',
+      groupLabel: 'Отображение и интерфейс',
       items: interfaceSettingsItems,
     },
     ...settingsFeatureGroups.map(group => ({
@@ -762,11 +750,11 @@ const Settings: React.FC<SettingsProps> = ({
       items: group.items,
     })),
     {
-      groupLabel: '数据与备份',
+      groupLabel: 'Данные и копии',
       items: dataSettingsItems,
     },
     {
-      groupLabel: '关于',
+      groupLabel: 'О приложении',
       items: aboutSettingsItems,
     },
   ];
@@ -908,86 +896,6 @@ const Settings: React.FC<SettingsProps> = ({
                 >
                   {/* 顶部渐变阴影（随滚动粘附）*/}
                   <div className="fade-mask-to-b pointer-events-none sticky top-0 z-10 h-12 w-full bg-neutral-50 first:border-b-0 dark:bg-neutral-900"></div>
-                  {/* 帮助与反馈 */}
-                  <SettingGroup
-                    className="-mt-4"
-                    paddingClass={masterGroupPaddingClass}
-                    items={[
-                      {
-                        icon: CircleHelp,
-                        label: '帮助文档',
-                        onClick: () => {
-                          void openExternalUrl(
-                            'https://chu3.top/brewguide-help'
-                          );
-                          if (settings.hapticFeedback) {
-                            hapticsUtils.light();
-                          }
-                        },
-                      },
-                      {
-                        icon: MessageCircle,
-                        label: '交流群',
-                        isExpanded: qrCodeType === 'group',
-                        onClick: () => {
-                          setQrCodeType(
-                            qrCodeType === 'group' ? null : 'group'
-                          );
-                          if (settings.hapticFeedback) {
-                            hapticsUtils.light();
-                          }
-                        },
-                        expandedContent: (
-                          <div className="flex flex-col items-start justify-center pb-3.5 pl-10.5">
-                            <div className="overflow-hidden rounded-lg border border-neutral-400/10 bg-white p-2">
-                              <Image
-                                src="/images/content/group-code.jpg"
-                                alt="交流群二维码"
-                                width={200}
-                                height={200}
-                                className="h-auto w-50"
-                              />
-                            </div>
-                            <p className="mt-3 text-xs text-neutral-500 dark:text-neutral-400">
-                              群满 200 人了，加开发者小号拉你进群吧
-                            </p>
-                          </div>
-                        ),
-                      },
-                      {
-                        icon: ThumbsUp,
-                        label: '赞赏码',
-                        isExpanded: qrCodeType === 'appreciation',
-                        onClick: () => {
-                          setQrCodeType(
-                            qrCodeType === 'appreciation'
-                              ? null
-                              : 'appreciation'
-                          );
-                          if (settings.hapticFeedback) {
-                            hapticsUtils.light();
-                          }
-                        },
-                        expandedContent: (
-                          <div className="flex flex-col items-start justify-center pb-3.5 pl-10.5">
-                            <div className="overflow-hidden rounded-lg border border-neutral-400/10 bg-white p-2">
-                              <Image
-                                src="/images/content/appreciation-code.jpg"
-                                alt="赞赏码"
-                                width={200}
-                                height={200}
-                                className="h-auto w-50"
-                              />
-                            </div>
-                            <p className="mt-3 text-xs text-neutral-500 dark:text-neutral-400">
-                              赞赏码（开发不易，要是能支持一下就太好了 www）
-                            </p>
-                          </div>
-                        ),
-                      },
-                    ]}
-                  />
-
                   {/* 显示与界面设置 */}
                   <SettingGroup
                     paddingClass={masterGroupPaddingClass}
@@ -1025,17 +933,6 @@ const Settings: React.FC<SettingsProps> = ({
                     items={aboutSettingsItems}
                   />
 
-                  {/* 感谢名单 */}
-                  <div ref={sponsorSectionRef} className="px-8 pt-18 pb-8">
-                    <div className="text-left text-xs select-none">
-                      <p className="font-medium text-neutral-800 dark:text-neutral-200">
-                        感谢各位一直以来的支持，自 2025 年 2 月 1
-                        日首次发布至今，项目已持续运行 {runningDays}{' '}
-                        天，你们的每一次鼓励与贡献，都是它不断成长的重要动力。
-                      </p>
-                      <SponsorList />
-                    </div>
-                  </div>
                 </div>
               </motion.div>
             )}

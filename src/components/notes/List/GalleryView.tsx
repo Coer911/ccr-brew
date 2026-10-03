@@ -64,7 +64,7 @@ const GalleryView: React.FC<GalleryViewProps> = ({
             formatNoteBeanDisplayName(note.coffeeBeanInfo, {
               roasterFieldEnabled,
               roasterSeparator,
-            }) || '未知豆子';
+            }) || 'Неизвестное зерно';
 
           return (
             <div

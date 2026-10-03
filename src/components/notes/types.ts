@@ -25,9 +25,9 @@ export type DateGroupingMode = 'year' | 'month' | 'day';
 
 // 日期分组粒度的显示名称
 export const DATE_GROUPING_LABELS: Record<DateGroupingMode, string> = {
-  year: '按年',
-  month: '按月',
-  day: '按日',
+  year: 'По годам',
+  month: 'По месяцам',
+  day: 'По дням',
 };
 
 // 笔记历史组件属性

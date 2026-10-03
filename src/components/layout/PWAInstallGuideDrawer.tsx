@@ -36,7 +36,7 @@ export const PWAInstallGuideContent: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3">
         <p className="text-2xl font-medium text-neutral-900 dark:text-neutral-100">
-          安装 iOS PWA 应用
+          Установка на iPhone
         </p>
       </div>
 
@@ -48,7 +48,7 @@ export const PWAInstallGuideContent: React.FC = () => {
               <IOSShareIcon className="h-5 w-5 text-neutral-100 dark:text-neutral-800" />
             </div>
             <p className="text-sm text-neutral-600 dark:text-neutral-200">
-              按下屏幕底部的这个按钮
+              Нажмите эту кнопку внизу экрана
             </p>
           </div>
         </div>
@@ -59,11 +59,11 @@ export const PWAInstallGuideContent: React.FC = () => {
             <div className="-mt-1 inline-flex items-center gap-2 rounded-full bg-neutral-900 p-3.5 text-sm font-semibold text-neutral-100 dark:bg-neutral-100 dark:text-neutral-900">
               <SquarePlus className="h-5 w-5 stroke-[1.5] text-neutral-100 dark:text-neutral-800" />
               <span className="text-neutral-100 dark:text-neutral-900">
-                添加到主屏幕
+                На экран «Домой»
               </span>
             </div>
             <p className="text-sm text-neutral-600 dark:text-neutral-200">
-              从菜单中按下此按钮
+              Выберите в меню этот пункт
             </p>
           </div>
         </div>
@@ -73,11 +73,11 @@ export const PWAInstallGuideContent: React.FC = () => {
           <div className="space-y-2">
             <div className="-mt-1 inline-flex h-12 items-center gap-2 rounded-full bg-neutral-900 p-3.5 text-sm leading-none font-semibold text-neutral-100 dark:bg-neutral-100 dark:text-neutral-900">
               <span className="text-neutral-100 dark:text-neutral-900">
-                添加
+                Добавить
               </span>
             </div>
             <p className="text-sm text-neutral-600 dark:text-neutral-200">
-              按下右上角的这个按钮
+              Нажмите эту кнопку вверху справа
             </p>
           </div>
         </div>

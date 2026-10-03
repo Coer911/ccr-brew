@@ -607,7 +607,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
           },
           back: {
             url: backImageUrl,
-            alt: `${alt} - 背面`,
+            alt: `${alt} — сзади`,
             size: backSize,
           },
         };
@@ -666,11 +666,11 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
         tapAction: 'close',
         doubleTapAction: false,
         imageClickAction: 'close',
-        errorMsg: '图片加载失败',
-        closeTitle: '关闭',
-        zoomTitle: '缩放',
-        arrowPrevTitle: '上一张',
-        arrowNextTitle: '下一张',
+        errorMsg: 'Не удалось загрузить картинку',
+        closeTitle: 'Закрыть',
+        zoomTitle: 'Масштаб',
+        arrowPrevTitle: 'Предыдущее',
+        arrowNextTitle: 'Следующее',
         indexIndicatorSep: ' / ',
       });
 

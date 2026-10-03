@@ -254,7 +254,7 @@ const CustomMethodForm = React.forwardRef<
             coffee: '18g',
             water: '36g',
             ratio: '1:2',
-            grindSize: '细',
+            grindSize: 'Мелкий',
             temp: '93°C',
             extractionTime: 25,
             liquidWeight: '36g',
@@ -262,9 +262,9 @@ const CustomMethodForm = React.forwardRef<
               ? [
                   {
                     duration: 25,
-                    label: '萃取浓缩',
+                    label: 'Экстракция',
                     water: '36',
-                    detail: '标准意式浓缩',
+                    detail: 'Классический эспрессо',
                     pourType: 'extraction',
                   },
                 ]
@@ -279,7 +279,7 @@ const CustomMethodForm = React.forwardRef<
           coffee: '15g',
           water: '225g',
           ratio: '1:15',
-          grindSize: '中细',
+          grindSize: 'Средне-мелкий',
           temp: '92°C',
           stages: enableStageEditing
             ? createInitialStagesForEquipment(customEquipment, '15g')
@@ -301,10 +301,10 @@ const CustomMethodForm = React.forwardRef<
           id,
           label:
             id === 'name'
-              ? '方案名称'
+              ? 'Название рецепта'
               : id === 'params'
-                ? '基本参数'
-                : '冲泡步骤',
+                ? 'Основные параметры'
+                : 'Этапы заварки',
         })),
       [stepOrder]
     );
@@ -386,7 +386,7 @@ const CustomMethodForm = React.forwardRef<
           normalizedMethod.params.stages = normalizedMethod.params.stages.map(
             stage => ({
               ...stage,
-              label: stage.label.replace(/\s*\[开阀\]|\s*\[关阀\]/g, '').trim(),
+              label: stage.label.replace(/\s*\[клапан открыт\]|\s*\[клапан закрыт\]/g, '').trim(),
             })
           );
         }
@@ -669,10 +669,10 @@ const CustomMethodForm = React.forwardRef<
           finalMethod.params.stages = finalMethod.params.stages.map(stage => {
             if (stage.valveStatus) {
               const valveStatusText =
-                stage.valveStatus === 'open' ? '[开阀]' : '[关阀]';
+                stage.valveStatus === 'open' ? '[клапан открыт]' : '[клапан закрыт]';
               // 确保没有重复添加
               const baseLabel = stage.label
-                .replace(/\s*\[开阀\]|\s*\[关阀\]/g, '')
+                .replace(/\s*\[клапан открыт\]|\s*\[клапан закрыт\]/g, '')
                 .trim();
               return {
                 ...stage,
@@ -738,7 +738,7 @@ const CustomMethodForm = React.forwardRef<
           await onSave(finalMethod);
         } catch {
           // 可以在这里添加用户友好的错误提示
-          alert('保存方案失败，请重试');
+          alert('Не удалось сохранить рецепт, попробуйте ещё раз');
         }
       },
       [
@@ -1040,7 +1040,7 @@ const CustomMethodForm = React.forwardRef<
       stage.valveStatus = newStatus;
 
       // 保留原始的标签内容，移除可能已存在的阀门状态标记
-      const baseLabel = stage.label.replace(/\s*\[开阀\]|\s*\[关阀\]/g, '');
+      const baseLabel = stage.label.replace(/\s*\[клапан открыт\]|\s*\[клапан закрыт\]/g, '');
       stage.label = baseLabel.trim();
 
       newStages[index] = stage;
@@ -1260,18 +1260,18 @@ const CustomMethodForm = React.forwardRef<
     const getValidationErrorMessage = useCallback((): string | null => {
       switch (currentStep) {
         case 'name':
-          if (!method.name.trim()) return '请输入方案名称';
+          if (!method.name.trim()) return 'Введите название рецепта';
           return null;
         case 'params':
-          if (!method.params.coffee.trim()) return '请输入咖啡粉量';
-          if (!method.params.water.trim()) return '请输入水量';
-          if (!method.params.ratio.trim()) return '请输入水粉比';
-          if (!method.params.temp.trim()) return '请输入水温';
-          if (!method.params.grindSize.trim()) return '请输入研磨度';
+          if (!method.params.coffee.trim()) return 'Введите дозу кофе';
+          if (!method.params.water.trim()) return 'Введите количество воды';
+          if (!method.params.ratio.trim()) return 'Введите соотношение';
+          if (!method.params.temp.trim()) return 'Введите температуру воды';
+          if (!method.params.grindSize.trim()) return 'Укажите помол';
           return null;
         case 'stages':
           if (method.params.stages.length === 0)
-            return '请添加至少一个冲泡步骤';
+            return 'Добавьте хотя бы один этап';
 
           for (let i = 0; i < method.params.stages.length; i++) {
             const stage = method.params.stages[i];
@@ -1284,17 +1284,17 @@ const CustomMethodForm = React.forwardRef<
                     !hasStageDuration(stage.duration) ||
                     !isValidDuration(stage.duration)
                   )
-                    return `步骤${stageNum}：请输入萃取时间`;
+                    return `Этап ${stageNum}: укажите время экстракции`;
                   if (!stage.label.trim())
-                    return `步骤${stageNum}：请输入步骤名称`;
+                    return `Этап ${stageNum}: введите название этапа`;
                   if (!isValidWater(stage.water, stage.pourType))
-                    return `步骤${stageNum}：请输入液重`;
+                    return `Этап ${stageNum}: укажите выход напитка`;
                   break;
                 case 'beverage':
                   if (!stage.label.trim())
-                    return `步骤${stageNum}：请输入饮料名称`;
+                    return `Этап ${stageNum}: введите название напитка`;
                   if (!isValidWater(stage.water, stage.pourType))
-                    return `步骤${stageNum}：请输入液量`;
+                    return `Этап ${stageNum}: укажите объём`;
                   break;
               }
               continue;
@@ -1306,22 +1306,22 @@ const CustomMethodForm = React.forwardRef<
                   !hasStageDuration(stage.duration) ||
                   !isValidDuration(stage.duration)
                 )
-                  return `步骤${stageNum}：请输入等待时间`;
+                  return `Этап ${stageNum}: укажите время ожидания`;
                 continue;
               }
               if (
                 !hasStageDuration(stage.duration) ||
                 !isValidDuration(stage.duration)
               )
-                return `步骤${stageNum}：请输入阶段用时`;
+                return `Этап ${stageNum}: укажите длительность этапа`;
               if (!isValidWater(stage.water, stage.pourType))
-                return `步骤${stageNum}：请输入注水量`;
+                return `Этап ${stageNum}: укажите объём пролива`;
               if (
                 customEquipment.hasValve &&
                 stage.valveStatus !== 'open' &&
                 stage.valveStatus !== 'closed'
               )
-                return `步骤${stageNum}：请设置阀门状态`;
+                return `Этап ${stageNum}: укажите состояние клапана`;
               continue;
             }
 
@@ -1330,14 +1330,14 @@ const CustomMethodForm = React.forwardRef<
                 !hasStageDuration(stage.duration) ||
                 !isValidDuration(stage.duration)
               )
-                return `步骤${stageNum}：请输入等待时间`;
+                return `Этап ${stageNum}: укажите время ожидания`;
               continue;
             }
 
             if (stage.pourType === 'bypass') {
-              if (!stage.label.trim()) return `步骤${stageNum}：请输入步骤名称`;
+              if (!stage.label.trim()) return `Этап ${stageNum}: введите название этапа`;
               if (!isValidWater(stage.water, stage.pourType))
-                return `步骤${stageNum}：请输入水量`;
+                return `Этап ${stageNum}: укажите количество воды`;
               continue;
             }
 
@@ -1345,17 +1345,17 @@ const CustomMethodForm = React.forwardRef<
               !hasStageDuration(stage.duration) ||
               !isValidDuration(stage.duration)
             )
-              return `步骤${stageNum}：请输入阶段用时`;
-            if (!stage.label.trim()) return `步骤${stageNum}：请输入步骤名称`;
+              return `Этап ${stageNum}: укажите длительность этапа`;
+            if (!stage.label.trim()) return `Этап ${stageNum}: введите название этапа`;
             if (!isValidWater(stage.water, stage.pourType))
-              return `步骤${stageNum}：请输入注水量`;
-            if (!stage.pourType) return `步骤${stageNum}：请选择注水方式`;
+              return `Этап ${stageNum}: укажите объём пролива`;
+            if (!stage.pourType) return `Этап ${stageNum}: выберите способ пролива`;
             if (
               customEquipment.hasValve &&
               stage.valveStatus !== 'open' &&
               stage.valveStatus !== 'closed'
             )
-              return `步骤${stageNum}：请设置阀门状态`;
+              return `Этап ${stageNum}: укажите состояние клапана`;
           }
           return null;
         default:
@@ -1415,7 +1415,7 @@ const CustomMethodForm = React.forwardRef<
       if (chromeMode !== 'drawer') return;
 
       onChromeChange?.({
-        doneLabel: isLastStep ? '完成' : '下一步',
+        doneLabel: isLastStep ? 'Готово' : 'Далее',
         doneDisabled: false,
         canGoBack: getCurrentStepIndex() > 0,
       });
@@ -1437,7 +1437,7 @@ const CustomMethodForm = React.forwardRef<
             className={`flex cursor-pointer items-center justify-center p-4 ${!stepValid ? 'cursor-not-allowed opacity-50' : ''} ${isLastStep ? 'rounded-full bg-neutral-800 px-6 py-3 text-neutral-100 dark:bg-neutral-200 dark:text-neutral-800' : ''} `}
           >
             {isLastStep ? (
-              <span className="font-medium">完成</span>
+              <span className="font-medium">Готово</span>
             ) : (
               <div className="relative flex items-center">
                 <div className="h-0.5 w-24 bg-neutral-800 dark:bg-neutral-200"></div>

@@ -63,8 +63,8 @@ const StatsSectionRow: React.FC<StatsSectionRowProps> = ({
       >
         <button
           type="button"
-          aria-label={`拖动调整 ${section.label} 排序`}
-          title="拖动排序"
+          aria-label={`Перетащите, чтобы изменить ${section.label} порядок`}
+          title="Перетащите для сортировки"
           onPointerDown={startDrag}
           onPointerUp={() => onDragStateChange(false)}
           onPointerCancel={() => onDragStateChange(false)}
@@ -158,7 +158,7 @@ const StatsSectionEditorDrawer: React.FC<StatsSectionEditorDrawerProps> = ({
                 onClick={handleCancel}
                 className="min-h-10 min-w-16 cursor-pointer rounded-full bg-neutral-100 px-4 text-sm font-medium text-neutral-600 transition-transform active:scale-[0.96] dark:bg-neutral-800 dark:text-neutral-300"
               >
-                取消
+                Отмена
               </button>
               <Drawer.Title className="truncate px-3 text-center text-base font-semibold text-neutral-900 dark:text-neutral-50">
                 {title}
@@ -168,7 +168,7 @@ const StatsSectionEditorDrawer: React.FC<StatsSectionEditorDrawerProps> = ({
                 onClick={handleDone}
                 className="min-h-10 min-w-16 cursor-pointer rounded-full bg-neutral-100 px-4 text-sm font-semibold text-neutral-800 transition-transform active:scale-[0.96] dark:bg-neutral-800 dark:text-neutral-100"
               >
-                完成
+                Готово
               </button>
             </div>
 

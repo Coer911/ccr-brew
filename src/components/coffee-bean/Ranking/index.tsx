@@ -347,7 +347,7 @@ const CoffeeBeanRanking: React.FC<CoffeeBeanRankingProps> = ({
                 className={`relative px-3 pb-1.5 text-xs ${beanType === 'all' ? 'text-neutral-800 dark:text-neutral-100' : 'text-neutral-600 dark:text-neutral-400'}`}
                 onClick={() => setBeanType('all')}
               >
-                <span className="relative">全部豆子</span>
+                <span className="relative">Всё зерно</span>
                 {beanType === 'all' && (
                   <motion.span
                     layoutId="ranking-internal-underline"
@@ -361,7 +361,7 @@ const CoffeeBeanRanking: React.FC<CoffeeBeanRankingProps> = ({
                 className={`relative px-3 pb-1.5 text-xs ${beanType === 'espresso' ? 'text-neutral-800 dark:text-neutral-100' : 'text-neutral-600 dark:text-neutral-400'}`}
                 onClick={() => setBeanType('espresso')}
               >
-                <span className="relative">意式豆</span>
+                <span className="relative">Для эспрессо</span>
                 {beanType === 'espresso' && (
                   <motion.span
                     layoutId="ranking-internal-underline"
@@ -375,7 +375,7 @@ const CoffeeBeanRanking: React.FC<CoffeeBeanRankingProps> = ({
                 className={`relative px-3 pb-1.5 text-xs ${beanType === 'filter' ? 'text-neutral-800 dark:text-neutral-100' : 'text-neutral-600 dark:text-neutral-400'}`}
                 onClick={() => setBeanType('filter')}
               >
-                <span className="relative">手冲豆</span>
+                <span className="relative">Для фильтра</span>
                 {beanType === 'filter' && (
                   <motion.span
                     layoutId="ranking-internal-underline"
@@ -394,13 +394,13 @@ const CoffeeBeanRanking: React.FC<CoffeeBeanRankingProps> = ({
         <div className="flex h-28 items-center justify-center text-[10px] tracking-widest text-neutral-500 dark:text-neutral-400">
           {isSearching && ratedBeans.length > 0 ? (
             <div className="text-center">
-              <div>[ 没有找到匹配的咖啡豆 ]</div>
+              <div>[ Ничего не найдено ]</div>
               <div className="mt-1 text-[9px] opacity-70">
-                尝试使用其他关键词搜索
+                Попробуйте другой запрос
               </div>
             </div>
           ) : (
-            <div>[ 有咖啡豆数据后，再来查看吧～ ]</div>
+            <div>[ Добавьте зерно — и здесь появится статистика ]</div>
           )}
         </div>
       ) : (
@@ -440,20 +440,20 @@ const CoffeeBeanRanking: React.FC<CoffeeBeanRankingProps> = ({
                           const currentBeanType = bean.beanType;
                           infoArray.push(
                             currentBeanType === 'espresso'
-                              ? '意式豆'
+                              ? 'Для эспрессо'
                               : currentBeanType === 'filter'
-                                ? '手冲豆'
-                                : '全能豆'
+                                ? 'Для фильтра'
+                                : 'Омни'
                           );
                         }
 
-                        if (bean.roastLevel && bean.roastLevel !== '未知') {
+                        if (bean.roastLevel && bean.roastLevel !== 'Неизвестно') {
                           infoArray.push(bean.roastLevel);
                         }
 
                         const pricePerGram = calculatePricePerGram(bean);
                         if (pricePerGram) {
-                          infoArray.push(`${pricePerGram}元/克`);
+                          infoArray.push(`${pricePerGram} ₽/г`);
                         }
 
                         return infoArray.map((info, index) => (
@@ -497,8 +497,8 @@ const CoffeeBeanRanking: React.FC<CoffeeBeanRankingProps> = ({
             >
               {isSearching &&
               filteredUnratedBeans.length !== unratedBeans.length
-                ? `${filteredUnratedBeans.length}/${unratedBeans.length}款未评分咖啡豆`
-                : `${unratedBeans.length}款未评分咖啡豆`}
+                ? `${filteredUnratedBeans.length}/${unratedBeans.length} шт. зерна без оценки`
+                : `${unratedBeans.length} шт. зерна без оценки`}
               <svg
                 className={`ml-1 h-3 w-3 transition-transform duration-200 ${showUnrated ? 'rotate-180' : ''}`}
                 viewBox="0 0 24 24"
@@ -543,22 +543,22 @@ const CoffeeBeanRanking: React.FC<CoffeeBeanRankingProps> = ({
                             if (beanType === 'all') {
                               infoArray.push(
                                 bean.beanType === 'espresso'
-                                  ? '意式豆'
+                                  ? 'Для эспрессо'
                                   : bean.beanType === 'filter'
-                                    ? '手冲豆'
-                                    : '全能豆'
+                                    ? 'Для фильтра'
+                                    : 'Омни'
                               );
                             }
 
                             // Roast Level - Conditionally display
-                            if (bean.roastLevel && bean.roastLevel !== '未知') {
+                            if (bean.roastLevel && bean.roastLevel !== 'Неизвестно') {
                               infoArray.push(bean.roastLevel);
                             }
 
                             // 每克价格
                             const pricePerGram = calculatePricePerGram(bean);
                             if (pricePerGram) {
-                              infoArray.push(`${pricePerGram}元/克`);
+                              infoArray.push(`${pricePerGram} ₽/г`);
                             }
 
                             return infoArray.map((info, index) => (
@@ -578,7 +578,7 @@ const CoffeeBeanRanking: React.FC<CoffeeBeanRankingProps> = ({
                       onClick={() => handleRateBeanClick(bean as CoffeeBean)}
                       className="text-xs text-neutral-800 hover:opacity-80 dark:text-neutral-100"
                     >
-                      + 添加评分
+                      + Добавить оценку
                     </button>
                   </div>
                 </div>

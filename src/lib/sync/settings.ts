@@ -159,12 +159,12 @@ export function isPullToSyncEnabled(settings: SettingsOptions): boolean {
 export function getCloudProviderLabel(provider: CloudProvider): string {
   switch (provider) {
     case 's3':
-      return 'S3 对象存储';
+      return 'Хранилище S3';
     case 'webdav':
       return 'WebDAV';
     case 'supabase':
-      return 'Supabase 实时同步';
+      return 'Supabase (в реальном времени)';
     default:
-      return '不使用';
+      return 'Не использовать';
   }
 }

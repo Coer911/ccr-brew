@@ -94,10 +94,10 @@ const NoteSettings: React.FC<NoteSettingsProps> = ({
   }, []);
 
   return (
-    <SettingPage title="笔记" isVisible={isVisible} onClose={handleClose}>
-      <SettingSection title="列表" className="-mt-4">
+    <SettingPage title="Заметки" isVisible={isVisible} onClose={handleClose}>
+      <SettingSection title="Список" className="-mt-4">
         <SettingRow
-          label="经典列表样式"
+          label="Классический список"
           isLast={settings.useClassicNotesListStyle ?? false}
         >
           <SettingToggle
@@ -108,7 +108,7 @@ const NoteSettings: React.FC<NoteSettingsProps> = ({
           />
         </SettingRow>
         {!(settings.useClassicNotesListStyle ?? false) && (
-          <SettingRow label="评分维度入口" isSubSetting isLast>
+          <SettingRow label="Вход в критерии оценки" isSubSetting isLast>
             <SettingToggle
               checked={settings.showRatingDimensionsEntry ?? false}
               onChange={checked =>
@@ -119,14 +119,14 @@ const NoteSettings: React.FC<NoteSettingsProps> = ({
         )}
       </SettingSection>
 
-      <SettingSection title="详情">
-        <SettingRow label="价格">
+      <SettingSection title="Подробности">
+        <SettingRow label="Цена">
           <SettingToggle
             checked={settings.showUnitPriceInNote ?? false}
             onChange={checked => handleChange('showUnitPriceInNote', checked)}
           />
         </SettingRow>
-        <SettingRow label="养豆">
+        <SettingRow label="Отдых">
           <SettingToggle
             checked={settings.showBeanAgingDaysInNote ?? false}
             onChange={checked =>
@@ -134,13 +134,13 @@ const NoteSettings: React.FC<NoteSettingsProps> = ({
             }
           />
         </SettingRow>
-        <SettingRow label="风味">
+        <SettingRow label="Вкусы">
           <SettingToggle
             checked={settings.showFlavorInNote ?? true}
             onChange={checked => handleChange('showFlavorInNote', checked)}
           />
         </SettingRow>
-        <SettingRow label="时间" isLast>
+        <SettingRow label="Время" isLast>
           <SettingToggle
             checked={settings.showNoteTimeInNote ?? true}
             onChange={checked => handleChange('showNoteTimeInNote', checked)}
@@ -148,9 +148,9 @@ const NoteSettings: React.FC<NoteSettingsProps> = ({
         </SettingRow>
       </SettingSection>
 
-      <SettingSection title="表单">
+      <SettingSection title="Форма">
         <SettingRow
-          label="评分"
+          label="Оценка"
           isLast={!(settings.showOverallRatingInForm ?? true)}
         >
           <SettingToggle
@@ -161,7 +161,7 @@ const NoteSettings: React.FC<NoteSettingsProps> = ({
           />
         </SettingRow>
         {(settings.showOverallRatingInForm ?? true) && (
-          <SettingRow label="使用滑块评分" isSubSetting isLast>
+          <SettingRow label="Оценивать ползунком" isSubSetting isLast>
             <SettingToggle
               checked={
                 (settings.overallRatingUseSlider ?? false) ||
@@ -180,7 +180,7 @@ const NoteSettings: React.FC<NoteSettingsProps> = ({
       {(settings.showOverallRatingInForm ?? true) && (
         <SettingSection>
           <SettingRow
-            label="风味评分"
+            label="Оценка вкуса"
             isLast={!(settings.showFlavorRatingInForm ?? true)}
           >
             <SettingToggle
@@ -193,7 +193,7 @@ const NoteSettings: React.FC<NoteSettingsProps> = ({
           {/* 风味评分开启时，显示其相关设置 */}
           {(settings.showFlavorRatingInForm ?? true) && (
             <>
-              <SettingRow label="半分制" isSubSetting>
+              <SettingRow label="Шаг 0,5" isSubSetting>
                 <SettingToggle
                   checked={
                     (settings.flavorRatingHalfStep ?? false) &&
@@ -202,13 +202,13 @@ const NoteSettings: React.FC<NoteSettingsProps> = ({
                   onChange={handleHalfStepChange}
                 />
               </SettingRow>
-              <SettingRow label="十分位制" isSubSetting>
+              <SettingRow label="Десятибалльная шкала" isSubSetting>
                 <SettingToggle
                   checked={settings.flavorRatingTenthStep ?? false}
                   onChange={handleTenthStepChange}
                 />
               </SettingRow>
-              <SettingRow label="初始值跟随总评" isSubSetting isLast>
+              <SettingRow label="Начальное значение = общая оценка" isSubSetting isLast>
                 <SettingToggle
                   checked={settings.flavorRatingFollowOverall ?? false}
                   onChange={checked =>
@@ -221,8 +221,8 @@ const NoteSettings: React.FC<NoteSettingsProps> = ({
         </SettingSection>
       )}
 
-      <SettingSection title="记录">
-        <SettingRow label="容量调整记录" isLast>
+      <SettingSection title="Записи">
+        <SettingRow label="Записи об изменении остатка" isLast>
           <SettingToggle
             checked={settings.showCapacityAdjustmentRecords ?? true}
             onChange={checked =>

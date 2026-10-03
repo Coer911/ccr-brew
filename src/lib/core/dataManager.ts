@@ -334,8 +334,8 @@ export const DataManager = {
       }
       throw new Error(
         error instanceof Error
-          ? `导出数据失败: ${error.message}`
-          : '导出数据失败'
+          ? `Ошибка экспорта данных: ${error.message}`
+          : 'Ошибка экспорта данных'
       );
     }
   },
@@ -355,7 +355,7 @@ export const DataManager = {
       if (!importData.data) {
         return {
           success: false,
-          message: '导入的数据格式不正确，缺少 data 字段',
+          message: 'Неверный формат импортируемых данных: нет поля data',
         };
       }
 
@@ -653,20 +653,20 @@ export const DataManager = {
             second: 'numeric',
             timeZoneName: 'short',
           })
-        : '未知';
+        : 'Неизвестно';
 
       const timeZoneInfo = importData.timeZone
-        ? ` (时区: ${importData.timeZone})`
+        ? ` (часовой пояс: ${importData.timeZone})`
         : '';
 
       return {
         success: true,
-        message: `数据导入成功，导出日期: ${displayDate}${timeZoneInfo}`,
+        message: `Данные импортированы, дата экспорта: ${displayDate}${timeZoneInfo}`,
       };
     } catch (_error) {
       return {
         success: false,
-        message: `导入数据失败: ${(_error as Error).message}`,
+        message: `Ошибка импорта данных: ${(_error as Error).message}`,
       };
     }
   },
@@ -824,13 +824,13 @@ export const DataManager = {
 
       return {
         success: true,
-        message: '已重置所有数据和设置',
+        message: 'Все данные и настройки сброшены',
       };
     } catch (_error) {
       console.error('重置数据失败:', _error);
       return {
         success: false,
-        message: '重置数据失败',
+        message: 'Не удалось сбросить данные',
       };
     }
   },
@@ -848,19 +848,19 @@ export const DataManager = {
 
     // 占位符文本列表
     const placeholders = [
-      '产地',
+      'Происхождение',
       'origin',
       'Origin',
-      '处理法',
+      'Обработка',
       'process',
       'Process',
-      '水洗',
-      '日晒',
-      '蜜处理',
-      '品种',
+      'Мытая',
+      'Натуральная',
+      'Хани',
+      'Разновидность',
       'variety',
       'Variety',
-      '烘焙度',
+      'Обжарка',
       'roast',
       'Roast',
     ];

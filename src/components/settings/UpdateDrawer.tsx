@@ -66,24 +66,24 @@ const UpdateDrawer: React.FC<UpdateDrawerProps> = ({
       <ActionDrawer.Content>
         <p className="text-neutral-500 dark:text-neutral-400">
           {isPWAMode ? (
-            <>检测到新版本，建议更新以获得最佳体验。</>
+            <>Вышла новая версия, советуем обновиться.</>
           ) : (
             <>
-              发现新版本
+              Вышла новая версия
               <span className="text-neutral-800 dark:text-neutral-200">
                 {' '}
                 v{latestVersion}
               </span>
               {releaseNotes ? (
                 <>
-                  ，本次更新
+                  , в этом обновлении
                   <span className="text-neutral-800 dark:text-neutral-200">
                     {releaseNotes}
                   </span>
-                  ，建议更新以获得最佳体验。
+                  , советуем обновиться.
                 </>
               ) : (
-                <>，建议更新以获得最佳体验。</>
+                <>, советуем обновиться.</>
               )}
             </>
           )}
@@ -92,13 +92,13 @@ const UpdateDrawer: React.FC<UpdateDrawerProps> = ({
 
       <ActionDrawer.Actions>
         <ActionDrawer.SecondaryButton onClick={handleSecondaryClick}>
-          {secondaryText ?? (isAutoCheck ? '以后再说' : '稍后再说')}
+          {secondaryText ?? (isAutoCheck ? 'Потом' : 'Позже')}
         </ActionDrawer.SecondaryButton>
         <ActionDrawer.PrimaryButton
           onClick={handlePrimaryAction}
           disabled={primaryDisabled}
         >
-          {primaryText ?? (isPWAMode ? '立即更新' : '前往更新')}
+          {primaryText ?? (isPWAMode ? 'Обновить сейчас' : 'Обновить')}
         </ActionDrawer.PrimaryButton>
       </ActionDrawer.Actions>
     </ActionDrawer>

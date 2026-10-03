@@ -72,7 +72,7 @@ export const useBrewingNoteStore = create<BrewingNoteStore>()(
           initialized: true,
         });
       } catch (error) {
-        set({ error: '加载笔记失败', isLoading: false, initialized: false });
+        set({ error: 'Не удалось загрузить заметки', isLoading: false, initialized: false });
         throw error;
       }
     },

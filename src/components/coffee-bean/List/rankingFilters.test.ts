@@ -78,8 +78,8 @@ describe('ranking filters', () => {
   it('formats recent dates consistently with the notes filter', () => {
     const now = new Date(2026, 8, 2, 12);
 
-    expect(formatRankingDateLabel('2026', 'year', now)).toBe('今年');
-    expect(formatRankingDateLabel('2026-09', 'month', now)).toBe('本月');
-    expect(formatRankingDateLabel('2026-09-01', 'day', now)).toBe('昨天');
+    expect(formatRankingDateLabel('2026', 'year', now)).toBe('В этом году');
+    expect(formatRankingDateLabel('2026-09', 'month', now)).toBe('В этом месяце');
+    expect(formatRankingDateLabel('2026-09-01', 'day', now)).toBe('Вчера');
   });
 });

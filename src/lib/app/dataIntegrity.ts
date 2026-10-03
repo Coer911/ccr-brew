@@ -264,7 +264,7 @@ export async function inspectCoreDataIntegrity(
     );
     recordCrashCheckpoint('data-integrity:unexpected-empty-core', reportMeta);
     await recordDataIntegrityReport(
-      '检测到本地核心数据表异常变为空，但设置数据仍然存在。请先导出抢救数据和诊断信息。',
+      'Основные таблицы данных неожиданно опустели, хотя настройки на месте. Сначала выгрузите данные для восстановления и диагностику.',
       reportMeta
     );
   }

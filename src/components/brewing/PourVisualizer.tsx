@@ -40,8 +40,8 @@ const INITIAL_ANIMATION_PROGRESS: AnimationProgress = {
   displayedIceIndices: [],
 };
 
-const OPEN_VALVE_LABEL_PATTERN = /\[开阀\]/;
-const CLOSED_VALVE_LABEL_PATTERN = /\[关阀\]/;
+const OPEN_VALVE_LABEL_PATTERN = /\[клапан открыт\]/;
+const CLOSED_VALVE_LABEL_PATTERN = /\[клапан закрыт\]/;
 
 interface PourVisualizerProps {
   isRunning: boolean;

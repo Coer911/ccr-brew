@@ -75,7 +75,7 @@ const SettingsSearchResults: React.FC<SettingsSearchResultsProps> = ({
           className="mb-5 h-32 w-32 [&_path]:stroke-[0.9px]"
         />
         <p className="max-w-72 text-base leading-relaxed font-medium">
-          未找到「{trimmedQuery}」的相关结果
+          По запросу «{trimmedQuery}» ничего не найдено
         </p>
       </div>
     );

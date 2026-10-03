@@ -550,7 +550,7 @@ const BeanDetailModal: React.FC<BeanDetailModalProps> = ({
     }
 
     const roasterName = getRoasterName(bean, roasterSettings);
-    if (roasterName && roasterName !== '未知烘焙商') {
+    if (roasterName && roasterName !== 'Неизвестный обжарщик') {
       return roasterName;
     }
 
@@ -714,7 +714,7 @@ const BeanDetailModal: React.FC<BeanDetailModalProps> = ({
 
         showToast({
           type: 'error',
-          title: result.error || '烘焙失败',
+          title: result.error || 'Ошибка обжарки',
           duration: 3000,
         });
         return;
@@ -724,7 +724,7 @@ const BeanDetailModal: React.FC<BeanDetailModalProps> = ({
       if (isNaN(currentRemaining)) {
         showToast({
           type: 'error',
-          title: '当前剩余量无效，无法扣除',
+          title: 'Текущий остаток некорректен, списать нельзя',
           duration: 3000,
         });
         return;
@@ -746,7 +746,7 @@ const BeanDetailModal: React.FC<BeanDetailModalProps> = ({
       console.error('详情页快捷扣除失败:', error);
       showToast({
         type: 'error',
-        title: '扣除失败，请重试',
+        title: 'Не удалось списать, попробуйте ещё раз',
         duration: 3000,
       });
     }
@@ -811,7 +811,7 @@ const BeanDetailModal: React.FC<BeanDetailModalProps> = ({
     setTimeout(() => {
       document.dispatchEvent(
         new CustomEvent(BREWING_EVENTS.NAVIGATE_TO_MAIN_TAB, {
-          detail: { tab: '冲煮' },
+          detail: { tab: 'Заварка' },
         })
       );
       setTimeout(() => {
@@ -891,7 +891,7 @@ const BeanDetailModal: React.FC<BeanDetailModalProps> = ({
   ) => {
     openImageViewer({
       url: imageUrl,
-      alt: bean?.name || '咖啡豆图片',
+      alt: bean?.name || 'Фото зерна',
       backUrl: backImageUrl,
       sourceElement,
     });
@@ -920,7 +920,7 @@ const BeanDetailModal: React.FC<BeanDetailModalProps> = ({
               bean={bean}
               tempBean={tempBean}
               printEnabled={printEnabled}
-              saveButtonLabel={isRepurchaseMode ? '添加' : undefined}
+              saveButtonLabel={isRepurchaseMode ? 'Добавить' : undefined}
               canGoToBrewing={navigationState.visibleTabs.brewing}
               canGoToNotes={navigationState.visibleTabs.notes}
               onClose={handleClose}
@@ -1107,7 +1107,7 @@ const BeanDetailModal: React.FC<BeanDetailModalProps> = ({
           }
         }}
         itemName={bean?.name || ''}
-        itemType="咖啡豆"
+        itemType="Зерно"
       />
 
       <ActionDrawer
@@ -1117,11 +1117,11 @@ const BeanDetailModal: React.FC<BeanDetailModalProps> = ({
       >
         <ActionDrawer.Content>
           <p className="text-neutral-500 dark:text-neutral-400">
-            当前内容尚未完成，你可以先
+            Данные ещё не заполнены. Можно
             <span className="text-neutral-800 dark:text-neutral-200">
-              保存为草稿
+              сохранить черновик
             </span>
-            ，稍后继续；也可以直接离开。
+            и продолжить позже или просто выйти.
           </p>
         </ActionDrawer.Content>
         <ActionDrawer.Actions>
@@ -1129,13 +1129,13 @@ const BeanDetailModal: React.FC<BeanDetailModalProps> = ({
             onClick={() => completeClose()}
             className="text-neutral-500 dark:text-neutral-400"
           >
-            离开
+            Выйти
           </ActionDrawer.SecondaryButton>
           <ActionDrawer.PrimaryButton
             onClick={handleSaveDraft}
             className="bg-neutral-200 text-neutral-800 dark:bg-neutral-700 dark:text-neutral-100"
           >
-            保存草稿
+            Сохранить черновик
           </ActionDrawer.PrimaryButton>
         </ActionDrawer.Actions>
       </ActionDrawer>

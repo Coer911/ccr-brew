@@ -113,16 +113,16 @@ export const WebDAVSyncSection: React.FC<WebDAVSyncSectionProps> = ({
   };
 
   const getEffectiveStatusText = () => {
-    if (!enabled) return '点击启用';
+    if (!enabled) return 'Нажмите, чтобы включить';
     switch (effectiveStatus) {
       case 'connected':
-        return '已连接';
+        return 'Подключено';
       case 'connecting':
-        return '连接中...';
+        return 'Подключаемся...';
       case 'error':
-        return '连接失败';
+        return 'Ошибка подключения';
       default:
-        return '未配置';
+        return 'Не настроено';
     }
   };
 
@@ -162,7 +162,7 @@ export const WebDAVSyncSection: React.FC<WebDAVSyncSectionProps> = ({
 
   const testConnection = async () => {
     if (!settings.url || !settings.username || !settings.password) {
-      setError('请填写完整的WebDAV配置信息');
+      setError('Заполните все настройки WebDAV');
       setStatus('error');
       return;
     }
@@ -190,20 +190,20 @@ export const WebDAVSyncSection: React.FC<WebDAVSyncSectionProps> = ({
         setError(
           manager.getLastError() ||
             (settings.remotePath
-              ? '连接失败：请检查服务器地址、账号密码和路径是否正确'
-              : '连接失败：请检查服务器地址、账号或密码')
+              ? 'Ошибка подключения: проверьте адрес сервера, логин, пароль и путь'
+              : 'Ошибка подключения: проверьте адрес сервера, логин или пароль')
         );
       }
     } catch (err) {
       setStatus('error');
-      const errorMsg = err instanceof Error ? err.message : '未知错误';
-      setError(`连接失败: ${errorMsg}`);
+      const errorMsg = err instanceof Error ? err.message : 'Неизвестная ошибка';
+      setError(`Ошибка подключения: ${errorMsg}`);
     }
   };
 
   const performSync = async (direction: 'upload' | 'download') => {
     if (isSyncing) {
-      setError('同步正在进行中');
+      setError('Синхронизация уже идёт');
       return;
     }
 
@@ -228,7 +228,7 @@ export const WebDAVSyncSection: React.FC<WebDAVSyncSectionProps> = ({
         );
         if (!connected) {
           setStatus('error');
-          setError(manager.getLastError() || '连接失败，请检查配置');
+          setError(manager.getLastError() || 'Ошибка подключения, проверьте настройки');
           setIsSyncing(false);
           return;
         }
@@ -259,7 +259,7 @@ export const WebDAVSyncSection: React.FC<WebDAVSyncSectionProps> = ({
         if (result.uploadedFiles > 0) {
           showToast({
             type: 'success',
-            title: `已上传 ${result.uploadedFiles} 项到云端`,
+            title: `Загружено: ${result.uploadedFiles} шт. в облако`,
             duration: 2500,
           });
         } else {
@@ -268,13 +268,13 @@ export const WebDAVSyncSection: React.FC<WebDAVSyncSectionProps> = ({
             setShowDebugDrawer(true);
             showToast({
               type: 'warning',
-              title: `${direction === 'upload' ? '上传' : '下载'}完成但未传输任何文件，请查看详细日志`,
+              title: `${direction === 'upload' ? 'Загрузить в облако' : 'Скачать из облака'} завершено, но файлы не переданы — посмотрите подробный журнал`,
               duration: 3000,
             });
           } else {
             showToast({
               type: 'info',
-              title: '数据已是最新，无需同步',
+              title: 'Данные актуальны, синхронизация не нужна',
               duration: 2000,
             });
           }
@@ -287,19 +287,19 @@ export const WebDAVSyncSection: React.FC<WebDAVSyncSectionProps> = ({
           setDebugLogs(result.debugLogs);
           setShowDebugDrawer(true);
         }
-        setError(result.message || '同步失败');
+        setError(result.message || 'Ошибка синхронизации');
         showToast({
           type: 'error',
-          title: result.message || 'WebDAV 同步失败',
+          title: result.message || 'Ошибка синхронизации WebDAV',
           duration: 3000,
         });
       }
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : '未知错误';
-      setError(`同步失败: ${errorMsg}`);
+      const errorMsg = err instanceof Error ? err.message : 'Неизвестная ошибка';
+      setError(`Ошибка синхронизации: ${errorMsg}`);
       showToast({
         type: 'error',
-        title: `WebDAV 同步失败: ${errorMsg}`,
+        title: `Ошибка синхронизации WebDAV: ${errorMsg}`,
         duration: 3000,
       });
     } finally {
@@ -324,7 +324,7 @@ export const WebDAVSyncSection: React.FC<WebDAVSyncSectionProps> = ({
           true
         );
         if (!connected) {
-          showToast({ type: 'error', title: '连接失败', duration: 2000 });
+          showToast({ type: 'error', title: 'Ошибка подключения', duration: 2000 });
           return;
         }
         setSyncManager(manager);
@@ -346,13 +346,13 @@ export const WebDAVSyncSection: React.FC<WebDAVSyncSectionProps> = ({
       if (success) {
         showToast({
           type: 'success',
-          title: '恢复成功，即将重启...',
+          title: 'Восстановлено, перезапускаем...',
           duration: 2000,
         });
         setTimeout(() => window.location.reload(), 2000);
         return true;
       } else {
-        showToast({ type: 'error', title: '恢复失败', duration: 2000 });
+        showToast({ type: 'error', title: 'Не удалось восстановить', duration: 2000 });
         return false;
       }
     } finally {
@@ -391,7 +391,7 @@ export const WebDAVSyncSection: React.FC<WebDAVSyncSectionProps> = ({
               htmlFor="webdav-url"
               className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-400"
             >
-              服务器地址
+              Адрес сервера
             </label>
             <input
               id="webdav-url"
@@ -403,7 +403,7 @@ export const WebDAVSyncSection: React.FC<WebDAVSyncSectionProps> = ({
             />
             <div className="mt-1.5 space-y-1">
               <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                坚果云: https://dav.jianguoyun.com/dav/
+                Яндекс Диск: https://webdav.yandex.ru/
               </p>
             </div>
           </div>
@@ -414,7 +414,7 @@ export const WebDAVSyncSection: React.FC<WebDAVSyncSectionProps> = ({
               htmlFor="webdav-username"
               className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-400"
             >
-              账号
+              Логин
             </label>
             <input
               id="webdav-username"
@@ -433,7 +433,7 @@ export const WebDAVSyncSection: React.FC<WebDAVSyncSectionProps> = ({
               htmlFor="webdav-password"
               className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-400"
             >
-              密码
+              Пароль
             </label>
             <div className="relative">
               <input
@@ -465,7 +465,7 @@ export const WebDAVSyncSection: React.FC<WebDAVSyncSectionProps> = ({
               htmlFor="webdav-remote-path"
               className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-400"
             >
-              远程目录路径
+              Папка на сервере
             </label>
             <input
               id="webdav-remote-path"
@@ -491,7 +491,7 @@ export const WebDAVSyncSection: React.FC<WebDAVSyncSectionProps> = ({
             disabled={effectiveStatus === 'connecting'}
             className="w-full rounded-md bg-neutral-800 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-900 disabled:bg-neutral-400 dark:bg-neutral-700 dark:hover:bg-neutral-600"
           >
-            {effectiveStatus === 'connecting' ? '连接中...' : '测试连接'}
+            {effectiveStatus === 'connecting' ? 'Подключаемся...' : 'Проверить подключение'}
           </button>
         </div>
       )}
@@ -532,7 +532,7 @@ export const WebDAVSyncSection: React.FC<WebDAVSyncSectionProps> = ({
         copySuccess={copySuccess}
         onCopy={handleCopyLogs}
         onSelectAll={handleSelectAll}
-        title="WebDAV 同步日志"
+        title="Журнал синхронизации WebDAV"
       />
     </div>
   );

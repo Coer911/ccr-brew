@@ -573,7 +573,7 @@ const RatingRadarDrawer: React.FC<RatingRadarDrawerProps> = ({
               <span>{beanName}</span>
               {overallRating !== undefined && overallRating > 0 && (
                 <span className="text-neutral-500 dark:text-neutral-400">
-                  ，总评 {overallRating}/5
+                  , итог {overallRating}/5
                 </span>
               )}
             </p>
@@ -610,7 +610,7 @@ const RatingRadarDrawer: React.FC<RatingRadarDrawerProps> = ({
                 onClick={handleClose}
                 className="flex-1"
               >
-                关闭
+                Закрыть
               </ActionDrawer.SecondaryButton>
             </motion.div>
           ) : isComparingActive ? (
@@ -626,7 +626,7 @@ const RatingRadarDrawer: React.FC<RatingRadarDrawerProps> = ({
               <div className="flex w-full gap-3">
                 <SegmentedControl
                   options={[
-                    { value: null, label: '无' },
+                    { value: null, label: 'Нет' },
                     ...availableCompareNotes.slice(0, 4).map(n => ({
                       value: n.id,
                       label: formatDate(n.timestamp),
@@ -661,8 +661,8 @@ const RatingRadarDrawer: React.FC<RatingRadarDrawerProps> = ({
                   min={0.5}
                   max={1.1}
                   onChange={handleScaleChange}
-                  minLabel="小"
-                  maxLabel="大"
+                  minLabel="Мал."
+                  maxLabel="Бол."
                   className="flex-1"
                 />
               </div>
@@ -672,8 +672,8 @@ const RatingRadarDrawer: React.FC<RatingRadarDrawerProps> = ({
                 {/* 形状切换 */}
                 <SegmentedControl
                   options={[
-                    { value: 'polygon' as const, label: '矩形' },
-                    { value: 'circle' as const, label: '圆形' },
+                    { value: 'polygon' as const, label: 'Прямоугольник' },
+                    { value: 'circle' as const, label: 'Круг' },
                   ]}
                   value={shape}
                   onChange={handleShapeChange}
@@ -684,8 +684,8 @@ const RatingRadarDrawer: React.FC<RatingRadarDrawerProps> = ({
                 {/* 对齐切换 */}
                 <SegmentedControl
                   options={[
-                    { value: 'left' as const, label: '左' },
-                    { value: 'center' as const, label: '中' },
+                    { value: 'left' as const, label: 'Слева' },
+                    { value: 'center' as const, label: 'Средняя' },
                   ]}
                   value={align}
                   onChange={handleAlignChange}

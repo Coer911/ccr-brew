@@ -18,7 +18,7 @@ const SettingsSearchBar: React.FC<SettingsSearchBarProps> = ({
   query,
   firstResult,
   isVisible = true,
-  placeholder = '搜索',
+  placeholder = 'Поиск',
   position = 'absolute',
   onQueryChange,
   onSelect,
@@ -141,7 +141,7 @@ const SettingsSearchBar: React.FC<SettingsSearchBarProps> = ({
               onBlur={handleInputBlur}
               onKeyDown={handleInputKeyDown}
               data-keyboard-avoidance="manual"
-              aria-label="搜索"
+              aria-label="Поиск"
               placeholder={placeholder}
               className="min-w-0 flex-1 bg-transparent text-sm font-medium text-neutral-800 outline-none placeholder:text-neutral-400 dark:text-neutral-100 dark:placeholder:text-neutral-500"
             />
@@ -152,7 +152,7 @@ const SettingsSearchBar: React.FC<SettingsSearchBarProps> = ({
               onMouseDown={handleClearMouseDown}
               onClick={handleClearQuery}
               className="flex size-11 shrink-0 items-center justify-center rounded-full border border-black/5 bg-neutral-100/95 text-neutral-800 shadow-lg shadow-black/5 backdrop-blur-xl transition-transform active:scale-95 dark:border-white/5 dark:bg-neutral-800/95 dark:text-neutral-100 dark:shadow-black/20"
-              aria-label="取消搜索"
+              aria-label="Отменить поиск"
             >
               <X className="size-5 stroke-[1.75px]" />
             </button>

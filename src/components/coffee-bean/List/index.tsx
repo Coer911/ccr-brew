@@ -340,7 +340,7 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
         } else {
           return {
             success: false,
-            error: new Error(result.error || '烘焙失败'),
+            error: new Error(result.error || 'Ошибка обжарки'),
           };
         }
       }
@@ -1015,7 +1015,7 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
         setEditingBean(bean);
       }
     } catch (_error) {
-      alert('编辑咖啡豆时出错，请重试');
+      alert('Ошибка при изменении зерна, попробуйте ещё раз');
     }
   };
 
@@ -1029,11 +1029,11 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
         setShowAddForm(false);
         setEditingBean(null);
       } else {
-        alert('保存失败，请重试');
+        alert('Не удалось сохранить, попробуйте ещё раз');
       }
     } catch (error) {
       console.error('保存咖啡豆失败:', error);
-      alert('保存失败，请重试');
+      alert('Не удалось сохранить, попробуйте ещё раз');
     }
   };
 
@@ -1063,7 +1063,7 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
       }
       return null;
     } catch (error) {
-      alert('保存评分失败，请重试');
+      alert('Не удалось сохранить оценку, попробуйте ещё раз');
       throw error;
     }
   };
@@ -1472,7 +1472,7 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
             ?.name ||
           coffeeBeanGroups?.find(group => group.id === selectedBeanGroupId)
             ?.name ||
-          '当前分组'
+          'Текущая группа'
         );
       default:
         return '';
@@ -1693,7 +1693,7 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
         calculateOriginalTotalWeight(beansToExport);
 
       // 根据豆子状态决定显示文本
-      const beanTypeName = selectedBeanState === 'green' ? '生豆' : '咖啡豆';
+      const beanTypeName = selectedBeanState === 'green' ? 'Зелёное зерно' : 'Зерно';
 
       // 获取showBeanSummary设置
       const showBeanSummary =
@@ -1714,9 +1714,9 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
 
         let text = '';
         if (showEmptyBeansInResults) {
-          text = `${beansToExport.length} 款${beanTypeName}，总共 ${originalTotalWeightText}，剩余 ${totalWeightText}`;
+          text = `${beansToExport.length} шт.${beanTypeName}, всего ${originalTotalWeightText}, осталось ${totalWeightText}`;
         } else {
-          text = `${beansToExport.length} 款${beanTypeName}，剩余 ${totalWeightText}`;
+          text = `${beansToExport.length} шт.${beanTypeName}, осталось ${totalWeightText}`;
         }
 
         // 添加预计杯数（仅熟豆）- 使用搜索感知的统计值
@@ -1725,7 +1725,7 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
           selectedBeanState === 'roasted' &&
           searchAwareEstimatedCupsLabel
         ) {
-          text += `，约 ${searchAwareEstimatedCupsLabel}`;
+          text += `, около ${searchAwareEstimatedCupsLabel}`;
         }
 
         // 添加详细剩余量信息（仅当选择"全部"类型且有多种类型时显示）- 使用搜索感知的统计值
@@ -1744,19 +1744,19 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
             [
               searchAwareTypeStats.espressoCount > 0
                 ? {
-                    label: '意式',
+                    label: 'Эспрессо',
                     weight: searchAwareTypeStats.espressoRemaining,
                   }
                 : null,
               searchAwareTypeStats.filterCount > 0
                 ? {
-                    label: '手冲',
+                    label: 'Фильтр',
                     weight: searchAwareTypeStats.filterRemaining,
                   }
                 : null,
               searchAwareTypeStats.omniCount > 0
                 ? {
-                    label: '全能',
+                    label: 'Универсальная',
                     weight: searchAwareTypeStats.omniRemaining,
                   }
                 : null,
@@ -1790,7 +1790,7 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
       console.error('导出预览图失败:', error);
       showToast({
         type: 'error',
-        title: '生成预览图失败',
+        title: 'Не удалось создать картинку',
       });
     } finally {
       setIsExportingPreview(false);
@@ -1877,7 +1877,7 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
       });
     } catch (error) {
       console.error('导出咖啡豆失败:', error);
-      showToast({ type: 'error', title: '导出咖啡豆失败', duration: 3000 });
+      showToast({ type: 'error', title: 'Не удалось экспортировать зерно', duration: 3000 });
       setIsSavingShareImage(false);
     }
   };
@@ -1936,7 +1936,7 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
       }
     } catch (error) {
       console.error('分享文本失败:', error);
-      showToast({ type: 'error', title: '分享文本失败', duration: 3000 });
+      showToast({ type: 'error', title: 'Не удалось поделиться текстом', duration: 3000 });
     }
   };
 
@@ -1962,9 +1962,9 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
         result.blob,
         result.fileName,
         {
-          title: '分享咖啡豆',
-          text: `${result.beanCount} 款咖啡豆`,
-          dialogTitle: '分享咖啡豆',
+          title: 'Поделиться зерном',
+          text: `${result.beanCount} шт. зерна`,
+          dialogTitle: 'Поделиться зерном',
         }
       );
 
@@ -1972,10 +1972,10 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
         type: shareOutcome === 'cancelled' ? 'info' : 'success',
         title:
           shareOutcome === 'activation-required'
-            ? '压缩包已生成，请再次点击分享'
+            ? 'Архив готов, нажмите «Поделиться» ещё раз'
             : shareOutcome === 'cancelled'
-              ? '已取消分享'
-              : '咖啡豆压缩包已保存',
+              ? 'Отправка отменена'
+              : 'Архив с зерном сохранён',
         duration: 2000,
       });
       handleCancelShare();
@@ -1983,7 +1983,7 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
       console.error('分享咖啡豆压缩包失败:', error);
       showToast({
         type: 'error',
-        title: error instanceof Error ? error.message : '分享咖啡豆压缩包失败',
+        title: error instanceof Error ? error.message : 'Не удалось поделиться архивом',
         duration: 3000,
       });
       setIsSharingBeanPackage(false);
@@ -2257,7 +2257,7 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
           buttons={[
             {
               icon: '+',
-              text: '手动添加',
+              text: 'Добавить вручную',
               onClick: () => {
                 // 沉浸式添加模式：触发事件打开详情页添加模式
                 if (settings?.immersiveAdd) {
@@ -2275,7 +2275,7 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
             },
             {
               icon: '↓',
-              text: '快速添加',
+              text: 'Быстрое добавление',
               onClick: () => {
                 if (onShowImport) onShowImport(selectedBeanState);
               },
@@ -2289,13 +2289,13 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
         <BottomActionBar
           buttons={[
             {
-              text: '取消',
+              text: 'Отмена',
               onClick: handleCancelShare,
             },
             {
               text: isSavingShareImage
-                ? '生成中...'
-                : `保存为图片 (${selectedBeans.length})`,
+                ? 'Готовим...'
+                : `Сохранить картинкой (${selectedBeans.length})`,
               onClick: handleSaveBeansAsImage,
               className:
                 selectedBeans.length === 0 ||
@@ -2305,7 +2305,7 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
                   : '',
             },
             {
-              text: '分享文本',
+              text: 'Поделиться текстом',
               onClick: handleShareText,
               className:
                 selectedBeans.length === 0 ||
@@ -2317,7 +2317,7 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
             ...(settings?.experimentalBeanSharePackageEnabled
               ? [
                   {
-                    text: isSharingBeanPackage ? '生成中...' : '分享压缩包',
+                    text: isSharingBeanPackage ? 'Готовим...' : 'Поделиться архивом',
                     onClick: handleSharePackage,
                     className:
                       selectedBeans.length === 0 ||
@@ -2374,7 +2374,7 @@ const CoffeeBeans: React.FC<CoffeeBeansProps> = ({
           }
         }}
         itemName={deletingBean?.name || ''}
-        itemType="咖啡豆"
+        itemType="Зерно"
         onExitComplete={() => setDeletingBean(null)}
       />
 

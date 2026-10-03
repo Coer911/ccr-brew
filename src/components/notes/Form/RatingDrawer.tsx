@@ -186,14 +186,14 @@ const RatingDrawer: React.FC<RatingDrawerProps> = ({
                 <p className="text-base font-medium text-neutral-500 dark:text-neutral-400">
                   {beanName ? (
                     <>
-                      为这杯
+                      Оцените эту
                       <span className="mx-1 text-neutral-800 dark:text-neutral-200">
                         {beanName}
                       </span>
-                      评分
+                      Оценка
                     </>
                   ) : (
-                    <>为这杯咖啡评分</>
+                    <>Оцените эту чашку</>
                   )}
                 </p>
               )}
@@ -201,14 +201,14 @@ const RatingDrawer: React.FC<RatingDrawerProps> = ({
                 <>
                   <div data-vaul-no-drag>
                     <ElasticSlider
-                      label="总体评分"
+                      label="Общая оценка"
                       min={0}
                       max={5}
                       step={overallStep}
                       value={tempRating}
                       onValueChange={setTempRating}
                       formatValue={formatOverallValue}
-                      aria-label="总体评分"
+                      aria-label="Общая оценка"
                     />
                   </div>
                 </>
@@ -267,7 +267,7 @@ const RatingDrawer: React.FC<RatingDrawerProps> = ({
                         <ElasticSlider
                           label={
                             dimension.order === 999
-                              ? `${dimension.label} (已删除)`
+                              ? `${dimension.label} (удалено)`
                               : dimension.label
                           }
                           min={0}
@@ -297,7 +297,7 @@ const RatingDrawer: React.FC<RatingDrawerProps> = ({
                         >
                           {dimension.label}
                           {dimension.order === 999 && (
-                            <span className="ml-1">(已删除)</span>
+                            <span className="ml-1">(удалено)</span>
                           )}
                         </span>
                         <div className="flex gap-0.5" data-vaul-no-drag>
@@ -360,10 +360,10 @@ const RatingDrawer: React.FC<RatingDrawerProps> = ({
       </ActionDrawer.Content>
       <ActionDrawer.Actions>
         <ActionDrawer.SecondaryButton onClick={onClose}>
-          取消
+          Отмена
         </ActionDrawer.SecondaryButton>
         <ActionDrawer.PrimaryButton onClick={handleConfirm}>
-          确定
+          OK
         </ActionDrawer.PrimaryButton>
       </ActionDrawer.Actions>
     </ActionDrawer>

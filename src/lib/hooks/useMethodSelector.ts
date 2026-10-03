@@ -46,7 +46,7 @@ export function useMethodSelector({
       if (!hasBrewingStages(method)) {
         showToast({
           type: 'error',
-          title: '该方案没有冲煮步骤，请补充步骤后再用于计时',
+          title: 'В рецепте нет этапов — добавьте их, чтобы использовать таймер',
         });
         return false;
       }
@@ -85,7 +85,7 @@ export function useMethodSelector({
       });
 
       // 简单的步骤切换：选择方案后进入注水步骤
-      setActiveTab('注水');
+      setActiveTab('Пролив');
       setActiveBrewingStep('brewing');
 
       return true;

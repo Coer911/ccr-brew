@@ -55,66 +55,66 @@ const ConvertToGreenDrawer: React.FC<ConvertToGreenDrawerProps> = ({
           <p className="text-neutral-500 dark:text-neutral-400">
             {preview.directConvert ? (
               <>
-                将
+                Перевести
                 <span className="text-neutral-800 dark:text-neutral-200">
                   「{preview.beanName}」
                 </span>
-                转换为生豆，原熟豆
+                в зелёное зерно; исходное обжаренное
                 <span className="text-neutral-800 dark:text-neutral-200">
                   {' '}
                   {preview.originalBean.capacity}g{' '}
                 </span>
-                尚未使用，将直接转为
+                ещё не использовалось и целиком станет
                 <span className="text-neutral-800 dark:text-neutral-200">
                   {' '}
                   {preview.greenBean.capacity}g{' '}
                 </span>
-                生豆。
+                зелёным зерном.
               </>
             ) : (
               <>
-                将
+                Перевести
                 <span className="text-neutral-800 dark:text-neutral-200">
                   「{preview.beanName}」
                 </span>
-                转换为生豆，原熟豆
+                в зелёное зерно; исходное обжаренное
                 <span className="text-neutral-800 dark:text-neutral-200">
                   {' '}
                   {preview.originalBean.capacity}g{' '}
                 </span>
-                总量、
+                всего,
                 <span className="text-neutral-800 dark:text-neutral-200">
                   {preview.originalBean.remaining}g{' '}
                 </span>
-                剩余，将拆分为
+                осталось — будет разделено на
                 <span className="text-neutral-800 dark:text-neutral-200">
                   {' '}
                   {preview.greenBean.capacity}g{' '}
                 </span>
-                生豆和
+                зелёного зерна и
                 <span className="text-neutral-800 dark:text-neutral-200">
                   {' '}
                   {preview.newRoastedBean.capacity}g{' '}
                 </span>
-                新熟豆。
+                нового обжаренного.
                 {preview.brewingNotesCount > 0 && (
                   <>
-                    届时将迁移
+                    Будут перенесены
                     <span className="text-neutral-800 dark:text-neutral-200">
                       {' '}
                       {preview.brewingNotesCount}{' '}
                     </span>
-                    条冲煮记录至新熟豆。
+                    записей заваривания в новое обжаренное зерно.
                   </>
                 )}
                 {preview.recordsToDeleteCount > 0 && (
                   <>
-                    同时删除
+                    Также удалится
                     <span className="text-neutral-800 dark:text-neutral-200">
                       {' '}
                       {preview.recordsToDeleteCount}{' '}
                     </span>
-                    条变动记录。
+                    записей об изменениях.
                   </>
                 )}
               </>
@@ -124,10 +124,10 @@ const ConvertToGreenDrawer: React.FC<ConvertToGreenDrawerProps> = ({
       </ActionDrawer.Content>
       <ActionDrawer.Actions>
         <ActionDrawer.SecondaryButton onClick={onClose}>
-          取消
+          Отмена
         </ActionDrawer.SecondaryButton>
         <ActionDrawer.PrimaryButton onClick={handleConfirm}>
-          确认转换
+          Перевести
         </ActionDrawer.PrimaryButton>
       </ActionDrawer.Actions>
     </ActionDrawer>

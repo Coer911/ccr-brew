@@ -26,51 +26,51 @@ const MOCK_RECOGNITION_DELAY = 100;
 
 // 模拟返回的方案数据
 const MOCK_METHOD_DATA = {
-  name: '四六法',
+  name: 'Метод 4:6',
   params: {
     coffee: '20g',
     water: '300g',
     ratio: '1:15',
-    grindSize: '中细',
+    grindSize: 'Средне-мелкий',
     temp: '92°C',
     stages: [
       {
         pourType: 'center',
-        label: '焖蒸',
+        label: 'Блуминг',
         water: '50',
         duration: 45,
-        detail: '小水流注水',
+        detail: 'Тонкая струя',
       },
       {
         pourType: 'circle',
-        label: '第一段',
+        label: 'Первый пролив',
         water: '70',
         duration: 10,
-        detail: '绕圈注水',
+        detail: 'Пролив по кругу',
       },
-      { pourType: 'wait', label: '等待', duration: 35 },
+      { pourType: 'wait', label: 'Ожидание', duration: 35 },
       {
         pourType: 'circle',
-        label: '第二段',
+        label: 'Второй пролив',
         water: '60',
         duration: 10,
-        detail: '绕圈注水',
+        detail: 'Пролив по кругу',
       },
-      { pourType: 'wait', label: '等待', duration: 35 },
+      { pourType: 'wait', label: 'Ожидание', duration: 35 },
       {
         pourType: 'circle',
-        label: '第三段',
+        label: 'Третий пролив',
         water: '60',
         duration: 10,
-        detail: '绕圈注水',
+        detail: 'Пролив по кругу',
       },
-      { pourType: 'wait', label: '等待', duration: 35 },
+      { pourType: 'wait', label: 'Ожидание', duration: 35 },
       {
         pourType: 'circle',
-        label: '第四段',
+        label: 'Четвёртый пролив',
         water: '60',
         duration: 10,
-        detail: '绕圈注水',
+        detail: 'Пролив по кругу',
       },
     ],
   },
@@ -116,7 +116,7 @@ const ScanningOverlay: React.FC<{ imageUrl: string }> = ({ imageUrl }) => {
       {/* 背景图片 - 保持原始比例，变暗处理 */}
       <img
         src={imageUrl}
-        alt="正在识别的图片"
+        alt="Фото на распознавании"
         className="w-full rounded-3xl brightness-75"
         style={{ maxHeight: '50vh', objectFit: 'cover' }}
       />
@@ -163,7 +163,7 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
 }) => {
   // 统一的复制功能
   const { copyText, failureDrawerProps } = useCopy({
-    successMessage: '提示词已复制',
+    successMessage: 'Запрос скопирован',
   });
 
   // 当前步骤
@@ -247,13 +247,13 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
           if (typeof methodData.method === 'string') {
             methodData.name = methodData.method;
           } else {
-            showToast({ type: 'error', title: '方案缺少名称' });
+            showToast({ type: 'error', title: 'У рецепта нет названия' });
             return;
           }
         }
 
         if (!methodData.params) {
-          showToast({ type: 'error', title: '方案缺少参数' });
+          showToast({ type: 'error', title: 'У рецепта нет параметров' });
           return;
         }
 
@@ -263,7 +263,7 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
           !Array.isArray(params.stages) ||
           (!acceptEmptyStages && params.stages.length === 0)
         ) {
-          showToast({ type: 'error', title: '方案缺少冲煮步骤' });
+          showToast({ type: 'error', title: 'У рецепта нет этапов' });
           return;
         }
 
@@ -274,7 +274,7 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
         if (existingMethod) {
           showToast({
             type: 'error',
-            title: `已存在同名方案"${methodData.name}"`,
+            title: `Рецепт «${methodData.name}"`,
           });
           return;
         }
@@ -305,8 +305,8 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
         onClose();
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : '未知错误';
-        showToast({ type: 'error', title: `添加失败: ${errorMessage}` });
+          error instanceof Error ? error.message : 'Неизвестная ошибка';
+        showToast({ type: 'error', title: `Не удалось добавить: ${errorMessage}` });
       }
     },
     [allowEmptyStages, existingMethods, onImport, onClose]
@@ -416,12 +416,12 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
       if (!isSupportedSourceImageFile(file)) {
         showToast({
           type: 'error',
-          title: '请上传 JPG、PNG、WebP 或 HEIF 格式的图片',
+          title: 'Загрузите фото в формате JPG, PNG, WebP или HEIF',
         });
         return;
       }
       if (file.size > 10 * 1024 * 1024) {
-        showToast({ type: 'error', title: '图片大小不能超过10MB' });
+        showToast({ type: 'error', title: 'Фото не должно быть больше 10 МБ' });
         return;
       }
 
@@ -438,7 +438,7 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
         console.error('图片识别失败:', error);
         showToast({
           type: 'error',
-          title: error instanceof Error ? error.message : '图片识别失败',
+          title: error instanceof Error ? error.message : 'Не удалось распознать фото',
         });
         setIsRecognizing(false);
         URL.revokeObjectURL(imageUrl);
@@ -467,7 +467,7 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
   // 提交 JSON 输入
   const handleSubmitJson = useCallback(async () => {
     if (!jsonInputValue.trim()) {
-      showToast({ type: 'error', title: '请输入方案数据' });
+      showToast({ type: 'error', title: 'Введите данные рецепта' });
       return;
     }
 
@@ -478,10 +478,10 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
       if (methodData && 'params' in methodData && 'name' in methodData) {
         await handleImportData(methodData);
       } else {
-        showToast({ type: 'error', title: '无法解析输入的数据' });
+        showToast({ type: 'error', title: 'Не удалось разобрать введённые данные' });
       }
     } catch (_error) {
-      showToast({ type: 'error', title: '数据格式错误' });
+      showToast({ type: 'error', title: 'Неверный формат данных' });
     }
   }, [jsonInputValue, handleImportData, customEquipment]);
 
@@ -501,19 +501,19 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
       {/* 内容区域 */}
       <ActionDrawer.Content>
         <p className="text-neutral-500 dark:text-neutral-400">
-          推荐使用
+          Советуем
           <span className="text-neutral-800 dark:text-neutral-200">
-            图片识别
+            распознавание по фото
           </span>
-          添加冲煮方案，也可将图片和
+          Добавьте рецепт — или отправьте фото и
           <button
             type="button"
             onClick={handleCopyPrompt}
             className="mx-0.5 text-neutral-800 underline decoration-neutral-400 underline-offset-2 hover:opacity-80 dark:text-neutral-200"
           >
-            提示词
+            запрос
           </button>
-          发给 AI 生成 JSON 后粘贴导入。
+          любому ИИ, получите JSON и вставьте его сюда.
         </p>
       </ActionDrawer.Content>
 
@@ -524,14 +524,14 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
           onClick={handleUploadImageClick}
           className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
         >
-          图片识别方案
+          Распознать рецепт по фото
         </motion.button>
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={handleInputJSON}
           className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
         >
-          输入 JSON
+          Ввести JSON
         </motion.button>
         {/* 没有当前器具信息时无法适配注水方式，不提供该入口 */}
         {customEquipment && (
@@ -542,7 +542,7 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
               onClick={handleSelectFromEquipment}
               className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
             >
-              从其他器具导入
+              Импорт из другого устройства
             </motion.button>
           </>
         )}
@@ -561,12 +561,12 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
       {/* 内容区域 */}
       <ActionDrawer.Content>
         <p className="text-neutral-500 dark:text-neutral-400">
-          粘贴
+          Вставьте
           <span className="text-neutral-800 dark:text-neutral-200">
             {' '}
-            AI 生成或他人分享
+            созданные ИИ или присланные другими
           </span>
-          的冲煮方案 JSON 数据。
+          данные рецепта в JSON.
         </p>
       </ActionDrawer.Content>
 
@@ -576,7 +576,7 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
           ref={jsonTextareaRef}
           value={jsonInputValue}
           onChange={e => setJsonInputValue(e.target.value)}
-          placeholder='{"name": "方案名称", "params": {...}}'
+          placeholder='{"name": "Название рецепта", "params": {...}}'
           className="h-24 w-full resize-none rounded-2xl bg-neutral-100 px-4 py-3 text-sm text-neutral-800 placeholder:text-neutral-400 focus:ring-2 focus:ring-neutral-300 focus:outline-none dark:bg-neutral-800 dark:text-white dark:placeholder:text-neutral-500 dark:focus:ring-neutral-600"
         />
         <div className="flex gap-2">
@@ -585,7 +585,7 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
             onClick={handleCancelJsonInput}
             className="flex-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
           >
-            取消
+            Отмена
           </motion.button>
           <motion.button
             whileTap={!jsonInputValue.trim() ? undefined : { scale: 0.98 }}
@@ -597,7 +597,7 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
                 : 'bg-neutral-100 text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500'
             }`}
           >
-            确认导入
+            Импортировать
           </motion.button>
         </div>
       </div>
@@ -617,11 +617,11 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
       {/* 内容区域 */}
       <ActionDrawer.Content>
         <p className="text-neutral-500 dark:text-neutral-400">
-          正在
+          Идёт
           <span className="text-neutral-800 dark:text-neutral-200">
-            识别冲煮方案
+            Распознать рецепт
           </span>
-          ，请稍候...
+          , подождите...
         </p>
       </ActionDrawer.Content>
     </>

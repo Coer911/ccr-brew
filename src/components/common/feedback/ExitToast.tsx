@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
  */
 
 // 退出提示文案 - 参考主流应用（微信/QQ/支付宝等）
-const EXIT_TOAST_TEXT = '再次返回退出';
+const EXIT_TOAST_TEXT = 'Нажмите «Назад» ещё раз, чтобы выйти';
 
 // 提示显示时长（毫秒）
 const TOAST_DURATION = 2000;

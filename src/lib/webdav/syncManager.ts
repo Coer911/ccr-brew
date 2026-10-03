@@ -22,7 +22,7 @@ import type { SyncMetadataV2 } from './types';
 class WebDAVMetadataManagerAdapter implements IMetadataManager {
   constructor(private manager: MetadataManager) {
     if (!manager) {
-      throw new Error('MetadataManager 不能为 null');
+      throw new Error('MetadataManager не может быть null');
     }
   }
 
@@ -36,14 +36,14 @@ class WebDAVMetadataManagerAdapter implements IMetadataManager {
 
   async saveLocalMetadata(metadata: SyncMetadataV2): Promise<void> {
     if (!metadata) {
-      throw new Error('metadata 不能为 null');
+      throw new Error('metadata не может быть null');
     }
     await this.manager.saveLocalMetadata(metadata);
   }
 
   async saveRemoteMetadata(metadata: SyncMetadataV2): Promise<void> {
     if (!metadata) {
-      throw new Error('metadata 不能为 null');
+      throw new Error('metadata не может быть null');
     }
     await this.manager.saveRemoteMetadata(metadata);
   }
@@ -92,7 +92,7 @@ export class WebDAVSyncManager extends BaseSyncManager {
       this.lastError = null;
 
       if (!config?.url || !config.username || !config.password) {
-        throw new Error('WebDAV 配置缺少必要字段');
+        throw new Error('В настройках WebDAV не хватает полей');
       }
 
       this.config = config;
@@ -114,7 +114,7 @@ export class WebDAVSyncManager extends BaseSyncManager {
         const connected = await this.webdavClient.testConnection();
         if (!connected) {
           throw new Error(
-            this.webdavClient.getLastError() || '无法连接到 WebDAV 服务'
+            this.webdavClient.getLastError() || 'Не удалось подключиться к WebDAV'
           );
         }
         console.warn(`✅ [WebDAV] 连接成功`);

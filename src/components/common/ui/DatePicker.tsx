@@ -21,7 +21,7 @@ export interface DatePickerProps {
 export function DatePicker({
   date,
   onDateChange,
-  placeholder = '选择日期',
+  placeholder = 'Выберите дату',
   locale = 'zh-CN',
   className = '',
   triggerClassName,

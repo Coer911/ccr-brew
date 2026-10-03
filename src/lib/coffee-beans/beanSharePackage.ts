@@ -162,7 +162,7 @@ export async function createCoffeeBeanSharePackage(
   const selectedBeans = beans.filter(bean => selectedBeanIdSet.has(bean.id));
 
   if (selectedBeans.length === 0) {
-    throw new Error('请选择至少一个咖啡豆');
+    throw new Error('Выберите хотя бы одно зерно');
   }
 
   const [{ default: JSZip }, imageRecords] = await Promise.all([
@@ -217,7 +217,7 @@ export async function readCoffeeBeanSharePackage(
   const manifestFile = zip.file(MANIFEST_FILE_NAME);
 
   if (!manifestFile) {
-    throw new Error('压缩包缺少咖啡豆清单');
+    throw new Error('В архиве нет списка зерна');
   }
 
   const manifest = JSON.parse(
@@ -229,7 +229,7 @@ export async function readCoffeeBeanSharePackage(
     manifest.version !== PACKAGE_VERSION ||
     !Array.isArray(manifest.beans)
   ) {
-    throw new Error('压缩包格式不受支持');
+    throw new Error('Формат архива не поддерживается');
   }
 
   const beans = await Promise.all(
@@ -252,7 +252,7 @@ export async function readCoffeeBeanSharePackage(
     beans.length === 0 ||
     beans.some(bean => !bean.name || typeof bean.name !== 'string')
   ) {
-    throw new Error('压缩包中没有有效的咖啡豆数据');
+    throw new Error('В архиве нет данных о зерне');
   }
 
   return beans;

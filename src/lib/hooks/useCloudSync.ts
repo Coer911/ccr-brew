@@ -53,11 +53,11 @@ export function useCloudSyncConnection(
 
             showToast({
               type: 'success',
-              title: `已上传 ${n} 项`,
+              title: `Загружено: ${n} шт.`,
               duration: 2500,
             });
           } else {
-            showToast({ type: 'info', title: '数据已是最新', duration: 2000 });
+            showToast({ type: 'info', title: 'Данные актуальны', duration: 2000 });
           }
           if (settings.hapticFeedback) hapticsUtils.medium();
         } else {
@@ -66,7 +66,7 @@ export function useCloudSyncConnection(
       } catch (e) {
         showToast({
           type: 'error',
-          title: `同步失败: ${e instanceof Error ? e.message : '未知错误'}`,
+          title: `Ошибка синхронизации: ${e instanceof Error ? e.message : 'Неизвестная ошибка'}`,
           duration: 3000,
         });
       } finally {

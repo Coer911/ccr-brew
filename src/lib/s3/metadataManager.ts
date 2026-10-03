@@ -108,7 +108,7 @@ export class MetadataManager {
    */
   async saveRemoteMetadata(metadata: SyncMetadataV2): Promise<void> {
     if (!this.client) {
-      throw new Error('S3 客户端未初始化');
+      throw new Error('Клиент S3 не инициализирован');
     }
 
     try {
@@ -126,7 +126,7 @@ export class MetadataManager {
           : null;
 
       if (!success) {
-        throw new Error(errorDetail || '上传元数据失败');
+        throw new Error(errorDetail || 'Не удалось загрузить метаданные');
       }
     } catch (error) {
       console.error('保存远程元数据失败:', error);

@@ -121,10 +121,10 @@ const RandomCoffeeBeanSettings: React.FC<RandomCoffeeBeanSettingsProps> = ({
   if (!shouldRender) return null;
 
   return (
-    <SettingPage title="随机咖啡豆" isVisible={isVisible} onClose={handleClose}>
-      <SettingSection title="类型">
+    <SettingPage title="Случайное зерно" isVisible={isVisible} onClose={handleClose}>
+      <SettingSection title="Тип">
         <SettingRow
-          label="长按随机不同类型咖啡豆"
+          label="Долгое нажатие — случайное зерно другого типа"
           isLast={!randomSettings.enableLongPressRandomType}
         >
           <SettingToggle
@@ -134,14 +134,14 @@ const RandomCoffeeBeanSettings: React.FC<RandomCoffeeBeanSettingsProps> = ({
         </SettingRow>
 
         {randomSettings.enableLongPressRandomType && (
-          <SettingRow label="长按时随机的类型" isLast>
+          <SettingRow label="Тип при долгом нажатии" isLast>
             <SettingSelector
               value={randomSettings.defaultRandomType}
               options={[
-                { value: 'espresso', label: '意式' },
-                { value: 'filter', label: '手冲' },
+                { value: 'espresso', label: 'Эспрессо' },
+                { value: 'filter', label: 'Фильтр' },
               ]}
-              ariaLabel="长按随机类型"
+              ariaLabel="Тип при долгом нажатии"
               onChange={val =>
                 handleDefaultRandomTypeChange(val as 'espresso' | 'filter')
               }
@@ -150,8 +150,8 @@ const RandomCoffeeBeanSettings: React.FC<RandomCoffeeBeanSettingsProps> = ({
         )}
       </SettingSection>
 
-      <SettingSection title="范围">
-        <SettingRow label="养豆期">
+      <SettingSection title="Диапазон">
+        <SettingRow label="Отдых">
           <SettingToggle
             checked={randomSettings.flavorPeriodRanges.aging}
             onChange={checked =>
@@ -160,7 +160,7 @@ const RandomCoffeeBeanSettings: React.FC<RandomCoffeeBeanSettingsProps> = ({
           />
         </SettingRow>
 
-        <SettingRow label="赏味期">
+        <SettingRow label="Лучший период">
           <SettingToggle
             checked={randomSettings.flavorPeriodRanges.optimal}
             onChange={checked =>
@@ -169,7 +169,7 @@ const RandomCoffeeBeanSettings: React.FC<RandomCoffeeBeanSettingsProps> = ({
           />
         </SettingRow>
 
-        <SettingRow label="衰退期">
+        <SettingRow label="Угасание">
           <SettingToggle
             checked={randomSettings.flavorPeriodRanges.decline}
             onChange={checked =>
@@ -178,7 +178,7 @@ const RandomCoffeeBeanSettings: React.FC<RandomCoffeeBeanSettingsProps> = ({
           />
         </SettingRow>
 
-        <SettingRow label="冷冻">
+        <SettingRow label="Заморожено">
           <SettingToggle
             checked={randomSettings.flavorPeriodRanges.frozen}
             onChange={checked =>
@@ -187,7 +187,7 @@ const RandomCoffeeBeanSettings: React.FC<RandomCoffeeBeanSettingsProps> = ({
           />
         </SettingRow>
 
-        <SettingRow label="在途">
+        <SettingRow label="В пути">
           <SettingToggle
             checked={randomSettings.flavorPeriodRanges.inTransit}
             onChange={checked =>
@@ -196,7 +196,7 @@ const RandomCoffeeBeanSettings: React.FC<RandomCoffeeBeanSettingsProps> = ({
           />
         </SettingRow>
 
-        <SettingRow label="未知状态" isLast>
+        <SettingRow label="Неизвестное состояние" isLast>
           <SettingToggle
             checked={randomSettings.flavorPeriodRanges.unknown}
             onChange={checked =>

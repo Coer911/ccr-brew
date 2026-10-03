@@ -88,9 +88,9 @@ const BrewingSettings: React.FC<BrewingSettingsProps> = ({
   if (!shouldRender) return null;
 
   return (
-    <SettingPage title="冲煮" isVisible={isVisible} onClose={handleClose}>
-      <SettingSection title="流程" className="-mt-4">
-        <SettingRow label="咖啡豆选择步骤" isLast>
+    <SettingPage title="Заварка" isVisible={isVisible} onClose={handleClose}>
+      <SettingSection title="Процесс" className="-mt-4">
+        <SettingRow label="Шаг выбора зерна" isLast>
           <SettingToggle
             checked={settings.showCoffeeBeanSelectionStep ?? true}
             onChange={handleCoffeeBeanSelectionStepChange}

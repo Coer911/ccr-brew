@@ -47,12 +47,12 @@ export class WebDAVClient {
         // 检查是否有错误
         if (json.status?.error) {
           const error = json.status.error;
-          return error.message || error.code || error.name || '代理请求失败';
+          return error.message || error.code || error.name || 'Ошибка прокси-запроса';
         }
 
         // 检查 contents 是否为 null（代理请求失败的另一种情况）
         if (json.contents === null && json.status) {
-          return '代理请求失败：无法获取远程内容';
+          return 'Ошибка прокси-запроса: не удалось получить данные';
         }
       }
     } catch {
@@ -89,10 +89,10 @@ export class WebDAVClient {
       if (exceptionMatch || messageMatch) {
         const exception = exceptionMatch?.[1] || '';
         const message = messageMatch?.[1] || '';
-        return `${exception}: ${message}`.trim() || 'WebDAV 错误';
+        return `${exception}: ${message}`.trim() || 'Ошибка WebDAV';
       }
 
-      return 'WebDAV 返回错误响应';
+      return 'WebDAV вернул ошибку';
     }
 
     // 检查常见的 WebDAV 错误
@@ -100,7 +100,7 @@ export class WebDAVClient {
       responseText.includes('ObjectNotFound') ||
       responseText.includes('does not exist')
     ) {
-      return '资源不存在';
+      return 'Ресурс не найден';
     }
 
     return null;
@@ -111,10 +111,10 @@ export class WebDAVClient {
     responseText: string
   ): string {
     const proxyError = this.checkProxyError(responseText);
-    if (proxyError) return `代理错误: ${proxyError}`;
+    if (proxyError) return `Ошибка прокси: ${proxyError}`;
 
     const webdavError = this.checkWebDAVError(responseText);
-    if (webdavError) return `WebDAV 错误: ${webdavError}`;
+    if (webdavError) return `Ошибка WebDAV: ${webdavError}`;
 
     const statusText = response.statusText ? ` ${response.statusText}` : '';
     const snippet = responseText.trim().replace(/\s+/g, ' ').slice(0, 300);
@@ -158,7 +158,7 @@ export class WebDAVClient {
       const proxyError = this.checkProxyError(responseText);
       if (proxyError) {
         console.log(`[WebDAV] 代理返回错误: ${proxyError}`);
-        this.lastError = `代理错误: ${proxyError}`;
+        this.lastError = `Ошибка прокси: ${proxyError}`;
         return false;
       }
 
@@ -186,7 +186,7 @@ export class WebDAVClient {
         const webdavError = this.checkWebDAVError(responseText);
         if (webdavError) {
           console.log(`[WebDAV] WebDAV 错误: ${webdavError}`);
-          this.lastError = `WebDAV 错误: ${webdavError}`;
+          this.lastError = `Ошибка WebDAV: ${webdavError}`;
           return false;
         }
 
@@ -202,13 +202,13 @@ export class WebDAVClient {
           console.log(
             `[WebDAV] 响应内容片段: ${responseText.substring(0, 500)}`
           );
-          this.lastError = '响应包含认证错误，请检查账号、密码和访问权限';
+          this.lastError = 'Ошибка авторизации — проверьте логин, пароль и права доступа';
           return false;
         }
 
         console.log(`[WebDAV] 错误: 响应不是有效的 WebDAV 格式`);
         console.log(`[WebDAV] 响应内容片段: ${responseText.substring(0, 500)}`);
-        this.lastError = '响应不是有效的 WebDAV 格式';
+        this.lastError = 'Ответ не похож на WebDAV';
         return false;
       }
 
@@ -223,12 +223,12 @@ export class WebDAVClient {
 
         if (!dirCreated) {
           console.log(`[WebDAV] 错误: 远程路径检查/创建失败: ${remotePath}`);
-          this.lastError = `无法访问或创建远程目录: ${remotePath}`;
+          this.lastError = `Не удалось открыть или создать папку: ${remotePath}`;
           this.logSummary('test-connection', {
             url: baseUrl,
             remotePath: this.config.remotePath,
             ok: false,
-            error: '无法访问或创建远程目录',
+            error: 'Не удалось открыть или создать папку',
           });
           return false;
         }
@@ -326,7 +326,7 @@ export class WebDAVClient {
 
       if (!success) {
         console.error(`[WebDAV] 上传失败: ${errorDetail}`);
-        return { success: false, error: errorDetail || '上传失败' };
+        return { success: false, error: errorDetail || 'Ошибка загрузки' };
       }
 
       return success;
@@ -338,7 +338,7 @@ export class WebDAVClient {
         ok: false,
         error: errorMsg,
       });
-      return { success: false, error: `异常: ${errorMsg}` };
+      return { success: false, error: `Ошибка: ${errorMsg}` };
     }
   }
 
@@ -702,7 +702,7 @@ export class WebDAVClient {
 
       const proxyError = this.checkProxyError(responseText);
       if (proxyError) {
-        this.lastError = `代理错误: ${proxyError}`;
+        this.lastError = `Ошибка прокси: ${proxyError}`;
         this.logSummary('mkdir-check', {
           path,
           url,
@@ -749,7 +749,7 @@ export class WebDAVClient {
 
           const mkcolProxyError = this.checkProxyError(mkcolText);
           if (mkcolProxyError) {
-            this.lastError = `代理错误: ${mkcolProxyError}`;
+            this.lastError = `Ошибка прокси: ${mkcolProxyError}`;
             this.logSummary('mkdir', {
               path: currentPath,
               url: currentUrl,
@@ -768,7 +768,7 @@ export class WebDAVClient {
             mkcolText.includes('Unauthorized') ||
             mkcolText.includes('Forbidden');
           if (hasAuthError) {
-            this.lastError = '创建目录失败：认证或权限不足';
+            this.lastError = 'Не удалось создать папку: нет авторизации или прав';
             this.logSummary('mkdir', {
               path: currentPath,
               url: currentUrl,
@@ -789,7 +789,7 @@ export class WebDAVClient {
 
           if (!mkcolSuccess) {
             console.error(`[WebDAV] 创建目录失败: ${currentPath}`);
-            this.lastError = `创建目录失败: ${currentPath}`;
+            this.lastError = `Не удалось создать папку:${currentPath}`;
             this.logSummary('mkdir', {
               path: currentPath,
               url: currentUrl,

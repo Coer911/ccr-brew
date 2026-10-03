@@ -115,7 +115,7 @@ export const DetailedTemplate: React.FC<TemplateProps> = ({
     },
     {
       key: 'packDate',
-      label: '分装',
+      label: 'Фасовка',
       value: formattedPackDate,
       show:
         config.fields.roastDate &&

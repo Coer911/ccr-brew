@@ -27,18 +27,18 @@ export type BeanFilterMode =
 
 // 分类模式显示名称
 const BEAN_FILTER_LABELS: Record<BeanFilterMode, string> = {
-  roaster: '按烘焙商',
-  origin: '按产地',
-  country: '按产国',
-  region: '按产区',
-  estate: '按庄园',
-  processingStation: '按处理站',
-  altitude: '按海拔',
-  processingMethod: '按处理法',
-  batch: '按批次',
-  variety: '按品种',
-  flavorPeriod: '按赏味期',
-  group: '按分组',
+  roaster: 'По обжарщику',
+  origin: 'По происхождению',
+  country: 'По стране',
+  region: 'По региону',
+  estate: 'По ферме',
+  processingStation: 'По станции обработки',
+  altitude: 'По высоте',
+  processingMethod: 'По обработке',
+  batch: 'По партии',
+  variety: 'По разновидности',
+  flavorPeriod: 'По лучшему периоду',
+  group: 'По группам',
 };
 
 export const BEAN_FIELD_FILTER_MODE_BY_FIELD_ID: Partial<
@@ -107,7 +107,7 @@ export interface CoffeeBeansProps {
 // 导出工具函数 - 直接返回咖啡豆名称
 export const generateBeanTitle = (bean: ExtendedCoffeeBean): string => {
   if (!bean || typeof bean !== 'object' || !bean.name) {
-    return bean?.name || '未命名咖啡豆';
+    return bean?.name || 'Зерно без названия';
   }
   return bean.name;
 };
@@ -117,6 +117,6 @@ export type BeanState = 'green' | 'roasted';
 
 // 豆子状态显示名称
 export const BEAN_STATE_LABELS: Record<BeanState, string> = {
-  green: '生豆',
-  roasted: '咖啡豆',
+  green: 'Зелёное зерно',
+  roasted: 'Зерно',
 };

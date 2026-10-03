@@ -260,7 +260,7 @@ export const calculateBeanSummaryEstimatedCups = (
 
 export const formatBeanSummaryEstimatedCups = (
   displayValue: BeanSummaryDisplayValue
-): string => `${displayValue.value} 杯`;
+): string => `${displayValue.value} чаш.`;
 
 export const buildBeanSummaryDetailItems = (
   items: BeanSummaryWeightItem[],

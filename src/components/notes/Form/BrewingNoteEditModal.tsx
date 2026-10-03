@@ -66,21 +66,21 @@ const BrewingNoteEditModal: React.FC<BrewingNoteEditModalProps> = ({
       canShowQuickRecordConversionButton ||
       isPlainNoteQuickMode);
   const quickModeToggleLabel = isQuickMode
-    ? '记录更多'
+    ? 'Подробнее'
     : isChangeRecordEdit
       ? initialData?.source === 'capacity-adjustment'
-        ? '返回变动记录'
-        : '返回快捷记录'
-      : '转为快捷记录';
+        ? 'Назад к изменениям'
+        : 'Назад к быстрой записи'
+      : 'Сделать быстрой записью';
   const saveButtonLabel =
     isQuickMode &&
     (isChangeRecordEdit ||
       canShowQuickRecordConversionButton ||
       isPlainNoteQuickMode)
-      ? '保存记录'
+      ? 'Сохранить запись'
       : canUseNotesModule
-        ? '保存笔记'
-        : '保存记录';
+        ? 'Сохранить заметку'
+        : 'Сохранить запись';
 
   // 处理切换快捷记录模式
   const handleToggleQuickMode = useCallback(() => {

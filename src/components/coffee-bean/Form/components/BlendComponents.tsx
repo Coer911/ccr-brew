@@ -77,7 +77,7 @@ const BlendComponents: React.FC<BlendComponentsProps> = ({
     <div className="w-full space-y-5">
       <div className="flex items-center justify-between">
         <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-          咖啡豆成分
+          Состав
         </label>
         <button
           type="button"
@@ -89,7 +89,7 @@ const BlendComponents: React.FC<BlendComponentsProps> = ({
               : 'bg-neutral-200 text-neutral-700 hover:bg-neutral-300 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-600'
           }`}
         >
-          添加成分
+          Добавить компонент
         </button>
       </div>
 
@@ -106,14 +106,14 @@ const BlendComponents: React.FC<BlendComponentsProps> = ({
                   className="mb-3 flex items-center justify-between"
                 >
                   <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                    成分 #{index + 1}
+                    Компонент #{index + 1}
                   </span>
                   <button
                     type="button"
                     onClick={() => onRemove(index)}
                     className="text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
                   >
-                    移除
+                    Убрать
                   </button>
                 </div>
               )}
@@ -121,10 +121,10 @@ const BlendComponents: React.FC<BlendComponentsProps> = ({
               {components.length > 1 && (
                 <div key="percentage" className="mb-3 space-y-1">
                   <label className="block text-xs text-neutral-500 dark:text-neutral-400">
-                    比例 (可选)
+                    Доля (необязательно)
                     {maxAllowed === 0 && (
                       <span className="ml-1 text-amber-600 dark:text-amber-400">
-                        (已达100%)
+                        (уже 100%)
                       </span>
                     )}
                   </label>
@@ -162,12 +162,12 @@ const BlendComponents: React.FC<BlendComponentsProps> = ({
         <div
           className={`text-xs ${percentageStatus} mt-1 flex items-center justify-between`}
         >
-          <span>当前总比例：{totalPercentage}%</span>
+          <span>Сумма долей: {totalPercentage}%</span>
           {totalPercentage !== 100 && (
             <span>
               {totalPercentage < 100
-                ? `还差 ${100 - totalPercentage}%`
-                : `超出 ${totalPercentage - 100}%`}
+                ? `Не хватает ${100 - totalPercentage}%`
+                : `Лишнее ${totalPercentage - 100}%`}
             </span>
           )}
         </div>

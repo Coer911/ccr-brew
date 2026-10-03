@@ -118,11 +118,11 @@ const NotificationSettings: React.FC<NotificationSettingsProps> = ({
   }, []);
 
   return (
-    <SettingPage title="提醒通知" isVisible={isVisible} onClose={handleClose}>
+    <SettingPage title="Уведомления" isVisible={isVisible} onClose={handleClose}>
       {showGeneralNotificationSection && (
-        <SettingSection title="通用" className="-mt-4">
+        <SettingSection title="Общие" className="-mt-4">
           {showBrewingNotificationSound && (
-            <SettingRow label="提示音">
+            <SettingRow label="Звук">
               <SettingToggle
                 checked={settings.notificationSound}
                 onChange={checked => handleChange('notificationSound', checked)}
@@ -131,7 +131,7 @@ const NotificationSettings: React.FC<NotificationSettingsProps> = ({
           )}
 
           {isNativeApp && (
-            <SettingRow label="震动反馈">
+            <SettingRow label="Вибрация">
               <SettingToggle
                 checked={settings.hapticFeedback}
                 onChange={checked => handleChange('hapticFeedback', checked)}
@@ -139,7 +139,7 @@ const NotificationSettings: React.FC<NotificationSettingsProps> = ({
             </SettingRow>
           )}
 
-          <SettingRow label="更新提示" isLast>
+          <SettingRow label="Сообщать об обновлениях" isLast>
             <SettingToggle
               checked={settings.showUpdatePrompt !== false}
               onChange={handleUpdatePromptChange}
@@ -149,8 +149,8 @@ const NotificationSettings: React.FC<NotificationSettingsProps> = ({
       )}
 
       {showCoffeeBeanNotifications && (
-        <SettingSection title="咖啡豆">
-          <SettingRow label="提醒弹窗" isLast={!calendarSyncSupported}>
+        <SettingSection title="Зерно">
+          <SettingRow label="Всплывающие напоминания" isLast={!calendarSyncSupported}>
             <SettingToggle
               checked={settings.showBeanReadyReminderPopup}
               onChange={checked =>
@@ -159,7 +159,7 @@ const NotificationSettings: React.FC<NotificationSettingsProps> = ({
             />
           </SettingRow>
           {calendarSyncSupported && (
-            <SettingRow label="同步日历" isLast>
+            <SettingRow label="Синхронизация с календарём" isLast>
               <SettingToggle
                 checked={calendarSync.enabled}
                 onChange={handleCalendarSyncChange}

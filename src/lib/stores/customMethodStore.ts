@@ -217,7 +217,7 @@ export const useCustomMethodStore = create<CustomMethodStore>()(
       } catch (error) {
         console.error('[CustomMethodStore] loadMethods failed:', error);
         set({
-          error: '加载自定义方案失败',
+          error: 'Не удалось загрузить свои рецепты',
           isLoading: false,
           initialized: false,
         });
@@ -670,10 +670,10 @@ export async function exportEquipmentToFile(
 
   await exportJsonFile({
     jsonData,
-    fileName: `${equipment.name}_器具配置.json`,
-    title: '导出器具配置',
-    text: '请选择保存位置',
-    dialogTitle: '导出器具配置',
+    fileName: `${equipment.name} — настройки устройства.json`,
+    title: 'Экспорт настроек устройства',
+    text: 'Выберите, куда сохранить',
+    dialogTitle: 'Экспорт настроек устройства',
   });
 }
 
@@ -690,7 +690,7 @@ export async function copyMethodToClipboard(
   const text = await generateMethodShareText(method, customEquipment);
   const result = await copyToClipboard(text);
   if (!result.success) {
-    throw new Error('复制失败');
+    throw new Error('Не удалось скопировать');
   }
 }
 

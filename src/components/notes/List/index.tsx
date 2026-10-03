@@ -551,13 +551,13 @@ const BrewingHistory: React.FC<BrewingHistoryProps> = ({
       return '';
     }
 
-    if (selectedDate === 'today') return '今天';
-    if (selectedDate === 'yesterday') return '昨天';
-    if (selectedDate === 'dayBeforeYesterday') return '前天';
-    if (dateGroupingMode === 'year') return `${selectedDate}年`;
+    if (selectedDate === 'today') return 'Сегодня';
+    if (selectedDate === 'yesterday') return 'Вчера';
+    if (selectedDate === 'dayBeforeYesterday') return 'Позавчера';
+    if (dateGroupingMode === 'year') return `${selectedDate} г.`;
     if (dateGroupingMode === 'month') {
       const [year, month] = selectedDate.split('-');
-      return `${year}年${Number(month)}月`;
+      return `${year} г. ${Number(month)} мес.`;
     }
 
     return selectedDate;
@@ -640,7 +640,7 @@ const BrewingHistory: React.FC<BrewingHistoryProps> = ({
       setShowDeleteConfirm(true);
     } catch (error) {
       console.error('删除笔记失败:', error);
-      showToastMessage('删除笔记失败', 'error');
+      showToastMessage('Не удалось удалить заметку', 'error');
     }
   };
 
@@ -674,10 +674,10 @@ const BrewingHistory: React.FC<BrewingHistoryProps> = ({
       // 删除笔记 - 使用 Zustand store
       deleteNote(noteId);
 
-      showToastMessage('笔记已删除', 'success');
+      showToastMessage('Заметка удалена', 'success');
     } catch (error) {
       console.error('删除笔记失败:', error);
-      showToastMessage('删除笔记失败', 'error');
+      showToastMessage('Не удалось удалить заметку', 'error');
     }
   };
 
@@ -737,10 +737,10 @@ const BrewingHistory: React.FC<BrewingHistoryProps> = ({
       );
 
       // 提示用户
-      showToastMessage('请修改后保存', 'info');
+      showToastMessage('Исправьте и сохраните', 'info');
     } catch (error) {
       console.error('复制笔记失败:', error);
-      showToastMessage('复制笔记失败', 'error');
+      showToastMessage('Не удалось скопировать заметку', 'error');
     }
   };
 
@@ -753,7 +753,7 @@ const BrewingHistory: React.FC<BrewingHistoryProps> = ({
       noteForEdit = (await getBrewingNoteById(note.id)) || note;
     } catch (error) {
       console.error('加载完整笔记失败:', error);
-      showToastMessage('加载笔记失败，请稍后重试', 'error');
+      showToastMessage('Не удалось загрузить заметки, попробуйте позже', 'error');
       return;
     }
 
@@ -981,7 +981,7 @@ const BrewingHistory: React.FC<BrewingHistoryProps> = ({
       });
     } catch (error) {
       console.error('导出笔记失败:', error);
-      showToastMessage('导出笔记失败', 'error');
+      showToastMessage('Не удалось экспортировать заметки', 'error');
       setIsSaving(false);
     }
   };
@@ -1195,17 +1195,17 @@ const BrewingHistory: React.FC<BrewingHistoryProps> = ({
                   if (imageFlowStats) {
                     return imageFlowStats.count === 0
                       ? ''
-                      : `${imageFlowStats.count} 条图片记录，已消耗 ${formatConsumption(imageFlowStats.consumption)}`;
+                      : `${imageFlowStats.count} записей с фото, израсходовано ${formatConsumption(imageFlowStats.consumption)}`;
                   }
 
                   // 普通模式下显示总记录统计
                   // 搜索模式：显示搜索结果的统计
                   if (isSearching && searchQuery.trim()) {
-                    return `${searchFilteredNotes.length} 条记录，已消耗 ${formatConsumption(currentConsumption)}`;
+                    return `${searchFilteredNotes.length} записей, израсходовано ${formatConsumption(currentConsumption)}`;
                   }
 
                   // 普通模式：显示当前筛选结果的统计
-                  return `${totalCount} 条记录，已消耗 ${formatConsumption(currentConsumption)}`;
+                  return `${totalCount} записей, израсходовано ${formatConsumption(currentConsumption)}`;
                 })()}
               </div>
             </div>
@@ -1297,13 +1297,13 @@ const BrewingHistory: React.FC<BrewingHistoryProps> = ({
         <BottomActionBar
           buttons={[
             {
-              text: '取消',
+              text: 'Отмена',
               onClick: handleCancelShare,
             },
             {
               text: isSaving
-                ? '生成中...'
-                : `保存为图片 (${selectedNotes.length})`,
+                ? 'Готовим...'
+                : `Сохранить картинкой (${selectedNotes.length})`,
               onClick: handleSaveNotes,
               className:
                 selectedNotes.length === 0 || isSaving
@@ -1311,7 +1311,7 @@ const BrewingHistory: React.FC<BrewingHistoryProps> = ({
                   : '',
             },
             {
-              text: '图文分享',
+              text: 'Поделиться с картинкой',
               onClick: handleArtisticShare,
               className:
                 selectedNotes.length !== 1
@@ -1351,9 +1351,9 @@ const BrewingHistory: React.FC<BrewingHistoryProps> = ({
           }
         }}
         itemName={deleteConfirmData?.noteName || ''}
-        itemType="笔记"
+        itemType="Заметки"
         itemSuffix={deleteConfirmData?.noteSuffix}
-        extraWarning="删除后咖啡豆库存将恢复。"
+        extraWarning="После удаления остаток зерна восстановится."
         onExitComplete={() => setDeleteConfirmData(null)}
       />
     </div>

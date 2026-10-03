@@ -161,7 +161,7 @@ const GrinderSettings: React.FC<GrinderSettingsProps> = ({
   }, [deletingId]);
 
   return (
-    <SettingPage title="磨豆机" isVisible={isVisible} onClose={handleClose}>
+    <SettingPage title="Кофемолка" isVisible={isVisible} onClose={handleClose}>
       {/* 顶部渐变阴影 */}
       <div className="-mt-4 space-y-4 px-6">
         {/* 磨豆机列表 */}
@@ -193,7 +193,7 @@ const GrinderSettings: React.FC<GrinderSettingsProps> = ({
                       (tempGrindSizeRef.current[grinder.id] = e.target.value)
                     }
                     onBlur={() => handleGrindSizeBlur(grinder.id)}
-                    placeholder="当前刻度"
+                    placeholder="Текущая настройка"
                     autoFocus
                     className="flex-1 appearance-none bg-transparent text-sm font-medium text-neutral-900 placeholder:text-neutral-400 focus:outline-none dark:text-neutral-100 dark:placeholder:text-neutral-500"
                   />
@@ -206,7 +206,7 @@ const GrinderSettings: React.FC<GrinderSettingsProps> = ({
                     }}
                     className="cursor-pointer"
                   >
-                    {grinder.currentGrindSize || '点击设置刻度'}
+                    {grinder.currentGrindSize || 'Нажмите, чтобы задать настройку'}
                   </span>
                 )}
               </div>
@@ -226,7 +226,7 @@ const GrinderSettings: React.FC<GrinderSettingsProps> = ({
                     : 'text-neutral-500 hover:text-red-600 dark:text-neutral-400 dark:hover:text-red-400'
                 }`}
               >
-                {deletingId === grinder.id ? '确认删除' : '删除'}
+                {deletingId === grinder.id ? 'Удалить' : 'Удалить'}
               </button>
             </div>
           );
@@ -252,7 +252,7 @@ const GrinderSettings: React.FC<GrinderSettingsProps> = ({
                   setNewGrinderName('');
                 }
               }}
-              placeholder="输入磨豆机名称"
+              placeholder="Введите название кофемолки"
               autoFocus
               className="flex-1 appearance-none bg-transparent text-sm font-medium text-neutral-900 placeholder:text-neutral-400 focus:outline-none dark:text-neutral-100 dark:placeholder:text-neutral-500"
             />
@@ -264,7 +264,7 @@ const GrinderSettings: React.FC<GrinderSettingsProps> = ({
               disabled={!newGrinderName.trim()}
               className="text-xs font-medium text-neutral-800 transition-colors hover:text-neutral-900 disabled:cursor-not-allowed disabled:opacity-40 dark:text-neutral-200 dark:hover:text-neutral-100"
             >
-              下一步
+              Далее
             </button>
           </div>
         ) : addingStep === 'grindSize' ? (
@@ -292,7 +292,7 @@ const GrinderSettings: React.FC<GrinderSettingsProps> = ({
                   setNewGrindSize('');
                 }
               }}
-              placeholder="输入当前刻度"
+              placeholder="Введите текущую настройку"
               autoFocus
               className="flex-1 appearance-none bg-transparent text-sm font-medium text-neutral-900 placeholder:text-neutral-400 focus:outline-none dark:text-neutral-100 dark:placeholder:text-neutral-500"
             />
@@ -302,18 +302,18 @@ const GrinderSettings: React.FC<GrinderSettingsProps> = ({
               disabled={!newGrindSize.trim()}
               className="ml-auto text-xs font-medium text-neutral-800 transition-colors hover:text-neutral-900 disabled:cursor-not-allowed disabled:opacity-40 dark:text-neutral-200 dark:hover:text-neutral-100"
             >
-              添加
+              Добавить
             </button>
           </div>
         ) : (
           <button
             type="button"
-            data-settings-search-id={makeSettingRowSearchId('添加磨豆机')}
+            data-settings-search-id={makeSettingRowSearchId('Добавить кофемолку')}
             onClick={() => setAddingStep('name')}
-            className={`flex w-full items-center justify-center gap-2 rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${getSearchHighlightClass('添加磨豆机')}`}
+            className={`flex w-full items-center justify-center gap-2 rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${getSearchHighlightClass('Добавить кофемолку')}`}
           >
             <Plus className="h-4 w-4" />
-            添加磨豆机
+            Добавить кофемолку
           </button>
         )}
 

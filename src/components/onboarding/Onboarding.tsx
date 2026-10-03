@@ -106,18 +106,18 @@ const onboardingReducer = (
 const highlights = [
   {
     icon: Lock,
-    title: '本地存储',
-    description: '完全免费且开源，数据默认保存在本机设备中，隐私由你自己掌控。',
+    title: 'Данные на устройстве',
+    description: 'Бесплатно и с открытым кодом. Данные хранятся на вашем устройстве — приватность под вашим контролем.',
   },
   {
     icon: Layers,
-    title: '一站管理',
-    description: '从辅助冲煮、豆仓库存到品鉴笔记，常用咖啡流程都能覆盖。',
+    title: 'Всё в одном месте',
+    description: 'Помощь в заварке, учёт зерна и дегустационные заметки — весь кофейный процесс.',
   },
   {
     icon: Share2,
-    title: '轻松分享',
-    description: '支持数据导入导出，方便迁移、备份和分享冲煮心得。',
+    title: 'Легко делиться',
+    description: 'Импорт и экспорт данных — для переноса, резервных копий и обмена рецептами.',
   },
 ];
 
@@ -269,7 +269,7 @@ const Onboarding: React.FC<OnboardingProps> = ({
           <div>
             <ActionDrawer.Content className="mb-24!">
               <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
-                不建议在微信内打开，请点右上角“…”选择“在浏览器打开”。
+                Откройте в обычном браузере: нажмите «…» вверху справа и выберите «Открыть в браузере».
               </p>
             </ActionDrawer.Content>
 
@@ -278,7 +278,7 @@ const Onboarding: React.FC<OnboardingProps> = ({
                 className="w-full"
                 onClick={handleAcknowledgeIntroStep}
               >
-                知道了
+                Понятно
               </ActionDrawer.SecondaryButton>
             </ActionDrawer.Actions>
           </div>
@@ -293,7 +293,7 @@ const Onboarding: React.FC<OnboardingProps> = ({
                 className="w-full"
                 onClick={handleAcknowledgeIntroStep}
               >
-                知道了
+                Понятно
               </ActionDrawer.SecondaryButton>
             </ActionDrawer.Actions>
           </div>
@@ -303,14 +303,14 @@ const Onboarding: React.FC<OnboardingProps> = ({
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-[1.125rem]">
                 <Image
                   src="/images/icons/app/icon-192x192-contained.png"
-                  alt="Brew Guide"
+                  alt="Cultura Brew"
                   width={64}
                   height={64}
                   className="h-full w-full object-cover"
                 />
               </div>
               <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-50">
-                欢迎使用 &quot;Brew Guide&quot;
+                Добро пожаловать в Cultura Brew
               </h2>
             </div>
 
@@ -339,7 +339,7 @@ const Onboarding: React.FC<OnboardingProps> = ({
                 className="w-full"
                 onClick={handleAcknowledgeIntroStep}
               >
-                继续
+                Продолжить
               </ActionDrawer.SecondaryButton>
             </ActionDrawer.Actions>
           </div>
@@ -347,10 +347,10 @@ const Onboarding: React.FC<OnboardingProps> = ({
           <div>
             <div className="mb-6 space-y-1">
               <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-50">
-                选择常用功能
+                Выберите основные функции
               </h2>
               <p className="text-sm text-neutral-900/50 dark:text-neutral-50/50">
-                可以随时在设置中调整
+                Это можно поменять в настройках
               </p>
             </div>
 
@@ -393,7 +393,7 @@ const Onboarding: React.FC<OnboardingProps> = ({
                 onClick={handleComplete}
                 disabled={isCompleting}
               >
-                开始使用
+                Начать
               </ActionDrawer.SecondaryButton>
             </ActionDrawer.Actions>
           </div>

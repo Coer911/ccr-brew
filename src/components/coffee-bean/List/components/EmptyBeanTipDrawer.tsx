@@ -78,22 +78,22 @@ const EmptyBeanTipDrawer: React.FC<EmptyBeanTipDrawerProps> = ({
       onClose={handleUnderstand}
       icon={EmojiObjectsIcon}
       historyId="empty-bean-tip"
-      primaryButtonText="帮我开启"
+      primaryButtonText="Включить"
       onPrimaryClick={handleEnable}
-      secondaryButtonText="明白了"
+      secondaryButtonText="Понятно"
       onSecondaryClick={handleUnderstand}
     >
       <p className="text-neutral-500 dark:text-neutral-400">
-        用完的咖啡豆被归档，可在咖啡豆分类栏点击{' '}
+        Закончившееся зерно уходит в архив. Нажмите на категорию зерна,{' '}
         <span className="inline-flex items-center align-middle">
           <AlignLeft
             size={12}
             className="mx-0.5 inline-block text-neutral-800 dark:text-neutral-200"
           />
         </span>{' '}
-        进入筛选，并开启
+        откройте фильтр и включите
         <span className="text-neutral-800 dark:text-neutral-200">
-          【展示已用完】
+          «Показывать закончившееся»
         </span>
         。
       </p>

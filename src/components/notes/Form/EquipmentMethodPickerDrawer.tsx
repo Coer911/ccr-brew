@@ -273,7 +273,7 @@ const EquipmentMethodPickerDrawer: React.FC<
             onClick={onClose}
             className="flex-1 rounded-full bg-neutral-100 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
           >
-            取消
+            Отмена
           </button>
           <button
             type="button"
@@ -281,7 +281,7 @@ const EquipmentMethodPickerDrawer: React.FC<
             disabled={!tempEquipmentId}
             className="flex-1 rounded-full bg-neutral-900 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100"
           >
-            确定
+            OK
           </button>
         </div>
       </div>

@@ -8,9 +8,9 @@ export { ROAST_LEVELS };
 
 // 咖啡豆类型选项
 export const BEAN_TYPES = [
-  { value: 'filter' as const, label: '手冲' },
-  { value: 'espresso' as const, label: '意式' },
-  { value: 'omni' as const, label: '全能' },
+  { value: 'filter' as const, label: 'Фильтр' },
+  { value: 'espresso' as const, label: 'Эспрессо' },
+  { value: 'omni' as const, label: 'Универсальная' },
 ];
 
 // 信息项类型定义

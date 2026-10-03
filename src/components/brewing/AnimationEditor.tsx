@@ -538,7 +538,7 @@ const AnimationEditor = forwardRef<AnimationEditorRef, AnimationEditorProps>(
 
           {/* 帧指示器 */}
           <div className="absolute top-2 left-2 rounded-md bg-black/60 px-2 py-1 text-xs text-neutral-100">
-            帧 {currentFrameIndex + 1}/{frames.length}
+            Кадр {currentFrameIndex + 1}/{frames.length}
           </div>
         </div>
 
@@ -576,12 +576,12 @@ const AnimationEditor = forwardRef<AnimationEditorRef, AnimationEditorProps>(
                     />
                   ) : (
                     <span className="text-xs text-neutral-400 dark:text-neutral-500">
-                      空白
+                      Пусто
                     </span>
                   )}
                 </div>
                 <div className="absolute right-0 bottom-0 left-0 bg-black/50 text-center text-[10px] text-neutral-100">
-                  帧 {index + 1}
+                  Кадр {index + 1}
                 </div>
               </button>
             ))}
@@ -627,7 +627,7 @@ const AnimationEditor = forwardRef<AnimationEditorRef, AnimationEditorProps>(
                   togglePlayback();
                 }}
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-200 dark:bg-neutral-700"
-                aria-label={isPlaying ? '暂停' : '播放'}
+                aria-label={isPlaying ? 'Пауза' : 'Пуск'}
               >
                 {isPlaying ? (
                   <svg
@@ -675,7 +675,7 @@ const AnimationEditor = forwardRef<AnimationEditorRef, AnimationEditorProps>(
                 className={`flex h-10 w-10 items-center justify-center rounded-full bg-neutral-200 dark:bg-neutral-700 ${
                   currentFrameIndex <= 0 ? 'cursor-not-allowed opacity-50' : ''
                 }`}
-                aria-label="上一帧"
+                aria-label="Предыдущий кадр"
               >
                 <svg
                   className="h-5 w-5"
@@ -707,7 +707,7 @@ const AnimationEditor = forwardRef<AnimationEditorRef, AnimationEditorProps>(
                     ? 'cursor-not-allowed opacity-50'
                     : ''
                 }`}
-                aria-label="下一帧"
+                aria-label="Следующий кадр"
               >
                 <svg
                   className="h-5 w-5"
@@ -741,7 +741,7 @@ const AnimationEditor = forwardRef<AnimationEditorRef, AnimationEditorProps>(
                     ? 'cursor-not-allowed opacity-50'
                     : ''
                 }`}
-                aria-label="复制当前帧"
+                aria-label="Копировать кадр"
               >
                 <svg
                   className="h-5 w-5"
@@ -771,7 +771,7 @@ const AnimationEditor = forwardRef<AnimationEditorRef, AnimationEditorProps>(
                 className={`flex h-10 w-10 items-center justify-center rounded-full bg-neutral-200 dark:bg-neutral-700 ${
                   frames.length <= 1 ? 'cursor-not-allowed opacity-50' : ''
                 }`}
-                aria-label="删除当前帧"
+                aria-label="Удалить кадр"
               >
                 <svg
                   className="h-5 w-5"
@@ -795,7 +795,7 @@ const AnimationEditor = forwardRef<AnimationEditorRef, AnimationEditorProps>(
           {referenceImages.length > 0 && (
             <div className="mt-2">
               <label className="mb-1 block text-sm font-medium text-neutral-600 dark:text-neutral-400">
-                参考图像
+                Образец
               </label>
               <div className="flex gap-2 overflow-x-auto rounded-lg bg-neutral-100 p-2 dark:bg-neutral-800">
                 {/* 无参考选项 */}
@@ -829,7 +829,7 @@ const AnimationEditor = forwardRef<AnimationEditorRef, AnimationEditorProps>(
                     </svg>
                   </div>
                   <div className="absolute right-0 bottom-0 left-0 bg-black/50 text-center text-[10px] text-neutral-100">
-                    无
+                    Нет
                   </div>
                 </button>
 

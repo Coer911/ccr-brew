@@ -96,6 +96,6 @@ export interface TemplateProps {
 
 // 模板选项
 export const TEMPLATE_OPTIONS = [
-  { id: 'minimal' as const, name: '简洁' },
-  { id: 'detailed' as const, name: '详细' },
+  { id: 'minimal' as const, name: 'Кратко' },
+  { id: 'detailed' as const, name: 'Подробно' },
 ];

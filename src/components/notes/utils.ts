@@ -43,26 +43,26 @@ export const getNoteDeleteDisplay = (
   coffeeBeanLookup?: CoffeeBeanLookup
 ): NoteDeleteDisplay => {
   const resolvedBeanInfo = resolveNoteCoffeeBeanInfo(note, coffeeBeanLookup);
-  const beanName = resolvedBeanInfo?.name?.trim() || '未知咖啡豆';
+  const beanName = resolvedBeanInfo?.name?.trim() || 'Неизвестное зерно';
 
   if (note.source === 'quick-decrement') {
     return {
       itemName: beanName,
-      itemSuffix: '的快捷扣除记录',
+      itemSuffix: ' — быстрое списание',
     };
   }
 
   if (note.source === 'capacity-adjustment') {
     return {
       itemName: beanName,
-      itemSuffix: '的容量调整记录',
+      itemSuffix: ' — изменение остатка',
     };
   }
 
   if (note.source === 'roasting') {
     return {
       itemName: beanName,
-      itemSuffix: '的烘焙记录',
+      itemSuffix: ' — обжарка',
     };
   }
 
@@ -75,7 +75,7 @@ export const getNoteDeleteDisplay = (
     return { itemName: resolvedBeanInfo.name.trim() };
   }
 
-  return { itemName: '此笔记' };
+  return { itemName: 'эту заметку' };
 };
 
 const normalizeSearchText = (text: string | undefined | null): string => {
@@ -128,11 +128,11 @@ export const buildNoteSearchableTexts = (
   const absoluteDateText = note.timestamp
     ? formatDateAbsolute(note.timestamp)
     : '';
-  const totalTimeText = note.totalTime ? `${note.totalTime}秒` : '';
+  const totalTimeText = note.totalTime ? `${note.totalTime} с` : '';
   const ratingText = note.rating
-    ? `评分${note.rating} ${note.rating}分 ${note.rating}星`
+    ? `Оценка${note.rating} ${note.rating} из ${note.rating} зв.`
     : '';
-  const tasteText = `酸度${note.taste?.acidity || 0} 甜度${note.taste?.sweetness || 0} 苦度${note.taste?.bitterness || 0} 醇厚度${note.taste?.body || 0}`;
+  const tasteText = `Кислотность${note.taste?.acidity || 0} Сладость${note.taste?.sweetness || 0} Горечь${note.taste?.bitterness || 0} Тело${note.taste?.body || 0}`;
 
   return dedupeWeightedSearchTexts([
     { text: note.coffeeBeanInfo?.name || '', weight: 3 },
@@ -206,27 +206,27 @@ export const formatDate = (timestamp: number): string => {
 
   // 1分钟内：刚刚
   if (seconds < 60) {
-    return '刚刚';
+    return 'Только что';
   }
   // 1小时内：N分钟前
   else if (minutes < 60) {
-    return `${minutes}分钟前`;
+    return `${minutes} мин назад`;
   }
   // 今天：N小时前
   else if (isToday(date)) {
-    return `${hours}小时前`;
+    return `${hours} ч назад`;
   }
   // 昨天：昨天 HH:mm
   else if (isYesterday(date)) {
-    return `昨天 ${formatTime(date)}`;
+    return `Вчера ${formatTime(date)}`;
   }
   // 今年内：MM月DD日 HH:mm
   else if (isThisYear(date)) {
-    return `${date.getMonth() + 1}月${date.getDate()}日 ${formatTime(date)}`;
+    return `${date.getMonth() + 1}.${date.getDate()} ${formatTime(date)}`;
   }
   // 更早：YYYY年MM月DD日 HH:mm
   else {
-    return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 ${formatTime(date)}`;
+    return `${date.getFullYear()} г. ${date.getMonth() + 1}.${date.getDate()} ${formatTime(date)}`;
   }
 };
 
@@ -239,7 +239,7 @@ export const formatDateAbsolute = (timestamp: number): string => {
 // 笔记详情使用精确到分钟的固定时间，避免停留在相对时间文案。
 export const formatNoteDetailDateTime = (timestamp: number): string => {
   const date = new Date(timestamp);
-  return `${date.getMonth() + 1}月${date.getDate()}日 ${formatTime(date)}`;
+  return `${date.getMonth() + 1}.${date.getDate()} ${formatTime(date)}`;
 };
 
 // 辅助函数：判断是否是今天

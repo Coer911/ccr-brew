@@ -27,9 +27,9 @@ interface DetailInfoProps {
 
 // 咖啡豆类型选项
 const BEAN_TYPES = [
-  { value: 'filter', label: '手冲' },
-  { value: 'espresso', label: '意式' },
-  { value: 'omni', label: '全能' },
+  { value: 'filter', label: 'Фильтр' },
+  { value: 'espresso', label: 'Эспрессо' },
+  { value: 'omni', label: 'Универсальная' },
 ];
 
 const DetailInfo: React.FC<DetailInfoProps> = ({
@@ -56,7 +56,7 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
       <div className="grid w-full grid-cols-1 gap-6">
         <div className="space-y-2">
           <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-            咖啡豆类型
+            Тип зерна
           </label>
           <div className="flex w-full border-b border-neutral-300 dark:border-neutral-700">
             {BEAN_TYPES.map(type => (
@@ -95,7 +95,7 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
         <div className="w-full space-y-4">
           <div className="flex items-center justify-between">
             <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-              赏味期设置
+              Лучший период
             </label>
             <div className="flex space-x-2">
               <button
@@ -103,26 +103,26 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
                 onClick={() => autoSetFlavorPeriod()}
                 className="text-xs text-neutral-600 underline dark:text-neutral-400"
               >
-                按烘焙度重置
+                Сбросить по обжарке
               </button>
               <button
                 type="button"
                 onClick={toggleFrozenState}
                 className="text-xs text-neutral-600 underline dark:text-neutral-400"
               >
-                设为冷冻状态
+                Заморозить
               </button>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="block text-xs text-neutral-500 dark:text-neutral-400">
-                养豆期结束 (天)
+                Конец отдыха (дн.)
               </label>
               <AutocompleteInput
                 value={bean.startDay ? String(bean.startDay) : ''}
                 onChange={onBeanChange('startDay')}
-                placeholder="天数"
+                placeholder="Дней"
                 clearable={false}
                 suggestions={[]}
                 inputType="tel"
@@ -130,12 +130,12 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
             </div>
             <div className="space-y-1">
               <label className="block text-xs text-neutral-500 dark:text-neutral-400">
-                赏味期结束 (天)
+                Конец лучшего периода (дн.)
               </label>
               <AutocompleteInput
                 value={bean.endDay ? String(bean.endDay) : ''}
                 onChange={onBeanChange('endDay')}
-                placeholder="天数"
+                placeholder="Дней"
                 clearable={false}
                 suggestions={[]}
                 inputType="tel"
@@ -145,11 +145,11 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
           {(startDay > 0 || endDay > 0) && (
             <div className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
               <p>
-                说明：
-                {startDay > 0 ? `${startDay}天前为养豆期` : '未设置养豆期'}
+                Пояснение:
+                {startDay > 0 ? `${startDay} дн. — отдых` : 'Отдых не задан'}
                 {endDay > 0
-                  ? `，${startDay > 0 ? `${startDay}-` : ''}${endDay}天为赏味期，${endDay}天后赏味期结束`
-                  : '，未设置赏味期结束'}
+                  ? `，${startDay > 0 ? `${startDay}-` : ''}${endDay} дн. — лучший период,${endDay} дн. — лучший период закончился`
+                  : ', конец лучшего периода не задан'}
               </p>
             </div>
           )}
@@ -160,7 +160,7 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
         <div className="w-full space-y-4">
           <div className="flex items-center justify-between">
             <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-              状态设置
+              Состояние
             </label>
             <div className="flex space-x-2">
               <button
@@ -168,7 +168,7 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
                 onClick={toggleFrozenState}
                 className="text-xs text-neutral-600 underline dark:text-neutral-400"
               >
-                取消冷冻状态
+                Разморозить
               </button>
             </div>
           </div>
@@ -177,12 +177,12 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
 
       <div className="w-full space-y-2">
         <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-          备注
+          Заметка
         </label>
         <AutoResizeTextarea
           value={bean.notes || ''}
           onChange={e => onBeanChange('notes')(e.target.value)}
-          placeholder="其他备注信息..."
+          placeholder="Другие заметки..."
           className="w-full border-b border-neutral-300 bg-transparent py-2 outline-hidden focus:border-neutral-800/50 dark:border-neutral-700 dark:focus:border-neutral-400"
           minRows={2}
           maxRows={8}

@@ -133,22 +133,22 @@ interface BrewingNoteFormProps {
 
 // 工具函数
 const normalizeRoastLevel = (roastLevel?: string): string => {
-  if (!roastLevel) return '中度烘焙';
-  if (roastLevel.endsWith('烘焙')) return roastLevel;
+  if (!roastLevel) return 'Средняя обжарка';
+  if (roastLevel.endsWith('Обжарка')) return roastLevel;
 
   const roastMap: Record<string, string> = {
-    极浅: '极浅烘焙',
-    浅度: '浅度烘焙',
-    中浅: '中浅烘焙',
-    中度: '中度烘焙',
-    中深: '中深烘焙',
-    深度: '深度烘焙',
+    'Очень светлая': 'Очень светлая обжарка',
+    Светлая: 'Светлая обжарка',
+    'Светло-средняя': 'Светло-средняя обжарка',
+    Средняя: 'Средняя обжарка',
+    'Средне-тёмная': 'Средне-тёмная обжарка',
+    Тёмная: 'Тёмная обжарка',
   };
 
   return (
     roastMap[roastLevel] ||
     Object.entries(roastMap).find(([key]) => roastLevel.includes(key))?.[1] ||
-    '中度烘焙'
+    'Средняя обжарка'
   );
 };
 
@@ -367,9 +367,9 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
     const name = equipment?.name || '';
     return (
       selectedEquipment.toLowerCase().includes('espresso') ||
-      selectedEquipment.toLowerCase().includes('意式') ||
+      selectedEquipment.toLowerCase().includes('эспрессо') ||
       name.toLowerCase().includes('espresso') ||
-      name.toLowerCase().includes('意式')
+      name.toLowerCase().includes('эспрессо')
     );
   }, [selectedEquipment, availableEquipments]);
 
@@ -453,7 +453,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
         // 创建一个历史维度项
         const historicalDimension: FlavorDimension = {
           id: tasteId,
-          label: historicalLabels[tasteId] || '已删除的评分维度',
+          label: historicalLabels[tasteId] || 'Удалённый критерий оценки',
           order: 999, // 放在最后
           isDefault: false,
         };
@@ -1003,7 +1003,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
     try {
       await appendSelectedImages(files, remainCount);
     } catch (error) {
-      alert(error instanceof Error ? error.message : '图片处理失败，请重试');
+      alert(error instanceof Error ? error.message : 'Не удалось обработать фото, попробуйте ещё раз');
     }
 
     // 清除 input 值，允许再次选择同一文件
@@ -1023,7 +1023,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
     } catch (error) {
       if (isImageSelectionCancelled(error)) return;
 
-      alert(error instanceof Error ? error.message : '图片处理失败，请重试');
+      alert(error instanceof Error ? error.message : 'Не удалось обработать фото, попробуйте ещё раз');
     }
   };
 
@@ -1039,7 +1039,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
   const handleImageSelect = async (source: 'camera' | 'gallery') => {
     // 检查是否已达到最大数量
     if (formData.images.length >= 9) {
-      alert('最多只能上传9张图片');
+      alert('Можно загрузить не больше 9 фото');
       return;
     }
 
@@ -1059,7 +1059,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
 
       await appendSelectedImages([file], 1);
     } catch (error) {
-      alert(error instanceof Error ? error.message : '打开相机失败，请重试');
+      alert(error instanceof Error ? error.message : 'Не удалось открыть камеру, попробуйте ещё раз');
     }
   };
 
@@ -1090,7 +1090,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
           coffeeBeanInfo: {
             name: beanName,
             roastLevel: isPending
-              ? '中度烘焙'
+              ? 'Средняя обжарка'
               : normalizeRoastLevel((bean as CoffeeBean).roastLevel),
             roastDate: isPending ? '' : (bean as CoffeeBean).roastDate || '',
             roaster: beanRoaster,
@@ -1102,7 +1102,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
           ...prev,
           coffeeBeanInfo: {
             name: '',
-            roastLevel: '中度烘焙',
+            roastLevel: 'Средняя обжарка',
             roastDate: '',
             roaster: undefined,
           },
@@ -1156,12 +1156,12 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
 
       if (isSavingQuickRecord) {
         if (!selectedCoffeeBean) {
-          alert('请选择咖啡豆后再扣除');
+          alert('Сначала выберите зерно');
           return;
         }
 
         if (currentCoffeeAmount <= 0) {
-          alert('当前方案没有有效的咖啡用量，无法扣除');
+          alert('В рецепте нет дозы кофе, списать нельзя');
           return;
         }
       }
@@ -1188,7 +1188,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
           setSelectedCoffeeBean(newBean);
         } catch (error) {
           console.error('创建咖啡豆失败:', error);
-          alert('创建咖啡豆失败，请重试');
+          alert('Не удалось создать зерно, попробуйте ещё раз');
           return;
         }
       } else if (
@@ -1227,7 +1227,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
                 deductedCoffeeAmount = decrementAmount;
 
                 if (isSavingQuickRecord && decrementAmount <= 0) {
-                  alert('当前咖啡豆剩余量不足，无法扣除');
+                  alert('Зерна осталось слишком мало для списания');
                   return;
                 }
 
@@ -1320,7 +1320,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
           : initialData.beanId);
 
       if (isSavingQuickRecord && deductedCoffeeAmount <= 0) {
-        alert('扣除失败，请重试');
+        alert('Не удалось списать, попробуйте ещё раз');
         return;
       }
 
@@ -1525,7 +1525,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
         if (process.env.NODE_ENV === 'development') {
           console.error('保存笔记时出错:', error);
         }
-        alert('保存笔记时出错，请重试');
+        alert('Ошибка при сохранении заметки, попробуйте ещё раз');
       }
     } finally {
       isSubmittingRef.current = false;
@@ -1608,7 +1608,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
               className="inline-flex h-6 shrink-0 items-center gap-1.5 rounded bg-neutral-100/80 px-1.5 py-0.5 text-sm font-medium text-neutral-500 transition-all duration-150 ease-out hover:bg-neutral-100 hover:text-neutral-600 dark:bg-neutral-800/40 dark:text-neutral-500 dark:hover:bg-neutral-800/60 dark:hover:text-neutral-400"
             >
               <CornerDownRight className="h-3.5 w-3.5" />
-              显示风味
+              Показать вкусы
             </button>
           </motion.div>
         )}
@@ -1624,13 +1624,13 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
         !Number.isNaN(parsedTime) && parsedTime > 0 ? `${parsedTime}s` : '';
 
       const params = [
-        methodParams.coffee && { label: '粉量', value: methodParams.coffee },
+        methodParams.coffee && { label: 'Доза', value: methodParams.coffee },
         methodParams.grindSize && {
-          label: '研磨',
+          label: 'Помол',
           value: methodParams.grindSize,
         },
-        timeValue && { label: '时长', value: timeValue },
-        methodParams.water && { label: '液重', value: methodParams.water },
+        timeValue && { label: 'Время', value: timeValue },
+        methodParams.water && { label: 'Выход', value: methodParams.water },
       ].filter(Boolean) as { label: string; value: string }[];
 
       if (params.length === 0) return null;
@@ -1651,13 +1651,13 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
 
     // 非意式参数预览
     const params = [
-      methodParams.coffee && { label: '粉量', value: methodParams.coffee },
-      methodParams.ratio && { label: '比例', value: methodParams.ratio },
+      methodParams.coffee && { label: 'Доза', value: methodParams.coffee },
+      methodParams.ratio && { label: 'Доля', value: methodParams.ratio },
       methodParams.grindSize && {
-        label: '研磨',
+        label: 'Помол',
         value: methodParams.grindSize,
       },
-      methodParams.temp && { label: '水温', value: methodParams.temp },
+      methodParams.temp && { label: 'Темп. воды', value: methodParams.temp },
     ].filter(Boolean) as { label: string; value: string }[];
 
     if (params.length === 0) return null;
@@ -1719,7 +1719,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
     if (!Number.isNaN(parsedTime) && parsedTime > 0) {
       return [
         {
-          label: '萃取',
+          label: 'Экстракция',
           detail: '',
           duration: parsedTime,
           pourType: 'extraction',
@@ -1761,7 +1761,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
       ? formData.coffeeBeanInfo
       : {
           name: '',
-          roastLevel: '中度烘焙',
+          roastLevel: 'Средняя обжарка',
           roastDate: '',
           roaster: undefined,
         };
@@ -1822,7 +1822,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
           ref={textareaRef}
           id="brewing-notes"
           name="brewingNotes"
-          aria-label="笔记内容"
+          aria-label="Текст заметки"
           value={formData.notes}
           onChange={e => {
             setFormData({
@@ -1831,7 +1831,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
             });
           }}
           className="min-h-[120px] w-full resize-none overflow-hidden border-none bg-transparent text-sm font-medium text-neutral-800 placeholder:text-neutral-300 focus:outline-none dark:text-neutral-200 dark:placeholder:text-neutral-600"
-          placeholder="记录一下这杯的感受..."
+          placeholder="Как вам эта чашка?.."
         />
       </div>
 
@@ -1846,7 +1846,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
                   type="button"
                   onClick={() => handleImageSelect('camera')}
                   className="flex h-24 w-24 shrink-0 items-center justify-center rounded bg-neutral-100 transition-colors dark:bg-neutral-800/40"
-                  title="拍照"
+                  title="Сфотографировать"
                 >
                   <Camera
                     className="h-8 w-8 text-neutral-200 dark:text-neutral-800"
@@ -1857,7 +1857,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
                   type="button"
                   onClick={() => handleImageSelect('gallery')}
                   className="flex h-24 w-24 shrink-0 items-center justify-center rounded bg-neutral-100 transition-colors dark:bg-neutral-800/40"
-                  title="相册"
+                  title="Галерея"
                 >
                   <ImageIcon
                     className="h-8 w-8 text-neutral-200 dark:text-neutral-800"
@@ -1881,7 +1881,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
                   >
                     <Image
                       src={img}
-                      alt={`笔记图片 ${index + 1}`}
+                      alt={`Фото заметки ${index + 1}`}
                       className="h-full w-full object-cover"
                       width={200}
                       height={200}
@@ -1896,7 +1896,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
                     type="button"
                     onClick={() => handleImageSelect('gallery')}
                     className="flex aspect-square items-center justify-center rounded bg-neutral-100 transition-colors dark:bg-neutral-800/40"
-                    title="添加图片"
+                    title="Добавить фото"
                   >
                     <Plus
                       className="h-8 w-8 text-neutral-300 dark:text-neutral-600"
@@ -1913,7 +1913,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
         <div className="">
           {/* 日期 */}
           <FeatureListItem
-            label="日期"
+            label="Дата"
             value={formatDateDisplay(timestamp)}
             onClick={() => setShowDatePickerDrawer(true)}
             isFirst={true}
@@ -1922,7 +1922,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
           {/* 咖啡豆 */}
           {canUseCoffeeBeanModule && (
             <FeatureListItem
-              label="咖啡豆"
+              label="Зерно"
               value={getCoffeeBeanDisplayName()}
               onClick={() => setShowCoffeeBeanPickerDrawer(true)}
               preview={getCoffeeBeanFlavorPreview()}
@@ -1933,7 +1933,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
           {isQuickRecordMode && (
             <div className="flex items-center border-b border-neutral-200/50 py-3 dark:border-neutral-800/50">
               <span className="shrink-0 text-sm font-medium text-neutral-600 dark:text-neutral-400">
-                扣除量
+                Списать
               </span>
               <div className="ml-auto flex items-center gap-2">
                 <input
@@ -1961,7 +1961,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
             <div className="border-b border-neutral-200/50 py-3 dark:border-neutral-800/50">
               <div className="flex items-center">
                 <span className="shrink-0 text-sm font-medium text-neutral-600 dark:text-neutral-400">
-                  {isCapacityAdjustmentIncrease ? '增加量 (+)' : '减少量 (-)'}
+                  {isCapacityAdjustmentIncrease ? 'Добавить (+)' : 'Списать (−)'}
                 </span>
                 <div className="ml-auto flex items-center gap-2">
                   <input
@@ -1994,8 +1994,8 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
                 >
                   <CornerDownRight className="h-3.5 w-3.5" />
                   {isCapacityAdjustmentIncrease
-                    ? '切换为减少量'
-                    : '切换为增加量'}
+                    ? 'Переключить на списание'
+                    : 'Переключить на добавление'}
                 </button>
               </div>
             </div>
@@ -2006,7 +2006,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
             !isCompactRecordMode &&
             (initialData?.id || selectedEquipment) && (
               <FeatureListItem
-                label="器具方案"
+                label="Устройство и рецепт"
                 value={equipmentMethodValue}
                 onClick={() => setShowEquipmentMethodDrawer(true)}
                 preview={getMethodParamsPreview()}
@@ -2016,7 +2016,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
           {/* 评分（合并风味评分和总体评分） - 非快捷模式时显示 */}
           {showRatingSection && !isCompactRecordMode && (
             <FeatureListItem
-              label="评分"
+              label="Оценка"
               value={getOverallRatingDisplay()}
               onClick={() => setShowRatingDrawer(true)}
               preview={getFlavorRatingPreview()}
@@ -2035,7 +2035,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
                 value={BREWING_NOTE_FORM_INTENTS.quickDecrement}
                 className="flex items-center justify-center rounded-full bg-neutral-100 px-6 py-3 font-medium text-neutral-700 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
               >
-                仅扣除
+                Только списать
               </button>
             )}
             <button
@@ -2044,7 +2044,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
               value="save-note"
               className="flex items-center justify-center rounded-full bg-neutral-100 px-6 py-3 font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700"
             >
-              保存笔记
+              Сохранить заметку
             </button>
           </div>
         )}
@@ -2054,7 +2054,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
       {formData.images[previewImageIndex] && (
         <ImagePreview
           src={formData.images[previewImageIndex]}
-          alt="笔记图片"
+          alt="Фото заметки"
           isOpen={showImagePreview}
           onClose={() => setShowImagePreview(false)}
           layoutId={`note-image-${previewImageIndex}`}

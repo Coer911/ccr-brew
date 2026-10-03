@@ -74,7 +74,7 @@ const ChangeRecordNoteItem: React.FC<ChangeRecordNoteItemProps> = ({
     formatNoteBeanDisplayName(displayBeanInfo, {
       roasterFieldEnabled,
       roasterSeparator,
-    }) || '未知咖啡豆';
+    }) || 'Неизвестное зерно';
   const dateFormatted = note.timestamp
     ? formatDateAbsolute(note.timestamp)
     : '';
@@ -200,23 +200,23 @@ const ChangeRecordNoteItem: React.FC<ChangeRecordNoteItemProps> = ({
               items={[
                 {
                   id: 'edit',
-                  label: '编辑',
+                  label: 'Изменить',
                   onClick: () => onEdit && onEdit(note),
                 },
                 {
                   id: 'copy',
-                  label: '复制',
+                  label: 'Копировать',
                   onClick: () => onCopy && onCopy(note.id),
                 },
                 {
                   id: 'delete',
-                  label: '删除',
+                  label: 'Удалить',
                   onClick: () => onDelete && onDelete(note.id),
                   color: 'danger',
                 },
                 {
                   id: 'share',
-                  label: '分享',
+                  label: 'Поделиться',
                   onClick: () => {
                     if (onToggleSelect) {
                       onToggleSelect(note.id, true);

@@ -52,8 +52,8 @@ import StatsSectionEditorDrawer, {
 // 格式化辅助函数
 const fmtWeight = (v: number) => (v > 0 ? `${formatNumber(v)}g` : '-');
 const fmtCost = (v: number) => (v > 0 ? `¥${formatNumber(v)}` : '-');
-const fmtDays = (v: number) => (v > 0 ? `${v}天` : '-');
-const fmtAverageWeight = (v: number, unit: '天' | '月') =>
+const fmtDays = (v: number) => (v > 0 ? `${v} дн.` : '-');
+const fmtAverageWeight = (v: number, unit: 'День' | 'Месяц') =>
   v > 0 ? `${formatNumber(v)}g/${unit}` : '-';
 const fmtPricePerGram = (v: number) => (v > 0 ? `¥${formatNumber(v)}/g` : '-');
 const fmtDetailWeight = (v: number) => `${formatNumber(v)}g`;
@@ -68,9 +68,9 @@ const parseBeanNumber = (value: string | number | undefined | null): number => {
 const BEAN_PRICE_HIGHLIGHT_MAX_COUNT = 15;
 const BEAN_TYPE_ORDER: BeanType[] = ['espresso', 'filter', 'omni'];
 const BEAN_TYPE_LABELS: Record<BeanType, string> = {
-  espresso: '意式豆',
-  filter: '手冲豆',
-  omni: '全能豆',
+  espresso: 'Для эспрессо',
+  filter: 'Для фильтра',
+  omni: 'Омни',
 };
 
 type BeanTypeSummary = Record<
@@ -119,24 +119,24 @@ type RoastedStatsSectionKey =
   | 'flavor';
 
 const ROASTED_STATS_SECTION_DEFAULTS: StatsSectionOption[] = [
-  { key: 'beanCount', label: '咖啡豆', visible: true },
-  { key: 'commonMethods', label: '常用方案', visible: true },
-  { key: 'roaster', label: '烘焙商', visible: true },
-  { key: 'expensiveBeans', label: '最贵豆子', visible: false },
-  { key: 'cheapBeans', label: '最便宜豆子', visible: false },
-  { key: 'bestBeans', label: '最夯豆子', visible: false },
-  { key: 'worstBeans', label: '最拉豆子', visible: false },
-  { key: 'originMap', label: '咖啡产区地图', visible: true },
-  { key: 'origin', label: '产地', visible: true },
-  { key: 'country', label: '产国', visible: true },
-  { key: 'region', label: '产区', visible: true },
-  { key: 'estate', label: '庄园', visible: true },
-  { key: 'processingStation', label: '处理站', visible: true },
-  { key: 'altitude', label: '海拔', visible: true },
-  { key: 'variety', label: '品种', visible: true },
-  { key: 'process', label: '处理法', visible: true },
-  { key: 'batch', label: '批次', visible: true },
-  { key: 'flavor', label: '风味', visible: true },
+  { key: 'beanCount', label: 'Зерно', visible: true },
+  { key: 'commonMethods', label: 'Частые рецепты', visible: true },
+  { key: 'roaster', label: 'Обжарщик', visible: true },
+  { key: 'expensiveBeans', label: 'Самое дорогое', visible: false },
+  { key: 'cheapBeans', label: 'Самое дешёвое', visible: false },
+  { key: 'bestBeans', label: 'Лучшее зерно', visible: false },
+  { key: 'worstBeans', label: 'Худшее зерно', visible: false },
+  { key: 'originMap', label: 'Карта кофейных регионов', visible: true },
+  { key: 'origin', label: 'Происхождение', visible: true },
+  { key: 'country', label: 'Страна', visible: true },
+  { key: 'region', label: 'Регион', visible: true },
+  { key: 'estate', label: 'Ферма', visible: true },
+  { key: 'processingStation', label: 'Станция обработки', visible: true },
+  { key: 'altitude', label: 'Высота', visible: true },
+  { key: 'variety', label: 'Разновидность', visible: true },
+  { key: 'process', label: 'Обработка', visible: true },
+  { key: 'batch', label: 'Партия', visible: true },
+  { key: 'flavor', label: 'Вкусы', visible: true },
 ];
 
 const hydrateStatsSectionOptions = (
@@ -290,7 +290,7 @@ const createTypeRows = (
   const ownedTypes = getOwnedBeanTypes(typeSummary);
 
   if (ownedTypes.length === 0) {
-    return [{ label: '未分类', value: getValue('omni') }];
+    return [{ label: 'Без категории', value: getValue('omni') }];
   }
 
   return ownedTypes.map(type => ({
@@ -341,56 +341,56 @@ const createExplanation = (
   switch (key) {
     case 'totalConsumption':
       return {
-        title: isHistoricalView ? '消耗' : '总消耗',
+        title: isHistoricalView ? 'Расход' : 'Всего израсходовано',
         value,
         formula: isHistoricalView
-          ? '∑ 每条冲煮记录的咖啡用量'
+          ? '∑ дозы кофе по каждой заварке'
           : useFallbackStats
-            ? '∑ (购买容量 - 剩余量)'
-            : '∑ 全部冲煮记录的咖啡用量',
+            ? '∑ (куплено − остаток)'
+            : '∑ дозы кофе по всем заваркам',
         dataSource: isHistoricalView
           ? [
-              { label: '有效冲煮记录', value: `${validNotes} 条` },
-              { label: '统计天数', value: `${actualDays} 天` },
+              { label: 'Учтённые заварки', value: `${validNotes} шт.` },
+              { label: 'Дней в статистике', value: `${actualDays} дн.` },
             ]
           : [
-              { label: '咖啡豆数量', value: `${beansTotal} 款` },
-              { label: '统计天数', value: `${actualDays} 天` },
+              { label: 'Видов зерна', value: `${beansTotal} шт.` },
+              { label: 'Дней в статистике', value: `${actualDays} дн.` },
             ],
         rows: createTypeRows(typeSummary, type =>
           fmtDetailWeight(stats.byType[type].consumption)
         ),
         note: isHistoricalView
           ? validNotes < 5
-            ? '记录较少，数据仅供参考'
+            ? 'Записей мало, данные приблизительные'
             : undefined
           : useFallbackStats
-            ? '暂无有效冲煮记录，基于咖啡豆容量变化估算'
-            : '基于全部冲煮记录累计，和月/日统计口径一致',
+            ? 'Заварок пока нет, оценка по изменению остатков'
+            : 'По всем заваркам, так же как в статистике по месяцам и дням',
       };
 
     case 'totalCost':
       return {
-        title: isHistoricalView ? '花费' : '总花费',
+        title: isHistoricalView ? 'Расходы' : 'Всего потрачено',
         value,
         formula: isHistoricalView
-          ? '∑ (用量 × 单价/容量)'
+          ? '∑ (доза × цена / вес)'
           : useFallbackStats
-            ? '∑ (消耗量 × 单价/容量)'
-            : '∑ 每条冲煮记录的 (用量 × 单价/容量)',
+            ? '∑ (расход × цена / вес)'
+            : '∑ по каждой заварке (доза × цена / вес)',
         dataSource: isHistoricalView
           ? [
-              { label: '有效冲煮记录', value: `${validNotes} 条` },
+              { label: 'Учтённые заварки', value: `${validNotes} шт.` },
               {
-                label: '有价格的咖啡豆',
-                value: `${beansWithPrice}/${beansTotal} 款`,
+                label: 'Зерно с ценой',
+                value: `${beansWithPrice}/${beansTotal} шт.`,
               },
             ]
           : [
-              { label: '咖啡豆数量', value: `${beansTotal} 款` },
+              { label: 'Видов зерна', value: `${beansTotal} шт.` },
               {
-                label: '有价格的咖啡豆',
-                value: `${beansWithPrice}/${beansTotal} 款`,
+                label: 'Зерно с ценой',
+                value: `${beansWithPrice}/${beansTotal} шт.`,
               },
             ],
         rows: createTypeRows(typeSummary, type =>
@@ -398,56 +398,56 @@ const createExplanation = (
         ),
         note:
           beansWithPrice < beansTotal
-            ? `${beansTotal - beansWithPrice} 款咖啡豆缺少价格信息，未计入花费`
+            ? `${beansTotal - beansWithPrice} шт. зерна без цены, в расходы не вошли`
             : isHistoricalView
               ? undefined
               : useFallbackStats
-                ? '暂无有效冲煮记录，基于咖啡豆容量变化估算'
-                : '基于全部冲煮记录累计，和月/日统计口径一致',
+                ? 'Заварок пока нет, оценка по изменению остатков'
+                : 'По всем заваркам, так же как в статистике по месяцам и дням',
       };
 
     case 'dailyConsumption':
       return {
-        title: '日均消耗',
+        title: 'Расход в день',
         value,
-        formula: '总消耗 ÷ 统计天数',
+        formula: 'Всего израсходовано ÷ дней',
         dataSource: [
-          { label: '总消耗', value: fmtWeight(stats.overview.consumption) },
-          { label: '统计天数', value: `${actualDays} 天` },
+          { label: 'Всего израсходовано', value: fmtWeight(stats.overview.consumption) },
+          { label: 'Дней в статистике', value: `${actualDays} дн.` },
         ],
         rows: createTypeRows(typeSummary, type =>
           fmtDetailWeight(stats.byType[type].consumption / normalizedDays)
         ),
-        note: actualDays < 7 ? '统计周期较短，日均值可能波动较大' : undefined,
+        note: actualDays < 7 ? 'Период короткий, среднее может сильно колебаться' : undefined,
       };
 
     case 'dailyCost':
       return {
-        title: '日均花费',
+        title: 'Расход в день',
         value,
-        formula: '总花费 ÷ 统计天数',
+        formula: 'Всего потрачено ÷ дней',
         dataSource: [
-          { label: '总花费', value: fmtCost(stats.overview.cost) },
-          { label: '统计天数', value: `${actualDays} 天` },
+          { label: 'Всего потрачено', value: fmtCost(stats.overview.cost) },
+          { label: 'Дней в статистике', value: `${actualDays} дн.` },
         ],
         rows: createTypeRows(typeSummary, type =>
           fmtDetailCost(stats.byType[type].cost / normalizedDays)
         ),
         note:
           beansWithPrice < beansTotal
-            ? '部分咖啡豆缺少价格，实际花费可能更高'
+            ? 'У части зерна нет цены, реальные расходы могут быть выше'
             : undefined,
       };
 
     case 'averageConsumption':
       return {
-        title: '平均消耗',
+        title: 'Средний расход',
         value,
-        formula: `总消耗 ÷ 统计${averageConsumptionUnit}数`,
+        formula: `Всего израсходовано ÷ ${averageConsumptionUnit} `,
         dataSource: [
-          { label: '总消耗', value: fmtWeight(stats.overview.consumption) },
+          { label: 'Всего израсходовано', value: fmtWeight(stats.overview.consumption) },
           {
-            label: `统计${averageConsumptionUnit}数`,
+            label: `Статистика ${averageConsumptionUnit} `,
             value: `${averageConsumptionPeriods} ${averageConsumptionUnit}`,
           },
         ],
@@ -458,22 +458,22 @@ const createExplanation = (
           )
         ),
         note:
-          averageConsumptionUnit === '月'
-            ? '按有效统计范围覆盖的日历月份计算'
+          averageConsumptionUnit === 'Месяц'
+            ? 'По календарным месяцам в выбранном периоде'
             : actualDays < 7
-              ? '统计周期较短，平均值可能波动较大'
+              ? 'Период короткий, среднее может сильно колебаться'
               : undefined,
       };
 
     case 'averagePricePerGram':
       return {
-        title: '平均克价',
+        title: 'Средняя цена грамма',
         value,
-        formula: '已计价花费 ÷ 已计价消耗',
+        formula: 'Учтённые расходы ÷ учтённый расход',
         dataSource: [
-          { label: '已计价花费', value: fmtCost(stats.overview.cost) },
+          { label: 'Учтённые расходы', value: fmtCost(stats.overview.cost) },
           {
-            label: '已计价消耗',
+            label: 'Учтённый расход',
             value: fmtWeight(stats.overview.pricedConsumption ?? 0),
           },
         ],
@@ -485,16 +485,16 @@ const createExplanation = (
         }),
         note:
           beansWithPrice < beansTotal
-            ? '部分咖啡豆缺少价格，平均克价仅基于已计入花费的数据'
+            ? 'У части зерна нет цены, средняя цена грамма — только по учтённому'
             : undefined,
       };
 
     case 'todayConsumption':
       return {
-        title: '今日消耗',
+        title: 'Расход сегодня',
         value,
-        formula: '∑ 今日冲煮记录的咖啡用量',
-        dataSource: [{ label: '今日冲煮记录', value: `${todayNotes} 条` }],
+        formula: '∑ дозы кофе сегодняшних заварок',
+        dataSource: [{ label: 'Заварки сегодня', value: `${todayNotes} шт.` }],
         rows: createTypeRows(typeSummary, type =>
           fmtDetailWeight(todayStats?.byType[type].consumption ?? 0)
         ),
@@ -502,14 +502,14 @@ const createExplanation = (
 
     case 'todayCost':
       return {
-        title: '今日花费',
+        title: 'Потрачено сегодня',
         value,
-        formula: '∑ 今日 (用量 × 单价/容量)',
+        formula: '∑ сегодня (доза × цена / вес)',
         dataSource: [
-          { label: '今日冲煮记录', value: `${todayNotes} 条` },
+          { label: 'Заварки сегодня', value: `${todayNotes} шт.` },
           {
-            label: '有价格的咖啡豆',
-            value: `${beansWithPrice}/${beansTotal} 款`,
+            label: 'Зерно с ценой',
+            value: `${beansWithPrice}/${beansTotal} шт.`,
           },
         ],
         rows: createTypeRows(typeSummary, type =>
@@ -519,10 +519,10 @@ const createExplanation = (
 
     case 'remaining':
       return {
-        title: '剩余总量',
+        title: 'Всего осталось',
         value,
-        formula: '∑ 每款咖啡豆的剩余量',
-        dataSource: [{ label: '咖啡豆数量', value: `${beansTotal} 款` }],
+        formula: '∑ остатков по каждому зерну',
+        dataSource: [{ label: 'Видов зерна', value: `${beansTotal} шт.` }],
         rows: createTypeRows(typeSummary, type =>
           fmtDetailWeight(typeSummary[type].remaining)
         ),
@@ -530,60 +530,60 @@ const createExplanation = (
 
     case 'remainingValue':
       return {
-        title: '剩余价值',
+        title: 'Стоимость остатка',
         value,
-        formula: '∑ (剩余量 × 单价/容量)',
+        formula: '∑ (остаток × цена / вес)',
         dataSource: [
-          { label: '咖啡豆数量', value: `${beansTotal} 款` },
-          { label: '有价格信息', value: `${beansWithPrice} 款` },
+          { label: 'Видов зерна', value: `${beansTotal} шт.` },
+          { label: 'С ценой', value: `${beansWithPrice} шт.` },
         ],
         rows: createTypeRows(typeSummary, type =>
           fmtDetailCost(typeSummary[type].remainingValue)
         ),
         note:
           beansWithPrice < beansTotal
-            ? '部分咖啡豆缺少价格信息，未计入价值'
+            ? 'У части зерна нет цены, в стоимость не вошло'
             : undefined,
       };
 
     case 'totalCapacity':
       return {
-        title: '库存总量',
+        title: 'Всего куплено',
         value,
-        formula: '∑ 每款咖啡豆的购买容量',
-        dataSource: [{ label: '咖啡豆数量', value: `${beansTotal} 款` }],
+        formula: '∑ купленного веса каждого зерна',
+        dataSource: [{ label: 'Видов зерна', value: `${beansTotal} шт.` }],
         rows: createTypeRows(typeSummary, type =>
           fmtDetailWeight(typeSummary[type].totalCapacity)
         ),
-        note: '所有咖啡豆购买时的容量总和',
+        note: 'Сумма веса всего купленного зерна',
       };
 
     case 'totalValue':
       return {
-        title: '总价值',
+        title: 'Общая стоимость',
         value,
-        formula: '∑ 每款咖啡豆的购买价格',
+        formula: '∑ цен покупки каждого зерна',
         dataSource: [
-          { label: '咖啡豆数量', value: `${beansTotal} 款` },
-          { label: '有价格信息', value: `${beansWithPrice} 款` },
+          { label: 'Видов зерна', value: `${beansTotal} шт.` },
+          { label: 'С ценой', value: `${beansWithPrice} шт.` },
         ],
         rows: createTypeRows(typeSummary, type =>
           fmtDetailCost(typeSummary[type].totalValue)
         ),
         note:
           beansWithPrice < beansTotal
-            ? '部分咖啡豆缺少价格信息，未计入总价值'
-            : '所有咖啡豆购买时的价格总和',
+            ? 'У части зерна нет цены, в общую стоимость не вошло'
+            : 'Сумма цен всего купленного зерна',
       };
 
     case 'beanCount':
       return {
-        title: '咖啡豆数量',
+        title: 'Видов зерна',
         value,
-        formula: '未用完 / 总数',
+        formula: 'Не закончилось / всего',
         dataSource: [
-          { label: '总数', value: '拥有的咖啡豆总数量' },
-          { label: '未用完', value: '剩余量 > 0 的咖啡豆数量' },
+          { label: 'Всего', value: 'Сколько всего видов зерна' },
+          { label: 'Не закончилось', value: 'Видов зерна с остатком > 0' },
         ],
         rows: createTypeRows(
           typeSummary,
@@ -591,8 +591,8 @@ const createExplanation = (
             `${typeSummary[type].remainingCount} / ${typeSummary[type].totalCount}`
         ),
         note: dateRangeLabel
-          ? `基于咖啡豆添加日期的筛选范围进行统计`
-          : '基于咖啡豆添加日期的筛选范围进行统计',
+          ? `По дате добавления зерна в выбранном периоде`
+          : 'По дате добавления зерна в выбранном периоде',
       };
 
     default:
@@ -649,10 +649,10 @@ const InventoryForecast: React.FC<{ data: TypeInventoryStats[] }> = ({
     <div className="rounded-md bg-neutral-100 p-3 dark:bg-neutral-800/40">
       {/* 表头 */}
       <div className="mb-2 grid grid-cols-4 gap-2 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-        <div>类型</div>
-        <div className="text-right">剩余</div>
-        <div className="text-right">日均</div>
-        <div className="text-right">预计用完</div>
+        <div>Тип</div>
+        <div className="text-right">Осталось</div>
+        <div className="text-right">В день</div>
+        <div className="text-right">Закончится</div>
       </div>
       {/* 数据行 */}
       <div className="space-y-1.5">
@@ -688,10 +688,10 @@ const BrewingDetails: React.FC<{ data: BrewingDetailItem[] }> = ({ data }) => {
     <div className="rounded-md bg-neutral-100 p-3 dark:bg-neutral-800/40">
       {/* 表头 */}
       <div className="mb-2 grid grid-cols-[2fr_1fr_1fr_1fr] gap-2 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-        <div>咖啡豆</div>
-        <div className="text-right">用量</div>
-        <div className="text-right">花费</div>
-        <div className="text-right">时间</div>
+        <div>Зерно</div>
+        <div className="text-right">Доза</div>
+        <div className="text-right">Расходы</div>
+        <div className="text-right">Время</div>
       </div>
       {/* 数据行 */}
       <div className="space-y-1.5">
@@ -760,7 +760,7 @@ interface AttributeCardProps {
 const AttributeCard: React.FC<AttributeCardProps> = ({
   title,
   data,
-  valueLabel = '数量',
+  valueLabel = 'Кол-во',
   initialLimit = 5,
   displayMode = 'list',
 }) => {
@@ -970,14 +970,14 @@ const BeanCountStats: React.FC<BeanCountStatsProps> = ({
     >
       {/* 表头 */}
       <div className="mb-2 grid grid-cols-[1fr_auto] gap-2 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-        <div>咖啡豆</div>
-        <div className="text-right">未用完 / 总数</div>
+        <div>Зерно</div>
+        <div className="text-right">Не закончилось / всего</div>
       </div>
       {/* 数据行 */}
       <div className="space-y-1.5">
         {typeSummary.espresso.totalCount > 0 && (
           <div className="grid grid-cols-[1fr_auto] gap-2 text-sm font-medium text-neutral-900 dark:text-neutral-100">
-            <div>意式豆</div>
+            <div>Для эспрессо</div>
             <div className="text-right">
               {typeSummary.espresso.remainingCount} /{' '}
               {typeSummary.espresso.totalCount}
@@ -986,7 +986,7 @@ const BeanCountStats: React.FC<BeanCountStatsProps> = ({
         )}
         {typeSummary.filter.totalCount > 0 && (
           <div className="grid grid-cols-[1fr_auto] gap-2 text-sm font-medium text-neutral-900 dark:text-neutral-100">
-            <div>手冲豆</div>
+            <div>Для фильтра</div>
             <div className="text-right">
               {typeSummary.filter.remainingCount} /{' '}
               {typeSummary.filter.totalCount}
@@ -995,7 +995,7 @@ const BeanCountStats: React.FC<BeanCountStatsProps> = ({
         )}
         {typeSummary.omni.totalCount > 0 && (
           <div className="grid grid-cols-[1fr_auto] gap-2 text-sm font-medium text-neutral-900 dark:text-neutral-100">
-            <div>全能豆</div>
+            <div>Омни</div>
             <div className="text-right">
               {typeSummary.omni.remainingCount} / {typeSummary.omni.totalCount}
             </div>
@@ -1003,7 +1003,7 @@ const BeanCountStats: React.FC<BeanCountStatsProps> = ({
         )}
         {/* 总计 */}
         <div className="grid grid-cols-[1fr_auto] gap-2 border-t border-neutral-300/40 pt-1.5 text-sm font-medium text-neutral-900 dark:border-neutral-600/40 dark:text-neutral-100">
-          <div>总计</div>
+          <div>Итого</div>
           <div className="text-right">
             {totalRemaining} / {total}
           </div>
@@ -1267,9 +1267,9 @@ const BeanAttributeStats: React.FC<BeanAttributeStatsProps> = ({
         commonMethodStats.length > 0 ? (
           <AttributeCard
             key="commonMethods"
-            title="常用方案"
+            title="Частые рецепты"
             data={commonMethodStats}
-            valueLabel="次数"
+            valueLabel="Раз"
           />
         ) : null,
       ],
@@ -1278,9 +1278,9 @@ const BeanAttributeStats: React.FC<BeanAttributeStatsProps> = ({
         bestBeanStats.length > 0 ? (
           <AttributeCard
             key="bestBeans"
-            title="最夯豆子"
+            title="Лучшее зерно"
             data={bestBeanStats}
-            valueLabel="评分"
+            valueLabel="Оценка"
           />
         ) : null,
       ],
@@ -1289,9 +1289,9 @@ const BeanAttributeStats: React.FC<BeanAttributeStatsProps> = ({
         worstBeanStats.length > 0 ? (
           <AttributeCard
             key="worstBeans"
-            title="最拉豆子"
+            title="Худшее зерно"
             data={worstBeanStats}
-            valueLabel="评分"
+            valueLabel="Оценка"
           />
         ) : null,
       ],
@@ -1300,9 +1300,9 @@ const BeanAttributeStats: React.FC<BeanAttributeStatsProps> = ({
         expensiveBeanStats.length > 0 ? (
           <AttributeCard
             key="expensiveBeans"
-            title="最贵豆子"
+            title="Самое дорогое"
             data={expensiveBeanStats}
-            valueLabel="克价"
+            valueLabel="Цена грамма"
           />
         ) : null,
       ],
@@ -1311,41 +1311,41 @@ const BeanAttributeStats: React.FC<BeanAttributeStatsProps> = ({
         cheapBeanStats.length > 0 ? (
           <AttributeCard
             key="cheapBeans"
-            title="最便宜豆子"
+            title="Самое дешёвое"
             data={cheapBeanStats}
-            valueLabel="克价"
+            valueLabel="Цена грамма"
           />
         ) : null,
       ],
       [
         'roaster',
         roasterStats.length > 0 ? (
-          <AttributeCard key="roaster" title="烘焙商" data={roasterStats} />
+          <AttributeCard key="roaster" title="Обжарщик" data={roasterStats} />
         ) : null,
       ],
       ['originMap', originMap],
       [
         'origin',
         originStats.length > 0 ? (
-          <AttributeCard key="origin" title="产地" data={originStats} />
+          <AttributeCard key="origin" title="Происхождение" data={originStats} />
         ) : null,
       ],
       [
         'country',
         countryStats.length > 0 ? (
-          <AttributeCard key="country" title="产国" data={countryStats} />
+          <AttributeCard key="country" title="Страна" data={countryStats} />
         ) : null,
       ],
       [
         'region',
         regionStats.length > 0 ? (
-          <AttributeCard key="region" title="产区" data={regionStats} />
+          <AttributeCard key="region" title="Регион" data={regionStats} />
         ) : null,
       ],
       [
         'estate',
         estateStats.length > 0 ? (
-          <AttributeCard key="estate" title="庄园" data={estateStats} />
+          <AttributeCard key="estate" title="Ферма" data={estateStats} />
         ) : null,
       ],
       [
@@ -1353,7 +1353,7 @@ const BeanAttributeStats: React.FC<BeanAttributeStatsProps> = ({
         processingStationStats.length > 0 ? (
           <AttributeCard
             key="processingStation"
-            title="处理站"
+            title="Станция обработки"
             data={processingStationStats}
           />
         ) : null,
@@ -1361,25 +1361,25 @@ const BeanAttributeStats: React.FC<BeanAttributeStatsProps> = ({
       [
         'altitude',
         altitudeStats.length > 0 ? (
-          <AttributeCard key="altitude" title="海拔" data={altitudeStats} />
+          <AttributeCard key="altitude" title="Высота" data={altitudeStats} />
         ) : null,
       ],
       [
         'variety',
         varietyStats.length > 0 ? (
-          <AttributeCard key="variety" title="品种" data={varietyStats} />
+          <AttributeCard key="variety" title="Разновидность" data={varietyStats} />
         ) : null,
       ],
       [
         'process',
         processStats.length > 0 ? (
-          <AttributeCard key="process" title="处理法" data={processStats} />
+          <AttributeCard key="process" title="Обработка" data={processStats} />
         ) : null,
       ],
       [
         'batch',
         batchStats.length > 0 ? (
-          <AttributeCard key="batch" title="批次" data={batchStats} />
+          <AttributeCard key="batch" title="Партия" data={batchStats} />
         ) : null,
       ],
       [
@@ -1387,7 +1387,7 @@ const BeanAttributeStats: React.FC<BeanAttributeStatsProps> = ({
         flavorStats.length > 0 ? (
           <AttributeCard
             key="flavor"
-            title="风味"
+            title="Вкусы"
             data={flavorStats}
             displayMode="tags"
           />
@@ -1440,14 +1440,14 @@ const BeanAttributeStats: React.FC<BeanAttributeStatsProps> = ({
             onClick={() => setIsEditorOpen(true)}
             className="inline-flex cursor-pointer items-center rounded-full bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-600 transition-[background-color,transform] active:scale-[0.96] active:bg-neutral-200 dark:bg-neutral-800/60 dark:text-neutral-300 dark:active:bg-neutral-700/70"
           >
-            编辑
+            Изменить
           </button>
         </div>
       </div>
 
       <StatsSectionEditorDrawer
         isOpen={isEditorOpen}
-        title="统计模块"
+        title="Блоки статистики"
         sections={sectionOptions}
         onClose={() => setIsEditorOpen(false)}
         onChange={handleSectionOptionsChange}
@@ -1755,7 +1755,7 @@ const RoastedBeanStatsView: React.FC<RoastedBeanStatsViewProps> = ({
   if (roastedBeans.length === 0) {
     return (
       <div className="flex h-32 items-center justify-center text-[10px] tracking-widest text-neutral-500 dark:text-neutral-400">
-        [ 有熟豆数据后，再来查看吧～ ]
+        [ Добавьте обжаренное зерно — и здесь появится статистика ]
       </div>
     );
   }
@@ -1770,7 +1770,7 @@ const RoastedBeanStatsView: React.FC<RoastedBeanStatsViewProps> = ({
   const averageStats = showPeriodAverages
     ? [
         {
-          title: '平均消耗',
+          title: 'Средний расход',
           value: fmtAverageWeight(
             stats.overview.averageConsumption,
             metadata.averageConsumptionUnit
@@ -1778,7 +1778,7 @@ const RoastedBeanStatsView: React.FC<RoastedBeanStatsViewProps> = ({
           key: 'averageConsumption' as StatsKey,
         },
         {
-          title: '平均克价',
+          title: 'Средняя цена грамма',
           value: fmtPricePerGram(stats.overview.averagePricePerGram),
           key: 'averagePricePerGram' as StatsKey,
         },
@@ -1789,12 +1789,12 @@ const RoastedBeanStatsView: React.FC<RoastedBeanStatsViewProps> = ({
   const overviewStats = isSingleDayView
     ? [
         {
-          title: '消耗',
+          title: 'Расход',
           value: fmtWeight(stats.overview.consumption),
           key: 'totalConsumption' as StatsKey,
         },
         {
-          title: '花费',
+          title: 'Расходы',
           value: fmtCost(stats.overview.cost),
           key: 'totalCost' as StatsKey,
         },
@@ -1804,12 +1804,12 @@ const RoastedBeanStatsView: React.FC<RoastedBeanStatsViewProps> = ({
         ...(stats.inventory
           ? [
               {
-                title: '库存总量',
+                title: 'Всего куплено',
                 value: fmtWeight(stats.inventory.totalCapacity),
                 key: 'totalCapacity' as StatsKey,
               },
               {
-                title: '总价值',
+                title: 'Общая стоимость',
                 value: fmtCost(stats.inventory.totalValue),
                 key: 'totalValue' as StatsKey,
               },
@@ -1817,12 +1817,12 @@ const RoastedBeanStatsView: React.FC<RoastedBeanStatsViewProps> = ({
           : []),
         // 第二行：消耗数据
         {
-          title: '总消耗',
+          title: 'Всего израсходовано',
           value: fmtWeight(stats.overview.consumption),
           key: 'totalConsumption' as StatsKey,
         },
         {
-          title: '总花费',
+          title: 'Всего потрачено',
           value: fmtCost(stats.overview.cost),
           key: 'totalCost' as StatsKey,
         },
@@ -1834,12 +1834,12 @@ const RoastedBeanStatsView: React.FC<RoastedBeanStatsViewProps> = ({
   const todayStatsDisplay = hasTodayData
     ? [
         {
-          title: '今日消耗',
+          title: 'Расход сегодня',
           value: fmtWeight(todayStats.consumption),
           key: 'todayConsumption' as StatsKey,
         },
         {
-          title: '今日花费',
+          title: 'Потрачено сегодня',
           value: fmtCost(todayStats.cost),
           key: 'todayCost' as StatsKey,
         },
@@ -1850,12 +1850,12 @@ const RoastedBeanStatsView: React.FC<RoastedBeanStatsViewProps> = ({
   const inventoryStats = stats.inventory
     ? [
         {
-          title: '剩余总量',
+          title: 'Всего осталось',
           value: fmtWeight(stats.inventory.remaining),
           key: 'remaining' as StatsKey,
         },
         {
-          title: '剩余价值',
+          title: 'Стоимость остатка',
           value: fmtCost(stats.inventory.remainingValue),
           key: 'remainingValue' as StatsKey,
         },
@@ -1883,7 +1883,7 @@ const RoastedBeanStatsView: React.FC<RoastedBeanStatsViewProps> = ({
       <div className="flex flex-col items-center">
         <div className="w-full space-y-5">
           <StatsCard
-            title="概览"
+            title="Обзор"
             chart={
               showTrendChart ? (
                 <ConsumptionTrendChart data={trendData} />
@@ -1900,7 +1900,7 @@ const RoastedBeanStatsView: React.FC<RoastedBeanStatsViewProps> = ({
 
           {todayStatsDisplay.length > 0 && (
             <StatsCard
-              title="今日"
+              title="Сегодня"
               stats={todayStatsDisplay}
               onExplain={handleExplain}
             />
@@ -1910,7 +1910,7 @@ const RoastedBeanStatsView: React.FC<RoastedBeanStatsViewProps> = ({
             stats.inventoryByType &&
             stats.inventoryByType.length > 0 && (
               <StatsCard
-                title="库存"
+                title="Запасы"
                 stats={inventoryStats}
                 extra={<InventoryForecast data={stats.inventoryByType} />}
                 onExplain={handleExplain}
@@ -2186,7 +2186,7 @@ const StatsView: React.FC<StatsViewProps> = ({
     return (
       <div className="coffee-bean-stats-container bg-neutral-50 dark:bg-neutral-900">
         <div className="flex h-32 items-center justify-center text-[10px] tracking-widest text-neutral-500 dark:text-neutral-400">
-          [ 有咖啡豆数据后，再来查看吧～ ]
+          [ Добавьте зерно — и здесь появится статистика ]
         </div>
       </div>
     );

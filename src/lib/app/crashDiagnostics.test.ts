@@ -21,7 +21,7 @@ const createReport = (
 ): CrashDiagnosticReport => ({
   source: 'inferred',
   inferredReason:
-    '应用在启动完成前中断，可能是内存压力、WebView 崩溃或系统强杀',
+    'Приложение прервалось до завершения запуска — возможно, не хватило памяти, упал WebView или система закрыла приложение',
   detectedAt: '2026-05-24T23:03:22.382Z',
   session: createSession(sessionOverrides),
 });

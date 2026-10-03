@@ -37,7 +37,7 @@ const CustomEquipmentFormModal: React.FC<CustomEquipmentFormModalProps> = ({
   const formRef = useRef<CustomEquipmentFormHandle>(null);
   const defaultDrawerChrome = useMemo<EquipmentFormDrawerChrome>(
     () => ({
-      title: editingEquipment ? '编辑器具' : '添加器具',
+      title: editingEquipment ? 'Изменить устройство' : 'Добавить устройство',
       doneDisabled: false,
       canGoBack: false,
     }),
@@ -86,7 +86,7 @@ const CustomEquipmentFormModal: React.FC<CustomEquipmentFormModalProps> = ({
   const isEquipmentPickerPage = pageStack.currentPage === 'equipment-picker';
 
   const headerTitle = useMemo(() => {
-    if (isEquipmentPickerPage) return '选择器具';
+    if (isEquipmentPickerPage) return 'Выберите устройство';
     return drawerChrome.title;
   }, [drawerChrome.title, isEquipmentPickerPage]);
 
@@ -119,12 +119,12 @@ const CustomEquipmentFormModal: React.FC<CustomEquipmentFormModalProps> = ({
       const exportData = exportEquipment(equipment);
       const success = await copyToClipboard(exportData);
       if (success) {
-        alert('器具数据已复制到剪贴板');
+        alert('Данные устройства скопированы');
       } else {
-        alert('复制失败，请重试');
+        alert('Не удалось скопировать, попробуйте ещё раз');
       }
     } catch (_error) {
-      alert('导出失败，请重试');
+      alert('Ошибка экспорта, попробуйте ещё раз');
     }
   };
 

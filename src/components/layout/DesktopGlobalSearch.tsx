@@ -90,16 +90,16 @@ const toDesktopDate = (timestamp: number): string => {
   ).getTime();
 
   const dayDiff = Math.round((currentDayStart - targetDayStart) / 86400000);
-  if (dayDiff === 0) return '今天';
-  if (dayDiff === 1) return '昨天';
-  if (dayDiff === 2) return '前天';
+  if (dayDiff === 0) return 'Сегодня';
+  if (dayDiff === 1) return 'Вчера';
+  if (dayDiff === 2) return 'Позавчера';
 
   const month = date.getMonth() + 1;
   const day = date.getDate();
   if (date.getFullYear() === now.getFullYear()) {
-    return `${month}月${day}日`;
+    return `${month}.${day}`;
   }
-  return `${date.getFullYear()}年${month}月${day}日`;
+  return `${date.getFullYear()} г. ${month}.${day}`;
 };
 
 const isDesktopViewport = () =>
@@ -126,21 +126,21 @@ const formatPricePerGram = (
   const priceNum = parseFloat(price);
   const capacityNum = parseFloat(capacity.replace('g', ''));
   if (isNaN(priceNum) || isNaN(capacityNum) || capacityNum <= 0) return '';
-  return `${(priceNum / capacityNum).toFixed(2)}元/克`;
+  return `${(priceNum / capacityNum).toFixed(2)} ₽/г`;
 };
 
 const getFlavorStatusText = (
   bean: CoffeeBean,
   customFlavorPeriod?: SettingsOptions['customFlavorPeriod']
 ) => {
-  if (bean.isInTransit) return '在途';
-  if (bean.isFrozen) return '冷冻';
+  if (bean.isInTransit) return 'В пути';
+  if (bean.isFrozen) return 'Заморожено';
   if (!bean.roastDate) return '-';
 
   const info = calculateFlavorInfo(bean, customFlavorPeriod);
-  if (info.phase === '养豆期') return `养豆${info.remainingDays}天`;
-  if (info.phase === '赏味期') return `赏味${info.remainingDays}天`;
-  if (info.phase === '衰退期') return '已衰退';
+  if (info.phase === 'Отдых') return `Отдых${info.remainingDays} дн.`;
+  if (info.phase === 'Лучший период') return `Лучший период${info.remainingDays} дн.`;
+  if (info.phase === 'Угасание') return 'Выдохлось';
   return '';
 };
 
@@ -314,7 +314,7 @@ const DesktopGlobalSearch: React.FC<DesktopGlobalSearchProps> = ({
         bean.capacity && bean.remaining
           ? `${formatBeanNumber(bean.remaining)}/${formatBeanNumber(
               bean.capacity
-            )}克`
+            )} г`
           : '',
         formatPricePerGram(bean.price, bean.capacity),
       ].filter(Boolean);
@@ -391,7 +391,7 @@ const DesktopGlobalSearch: React.FC<DesktopGlobalSearchProps> = ({
           roasterSeparator: settings.roasterSeparator,
         });
         const equipmentName =
-          getEquipmentNameById(note.equipment, customEquipments) || '未知器具';
+          getEquipmentNameById(note.equipment, customEquipments) || 'Неизвестное устройство';
         const dateText = toDesktopDate(note.timestamp);
 
         const title = [beanDisplayName, note.method || equipmentName]
@@ -513,7 +513,7 @@ const DesktopGlobalSearch: React.FC<DesktopGlobalSearchProps> = ({
                   autoFocus
                   value={query}
                   onValueChange={setQuery}
-                  placeholder="搜索咖啡豆或笔记..."
+                  placeholder="Найти зерно или заметку..."
                   className="h-6 w-full bg-transparent text-sm text-neutral-800 outline-none placeholder:text-neutral-400 dark:text-neutral-100"
                 />
               </div>
@@ -521,13 +521,13 @@ const DesktopGlobalSearch: React.FC<DesktopGlobalSearchProps> = ({
               <Command.List className="min-h-0 flex-1 overflow-y-auto px-4">
                 {!hasResults && (
                   <div className="px-3 py-6 text-center text-xs text-neutral-500 dark:text-neutral-400">
-                    没有找到匹配的咖啡豆或笔记
+                    Ничего не найдено среди зерна и заметок
                   </div>
                 )}
 
                 {visibleBeanItems.length > 0 && (
                   <Command.Group
-                    heading={`咖啡豆 ${visibleBeanItems.length}`}
+                    heading={`Зерно ${visibleBeanItems.length}`}
                     className="py-1 text-xs text-neutral-500 dark:text-neutral-400 **:[[cmdk-group-heading]]:mb-1 **:[[cmdk-group-heading]]:px-0 **:[[cmdk-group-heading]]:pt-2 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-medium"
                   >
                     {visibleBeanItems.map(item => (
@@ -560,7 +560,7 @@ const DesktopGlobalSearch: React.FC<DesktopGlobalSearchProps> = ({
 
                 {visibleNoteItems.length > 0 && (
                   <Command.Group
-                    heading={`笔记 ${visibleNoteItems.length}`}
+                    heading={`Заметка ${visibleNoteItems.length}`}
                     className="py-1 text-xs text-neutral-500 dark:text-neutral-400 **:[[cmdk-group-heading]]:mb-1 **:[[cmdk-group-heading]]:px-0 **:[[cmdk-group-heading]]:pt-2 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-medium"
                   >
                     {visibleNoteItems.map(item => (
@@ -589,7 +589,7 @@ const DesktopGlobalSearch: React.FC<DesktopGlobalSearchProps> = ({
               </Command.List>
 
               <div className="border-t border-neutral-200/50 px-4 py-2 text-[11px] text-neutral-500 dark:border-neutral-800/50 dark:text-neutral-400">
-                Enter 打开 · Esc 关闭 · Command + K 唤出
+                Enter — открыть · Esc — закрыть · Command + K — вызвать
               </div>
             </Command>
           </div>

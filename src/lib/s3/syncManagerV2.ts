@@ -74,7 +74,7 @@ export class S3SyncManager extends BaseSyncManager {
       if (!skipConnectionTest) {
         const connected = await this.s3Client.testConnection();
         if (!connected) {
-          throw new Error(this.s3Client.getLastError() || '无法连接到 S3 服务');
+          throw new Error(this.s3Client.getLastError() || 'Не удалось подключиться к S3');
         }
       }
 

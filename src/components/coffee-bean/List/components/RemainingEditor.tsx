@@ -327,7 +327,7 @@ const RemainingEditor: React.FC<RemainingEditorProps> = ({
         method: '', // 添加空的method字段
         coffeeBeanInfo: {
           name: coffeeBean.name || '',
-          roastLevel: coffeeBean.roastLevel || '中度烘焙',
+          roastLevel: coffeeBean.roastLevel || 'Средняя обжарка',
           roastDate: coffeeBean.roastDate,
           roaster: coffeeBean.roaster,
         },
@@ -486,7 +486,7 @@ const RemainingEditor: React.FC<RemainingEditorProps> = ({
                     parseFloat(customValue) <= 0
                   }
                   onClick={handleCustomApply}
-                  title="确认扣除"
+                  title="Списать"
                 >
                   ✓
                 </button>

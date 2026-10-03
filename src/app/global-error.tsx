@@ -66,17 +66,17 @@ export default function GlobalError({
   // 生成错误详情文本
   const getErrorDetails = () => {
     const details = [
-      `时间: ${new Date().toLocaleString('zh-CN')}`,
-      `错误类型: ${error.name || 'Unknown'}`,
-      `错误信息: ${error.message || 'No message'}`,
-      error.digest ? `错误代码: ${error.digest}` : '',
+      `Время: ${new Date().toLocaleString('zh-CN')}`,
+      `Тип ошибки: ${error.name || 'Unknown'}`,
+      `Сообщение: ${error.message || 'No message'}`,
+      error.digest ? `Код ошибки: ${error.digest}` : '',
       `URL: ${typeof window !== 'undefined' ? window.location.href : 'N/A'}`,
       `User Agent: ${typeof navigator !== 'undefined' ? navigator.userAgent : 'N/A'}`,
       '',
-      '堆栈信息:',
+      'Стек вызовов:',
       error.stack || 'No stack trace available',
       diagnosticDetails ? '' : '',
-      diagnosticDetails ? '诊断信息:' : '',
+      diagnosticDetails ? 'Диагностика:' : '',
       diagnosticDetails,
     ]
       .filter(Boolean)
@@ -132,18 +132,18 @@ export default function GlobalError({
         <div className="flex min-h-screen flex-col items-center justify-center px-6 py-4">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-xl font-light tracking-wide text-neutral-900 dark:text-neutral-100">
-              {isChunkError ? '应用需要更新' : '出现了一些问题'}
+              {isChunkError ? 'Нужно обновить приложение' : 'Что-то пошло не так'}
             </h2>
 
             <p className="mt-4 text-sm text-neutral-500 dark:text-neutral-400">
               {isChunkError
-                ? '检测到新版本，请刷新页面以获取最新内容。'
-                : '应用遇到了意外错误，请尝试刷新页面。'}
+                ? 'Вышла новая версия, обновите страницу, чтобы получить её.'
+                : 'Приложение столкнулось с непредвиденной ошибкой, попробуйте обновить страницу.'}
             </p>
 
             {error.digest && (
               <p className="mt-2 text-xs text-neutral-400 dark:text-neutral-500">
-                错误代码: {error.digest}
+                Код ошибки: {error.digest}
               </p>
             )}
 
@@ -153,7 +153,7 @@ export default function GlobalError({
                 onClick={isChunkError ? handleChunkError : () => reset()}
                 className="rounded-full bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
               >
-                {isChunkError ? '更新应用' : '重试'}
+                {isChunkError ? 'Обновить приложение' : 'Повторить'}
               </button>
 
               <button
@@ -161,7 +161,7 @@ export default function GlobalError({
                 onClick={() => (window.location.href = '/')}
                 className="rounded-full bg-neutral-100 px-6 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
               >
-                返回首页
+                На главную
               </button>
 
               <button
@@ -169,7 +169,7 @@ export default function GlobalError({
                 onClick={() => setShowDetails(!showDetails)}
                 className="rounded-full bg-neutral-100 px-6 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
               >
-                {showDetails ? '隐藏详情' : '查看详情'}
+                {showDetails ? 'Скрыть подробности' : 'Подробнее'}
               </button>
             </div>
 
@@ -177,7 +177,7 @@ export default function GlobalError({
               <div className="mt-6 text-left">
                 <div className="mb-2 flex items-center justify-between">
                   <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
-                    错误日志
+                    Журнал ошибок
                   </span>
                   <button
                     type="button"
@@ -199,7 +199,7 @@ export default function GlobalError({
                             d="M5 13l4 4L19 7"
                           />
                         </svg>
-                        已复制
+                        Скопировано
                       </>
                     ) : (
                       <>
@@ -216,7 +216,7 @@ export default function GlobalError({
                             d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
                           />
                         </svg>
-                        复制日志
+                        Скопировать журнал
                       </>
                     )}
                   </button>

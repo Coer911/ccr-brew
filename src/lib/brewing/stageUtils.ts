@@ -252,7 +252,7 @@ function getImmediateWaitAfterIndex(
 function createWaitStage(duration: number): Stage {
   return {
     duration,
-    label: '等待',
+    label: 'Ожидание',
     detail: '',
     pourType: 'wait',
   };

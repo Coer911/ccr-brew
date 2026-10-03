@@ -212,12 +212,12 @@ const MethodRow: React.FC<{
   const { highlightedSettingId } = useSettingSearchHighlight();
   const isHighlighted = settingId && highlightedSettingId === settingId;
   const actionLabel = isConfirmingDelete
-    ? '确认删除'
+    ? 'Удалить'
     : isCustom
-      ? '删除'
+      ? 'Удалить'
       : isHidden
-        ? '恢复'
-        : '隐藏';
+        ? 'Вернуть'
+        : 'Скрыть';
   const action = isCustom ? onDelete : onToggleHidden;
   const isDanger = isConfirmingDelete;
   const showAction = isManageMode && Boolean(action);
@@ -333,12 +333,12 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
   const [isReorderMode, setIsReorderMode] = React.useState(false);
   const [drawerChrome, setDrawerChrome] =
     React.useState<EquipmentFormDrawerChrome>({
-      title: '编辑器具',
+      title: 'Изменить устройство',
       doneDisabled: false,
       canGoBack: false,
     });
   const [methodChrome, setMethodChrome] = React.useState({
-    doneLabel: '下一步',
+    doneLabel: 'Далее',
     doneDisabled: false,
     canGoBack: false,
   });
@@ -427,7 +427,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
       setIsCommonMethodManageMode(false);
       setIsDeleteConfirmingEquipment(false);
       setDrawerChrome({
-        title: '编辑器具',
+        title: 'Изменить устройство',
         doneDisabled: false,
         canGoBack: false,
       });
@@ -435,7 +435,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
       setMethodFormStep(1);
       setShowImportForm(false);
       setMethodChrome({
-        doneLabel: '下一步',
+        doneLabel: 'Далее',
         doneDisabled: false,
         canGoBack: false,
       });
@@ -497,10 +497,10 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
   const drawerTitle = isEquipmentFormPage
     ? isMethodFormPage
       ? editingMethod
-        ? '编辑方案'
-        : '添加方案'
+        ? 'Изменить рецепт'
+        : 'Добавить рецепт'
       : drawerChrome.title
-    : activeEquipment?.name || '器具';
+    : activeEquipment?.name || 'Устройства';
   const drawerCanGoBack =
     drawerStack.canGoBack ||
     Boolean(drawerChrome.canGoBack) ||
@@ -662,7 +662,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
 
     return [
       {
-        label: '跳过',
+        label: 'Пропустить',
         onClick: handleSkipMethodStages,
       },
       {
@@ -683,7 +683,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
     if (!activeEquipment) return;
 
     setDrawerChrome({
-      title: '编辑器具',
+      title: 'Изменить устройство',
       doneDisabled: false,
       canGoBack: false,
     });
@@ -762,14 +762,14 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
       showToast({
         type: 'success',
         title: methodWithFlags._isFromCommonMethod
-          ? '已保存为自定义方案'
-          : '方案已保存',
+          ? 'Сохранено как свой рецепт'
+          : 'Рецепт сохранён',
         duration: 1600,
       });
       setEditingMethod(undefined);
       setMethodFormStep(1);
       setMethodChrome({
-        doneLabel: '下一步',
+        doneLabel: 'Далее',
         doneDisabled: false,
         canGoBack: false,
       });
@@ -788,7 +788,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
         methodsByEquipment,
         undefined
       );
-      showToast({ type: 'success', title: '方案已导入', duration: 1600 });
+      showToast({ type: 'success', title: 'Рецепт импортирован', duration: 1600 });
     },
     [activeEquipmentId, methodsByEquipment]
   );
@@ -798,7 +798,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
       await onSaveEquipment(equipment);
       setActiveEquipmentId(equipment.id);
       drawerStack.back();
-      showToast({ type: 'success', title: '器具已保存', duration: 1600 });
+      showToast({ type: 'success', title: 'Устройство сохранено', duration: 1600 });
     },
     [drawerStack, onSaveEquipment]
   );
@@ -828,7 +828,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
       await deleteCustomMethod(activeEquipmentId, methodId);
       setDeleteConfirmingMethodId(null);
       triggerHaptic();
-      showToast({ type: 'success', title: '方案已删除', duration: 1600 });
+      showToast({ type: 'success', title: 'Рецепт удалён', duration: 1600 });
     },
     [activeEquipmentId, deleteConfirmingMethodId, triggerHaptic]
   );
@@ -844,14 +844,14 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
 
     const deleted = await deleteEquipment(activeEquipment.id);
     if (!deleted) {
-      showToast({ type: 'error', title: '删除器具失败', duration: 1600 });
+      showToast({ type: 'error', title: 'Не удалось удалить устройство', duration: 1600 });
       return;
     }
 
     setIsDeleteConfirmingEquipment(false);
     setActiveEquipmentId(null);
     triggerHaptic();
-    showToast({ type: 'success', title: '器具已删除', duration: 1600 });
+    showToast({ type: 'success', title: 'Устройство удалено', duration: 1600 });
   }, [
     activeEquipment,
     deleteEquipment,
@@ -966,14 +966,14 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
       console.error('保存方案排序失败:', error);
       orderedCustomMethodsRef.current = selectedCustomMethods;
       setOrderedCustomMethods(selectedCustomMethods);
-      showToast({ type: 'error', title: '保存方案排序失败', duration: 1600 });
+      showToast({ type: 'error', title: 'Не удалось сохранить порядок рецептов', duration: 1600 });
     }
   }, [activeEquipmentId, reorderMethods, selectedCustomMethods]);
 
   const equipmentSectionTitle = (
     <div className="flex items-center justify-between pl-3.5">
       <h3 className="text-sm font-semibold tracking-wider text-neutral-500 uppercase dark:text-neutral-400">
-        器具
+        Устройства
       </h3>
       {orderedVisibleEquipments.length > 1 && (
         <button
@@ -981,7 +981,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
           onClick={() => void toggleReorderMode()}
           className="flex shrink-0 cursor-pointer items-center rounded-full px-3 text-sm font-medium whitespace-nowrap text-neutral-600 transition-transform active:scale-[0.96] dark:text-neutral-300"
         >
-          {isEquipmentReorderMode ? '完成' : '编辑'}
+          {isEquipmentReorderMode ? 'Готово' : 'Изменить'}
         </button>
       )}
     </div>
@@ -1022,7 +1022,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
           onClick={onToggleManageMode}
           className="flex shrink-0 cursor-pointer items-center rounded-full px-3 text-sm font-medium whitespace-nowrap text-neutral-600 transition-transform active:scale-[0.96] dark:text-neutral-300"
         >
-          {isManageMode ? '完成' : '编辑'}
+          {isManageMode ? 'Готово' : 'Изменить'}
         </button>
       )}
     </div>
@@ -1033,7 +1033,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
       <SettingSection title={equipmentSectionTitle} className="-mt-4">
         {orderedVisibleEquipments.length === 0 ? (
           <ActionRow
-            label="添加器具"
+            label="Добавить устройство"
             onClick={() => {
               triggerHaptic();
               onAddEquipment();
@@ -1042,7 +1042,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
         ) : (
           <div>
             <ActionRow
-              label="添加器具"
+              label="Добавить устройство"
               onClick={() => {
                 triggerHaptic();
                 onAddEquipment();
@@ -1076,7 +1076,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
       </SettingSection>
 
       {hiddenPresetEquipments.length > 0 && (
-        <SettingSection title="隐藏的预设器具">
+        <SettingSection title="Скрытые стандартные устройства">
           {hiddenPresetEquipments.map((equipment, index) => (
             <SettingRow
               key={equipment.id}
@@ -1089,7 +1089,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
                 onClick={() => void toggleEquipmentHidden(equipment)}
                 className="cursor-pointer text-sm font-medium text-neutral-600 transition active:opacity-70 dark:text-neutral-300"
               >
-                恢复
+                Восстановить
               </button>
             </SettingRow>
           ))}
@@ -1105,15 +1105,15 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
       <div>
         <SettingSection
           title={getMethodSectionTitle(
-            '自定义方案',
+            'Свой рецепт',
             selectedCustomMethods.length > 0,
             isCustomMethodManageMode,
             toggleCustomMethodManageMode
           )}
         >
-          <ActionRow label="添加方案" icon={Plus} onClick={openNewMethodForm} />
+          <ActionRow label="Добавить рецепт" icon={Plus} onClick={openNewMethodForm} />
           <ActionRow
-            label="导入方案"
+            label="Импорт рецепта"
             icon={Download}
             onClick={openImportForm}
             isLast={orderedCustomMethods.length === 0}
@@ -1160,7 +1160,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
                               : 'text-neutral-600 dark:text-neutral-300'
                           }`}
                         >
-                          {isDeleteConfirming ? '确认删除' : '删除'}
+                          {isDeleteConfirming ? 'Удалить' : 'Удалить'}
                         </button>
                       ) : null
                     }
@@ -1174,7 +1174,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
         {visibleCommonMethods.length > 0 && (
           <SettingSection
             title={getMethodSectionTitle(
-              '预设方案',
+              'Готовые рецепты',
               visibleCommonMethods.length > 0,
               isCommonMethodManageMode,
               toggleCommonMethodManageMode
@@ -1202,7 +1202,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
         )}
 
         {hiddenCommonMethods.length > 0 && (
-          <SettingSection title="隐藏的预设方案">
+          <SettingSection title="Скрытые готовые рецепты">
             {hiddenCommonMethods.map((method, index) => (
               <SettingRow
                 key={getMethodId(method)}
@@ -1218,22 +1218,22 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
                   onClick={() => void toggleCommonMethodHidden(method)}
                   className="cursor-pointer text-sm font-medium text-neutral-600 transition active:opacity-70 dark:text-neutral-300"
                 >
-                  恢复
+                  Восстановить
                 </button>
               </SettingRow>
             ))}
           </SettingSection>
         )}
 
-        <SettingSection title="操作">
-          <ActionRow label="编辑器具" onClick={openEquipmentForm} />
+        <SettingSection title="Действия">
+          <ActionRow label="Изменить устройство" onClick={openEquipmentForm} />
           {!activeEquipment.isCustom && (
             <ActionRow
               label={
                 activeEquipment.isUserHidden ||
                 activeEquipment.isDefaultDisabled
-                  ? '恢复器具'
-                  : '隐藏器具'
+                  ? 'Вернуть устройство'
+                  : 'Скрыть устройство'
               }
               onClick={() => void toggleEquipmentHidden(activeEquipment)}
               isLast
@@ -1241,8 +1241,8 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
           )}
           {activeEquipment.isCustom && (
             <ActionRow
-              label={isDeleteConfirmingEquipment ? '确认删除' : '删除器具'}
-              settingId={makeSettingRowSearchId('删除器具')}
+              label={isDeleteConfirmingEquipment ? 'Удалить' : 'Удалить устройство'}
+              settingId={makeSettingRowSearchId('Удалить устройство')}
               onClick={() => void handleDeleteEquipment()}
               danger={isDeleteConfirmingEquipment}
               isLast
@@ -1300,7 +1300,7 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
   return (
     <>
       <SettingPage
-        title="器具和方案"
+        title="Устройства и рецепты"
         isVisible={isVisible}
         onClose={handlePageClose}
       >
@@ -1313,9 +1313,9 @@ const EquipmentMethodSettings: React.FC<EquipmentMethodSettingsProps> = ({
         activeKey={`${drawerStack.currentPage}-${isMethodFormPage ? methodFormStep : drawerChrome.key || activeEquipment?.id || 'empty'}`}
         canGoBack={drawerCanGoBack}
         backLabel={
-          isMethodFormPage && methodChrome.canGoBack ? '上一步' : '返回'
+          isMethodFormPage && methodChrome.canGoBack ? 'Назад' : 'Назад'
         }
-        doneLabel={isMethodFormPage ? methodChrome.doneLabel : '完成'}
+        doneLabel={isMethodFormPage ? methodChrome.doneLabel : 'Готово'}
         doneActions={drawerDoneActions}
         doneDisabled={
           isMethodFormPage

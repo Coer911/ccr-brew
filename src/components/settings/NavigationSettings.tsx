@@ -110,7 +110,7 @@ const NavigationSettings: React.FC<NavigationSettingsProps> = ({
       if (
         deriveNavigationSettings(nextNavigation).renderedMainTabs.length === 0
       ) {
-        showToast({ type: 'error', title: '至少需要保留一个应用功能' });
+        showToast({ type: 'error', title: 'Должна остаться хотя бы одна функция' });
         return false;
       }
 
@@ -130,7 +130,7 @@ const NavigationSettings: React.FC<NavigationSettingsProps> = ({
       currentNavigation.visibleTabs[tab] &&
       !canDisableMainNavigationTab(settings.navigationSettings, tab)
     ) {
-      showToast({ type: 'error', title: '至少需要保留一个应用功能' });
+      showToast({ type: 'error', title: 'Должна остаться хотя бы одна функция' });
       return;
     }
 
@@ -147,7 +147,7 @@ const NavigationSettings: React.FC<NavigationSettingsProps> = ({
       currentNavigation.coffeeBeanViews[view] &&
       !canDisableCoffeeBeanView(settings.navigationSettings, view)
     ) {
-      showToast({ type: 'error', title: '至少保留一个视图' });
+      showToast({ type: 'error', title: 'Должен остаться хотя бы один вид' });
       return;
     }
 
@@ -196,9 +196,9 @@ const NavigationSettings: React.FC<NavigationSettingsProps> = ({
   const showCoffeeBeanViewSettings = derivedNavigation.visibleTabs.coffeeBean;
 
   return (
-    <SettingPage title="应用功能" isVisible={isVisible} onClose={handleClose}>
-      <SettingSection title="显示偏好" className="-mt-4">
-        <SettingRow label="简化标签名称" isLast>
+    <SettingPage title="Функции приложения" isVisible={isVisible} onClose={handleClose}>
+      <SettingSection title="Отображение" className="-mt-4">
+        <SettingRow label="Короткие подписи" isLast>
           <SettingToggle
             checked={settings.simplifiedViewLabels ?? false}
             onChange={checked =>
@@ -209,8 +209,8 @@ const NavigationSettings: React.FC<NavigationSettingsProps> = ({
       </SettingSection>
 
       <SettingSection
-        title="启用的功能"
-        footer="关闭后隐藏对应入口，并简化相关流程；至少保留一个功能"
+        title="Включённые функции"
+        footer="Выключенные функции скрываются, а процесс упрощается; хотя бы одна должна остаться"
       >
         {MAIN_NAVIGATION_TABS.map((tab, index) => (
           <SettingRow
@@ -239,8 +239,8 @@ const NavigationSettings: React.FC<NavigationSettingsProps> = ({
           view => !derivedNavigation.pinnedViews.includes(view)
         ) && (
           <SettingSection
-            title="视图显示"
-            footer="控制在咖啡豆页面下拉菜单中显示的视图选项"
+            title="Виды"
+            footer="Какие виды показывать в меню на странице зерна"
           >
             {CONFIGURABLE_COFFEE_BEAN_VIEW_ORDER.filter(
               view => !derivedNavigation.pinnedViews.includes(view)
@@ -269,8 +269,8 @@ const NavigationSettings: React.FC<NavigationSettingsProps> = ({
 
       {showCoffeeBeanViewSettings && (
         <SettingSection
-          title="固定视图"
-          footer="把常用视图作为独立入口显示在主导航栏"
+          title="Закреплённые виды"
+          footer="Показывать частые виды отдельными вкладками в навигации"
         >
           {CONFIGURABLE_COFFEE_BEAN_VIEW_ORDER.map((view, index, array) => (
             <SettingRow

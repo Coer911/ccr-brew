@@ -115,22 +115,22 @@ export function formatSyncOperationDiagnostic(
   diagnostic: SyncOperationDiagnostic
 ): string {
   return [
-    `操作: ${diagnostic.operation}`,
-    diagnostic.table ? `表: ${diagnostic.table}` : null,
-    diagnostic.recordId ? `记录ID: ${diagnostic.recordId}` : null,
+    `Действие: ${diagnostic.operation}`,
+    diagnostic.table ? `Таблица: ${diagnostic.table}` : null,
+    diagnostic.recordId ? `ID записи: ${diagnostic.recordId}` : null,
     typeof diagnostic.recordIndex === 'number' ||
     typeof diagnostic.total === 'number'
-      ? `位置: ${diagnostic.recordIndex ?? '-'} / ${diagnostic.total ?? '-'}`
+      ? `Место: ${diagnostic.recordIndex ?? '-'} / ${diagnostic.total ?? '-'}`
       : null,
     typeof diagnostic.affectedCount === 'number'
-      ? `已完成: ${diagnostic.affectedCount}`
+      ? `Готово: ${diagnostic.affectedCount}`
       : null,
-    diagnostic.columns ? `列: ${diagnostic.columns}` : null,
+    diagnostic.columns ? `Колонки: ${diagnostic.columns}` : null,
     diagnostic.idsSample?.length
-      ? `ID样本: ${diagnostic.idsSample.join(', ')}`
+      ? `Пример ID: ${diagnostic.idsSample.join(', ')}`
       : null,
     diagnostic.dataSections?.length
-      ? `数据段: ${diagnostic.dataSections.join(', ')}`
+      ? `Фрагмент данных: ${diagnostic.dataSections.join(', ')}`
       : null,
     diagnostic.code ? `Supabase/PostgREST code: ${diagnostic.code}` : null,
     diagnostic.details ? `details: ${diagnostic.details}` : null,
@@ -479,7 +479,7 @@ export async function fetchRemoteAllRecords<T>(
 
         if (pageRecords.length === 0) {
           const error = new Error(
-            `分页拉取 ${table} 停止在 ${records.length}/${expectedTotal} 条，没有返回新数据`
+            `Постраничная загрузка ${table} остановилась на ${records.length}/${expectedTotal} записях, новых данных нет`
           );
           return createFailure(
             createDiagnostic('fetch-all-records', table, error, {
@@ -843,7 +843,7 @@ export async function downloadSettingsData(
     if (hasOwnSettingSection(settingsData, 'grinders')) {
       currentSection = 'grinders';
       if (!Array.isArray(settingsData.grinders)) {
-        throw new Error('云端 grinders 数据格式无效，应为数组');
+        throw new Error('Неверный формат grinders в облаке: должен быть массив');
       }
 
       const cloudGrinders = settingsData.grinders as Array<{
@@ -867,7 +867,7 @@ export async function downloadSettingsData(
           typeof settingsData.customPresets !== 'object' ||
           Array.isArray(settingsData.customPresets)
         ) {
-          throw new Error('云端 customPresets 数据格式无效，应为对象');
+          throw new Error('Неверный формат customPresets в облаке: должен быть объект');
         }
 
         const presets = settingsData.customPresets as Record<string, unknown>;

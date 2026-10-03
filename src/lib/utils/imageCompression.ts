@@ -70,7 +70,7 @@ export async function compressImage(
 
         const ctx = canvas.getContext('2d');
         if (!ctx) {
-          reject(new Error('无法创建 canvas context'));
+          reject(new Error('Не удалось создать canvas context'));
           return;
         }
 
@@ -87,7 +87,7 @@ export async function compressImage(
               blob =>
                 blob
                   ? resolveBlob(blob)
-                  : rejectBlob(new Error('图片压缩失败')),
+                  : rejectBlob(new Error('Не удалось сжать фото')),
               type,
               outputQuality
             );
@@ -139,14 +139,14 @@ export async function compressImage(
       };
 
       img.onerror = () => {
-        reject(new Error('图片加载失败'));
+        reject(new Error('Не удалось загрузить картинку'));
       };
 
       img.src = e.target?.result as string;
     };
 
     reader.onerror = () => {
-      reject(new Error('文件读取失败'));
+      reject(new Error('Не удалось прочитать файл'));
     };
 
     reader.readAsDataURL(file);
@@ -199,10 +199,10 @@ export function readFileAsDataUrl(file: Blob): Promise<string> {
         resolve(reader.result);
         return;
       }
-      reject(new Error(`图片读取结果异常：${typeof reader.result}`));
+      reject(new Error(`Странный результат чтения фото: ${typeof reader.result}`));
     };
-    reader.onerror = () => reject(reader.error || new Error('文件读取失败'));
-    reader.onabort = () => reject(new Error('文件读取被中断'));
+    reader.onerror = () => reject(reader.error || new Error('Не удалось прочитать файл'));
+    reader.onabort = () => reject(new Error('Чтение файла прервано'));
     reader.readAsDataURL(file);
   });
 }

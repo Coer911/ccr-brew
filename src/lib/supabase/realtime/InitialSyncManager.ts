@@ -165,11 +165,11 @@ interface SettingsSyncOutcome {
 }
 
 const TABLE_LABELS: Record<string, string> = {
-  [SYNC_TABLES.COFFEE_BEANS]: '咖啡豆',
-  [SYNC_TABLES.BREWING_NOTES]: '笔记',
-  [SYNC_TABLES.CUSTOM_EQUIPMENTS]: '自定义器具',
-  [SYNC_TABLES.CUSTOM_METHODS]: '自定义方案',
-  [SYNC_TABLES.USER_SETTINGS]: '设置',
+  [SYNC_TABLES.COFFEE_BEANS]: 'Зерно',
+  [SYNC_TABLES.BREWING_NOTES]: 'Заметки',
+  [SYNC_TABLES.CUSTOM_EQUIPMENTS]: 'Своё устройство',
+  [SYNC_TABLES.CUSTOM_METHODS]: 'Свой рецепт',
+  [SYNC_TABLES.USER_SETTINGS]: 'Настройки',
 };
 
 const INITIAL_SYNC_TASKS = [
@@ -203,9 +203,9 @@ function isRetryableSyncInterruption(error: unknown): boolean {
   const message = getErrorMessage(error).toLowerCase();
 
   return (
-    message.includes('超时') ||
-    message.includes('网络') ||
-    message.includes('下载设置超时') ||
+    message.includes('тайм-аут') ||
+    message.includes('сеть') ||
+    message.includes('истекло') ||
     message.includes('timeout') ||
     message.includes('timed out') ||
     message.includes('abort') ||
@@ -319,15 +319,15 @@ function createLocalDataError(params: {
   return new Error(
     [
       params.reason,
-      `操作: ${params.operation}`,
-      `表: ${params.table}`,
-      `记录ID: ${getRecordIdForDiagnostic(params.table, params.record)}`,
+      `Действие: ${params.operation}`,
+      `Таблица: ${params.table}`,
+      `ID записи: ${getRecordIdForDiagnostic(params.table, params.record)}`,
       typeof params.index === 'number' || typeof params.total === 'number'
-        ? `位置: ${params.index ?? '-'} / ${params.total ?? '-'}`
+        ? `Место: ${params.index ?? '-'} / ${params.total ?? '-'}`
         : null,
-      `数据形状: ${describeValueShape(params.record)}`,
-      params.cause ? `原始错误: ${getErrorMessage(params.cause)}` : null,
-      '判断方向: 云端 data 字段或本地历史数据可能存在结构不兼容、缺少主键、图片字段异常或时间字段异常。',
+      `Форма данных: ${describeValueShape(params.record)}`,
+      params.cause ? `Исходная ошибка: ${getErrorMessage(params.cause)}` : null,
+      'Что проверить: поле data в облаке или старые локальные данные могут быть несовместимы, без первичного ключа, с ошибкой в поле фото или времени.',
     ]
       .filter(Boolean)
       .join('\n')
@@ -353,7 +353,7 @@ function assertValidDownloadedRecords(
     record: first.record,
     index: first.index + 1,
     total: records.length,
-    reason: `云端 ${table} 数据格式无效，发现 ${invalid.length} 条缺少有效主键的记录`,
+    reason: `В облаке ${table} неверный формат данных, найдено ${invalid.length} записей без корректного первичного ключа`,
   });
 }
 
@@ -373,7 +373,7 @@ async function writeLocalRecordWithDiagnostics<T>(
       record,
       index,
       total,
-      reason: `写入本地 ${table} 记录失败`,
+      reason: `Запись на устройство ${table} — ошибка`,
       cause: error,
     });
   }
@@ -385,7 +385,7 @@ function truncateDiagnosticValue(value: string): string {
 }
 
 function formatDiagnosticTime(timestamp?: number): string {
-  if (!timestamp) return '无';
+  if (!timestamp) return 'Нет';
   return `${new Date(timestamp).toISOString()} (${timestamp})`;
 }
 
@@ -393,7 +393,7 @@ function getBrowserDiagnosticLines(): string[] {
   if (typeof navigator === 'undefined') return [];
 
   return [
-    `在线状态: ${navigator.onLine ? 'online' : 'offline'}`,
+    `Сеть: ${navigator.onLine ? 'online' : 'offline'}`,
     `User-Agent: ${navigator.userAgent}`,
   ];
 }
@@ -405,7 +405,7 @@ function inferSyncFailureHint(tasks: SupabaseSyncTask[]): string {
     .toLowerCase();
 
   if (!errorText) {
-    return '暂无错误明细，请结合控制台日志查看。';
+    return 'Подробностей нет, посмотрите журнал консоли.';
   }
 
   if (
@@ -414,7 +414,7 @@ function inferSyncFailureHint(tasks: SupabaseSyncTask[]): string {
     errorText.includes('rls') ||
     errorText.includes('42501')
   ) {
-    return '可能是 Supabase 表权限或 RLS 策略未按最新初始化 SQL 配置。';
+    return 'Возможно, права таблиц или политики RLS в Supabase настроены не по последнему SQL-скрипту.';
   }
 
   if (
@@ -423,7 +423,7 @@ function inferSyncFailureHint(tasks: SupabaseSyncTask[]): string {
     errorText.includes('could not find') ||
     errorText.includes('pgrst')
   ) {
-    return '可能是 Supabase 表结构、字段或 Data API 暴露配置不是最新版。';
+    return 'Возможно, структура таблиц, поля или настройки Data API в Supabase устарели.';
   }
 
   if (
@@ -432,7 +432,7 @@ function inferSyncFailureHint(tasks: SupabaseSyncTask[]): string {
     errorText.includes('network') ||
     errorText.includes('failed to fetch')
   ) {
-    return '可能是网络波动或 Supabase 请求超时。';
+    return 'Возможно, нестабильная сеть или тайм-аут запроса к Supabase.';
   }
 
   if (
@@ -440,18 +440,18 @@ function inferSyncFailureHint(tasks: SupabaseSyncTask[]): string {
     errorText.includes('indexeddb') ||
     errorText.includes('unknownerror')
   ) {
-    return '可能是浏览器本地 IndexedDB 事务在后台恢复时失效，可优先检查本地读写事务。';
+    return 'Возможно, транзакция IndexedDB в браузере стала недействительной при возврате из фона — проверьте локальные операции чтения/записи.';
   }
 
   if (
-    errorText.includes('数据格式无效') ||
-    errorText.includes('写入本地') ||
+    errorText.includes('Неверный формат данных') ||
+    errorText.includes('Запись на устройство') ||
     errorText.includes('invalid time value') ||
     errorText.includes('datacloneerror') ||
     errorText.includes('constraint') ||
     errorText.includes('dexie')
   ) {
-    return '可能是某条本地或云端历史数据结构不规范，优先看诊断里的表名和记录ID。';
+    return 'Возможно, у какой-то локальной или облачной записи нестандартная структура — сначала посмотрите таблицу и ID записи в диагностике.';
   }
 
   if (
@@ -460,24 +460,24 @@ function inferSyncFailureHint(tasks: SupabaseSyncTask[]): string {
     errorText.includes('413') ||
     errorText.includes('request entity')
   ) {
-    return '可能是单条记录内容过大，例如图片或备注字段进入了同步 data。';
+    return 'Возможно, одна запись слишком большая, например в data попали фото или заметки.';
   }
 
-  return '请根据失败任务的原始错误定位。';
+  return 'Ищите причину по исходной ошибке невыполненной задачи.';
 }
 
 function formatDiagnosticTask(task: SupabaseSyncTask): string {
   return [
     `${task.label} (${task.id})`,
-    `  状态: ${task.status}`,
-    task.detail ? `  阶段: ${task.detail}` : null,
+    `  Состояние: ${task.status}`,
+    task.detail ? `  Этап: ${task.detail}` : null,
     typeof task.completed === 'number' || typeof task.total === 'number'
-      ? `  进度: ${task.completed ?? '-'} / ${task.total ?? '-'}`
+      ? `  Прогресс: ${task.completed ?? '-'} / ${task.total ?? '-'}`
       : null,
     task.uploaded || task.downloaded || task.deleted || task.failed
-      ? `  统计: ↑${task.uploaded ?? 0} ↓${task.downloaded ?? 0} ×${task.deleted ?? 0} 失败${task.failed ?? 0}`
+      ? `  Итог: ↑${task.uploaded ?? 0} ↓${task.downloaded ?? 0} ×${task.deleted ?? 0} ошибок${task.failed ?? 0}`
       : null,
-    task.error ? `  错误: ${truncateDiagnosticValue(task.error)}` : null,
+    task.error ? `  Ошибка: ${truncateDiagnosticValue(task.error)}` : null,
   ]
     .filter(Boolean)
     .join('\n');
@@ -502,49 +502,49 @@ function createSyncDiagnostic(params: {
               `${task.label}:${task.status}${task.detail ? `(${task.detail})` : ''}`
           )
           .join(' | ')
-      : '无任务记录';
+      : 'Задач нет';
 
   const failedTaskText =
     failedTasks.length > 0
       ? failedTasks.map(formatDiagnosticTask).join('\n\n')
-      : '无失败任务明细';
+      : 'Подробностей по ошибкам нет';
 
   return [
-    'Brew Guide Supabase 同步诊断',
-    `生成时间: ${new Date().toISOString()}`,
-    `同步阶段: ${progress.phase}`,
-    `进度消息: ${progress.message || '无'}`,
-    `失败项目: ${params.errorCount}/${params.totalTaskCount}`,
-    `同步统计: ↑${params.stats.uploaded} ↓${params.stats.downloaded} ×${params.stats.deleted}`,
-    `本轮耗时: ${Date.now() - params.startedAt}ms`,
-    `上次成功同步: ${formatDiagnosticTime(params.lastSyncTime)}`,
+    'Диагностика синхронизации Supabase — Cultura Brew',
+    `Создано: ${new Date().toISOString()}`,
+    `Этап синхронизации: ${progress.phase}`,
+    `Сообщение: ${progress.message || 'Нет'}`,
+    `С ошибкой: ${params.errorCount}/${params.totalTaskCount}`,
+    `Итог синхронизации: ↑${params.stats.uploaded} ↓${params.stats.downloaded} ×${params.stats.deleted}`,
+    `Длительность: ${Date.now() - params.startedAt}ms`,
+    `Последняя успешная синхронизация: ${formatDiagnosticTime(params.lastSyncTime)}`,
     ...getBrowserDiagnosticLines(),
-    `判断方向: ${inferSyncFailureHint(failedTasks)}`,
+    `Что проверить: ${inferSyncFailureHint(failedTasks)}`,
     '',
-    '失败任务:',
+    'Задачи с ошибкой:',
     failedTaskText,
     '',
-    '全部任务:',
+    'Все задачи:',
     taskSummary,
   ].join('\n');
 }
 
 function createCopyDiagnosticAction(diagnostic: string) {
   return {
-    label: '复制诊断',
+    label: 'Скопировать диагностику',
     onClick: async () => {
       const result = await copyToClipboard(diagnostic);
 
       if (result.success) {
         showToast({
           type: 'success',
-          title: '诊断已复制',
+          title: 'Диагностика скопирована',
           duration: 2000,
         });
       } else {
         showToast({
           type: 'error',
-          title: '复制诊断失败',
+          title: 'Не удалось скопировать диагностику',
           duration: 3000,
         });
       }
@@ -656,8 +656,8 @@ export class InitialSyncManager {
       syncStatusStore.startSupabaseSyncProgress(
         lastSyncTime === 0 ? 'initial-sync' : 'background-sync',
         lastSyncTime === 0
-          ? '正在初始化 Supabase 数据'
-          : '正在同步 Supabase 数据',
+          ? 'Готовим данные Supabase'
+          : 'Синхронизируем данные Supabase',
         INITIAL_SYNC_TASKS
       );
     }
@@ -665,7 +665,7 @@ export class InitialSyncManager {
     // 仅在首次同步时显示提示，避免后台静默同步打扰用户
     // lastSyncTime 为 0 表示首次同步（或数据被重置）
     if (typeof window !== 'undefined' && lastSyncTime === 0) {
-      showToast({ type: 'info', title: '正在同步云端数据...', duration: 3000 });
+      showToast({ type: 'info', title: 'Синхронизируем облачные данные...', duration: 3000 });
     }
 
     // iOS Safari 在应用从后台恢复时容易让重叠的 IndexedDB 事务提前失效。
@@ -745,14 +745,14 @@ export class InitialSyncManager {
         if (errorCount === totalTaskCount) {
           showToast({
             type: 'error',
-            title: '同步失败，请检查网络',
+            title: 'Ошибка синхронизации, проверьте интернет',
             duration: SYNC_DIAGNOSTIC_TOAST_DURATION,
             action,
           });
         } else {
           showToast({
             type: 'warning',
-            title: '部分数据同步失败',
+            title: 'Часть данных не синхронизировалась',
             duration: SYNC_DIAGNOSTIC_TOAST_DURATION,
             action,
           });
@@ -769,7 +769,7 @@ export class InitialSyncManager {
 
         showToast({
           type: 'success',
-          title: `同步完成 ${parts.join(' ')}`,
+          title: `Синхронизация завершена ${parts.join(' ')}`,
         });
 
         // 首次实时同步如果下载了云端数据，立即刷新应用，确保所有页面与缓存状态一致
@@ -779,7 +779,7 @@ export class InitialSyncManager {
       } else {
         // 仅在首次同步时显示“数据已是最新”，避免日常使用中频繁打扰
         if (lastSyncTime === 0) {
-          showToast({ type: 'success', title: '数据已是最新' });
+          showToast({ type: 'success', title: 'Данные актуальны' });
         }
       }
     }
@@ -801,7 +801,7 @@ export class InitialSyncManager {
     );
 
     if (errorCount > 0) {
-      throw new Error(`Supabase 同步未完全完成，失败项目 ${errorCount} 个`);
+      throw new Error(`Синхронизация Supabase завершена не полностью, ошибок: ${errorCount} шт.`);
     }
 
     return stats;
@@ -817,7 +817,7 @@ export class InitialSyncManager {
     try {
       this.updateProgressTask(table, {
         status: 'preparing',
-        detail: '读取本地数据',
+        detail: 'Чтение данных на устройстве',
       });
 
       const dbTable = getDbTable(table);
@@ -827,7 +827,7 @@ export class InitialSyncManager {
 
       this.updateProgressTask(table, {
         status: 'fetching',
-        detail: '拉取云端索引',
+        detail: 'Получение облачного индекса',
         total: localRecords.length,
       });
 
@@ -837,7 +837,7 @@ export class InitialSyncManager {
       const remoteMetaResult = await withTimeout(
         fetchRemoteAllRecords(this.client, table, 'id, updated_at, deleted_at'),
         SYNC_TIMEOUT,
-        `拉取 ${table} 元数据超时`
+        `Получение ${table} — время метаданных истекло`
       );
 
       if (!remoteMetaResult.success) {
@@ -845,7 +845,7 @@ export class InitialSyncManager {
           `[InitialSync] ${table} 拉取失败:`,
           remoteMetaResult.error
         );
-        throw createSyncOperationError(remoteMetaResult, `拉取 ${table} 失败`);
+        throw createSyncOperationError(remoteMetaResult, `Получение ${table} — ошибка`);
       }
 
       const remoteMetaRecords = (remoteMetaResult.data || []).map(r => ({
@@ -858,7 +858,7 @@ export class InitialSyncManager {
 
       this.updateProgressTask(table, {
         status: 'fetching',
-        detail: `已读取 ${remoteMetaRecords.length} 条云端索引`,
+        detail: `Прочитано ${remoteMetaRecords.length} записей облачного индекса`,
         total: Math.max(localRecords.length, remoteMetaRecords.length),
         completed: 0,
       });
@@ -920,7 +920,7 @@ export class InitialSyncManager {
       if (idsToDownload.length > 0) {
         this.updateProgressTask(table, {
           status: 'downloading',
-          detail: `下载 ${idsToDownload.length} 条云端记录`,
+          detail: `Скачать ${idsToDownload.length} облачных записей`,
           total: idsToDownload.length,
           completed: 0,
         });
@@ -935,7 +935,7 @@ export class InitialSyncManager {
                 refreshDownloadTimeout();
                 this.updateProgressTask(table, {
                   status: 'downloading',
-                  detail: `已下载 ${downloadedCount}/${totalCount} 条云端记录`,
+                  detail: `Скачано ${downloadedCount}/${totalCount} облачных записей`,
                   total: totalCount,
                   completed: downloadedCount,
                   downloaded: downloadedCount,
@@ -943,7 +943,7 @@ export class InitialSyncManager {
               },
             }),
           DETAIL_DOWNLOAD_IDLE_TIMEOUT,
-          `下载 ${table} 详情超时（${DETAIL_DOWNLOAD_IDLE_TIMEOUT / 1000} 秒内无进度）`
+          `Скачать ${table} — подробности не успели (${DETAIL_DOWNLOAD_IDLE_TIMEOUT / 1000} с без прогресса)`
         );
 
         if (fetchResult.success && fetchResult.data) {
@@ -952,7 +952,7 @@ export class InitialSyncManager {
           });
           this.updateProgressTask(table, {
             status: 'downloading',
-            detail: `已下载 ${downloadedDataMap.size} 条云端记录`,
+            detail: `Скачано ${downloadedDataMap.size} облачных записей`,
             total: idsToDownload.length,
             completed: downloadedDataMap.size,
             downloaded: downloadedDataMap.size,
@@ -963,7 +963,7 @@ export class InitialSyncManager {
             fetchResult.error
           );
           // 下载失败时中止本表同步，避免后续误将本地旧数据上传覆盖云端
-          throw createSyncOperationError(fetchResult, `下载 ${table} 详情失败`);
+          throw createSyncOperationError(fetchResult, `Скачать ${table} — ошибка подробностей`);
         }
 
         const missingIds = idsToDownload.filter(
@@ -976,13 +976,13 @@ export class InitialSyncManager {
           // 关键保护：详情缺失时不继续冲突解决，防止把旧本地数据误判为“云端不存在”
           throw new Error(
             [
-              `下载 ${table} 详情不完整`,
+              `Скачать ${table} — подробности неполные`,
               `操作: verify-downloaded-records`,
-              `表: ${table}`,
-              `缺失数量: ${missingIds.length}`,
-              `缺失ID样本: ${missingIds.slice(0, 10).join(', ')}`,
-              `应下载数量: ${idsToDownload.length}`,
-              `实际下载数量: ${downloadedDataMap.size}`,
+              `Таблица: ${table}`,
+              `Не хватает: ${missingIds.length}`,
+              `Пример недостающих ID: ${missingIds.slice(0, 10).join(', ')}`,
+              `Должно быть скачано: ${idsToDownload.length}`,
+              `Скачано на деле: ${downloadedDataMap.size}`,
             ].join('\n')
           );
         }
@@ -1021,7 +1021,7 @@ export class InitialSyncManager {
       if (toUpload.length > 0) {
         this.updateProgressTask(table, {
           status: 'uploading',
-          detail: `上传 ${toUpload.length} 条本地记录`,
+          detail: `Загрузить ${toUpload.length} записей на устройстве`,
           total: toUpload.length,
           completed: 0,
         });
@@ -1051,7 +1051,7 @@ export class InitialSyncManager {
             onProgress: (uploadedCount, totalCount) => {
               this.updateProgressTask(table, {
                 status: 'uploading',
-                detail: `已上传 ${uploadedCount}/${totalCount} 条本地记录`,
+                detail: `Загружено: ${uploadedCount}/${totalCount} записей на устройстве`,
                 total: totalCount,
                 completed: uploadedCount,
                 uploaded: uploadedCount,
@@ -1059,11 +1059,11 @@ export class InitialSyncManager {
             },
           }
         );
-        assertSyncSuccess(uploadResult, `上传 ${table} 失败`);
+        assertSyncSuccess(uploadResult, `Загрузить ${table} — ошибка`);
 
         this.updateProgressTask(table, {
           status: 'uploading',
-          detail: `已上传 ${uploadResult.affectedCount} 条本地记录`,
+          detail: `Загружено: ${uploadResult.affectedCount} записей на устройстве`,
           total: toUpload.length,
           completed: uploadResult.affectedCount,
           uploaded: uploadResult.affectedCount,
@@ -1074,7 +1074,7 @@ export class InitialSyncManager {
       if (toDownload.length > 0) {
         this.updateProgressTask(table, {
           status: 'writing',
-          detail: `写入 ${toDownload.length} 条云端记录`,
+          detail: `Запись ${toDownload.length} облачных записей`,
           total: toDownload.length,
           completed: 0,
         });
@@ -1127,7 +1127,7 @@ export class InitialSyncManager {
 
         this.updateProgressTask(table, {
           status: 'writing',
-          detail: `已写入 ${validRecords.length} 条云端记录`,
+          detail: `Записано ${validRecords.length} облачных записей`,
           total: toDownload.length,
           completed: validRecords.length,
           downloaded: validRecords.length,
@@ -1137,7 +1137,7 @@ export class InitialSyncManager {
       // 执行本地删除
       if (toDeleteLocal.length > 0) {
         console.log(
-          `[InitialSync] ${table} 删除 ${toDeleteLocal.length} 条本地记录`
+          `[InitialSync] ${table} 删除 ${toDeleteLocal.length} записей на устройстве`
         );
         await dbTable.bulkDelete(toDeleteLocal);
         if (table === SYNC_TABLES.COFFEE_BEANS) {
@@ -1157,7 +1157,7 @@ export class InitialSyncManager {
 
       this.updateProgressTask(table, {
         status: 'success',
-        detail: `完成 ↑${toUpload.length} ↓${toDownload.length} ×${toDeleteLocal.length}`,
+        detail: `Готово ↑${toUpload.length} ↓${toDownload.length} ×${toDeleteLocal.length}`,
         uploaded: toUpload.length,
         downloaded: toDownload.length,
         deleted: toDeleteLocal.length,
@@ -1172,7 +1172,7 @@ export class InitialSyncManager {
       console.error(`[InitialSync] ${table} 同步失败:`, error);
       this.updateProgressTask(table, {
         status: 'error',
-        detail: '同步失败',
+        detail: 'Ошибка синхронизации',
         error: getErrorMessage(error),
       });
       throw error;
@@ -1186,7 +1186,7 @@ export class InitialSyncManager {
     try {
       this.updateProgressTask(SYNC_TABLES.CUSTOM_METHODS, {
         status: 'preparing',
-        detail: '读取本地方案',
+        detail: 'Чтение рецептов на устройстве',
       });
 
       // 获取本地方案
@@ -1210,7 +1210,7 @@ export class InitialSyncManager {
       // 增加超时控制
       this.updateProgressTask(SYNC_TABLES.CUSTOM_METHODS, {
         status: 'fetching',
-        detail: '拉取云端方案',
+        detail: 'Получение облачных рецептов',
         total: localRecords.length,
       });
 
@@ -1220,7 +1220,7 @@ export class InitialSyncManager {
           methods: Method[];
         }>(this.client, SYNC_TABLES.CUSTOM_METHODS),
         SYNC_TIMEOUT,
-        `拉取 custom_methods 超时`
+        `Время получения custom_methods истекло`
       );
 
       if (!remoteResult.success) {
@@ -1230,7 +1230,7 @@ export class InitialSyncManager {
         );
         throw createSyncOperationError(
           remoteResult,
-          '拉取 custom_methods 失败'
+          'Не удалось получить custom_methods'
         );
       }
 
@@ -1245,7 +1245,7 @@ export class InitialSyncManager {
               equipmentId: r.id,
               methods: methodsValue,
             },
-            reason: `云端 custom_methods 数据格式无效，data.methods 应为数组，实际为 ${describeValueShape(methodsValue)}`,
+            reason: `Неверный формат custom_methods в облаке: data.methods должен быть массивом, а получено ${describeValueShape(methodsValue)}`,
           });
         }
 
@@ -1281,7 +1281,7 @@ export class InitialSyncManager {
 
       this.updateProgressTask(SYNC_TABLES.CUSTOM_METHODS, {
         status: 'fetching',
-        detail: `已读取 ${(remoteResult.data || []).length} 条云端方案`,
+        detail: `Прочитано ${(remoteResult.data || []).length} облачных рецептов`,
         total: Math.max(localRecords.length, (remoteResult.data || []).length),
         completed: 0,
       });
@@ -1317,7 +1317,7 @@ export class InitialSyncManager {
       if (toUpload.length > 0) {
         this.updateProgressTask(SYNC_TABLES.CUSTOM_METHODS, {
           status: 'uploading',
-          detail: `上传 ${toUpload.length} 条本地方案`,
+          detail: `Загрузить ${toUpload.length} рецептов на устройстве`,
           total: toUpload.length,
           completed: 0,
         });
@@ -1335,7 +1335,7 @@ export class InitialSyncManager {
             onProgress: (uploadedCount, totalCount) => {
               this.updateProgressTask(SYNC_TABLES.CUSTOM_METHODS, {
                 status: 'uploading',
-                detail: `已上传 ${uploadedCount}/${totalCount} 条本地方案`,
+                detail: `Загружено: ${uploadedCount}/${totalCount} рецептов на устройстве`,
                 total: totalCount,
                 completed: uploadedCount,
                 uploaded: uploadedCount,
@@ -1343,11 +1343,11 @@ export class InitialSyncManager {
             },
           }
         );
-        assertSyncSuccess(uploadResult, '上传 custom_methods 失败');
+        assertSyncSuccess(uploadResult, 'Не удалось загрузить custom_methods');
 
         this.updateProgressTask(SYNC_TABLES.CUSTOM_METHODS, {
           status: 'uploading',
-          detail: `已上传 ${uploadResult.affectedCount} 条本地方案`,
+          detail: `Загружено: ${uploadResult.affectedCount} рецептов на устройстве`,
           total: toUpload.length,
           completed: uploadResult.affectedCount,
           uploaded: uploadResult.affectedCount,
@@ -1358,7 +1358,7 @@ export class InitialSyncManager {
       if (toDownload.length > 0) {
         this.updateProgressTask(SYNC_TABLES.CUSTOM_METHODS, {
           status: 'writing',
-          detail: `写入 ${toDownload.length} 条云端方案`,
+          detail: `Запись ${toDownload.length} облачных рецептов`,
           total: toDownload.length,
           completed: 0,
         });
@@ -1373,7 +1373,7 @@ export class InitialSyncManager {
 
         this.updateProgressTask(SYNC_TABLES.CUSTOM_METHODS, {
           status: 'writing',
-          detail: `已写入 ${toDownload.length} 条云端方案`,
+          detail: `Записано ${toDownload.length} облачных рецептов`,
           total: toDownload.length,
           completed: toDownload.length,
           downloaded: toDownload.length,
@@ -1387,7 +1387,7 @@ export class InitialSyncManager {
 
       this.updateProgressTask(SYNC_TABLES.CUSTOM_METHODS, {
         status: 'success',
-        detail: `完成 ↑${toUpload.length} ↓${toDownload.length} ×${toDeleteLocal.length}`,
+        detail: `Готово ↑${toUpload.length} ↓${toDownload.length} ×${toDeleteLocal.length}`,
         uploaded: toUpload.length,
         downloaded: toDownload.length,
         deleted: toDeleteLocal.length,
@@ -1402,7 +1402,7 @@ export class InitialSyncManager {
       console.error(`[InitialSync] custom_methods 同步失败:`, error);
       this.updateProgressTask(SYNC_TABLES.CUSTOM_METHODS, {
         status: 'error',
-        detail: '同步失败',
+        detail: 'Ошибка синхронизации',
         error: getErrorMessage(error),
       });
       throw error;
@@ -1416,7 +1416,7 @@ export class InitialSyncManager {
     try {
       this.updateProgressTask(SYNC_TABLES.USER_SETTINGS, {
         status: 'fetching',
-        detail: '检查云端设置',
+        detail: 'Проверка облачных настроек',
       });
 
       const lastSyncTime = await hydrateLastSyncTime();
@@ -1424,10 +1424,10 @@ export class InitialSyncManager {
       const remoteResult = await withTimeout(
         fetchRemoteLatestTimestamp(this.client, SYNC_TABLES.USER_SETTINGS),
         SYNC_TIMEOUT,
-        '获取设置时间戳超时'
+        'Время получения метки настроек истекло'
       );
 
-      assertSyncSuccess(remoteResult, '获取设置时间戳失败');
+      assertSyncSuccess(remoteResult, 'Не удалось получить метку настроек');
 
       const remoteTimestamp = remoteResult.data || 0;
       const settingsMode =
@@ -1440,24 +1440,24 @@ export class InitialSyncManager {
         if (remoteTimestamp > 0) {
           this.updateProgressTask(SYNC_TABLES.USER_SETTINGS, {
             status: 'downloading',
-            detail: '下载云端设置',
+            detail: 'Скачивание облачных настроек',
           });
 
           const result = await this.downloadSettingsWithTimeout(
             SYNC_TIMEOUT,
-            '下载设置超时'
+            'Время скачивания настроек истекло'
           );
-          assertSyncSuccess(result, '下载设置失败');
+          assertSyncSuccess(result, 'Не удалось скачать настройки');
           await refreshSettingsStores();
           this.updateProgressTask(SYNC_TABLES.USER_SETTINGS, {
             status: 'success',
-            detail: `已下载 ${result.affectedCount} 项设置`,
+            detail: `Скачано ${result.affectedCount} настроек`,
             downloaded: result.affectedCount,
           });
         } else {
           this.updateProgressTask(SYNC_TABLES.USER_SETTINGS, {
             status: 'uploading',
-            detail: '上传本地设置',
+            detail: 'Загрузка настроек с устройства',
           });
 
           const result = await withTimeout(
@@ -1465,13 +1465,13 @@ export class InitialSyncManager {
             SYNC_TIMEOUT,
             '上传设置超时'
           );
-          assertSyncSuccess(result, '上传设置失败');
+          assertSyncSuccess(result, 'Не удалось загрузить настройки');
           this.updateProgressTask(SYNC_TABLES.USER_SETTINGS, {
             status: 'success',
             detail:
               result.affectedCount > 0
-                ? `已上传 ${result.affectedCount} 项设置`
-                : '没有需要上传的设置',
+                ? `Загружено: ${result.affectedCount} настроек`
+                : 'Нет настроек для загрузки',
             uploaded: result.affectedCount,
           });
         }
@@ -1482,7 +1482,7 @@ export class InitialSyncManager {
         if (settingsMode === 'bidirectional' && this.settingsDirty) {
           this.updateProgressTask(SYNC_TABLES.USER_SETTINGS, {
             status: 'uploading',
-            detail: '上传本地设置',
+            detail: 'Загрузка настроек с устройства',
           });
 
           const result = await withTimeout(
@@ -1490,13 +1490,13 @@ export class InitialSyncManager {
             SYNC_TIMEOUT,
             '上传设置超时'
           );
-          assertSyncSuccess(result, '上传设置失败');
+          assertSyncSuccess(result, 'Не удалось загрузить настройки');
           this.updateProgressTask(SYNC_TABLES.USER_SETTINGS, {
             status: 'success',
             detail:
               result.affectedCount > 0
-                ? `已上传 ${result.affectedCount} 项设置`
-                : '没有需要上传的设置',
+                ? `Загружено: ${result.affectedCount} настроек`
+                : 'Нет настроек для загрузки',
             uploaded: result.affectedCount,
           });
           return { deferred: false };
@@ -1505,7 +1505,7 @@ export class InitialSyncManager {
         // 云端更新，下载
         this.updateProgressTask(SYNC_TABLES.USER_SETTINGS, {
           status: 'downloading',
-          detail: '下载云端设置',
+          detail: 'Скачивание облачных настроек',
         });
 
         const timeoutMs =
@@ -1516,13 +1516,13 @@ export class InitialSyncManager {
         try {
           const result = await this.downloadSettingsWithTimeout(
             timeoutMs,
-            '下载设置超时'
+            'Время скачивания настроек истекло'
           );
-          assertSyncSuccess(result, '下载设置失败');
+          assertSyncSuccess(result, 'Не удалось скачать настройки');
           await refreshSettingsStores();
           this.updateProgressTask(SYNC_TABLES.USER_SETTINGS, {
             status: 'success',
-            detail: `已下载 ${result.affectedCount} 项设置`,
+            detail: `Скачано ${result.affectedCount} настроек`,
             downloaded: result.affectedCount,
           });
           return { deferred: false };
@@ -1545,14 +1545,14 @@ export class InitialSyncManager {
       } else if (settingsMode === 'pull-only') {
         this.updateProgressTask(SYNC_TABLES.USER_SETTINGS, {
           status: 'success',
-          detail: '设置无远端更新',
+          detail: 'Новых настроек в облаке нет',
         });
         return { deferred: false };
       } else {
         // 本地更新，上传
         this.updateProgressTask(SYNC_TABLES.USER_SETTINGS, {
           status: 'uploading',
-          detail: '上传本地设置',
+          detail: 'Загрузка настроек с устройства',
         });
 
         const result = await withTimeout(
@@ -1560,13 +1560,13 @@ export class InitialSyncManager {
           SYNC_TIMEOUT,
           '上传设置超时'
         );
-        assertSyncSuccess(result, '上传设置失败');
+        assertSyncSuccess(result, 'Не удалось загрузить настройки');
         this.updateProgressTask(SYNC_TABLES.USER_SETTINGS, {
           status: 'success',
           detail:
             result.affectedCount > 0
-              ? `已上传 ${result.affectedCount} 项设置`
-              : '没有需要上传的设置',
+              ? `Загружено: ${result.affectedCount} настроек`
+              : 'Нет настроек для загрузки',
           uploaded: result.affectedCount,
         });
       }
@@ -1576,7 +1576,7 @@ export class InitialSyncManager {
       console.error('[InitialSync] 设置同步失败:', error);
       this.updateProgressTask(SYNC_TABLES.USER_SETTINGS, {
         status: 'error',
-        detail: '同步失败',
+        detail: 'Ошибка синхронизации',
         error: getErrorMessage(error),
       });
       throw error;

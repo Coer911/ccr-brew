@@ -1,1 +1,1 @@
-export const COFFEE_BEAN_SEARCH_OR_CREATE_PLACEHOLDER = '搜索或新建咖啡豆';
+export const COFFEE_BEAN_SEARCH_OR_CREATE_PLACEHOLDER = 'Найти или добавить зерно';

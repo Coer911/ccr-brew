@@ -30,7 +30,9 @@ const geistMono = localFont({
   display: 'swap',
 });
 
-const SEO_TITLE = 'Brew Guide';
+const SEO_TITLE = 'Cultura Brew';
+// Адрес сайта задаётся при сборке; по умолчанию — заглушка для метаданных.
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://cultura-brew.local').replace(/\/+$/, '') + '/';
 
 const encodeJsonForHtml = (value: unknown) =>
   JSON.stringify(value).replace(/[<>&]/g, char => {
@@ -49,57 +51,52 @@ const encodeJsonForHtml = (value: unknown) =>
 const STRUCTURED_DATA_JSON = encodeJsonForHtml({
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
-  name: 'Brew Guide',
+  name: 'Cultura Brew',
   applicationCategory: 'LifestyleApplication',
   operatingSystem: 'Web, iOS, Android',
-  url: 'https://coffee.chu3.top/',
+  url: SITE_URL,
   author: {
-    '@type': 'Person',
-    name: 'Chu3',
+    '@type': 'Organization',
+    name: 'Cultura Coffee',
   },
   offers: {
     '@type': 'Offer',
     price: '0',
-    priceCurrency: 'CNY',
-  },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '5',
-    ratingCount: '1',
+    priceCurrency: 'RUB',
   },
 });
 
 // SEO constants
 export const metadata: Metadata = {
-  metadataBase: new URL('https://coffee.chu3.top/'),
+  metadataBase: new URL(SITE_URL),
   title: SEO_TITLE,
   keywords: [
-    'Brew Guide',
-    '咖啡计时器',
-    '手冲计时器',
-    '咖啡豆库存',
-    '咖啡豆管理',
-    '豆仓管理',
-    '冲煮记录',
-    '咖啡笔记',
-    '品鉴记录',
+    'Cultura Brew',
+    'таймер для кофе',
+    'таймер для пуровера',
+    'запасы кофе',
+    'управление зерном',
+    'учёт зерна',
+    'записи заваривания',
+    'кофейные заметки',
+    'дегустационные заметки',
   ],
   manifest: '/manifest.json',
   alternates: {
-    canonical: 'https://coffee.chu3.top/',
+    canonical: SITE_URL,
   },
   openGraph: {
     title: SEO_TITLE,
-    url: 'https://coffee.chu3.top/',
-    siteName: 'Brew Guide',
-    locale: 'zh_CN',
+    url: SITE_URL,
+    siteName: 'Cultura Brew',
+    locale: 'ru_RU',
     type: 'website',
     images: [
       {
-        url: 'https://coffee.chu3.top/images/icons/app/icon-512x512-opaque.png',
+        url: SITE_URL + 'images/icons/app/icon-512x512-opaque.png',
         width: 512,
         height: 512,
-        alt: 'Brew Guide Logo',
+        alt: 'Cultura Brew',
       },
     ],
   },
@@ -107,9 +104,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: SEO_TITLE,
     images: [
-      'https://coffee.chu3.top/images/icons/app/icon-512x512-opaque.png',
+      SITE_URL + 'images/icons/app/icon-512x512-opaque.png',
     ],
-    creator: '@chu3',
   },
   robots: {
     index: true,
@@ -146,7 +142,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Brew Guide',
+    title: 'Cultura Brew',
   },
   verification: {
     google: null,
@@ -176,7 +172,7 @@ export default function RootLayout({
 
   return (
     <html
-      lang="zh"
+      lang="ru"
       suppressHydrationWarning
       className={geistMono.variable}
       style={
@@ -206,13 +202,13 @@ export default function RootLayout({
             __html: STRUCTURED_DATA_JSON,
           }}
         />
-        <meta name="application-name" content="Brew Guide" />
+        <meta name="application-name" content="Cultura Brew" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
-        <meta name="apple-mobile-web-app-title" content="Brew Guide" />
+        <meta name="apple-mobile-web-app-title" content="Cultura Brew" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-tap-highlight" content="no" />
@@ -259,10 +255,10 @@ export default function RootLayout({
         )}
       </head>
       <body className="select-none [&_[contenteditable]]:select-text [&_input]:select-text [&_textarea]:select-text">
-        <h1 className="sr-only">Brew Guide</h1>
+        <h1 className="sr-only">Cultura Brew</h1>
         <noscript>
           <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-            <h1>Brew Guide</h1>
+            <h1>Cultura Brew</h1>
           </div>
         </noscript>
         <ThemeProvider

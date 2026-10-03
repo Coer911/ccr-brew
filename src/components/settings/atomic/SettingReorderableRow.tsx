@@ -135,8 +135,8 @@ function SettingReorderableRow<T>({
 
         <button
           type="button"
-          aria-label={`拖动调整 ${label} 排序`}
-          title="拖动排序"
+          aria-label={`Перетащите, чтобы изменить ${label} порядок`}
+          title="Перетащите для сортировки"
           tabIndex={isReorderMode ? 0 : -1}
           disabled={!isReorderMode}
           onPointerDown={handleDragHandlePointerDown}

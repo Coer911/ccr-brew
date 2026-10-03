@@ -129,7 +129,7 @@ const GrindSizeInput = forwardRef<GrindSizeInputRef, GrindSizeInputProps>(
     {
       value,
       onChange,
-      placeholder = '例如：中细',
+      placeholder = 'Например: средне-мелкий',
       className = '',
       inputClassName = '',
       onSyncStateChange,

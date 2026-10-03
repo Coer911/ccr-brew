@@ -9,17 +9,17 @@ export const getFlavorInfo = (
 ): { phase: string; remainingDays: number } => {
   // 处理在途状态
   if (bean.isInTransit) {
-    return { phase: '在途', remainingDays: 0 };
+    return { phase: 'В пути', remainingDays: 0 };
   }
 
   // 处理冷冻状态
   if (bean.isFrozen) {
-    return { phase: '冷冻', remainingDays: 0 };
+    return { phase: 'Заморожено', remainingDays: 0 };
   }
 
   // 没有烘焙日期的归为"其他"类别
   if (!bean.roastDate) {
-    return { phase: '其他', remainingDays: 0 };
+    return { phase: 'Другое', remainingDays: 0 };
   }
 
   // 使用统一的赏味期计算工具
@@ -37,15 +37,15 @@ export const getFlavorInfo = (
  */
 export const getPhaseValue = (phase: string): number => {
   switch (phase) {
-    case '衰退期':
+    case 'Угасание':
       return 0;
-    case '赏味期':
+    case 'Лучший период':
       return 1;
-    case '冷冻':
+    case 'Заморожено':
       return 2;
-    case '养豆期':
+    case 'Отдых':
       return 3;
-    case '在途':
+    case 'В пути':
       return 4;
     default:
       return 5; // 其他未知状态
@@ -89,26 +89,26 @@ export const compareBeansByFlavorPeriod = (
     return phaseValueA - phaseValueB;
   }
 
-  if (phaseA === '衰退期') {
+  if (phaseA === 'Угасание') {
     const daysFromRoastA = getDaysFromRoast(a);
     const daysFromRoastB = getDaysFromRoast(b);
     const result = daysFromRoastB - daysFromRoastA;
     return desc ? -result : result;
   }
 
-  if (phaseA === '赏味期') {
+  if (phaseA === 'Лучший период') {
     const result = daysA - daysB;
     return desc ? -result : result;
   }
 
-  if (phaseA === '冷冻') {
+  if (phaseA === 'Заморожено') {
     const daysFromRoastA = getDaysFromRoast(a);
     const daysFromRoastB = getDaysFromRoast(b);
     const result = daysFromRoastB - daysFromRoastA;
     return desc ? -result : result;
   }
 
-  if (phaseA === '养豆期') {
+  if (phaseA === 'Отдых') {
     const result = daysA - daysB;
     return desc ? -result : result;
   }

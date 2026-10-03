@@ -133,11 +133,11 @@ const NoteImageGallery = React.memo(function NoteImageGallery({
           style={singleImageFrame?.style}
           data-image-index={position}
           onClick={onImageClick}
-          aria-label={image ? `查看笔记图片 ${position + 1}` : '笔记图片加载中'}
+          aria-label={image ? `Открыть фото заметки ${position + 1}` : 'Фото заметки загружается'}
         >
           {noteImageError ? (
             <div className="flex h-full w-full items-center justify-center text-xs text-neutral-500 dark:text-neutral-400">
-              加载失败
+              Ошибка загрузки
             </div>
           ) : !image ? (
             <div className="h-full w-full bg-neutral-100 dark:bg-neutral-800/40" />
@@ -145,7 +145,7 @@ const NoteImageGallery = React.memo(function NoteImageGallery({
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
               src={image}
-              alt={`笔记图片 ${position + 1}`}
+              alt={`Фото заметки ${position + 1}`}
               width={isSingleNoteImage ? singleImageFrame?.width : 96}
               height={isSingleNoteImage ? singleImageFrame?.height : 96}
               className={
@@ -249,7 +249,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
       Boolean(
         note.equipment &&
           (note.equipment.toLowerCase().includes('espresso') ||
-            note.equipment.includes('意式'))
+            note.equipment.includes('Эспрессо'))
       ),
     [note.equipment]
   );
@@ -277,7 +277,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
   });
   const beanPlaceholderInitial = beanInfo
     ? getBeanDisplayInitial(beanInfo)
-    : getTextInitial(beanName) || getTextInitial(note.notes) || '豆';
+    : getTextInitial(beanName) || getTextInitial(note.notes) || 'Зерно';
 
   const roasterLogoName = useMemo(() => {
     if (!beanInfo || beanImage) {
@@ -285,7 +285,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
     }
 
     const roasterName = getRoasterName(beanInfo, roasterSettings);
-    return roasterName && roasterName !== '未知烘焙商' ? roasterName : null;
+    return roasterName && roasterName !== 'Неизвестный обжарщик' ? roasterName : null;
   }, [beanImage, beanInfo, roasterSettings]);
   const roasterLogo = useRoasterLogo(roasterLogoName);
   const imageSource = beanImage || roasterLogo;
@@ -327,10 +327,10 @@ const NoteItem: React.FC<NoteItemProps> = ({
             (isBeanImage ? beanInfo?.image : undefined) ||
             imageSource,
           alt: isBeanImage
-            ? beanName || '咖啡豆图片'
+            ? beanName || 'Фото зерна'
             : beanInfo
-              ? `${getRoasterName(beanInfo, roasterSettings)} 烘焙商图标`
-              : '烘焙商图标',
+              ? `${getRoasterName(beanInfo, roasterSettings)} логотип обжарщика`
+              : 'Логотип обжарщика',
           backUrl: backImage || beanInfo?.backImage,
           sourceElement,
         });
@@ -372,10 +372,10 @@ const NoteItem: React.FC<NoteItemProps> = ({
 
       openImageViewer({
         url: imageUrl,
-        alt: `笔记图片 ${index + 1}`,
+        alt: `Фото заметки ${index + 1}`,
         items: noteImages.map((url, itemIndex) => ({
           url,
-          alt: `笔记图片 ${itemIndex + 1}`,
+          alt: `Фото заметки ${itemIndex + 1}`,
         })),
         index,
         sourceElement,
@@ -453,7 +453,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
             {beanImage && !imageError ? (
               <Image
                 src={beanImage}
-                alt={beanName || '咖啡豆图片'}
+                alt={beanName || 'Фото зерна'}
                 height={48}
                 width={48}
                 unoptimized
@@ -471,8 +471,8 @@ const NoteItem: React.FC<NoteItemProps> = ({
                 src={roasterLogo}
                 alt={
                   beanInfo
-                    ? getRoasterName(beanInfo, roasterSettings) + ' 烘焙商图标'
-                    : '烘焙商图标'
+                    ? getRoasterName(beanInfo, roasterSettings) + ' логотип обжарщика'
+                    : 'Логотип обжарщика'
                 }
                 height={48}
                 width={48}
@@ -544,7 +544,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
                 <>
                   {' · '}
                   {note.rating}
-                  /5分
+                  /5
                 </>
               )}
             </div>
@@ -560,7 +560,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
                   onClick={handleRatingDimensionsClick}
                 >
                   <span className="">
-                    评分维度 {validTasteRatings.length} 项
+                    Критерии оценки {validTasteRatings.length} шт.
                   </span>
                   <ChevronRight className="h-3.5 w-3.5 text-neutral-400 dark:text-neutral-600" />
                 </div>

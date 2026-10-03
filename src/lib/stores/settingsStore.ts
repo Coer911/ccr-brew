@@ -161,7 +161,7 @@ export const defaultSettings: AppSettings = {
   showCapacityAdjustmentRecords: true,
   useClassicNotesListStyle: false,
   artisticShareRatingStyle: 'dots',
-  artisticShareTags: '#咖啡 #手冲咖啡 #咖啡笔记 #BrewGuide',
+  artisticShareTags: '#кофе #пуровер #кофейныезаметки #CulturaBrew',
 
   // 生豆库设置
   enableGreenBeanInventory: false,
@@ -429,7 +429,7 @@ export const useSettingsStore = create<SettingsStore>()(
       } catch (error) {
         console.error('[SettingsStore] loadSettings failed:', error);
         set({
-          error: '加载设置失败',
+          error: 'Не удалось загрузить настройки',
           isLoading: false,
           initialized: false,
         });

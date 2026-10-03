@@ -38,9 +38,9 @@ export const createExpandedStages = (
     stage =>
       stage.pourType === 'extraction' ||
       stage.pourType === 'beverage' ||
-      stage.label?.toLowerCase().includes('意式') ||
+      stage.label?.toLowerCase().includes('эспрессо') ||
       stage.label?.toLowerCase().includes('espresso') ||
-      stage.detail?.toLowerCase().includes('意式') ||
+      stage.detail?.toLowerCase().includes('эспрессо') ||
       stage.detail?.toLowerCase().includes('espresso')
   );
 
@@ -79,7 +79,7 @@ const createEspressoExpandedStages = (stages: Stage[]): ExpandedStage[] => {
 
     expandedStages.push({
       type: 'pour', // 萃取步骤标记为pour类型
-      label: _stage.label || `萃取浓缩`,
+      label: _stage.label || `Экстракция`,
       startTime: 0, // 萃取始终从0开始
       endTime: stageDuration, // 使用设定时间，默认25秒
       time: stageDuration, // 阶段持续时间
@@ -98,7 +98,7 @@ const createEspressoExpandedStages = (stages: Stage[]): ExpandedStage[] => {
       stages.find(
         stage =>
           stage.pourType === 'extraction' ||
-          stage.label?.toLowerCase().includes('萃取浓缩')
+          stage.label?.toLowerCase().includes('экстракция')
       ) || stages[0];
 
     if (extractionStage) {
@@ -107,7 +107,7 @@ const createEspressoExpandedStages = (stages: Stage[]): ExpandedStage[] => {
 
       expandedStages.push({
         type: 'pour',
-        label: extractionStage.label || '萃取浓缩',
+        label: extractionStage.label || 'Экстракция',
         startTime: 0,
         endTime: stageDuration,
         time: stageDuration,
@@ -152,7 +152,7 @@ const createExpandedStagesFromNewFormat = (
     if (stage.pourType === 'wait') {
       expandedStages.push({
         type: 'wait',
-        label: stage.label || '等待',
+        label: stage.label || 'Ожидание',
         startTime,
         endTime,
         time: stageDuration,
@@ -168,7 +168,7 @@ const createExpandedStagesFromNewFormat = (
 
       expandedStages.push({
         type: 'pour',
-        label: stage.label || `阶段 ${index + 1}`,
+        label: stage.label || `Этап ${index + 1}`,
         startTime,
         endTime,
         time: stageDuration,
@@ -217,7 +217,7 @@ const createExpandedStagesFromLegacyFormat = (
       // 添加注水阶段
       expandedStages.push({
         type: 'pour',
-        label: stage.label || `阶段 ${index + 1}`,
+        label: stage.label || `Этап ${index + 1}`,
         startTime: prevStageTime,
         endTime: prevStageTime + stagePourTime,
         time: stagePourTime,
@@ -236,7 +236,7 @@ const createExpandedStagesFromLegacyFormat = (
       if (waitTime > 0) {
         expandedStages.push({
           type: 'wait',
-          label: stage.label || `阶段 ${index + 1}`,
+          label: stage.label || `Этап ${index + 1}`,
           startTime: prevStageTime + stagePourTime,
           endTime: stageTime,
           time: waitTime,
@@ -251,7 +251,7 @@ const createExpandedStagesFromLegacyFormat = (
       // 如果没有注水阶段，则整个阶段都是等待
       expandedStages.push({
         type: 'wait',
-        label: stage.label || `阶段 ${index + 1}`,
+        label: stage.label || `Этап ${index + 1}`,
         startTime: prevStageTime,
         endTime: stageTime,
         time: stageTime - prevStageTime,

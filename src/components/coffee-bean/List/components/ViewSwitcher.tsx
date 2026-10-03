@@ -117,9 +117,9 @@ const EMPTY_BEAN_GROUPS: CoffeeBeanGroup[] = [];
 type SelectableBeanType = Exclude<BeanType, 'all'>;
 
 const BEAN_TYPE_LABELS: Record<SelectableBeanType, string> = {
-  espresso: '意式',
-  filter: '手冲',
-  omni: '全能',
+  espresso: 'Эспрессо',
+  filter: 'Фильтр',
+  omni: 'Универсальная',
 };
 
 const BEAN_TYPE_ORDER: SelectableBeanType[] = ['espresso', 'filter', 'omni'];
@@ -341,7 +341,7 @@ const SortSection: React.FC<SortSectionProps> = ({
   return (
     <div>
       <div className="mb-2 text-xs font-medium text-neutral-700 dark:text-neutral-300">
-        排序
+        Сортировка
       </div>
       <div className="space-y-3">
         {/* 排序方式 */}
@@ -405,7 +405,7 @@ const BeanTypeFilter: React.FC<BeanTypeFilterProps> = ({
 }) => (
   <div>
     <div className="mb-2 text-xs font-medium text-neutral-700 dark:text-neutral-300">
-      类型
+      Тип
     </div>
     <div className="flex flex-wrap items-center gap-2">
       {showAll && (
@@ -413,7 +413,7 @@ const BeanTypeFilter: React.FC<BeanTypeFilterProps> = ({
           isActive={selectedBeanType === 'all' || !selectedBeanType}
           onClick={() => onBeanTypeChange?.('all')}
         >
-          全部
+          Всё
         </FilterButton>
       )}
       <FilterButton
@@ -421,21 +421,21 @@ const BeanTypeFilter: React.FC<BeanTypeFilterProps> = ({
         onClick={() => totalEspressoCount > 0 && onBeanTypeChange?.('espresso')}
         disabled={totalEspressoCount === 0}
       >
-        {showAll ? '意式' : '意式豆'}
+        {showAll ? 'Эспрессо' : 'Для эспрессо'}
       </FilterButton>
       <FilterButton
         isActive={selectedBeanType === 'filter'}
         onClick={() => totalFilterCount > 0 && onBeanTypeChange?.('filter')}
         disabled={totalFilterCount === 0}
       >
-        {showAll ? '手冲' : '手冲豆'}
+        {showAll ? 'Фильтр' : 'Для фильтра'}
       </FilterButton>
       <FilterButton
         isActive={selectedBeanType === 'omni'}
         onClick={() => totalOmniCount > 0 && onBeanTypeChange?.('omni')}
         disabled={totalOmniCount === 0}
       >
-        {showAll ? '全能' : '全能豆'}
+        {showAll ? 'Универсальная' : 'Омни'}
       </FilterButton>
     </div>
   </div>
@@ -462,14 +462,14 @@ const FilterModeSection: React.FC<FilterModeSectionProps> = ({
   return (
     <div>
       <div className="mb-2 text-xs font-medium text-neutral-700 dark:text-neutral-300">
-        分类
+        Категория
       </div>
       <div className="flex flex-wrap items-center gap-2">
         <FilterButton
           isActive={filterMode === 'roaster'}
           onClick={() => onFilterModeChange('roaster')}
         >
-          {isGreenBean ? '按生豆商' : '按烘焙商'}
+          {isGreenBean ? 'По поставщику' : 'По обжарщику'}
         </FilterButton>
         {/* 赏味期筛选仅对熟豆显示 */}
         {!isGreenBean && (
@@ -477,7 +477,7 @@ const FilterModeSection: React.FC<FilterModeSectionProps> = ({
             isActive={filterMode === 'flavorPeriod'}
             onClick={() => onFilterModeChange('flavorPeriod')}
           >
-            按赏味期
+            По лучшему периоду
           </FilterButton>
         )}
         {!isGreenBean && hasBeanGroups && (
@@ -485,7 +485,7 @@ const FilterModeSection: React.FC<FilterModeSectionProps> = ({
             isActive={filterMode === 'group'}
             onClick={() => onFilterModeChange('group')}
           >
-            按分组
+            По группам
           </FilterButton>
         )}
         {enabledBeanFieldFilterModes.map(mode => (
@@ -508,26 +508,26 @@ const RankingFilterModeSection: React.FC<{
 }> = ({ filterMode, onFilterModeChange }) => (
   <div>
     <div className="mb-2 text-xs font-medium text-neutral-700 dark:text-neutral-300">
-      分类
+      Категория
     </div>
     <div className="flex flex-wrap items-center gap-2">
       <FilterButton
         isActive={filterMode === 'type'}
         onClick={() => onFilterModeChange('type')}
       >
-        按类型
+        По типу
       </FilterButton>
       <FilterButton
         isActive={filterMode === 'date'}
         onClick={() => onFilterModeChange('date')}
       >
-        按时间
+        По дате
       </FilterButton>
       <FilterButton
         isActive={filterMode === 'roaster'}
         onClick={() => onFilterModeChange('roaster')}
       >
-        按烘焙商
+        По обжарщику
       </FilterButton>
     </div>
   </div>
@@ -539,7 +539,7 @@ const RankingDateGroupingSection: React.FC<{
 }> = ({ dateGroupingMode, onDateGroupingModeChange }) => (
   <div>
     <div className="mb-2 text-xs font-medium text-neutral-700 dark:text-neutral-300">
-      时间分组
+      Группировка по времени
     </div>
     <div className="flex flex-wrap items-center gap-2">
       {(['year', 'month', 'day'] as const).map(mode => (
@@ -548,7 +548,7 @@ const RankingDateGroupingSection: React.FC<{
           isActive={dateGroupingMode === mode}
           onClick={() => onDateGroupingModeChange(mode)}
         >
-          {mode === 'year' ? '按年' : mode === 'month' ? '按月' : '按日'}
+          {mode === 'year' ? 'По годам' : mode === 'month' ? 'По месяцам' : 'По дням'}
         </FilterButton>
       ))}
     </div>
@@ -811,7 +811,7 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
 
     return rankingAvailableBeanTypes.map(type => ({
       value: type,
-      label: `${BEAN_TYPE_LABELS[type]}豆`,
+      label: `${BEAN_TYPE_LABELS[type]} зерно`,
     }));
   }, [
     rankingAvailableDates,
@@ -843,7 +843,7 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
       : '';
   const beanStateLabel =
     selectedBeanTypeLabel && selectedBeanState === 'roasted'
-      ? `${selectedBeanTypeLabel}豆`
+      ? `${selectedBeanTypeLabel} зерно`
       : `${selectedBeanTypeLabel}${BEAN_STATE_LABELS[selectedBeanState]}`;
   const handleBeanTypeDoubleClick = useCallback(() => {
     const nextType = getNextBeanType(availableBeanTypes, selectedBeanType);
@@ -928,9 +928,9 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
 
     const details = buildBeanSummaryDetailItems(
       [
-        espressoCount > 0 ? { label: '意式', weight: espressoRemaining } : null,
-        filterCount > 0 ? { label: '手冲', weight: filterRemaining } : null,
-        omniCount > 0 ? { label: '全能', weight: omniRemaining } : null,
+        espressoCount > 0 ? { label: 'Эспрессо', weight: espressoRemaining } : null,
+        filterCount > 0 ? { label: 'Фильтр', weight: filterRemaining } : null,
+        omniCount > 0 ? { label: 'Универсальная', weight: omniRemaining } : null,
       ].filter(Boolean) as Array<{ label: string; weight: number }>,
       beanSummaryDisplayLimit,
       beanSummaryLimitMode
@@ -1264,7 +1264,7 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
             {viewMode === VIEW_OPTIONS.INVENTORY ? (
               showEmptyBeans ? (
                 <span>
-                  {beansCount} 款
+                  {beansCount} шт.
                   {enableGreenBeanInventory ? (
                     <span
                       className="cursor-pointer text-xs leading-none font-medium tracking-wide text-neutral-800 underline decoration-neutral-300 underline-offset-2 dark:text-neutral-100 dark:decoration-neutral-600"
@@ -1274,7 +1274,7 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                           selectedBeanState === 'green' ? 'roasted' : 'green';
                         onBeanStateChange?.(newState);
                       }}
-                      title="点击切换生豆/熟豆"
+                      title="Нажмите, чтобы переключить зелёное/обжаренное"
                     >
                       {beanStateLabel}
                     </span>
@@ -1283,16 +1283,16 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                       {beanStateLabel}
                     </span>
                   )}
-                  ，总共 {originalTotalWeight || '0g'}
-                  {totalWeight ? `，剩余 ${totalWeight}` : ''}
+                  , всего {originalTotalWeight || '0g'}
+                  {totalWeight ? `, осталось ${totalWeight}` : ''}
                   {showEstimatedCups &&
                     selectedBeanState === 'roasted' &&
                     estimatedCupsLabel &&
-                    `，约 ${estimatedCupsLabel}`}
+                    `, около ${estimatedCupsLabel}`}
                 </span>
               ) : (
                 <span>
-                  {beansCount} 款
+                  {beansCount} шт.
                   {enableGreenBeanInventory ? (
                     <span
                       className="cursor-pointer text-xs leading-none font-medium tracking-wide text-neutral-800 underline decoration-neutral-300 underline-offset-2 dark:text-neutral-100 dark:decoration-neutral-600"
@@ -1302,7 +1302,7 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                           selectedBeanState === 'green' ? 'roasted' : 'green';
                         onBeanStateChange?.(newState);
                       }}
-                      title="点击切换生豆/熟豆"
+                      title="Нажмите, чтобы переключить зелёное/обжаренное"
                     >
                       {beanStateLabel}
                     </span>
@@ -1311,20 +1311,20 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                       {beanStateLabel}
                     </span>
                   )}
-                  {totalWeight ? `，剩余 ${totalWeight}` : ''}
+                  {totalWeight ? `, осталось ${totalWeight}` : ''}
                   {showEstimatedCups &&
                     selectedBeanState === 'roasted' &&
                     estimatedCupsLabel &&
-                    `，约 ${estimatedCupsLabel}`}
+                    `, около ${estimatedCupsLabel}`}
                   {showBeanSummary && beanSummaryDetailsText}
                 </span>
               )
             ) : rankingBeansCount === 0 ? (
               '' // 当没有评分咖啡豆时不显示任何统计信息
             ) : rankingBeanType === 'all' ? (
-              `${rankingBeansCount} 款已评分咖啡豆`
+              `${rankingBeansCount} шт. зерна с оценкой`
             ) : (
-              `${rankingBeansCount} 款已评分${BEAN_TYPE_LABELS[rankingBeanType]}豆`
+              `${rankingBeansCount} шт. с оценкой${BEAN_TYPE_LABELS[rankingBeanType]} зерно`
             )}
           </div>
         </div>
@@ -1353,7 +1353,7 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                         dataTab="all"
                         layoutId={`ranking-${rankingFilterMode}-underline`}
                       >
-                        全部
+                        Всё
                       </TabButton>
 
                       {/* 筛选图标按钮 */}
@@ -1423,7 +1423,7 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                         onClick={handleSearchClick}
                         className="flex items-center pb-1.5 text-xs font-medium whitespace-nowrap text-neutral-600 dark:text-neutral-400"
                       >
-                        <span className="relative">搜索</span>
+                        <span className="relative">Поиск</span>
                       </button>
 
                       {/* 右侧固定按钮的左侧渐变遮罩 */}
@@ -1440,7 +1440,7 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                         value={searchQuery}
                         onChange={handleSearchChange}
                         onKeyDown={handleSearchKeyDown}
-                        placeholder="输入咖啡豆名称..."
+                        placeholder="Введите название зерна..."
                         className="w-full border-none bg-transparent pr-2 text-xs font-medium text-neutral-800 placeholder-neutral-400 outline-hidden dark:text-neutral-100 dark:placeholder-neutral-500"
                         autoComplete="off"
                         autoFocus
@@ -1469,7 +1469,7 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                         style={{ maxHeight: '3.5rem' }}
                       >
                         <div className="shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                          历史搜索:
+                          Недавние запросы:
                         </div>
                         {searchHistory.map((item, index) => (
                           <button
@@ -1576,7 +1576,7 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                       dataTab="all"
                       layoutId={`inventory-${filterMode}-underline`}
                     >
-                      全部
+                      Всё
                     </TabButton>
 
                     {/* 筛选图标按钮 */}
@@ -1699,7 +1699,7 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                       onClick={handleSearchClick}
                       className="flex items-center pb-1.5 text-xs font-medium whitespace-nowrap text-neutral-600 dark:text-neutral-400"
                     >
-                      <span className="relative">搜索</span>
+                      <span className="relative">Поиск</span>
                     </button>
 
                     {/* 右侧固定按钮的左侧渐变遮罩 */}
@@ -1715,7 +1715,7 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                       value={searchQuery}
                       onChange={handleSearchChange}
                       onKeyDown={handleSearchKeyDown}
-                      placeholder="输入咖啡豆名称..."
+                      placeholder="Введите название зерна..."
                       className="w-full border-none bg-transparent pr-2 text-xs font-medium text-neutral-800 placeholder-neutral-400 outline-hidden dark:text-neutral-100 dark:placeholder-neutral-500"
                       autoComplete="off"
                       autoFocus
@@ -1744,7 +1744,7 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                       style={{ maxHeight: '3.5rem' }}
                     >
                       <div className="shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                        历史搜索:
+                        Недавние запросы:
                       </div>
                       {searchHistory.map((item, index) => (
                         <button
@@ -1824,7 +1824,7 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                         {/* 显示选项 */}
                         <div>
                           <div className="mb-2 text-xs font-medium text-neutral-700 dark:text-neutral-300">
-                            显示
+                            Вид
                           </div>
                           <div className="space-y-2">
                             {onDisplayModeChange && (
@@ -1836,13 +1836,13 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                                   }
                                   onClick={() => onDisplayModeChange('list')}
                                 >
-                                  列表
+                                  Список
                                 </FilterButton>
                                 <FilterButton
                                   isActive={externalDisplayMode === 'table'}
                                   onClick={() => onDisplayModeChange('table')}
                                 >
-                                  表格
+                                  Таблица
                                 </FilterButton>
                                 <FilterButton
                                   isActive={
@@ -1855,7 +1855,7 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                                   }}
                                   disabled={!hasImageBeans}
                                 >
-                                  图片流
+                                  Галерея
                                 </FilterButton>
                               </div>
                             )}
@@ -1864,13 +1864,13 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                                 isActive={showEmptyBeans || false}
                                 onClick={() => onToggleShowEmptyBeans?.()}
                               >
-                                展示已用完
+                                Показывать закончившееся
                               </FilterButton>
                               <FilterButton
                                 isActive={false}
                                 onClick={() => onExportPreview?.()}
                               >
-                                导出预览图
+                                Сохранить картинкой
                               </FilterButton>
                             </div>
                           </div>
@@ -1881,7 +1881,7 @@ const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                           onTableColumnsChange && (
                             <div>
                               <div className="mb-2 text-xs font-medium text-neutral-700 dark:text-neutral-300">
-                                表格列
+                                Колонки таблицы
                               </div>
                               <div className="flex flex-wrap items-center gap-2">
                                 {TABLE_COLUMN_CONFIG.map(col => {

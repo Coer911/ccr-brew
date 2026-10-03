@@ -125,14 +125,14 @@ export class S3Client {
       this.lastError =
         typeof uploadResult === 'object'
           ? uploadResult.error
-          : '上传连接测试文件失败';
+          : 'Не удалось загрузить тестовый файл';
       return false;
     }
 
     try {
       const downloaded = await this.downloadFile(testKey);
       if (downloaded !== testContent) {
-        this.lastError = '连接测试文件读取失败，返回内容与上传内容不一致';
+        this.lastError = 'Тестовый файл прочитан с ошибкой: содержимое не совпадает с загруженным';
         return false;
       }
       return true;
@@ -157,7 +157,7 @@ export class S3Client {
           ok: false,
           method: 'head-object',
           status: response.status,
-          error: '无法访问存储桶',
+          error: 'Нет доступа к бакету',
         });
         return false;
       }
@@ -172,7 +172,7 @@ export class S3Client {
           service: 'qiniu',
           ok: false,
           method: 'write-test',
-          error: '无写入权限，请检查 AccessKey 配置',
+          error: 'Нет прав на запись, проверьте AccessKey',
         });
         return false;
       }
@@ -253,7 +253,7 @@ export class S3Client {
       });
 
       if (!response.ok) {
-        return { success: false, error: errorDetail || '上传失败' };
+        return { success: false, error: errorDetail || 'Ошибка загрузки' };
       }
 
       return response.ok;
@@ -265,7 +265,7 @@ export class S3Client {
         ok: false,
         error: errorMsg,
       });
-      return { success: false, error: `异常: ${errorMsg}` };
+      return { success: false, error: `Ошибка: ${errorMsg}` };
     }
   }
 
@@ -389,7 +389,7 @@ export class S3Client {
         const responseText = errorSnippet || '';
         throw new Error(
           this.formatHttpError(response, responseText) ||
-            `列出对象失败: ${response.status} ${response.statusText}`
+            `Не удалось получить список объектов: ${response.status} ${response.statusText}`
         );
       }
 
@@ -813,11 +813,11 @@ export class S3Client {
       : '';
 
     if (response.status === 401) {
-      return `HTTP 401${statusText}：S3 服务拒绝认证，请检查 AccessKey、Secret、权限是否为当前 Bucket 生成，并确认没有多余空格${snippet}`;
+      return `HTTP 401${statusText}: S3 отклонил авторизацию — проверьте, что AccessKey, Secret и права выданы для этого бакета и нет лишних пробелов${snippet}`;
     }
 
     if (response.status === 403) {
-      return `HTTP 403${statusText}：S3 服务拒绝访问，请检查 AccessKey 权限、Bucket 名称和对象前缀${snippet}`;
+      return `HTTP 403${statusText}: S3 отказал в доступе — проверьте права AccessKey, название бакета и префикс${snippet}`;
     }
 
     return `HTTP ${response.status}${statusText}${snippet}`;
@@ -1115,7 +1115,7 @@ export class S3Client {
     const cryptoObj =
       typeof globalThis !== 'undefined' ? globalThis.crypto : undefined;
     if (!cryptoObj || !cryptoObj.subtle) {
-      throw new Error('当前环境不支持 Web Crypto API，无法生成 AWS 签名');
+      throw new Error('Здесь нет Web Crypto API, подпись AWS создать нельзя');
     }
     return cryptoObj.subtle;
   }

@@ -264,14 +264,14 @@ export const EquipmentSourceStep: React.FC<{
       <p className="text-neutral-500 dark:text-neutral-400">
         {sources.length > 0 ? (
           <>
-            选择要导入方案的
+            Выберите
             <span className="text-neutral-800 dark:text-neutral-200">
-              来源器具
+              устройство-источник
             </span>
             。
           </>
         ) : (
-          '其他器具暂时没有可以导入的方案。'
+          'У других устройств пока нет рецептов для импорта.'
         )}
       </p>
     </ActionDrawer.Content>
@@ -284,7 +284,7 @@ export const EquipmentSourceStep: React.FC<{
               key={source.id}
               value={source.id}
               label={source.name}
-              hint={`${source.methodCount} 个方案`}
+              hint={`${source.methodCount} рецептов`}
               onClick={onSelect}
             />
           ))}
@@ -292,7 +292,7 @@ export const EquipmentSourceStep: React.FC<{
       )}
 
       <ActionDrawer.SecondaryButton onClick={onBack}>
-        返回
+        Назад
       </ActionDrawer.SecondaryButton>
     </div>
   </>
@@ -323,7 +323,7 @@ export const SourceMethodStep: React.FC<{
         key={getMethodKey(method)}
         value={method}
         label={method.name}
-        hint={isExisting ? '已存在' : undefined}
+        hint={isExisting ? 'Уже есть' : undefined}
         disabled={isExisting}
         onClick={onSelect}
       />
@@ -334,11 +334,11 @@ export const SourceMethodStep: React.FC<{
     <>
       <ActionDrawer.Content>
         <p className="text-neutral-500 dark:text-neutral-400">
-          选择要从
+          Выберите рецепты из
           <span className="text-neutral-800 dark:text-neutral-200">
             {source.name}
           </span>
-          导入的方案。
+          для импорта.
         </p>
       </ActionDrawer.Content>
 
@@ -346,20 +346,20 @@ export const SourceMethodStep: React.FC<{
         <PickerList refreshKey={`${source.id}-${source.methodCount}`}>
           {source.customMethods.length > 0 && (
             <>
-              {showGroupTitles && <PickerGroupTitle label="自定义方案" />}
+              {showGroupTitles && <PickerGroupTitle label="Свой рецепт" />}
               {source.customMethods.map(renderMethodRow)}
             </>
           )}
           {source.presetMethods.length > 0 && (
             <>
-              {showGroupTitles && <PickerGroupTitle label="预设方案" />}
+              {showGroupTitles && <PickerGroupTitle label="Готовый рецепт" />}
               {source.presetMethods.map(renderMethodRow)}
             </>
           )}
         </PickerList>
 
         <ActionDrawer.SecondaryButton onClick={onBack}>
-          返回
+          Назад
         </ActionDrawer.SecondaryButton>
       </div>
     </>

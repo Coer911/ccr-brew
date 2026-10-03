@@ -118,14 +118,14 @@ const getDateKey = (
   }
   return {
     key: `${y}-${m.toString().padStart(2, '0')}`,
-    label: `${m}月`,
+    label: `${m} мес.`,
   };
 };
 
 const BEAN_TYPE_LABELS: Record<BeanType, string> = {
-  espresso: '意式豆',
-  filter: '手冲豆',
-  omni: '全能豆',
+  espresso: 'Для эспрессо',
+  filter: 'Для фильтра',
+  omni: 'Омни',
 };
 
 /** 计算生豆库存数据 */
@@ -348,7 +348,7 @@ export const useGreenBeanStatsData = (
           roastingDetails.push({
             id: note.id,
             timestamp: ts,
-            greenBeanName: roastingRecord.greenBeanName || '未知生豆',
+            greenBeanName: roastingRecord.greenBeanName || 'Неизвестное зелёное',
             roastedAmount,
             roastedBeanName: roastingRecord.roastedBeanName,
           });
@@ -380,7 +380,7 @@ export const useGreenBeanStatsData = (
         todayRoastingDetails.push({
           id: note.id,
           timestamp: ts,
-          greenBeanName: roastingRecord.greenBeanName || '未知生豆',
+          greenBeanName: roastingRecord.greenBeanName || 'Неизвестное зелёное',
           roastedAmount,
           roastedBeanName: roastingRecord.roastedBeanName,
         });

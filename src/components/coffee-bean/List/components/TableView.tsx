@@ -131,7 +131,7 @@ const formatDateShort = (dateStr: string): string => {
 };
 
 const getAgingDaysText = (dateStr: string): string =>
-  `${getAgingDays(dateStr)}天`;
+  `${getAgingDays(dateStr)} дн.`;
 
 const formatNumber = (value: string | undefined): string =>
   !value
@@ -144,7 +144,7 @@ const formatPrice = (price: string, capacity: string): string => {
   const priceNum = parseFloat(price);
   const capacityNum = parseFloat(capacity.replace('g', ''));
   if (isNaN(priceNum) || isNaN(capacityNum) || capacityNum === 0) return '-';
-  return `${(priceNum / capacityNum).toFixed(2)}元/克`;
+  return `${(priceNum / capacityNum).toFixed(2)} ₽/г`;
 };
 
 const getPricePerGram = (price: string, capacity: string): number => {
@@ -234,14 +234,14 @@ const createDirectionAwareBeanSortingFn =
   };
 
 const getFlavorStatus = (bean: ExtendedCoffeeBean): string => {
-  if (bean.isInTransit) return '在途';
+  if (bean.isInTransit) return 'В пути';
   if (!bean.roastDate) return '-';
-  if (bean.isFrozen) return '冷冻';
+  if (bean.isFrozen) return 'Заморожено';
 
   const info = calculateFlavorInfo(bean);
-  if (info.phase === '养豆期') return `养豆${info.remainingDays}天`;
-  if (info.phase === '赏味期') return `赏味${info.remainingDays}天`;
-  if (info.phase === '衰退期') return '已衰退';
+  if (info.phase === 'Отдых') return `Отдых${info.remainingDays} дн.`;
+  if (info.phase === 'Лучший период') return `Лучший период${info.remainingDays} дн.`;
+  if (info.phase === 'Угасание') return 'Выдохлось';
   return getAgingDaysText(bean.roastDate);
 };
 
@@ -393,7 +393,7 @@ const TableView: React.FC<TableViewProps> = ({
     bean: ExtendedCoffeeBean
   ): HoverPreviewBean | null => {
     const roasterName = getRoasterName(bean, roasterSettings);
-    if (!roasterName || roasterName === '未知烘焙商') return null;
+    if (!roasterName || roasterName === 'Неизвестный обжарщик') return null;
 
     const imageSrc = getRoasterLogoFromConfigs(roasterConfigs, roasterName);
     if (!imageSrc) return null;
@@ -532,7 +532,7 @@ const TableView: React.FC<TableViewProps> = ({
         row => getRoasterName(row, roasterSettings) || '-',
         {
           id: 'roaster',
-          header: '烘焙商',
+          header: 'Обжарщик',
           cell: info => info.getValue(),
           sortingFn: alphanumericSortingFn,
           ...getColumnSizing('roaster'),
@@ -540,7 +540,7 @@ const TableView: React.FC<TableViewProps> = ({
       ),
       name: columnHelper.accessor(row => getNameDisplayValue(row), {
         id: 'name',
-        header: '名称',
+        header: 'Название',
         cell: ({ row }) => getNameDisplayValue(row.original),
         sortingFn: nameSortingFn,
         ...getColumnSizing('name'),
@@ -559,8 +559,8 @@ const TableView: React.FC<TableViewProps> = ({
             if (!displayDate) return '-';
 
             const content = (() => {
-              if (bean.isInTransit) return '在途';
-              if (bean.isFrozen) return '冷冻';
+              if (bean.isInTransit) return 'В пути';
+              if (bean.isFrozen) return 'Заморожено';
               if (!isGreenBean && dateDisplayMode === 'flavorPeriod') {
                 return getFlavorStatus(bean);
               }
@@ -585,7 +585,7 @@ const TableView: React.FC<TableViewProps> = ({
       ),
       capacity: columnHelper.accessor(row => parseFloat(row.remaining || '0'), {
         id: 'capacity',
-        header: '容量',
+        header: 'Вес',
         cell: ({ row }) => {
           const bean = row.original;
           if (!bean.capacity || !bean.remaining) return '-';
@@ -612,7 +612,7 @@ const TableView: React.FC<TableViewProps> = ({
         row => getPricePerGram(row.price || '0', row.capacity || '0'),
         {
           id: 'price',
-          header: '价格',
+          header: 'Цена',
           cell: ({ row }) => {
             const bean = row.original;
             return bean.price && bean.capacity
@@ -625,15 +625,15 @@ const TableView: React.FC<TableViewProps> = ({
       ),
       beanType: columnHelper.accessor(row => row.beanType || '', {
         id: 'beanType',
-        header: '类型',
+        header: 'Тип',
         cell: ({ row }) => {
           const type = row.original.beanType;
           return type === 'espresso'
-            ? '意式'
+            ? 'Эспрессо'
             : type === 'filter'
-              ? '手冲'
+              ? 'Фильтр'
               : type === 'omni'
-                ? '全能'
+                ? 'Универсальная'
                 : '-';
         },
         sortingFn: alphanumericSortingFn,
@@ -643,7 +643,7 @@ const TableView: React.FC<TableViewProps> = ({
         row => getComponentOriginDisplay(row.blendComponents?.[0]) || '',
         {
           id: 'origin',
-          header: '产地',
+          header: 'Происхождение',
           cell: info => info.getValue() || '-',
           sortingFn: alphanumericSortingFn,
           ...getColumnSizing('origin'),
@@ -653,7 +653,7 @@ const TableView: React.FC<TableViewProps> = ({
         row => row.blendComponents?.[0]?.estate || '',
         {
           id: 'estate',
-          header: '庄园',
+          header: 'Ферма',
           cell: info => info.getValue() || '-',
           sortingFn: alphanumericSortingFn,
           ...getColumnSizing('estate'),
@@ -663,7 +663,7 @@ const TableView: React.FC<TableViewProps> = ({
         row => row.blendComponents?.[0]?.process || '',
         {
           id: 'process',
-          header: '处理法',
+          header: 'Обработка',
           cell: info => info.getValue() || '-',
           sortingFn: alphanumericSortingFn,
           ...getColumnSizing('process'),
@@ -673,7 +673,7 @@ const TableView: React.FC<TableViewProps> = ({
         row => row.blendComponents?.[0]?.variety || '',
         {
           id: 'variety',
-          header: '品种',
+          header: 'Разновидность',
           cell: info => info.getValue() || '-',
           sortingFn: alphanumericSortingFn,
           ...getColumnSizing('variety'),
@@ -681,21 +681,21 @@ const TableView: React.FC<TableViewProps> = ({
       ),
       roastLevel: columnHelper.accessor(row => row.roastLevel || '', {
         id: 'roastLevel',
-        header: '烘焙度',
+        header: 'Обжарка',
         cell: info => info.getValue() || '-',
         sortingFn: alphanumericSortingFn,
         ...getColumnSizing('roastLevel'),
       }),
       flavor: columnHelper.accessor(row => row.flavor?.join('、') || '', {
         id: 'flavor',
-        header: '风味',
+        header: 'Вкусы',
         cell: info => info.getValue() || '-',
         sortingFn: alphanumericSortingFn,
         ...getColumnSizing('flavor'),
       }),
       rating: columnHelper.accessor(row => row.overallRating || 0, {
         id: 'rating',
-        header: '评分',
+        header: 'Оценка',
         cell: ({ row }) => {
           const bean = row.original;
           const rating = bean.overallRating;
@@ -708,8 +708,8 @@ const TableView: React.FC<TableViewProps> = ({
           const beanName = formatBeanDisplayName(bean, roasterSettings);
           const actionLabel =
             rating && rating > 0
-              ? `编辑 ${beanName} 的评分`
-              : `添加 ${beanName} 的评分`;
+              ? `Изменить ${beanName} — оценку`
+              : `Добавить ${beanName} — оценку`;
 
           return (
             <button
@@ -728,7 +728,7 @@ const TableView: React.FC<TableViewProps> = ({
       }),
       notes: columnHelper.accessor(row => row.notes || '', {
         id: 'notes',
-        header: '备注',
+        header: 'Заметка',
         cell: info => info.getValue() || '-',
         sortingFn: alphanumericSortingFn,
         ...getColumnSizing('notes'),
@@ -773,7 +773,7 @@ const TableView: React.FC<TableViewProps> = ({
   if (allBeans.length === 0) {
     return (
       <div className="flex h-32 items-center justify-center text-xs leading-relaxed font-medium text-neutral-600 dark:text-neutral-400">
-        [ 暂无咖啡豆数据 ]
+        [ Зерна пока нет ]
       </div>
     );
   }
@@ -851,14 +851,14 @@ const TableView: React.FC<TableViewProps> = ({
                           {canResize && (
                             <div
                               role="separator"
-                              aria-label={`调整${
+                              aria-label={`Изменить ${
                                 String(
                                   flexRender(
                                     header.column.columnDef.header,
                                     header.getContext()
                                   )
-                                ) || '列'
-                              }宽度`}
+                                ) || 'колонки'
+                              } ширину`}
                               aria-orientation="vertical"
                               className={`absolute top-0 right-0 z-20 h-full w-4 translate-x-1/2 cursor-col-resize touch-none ${
                                 isResizing

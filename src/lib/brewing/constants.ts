@@ -33,10 +33,10 @@ export const STEP_RULES = {
 
   // 步骤对应的标签映射
   tabMapping: {
-    coffeeBean: '咖啡豆' as TabType,
-    method: '方案' as TabType,
-    brewing: '注水' as TabType,
-    notes: '记录' as TabType,
+    coffeeBean: 'Зерно' as TabType,
+    method: 'Рецепт' as TabType,
+    brewing: 'Пролив' as TabType,
+    notes: 'Записать' as TabType,
   },
 
   // 定义参数规则类型

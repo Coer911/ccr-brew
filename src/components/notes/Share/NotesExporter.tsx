@@ -69,14 +69,14 @@ export async function exportSelectedNotes({
   onComplete,
 }: NotesExporterProps) {
   if (selectedNotes.length === 0) {
-    onError('请选择至少一条笔记');
+    onError('Выберите хотя бы одну заметку');
     return;
   }
 
   try {
     // 首先，从原始列表中找出选中的笔记元素
     if (!notesContainerRef.current) {
-      onError('找不到笔记容器');
+      onError('Не найден контейнер заметок');
       return;
     }
 
@@ -298,8 +298,8 @@ export async function exportSelectedNotes({
 
     // 签名：(@用户名 · Brew Guide App)
     const signatureText = username
-      ? `(@${username} · Brew Guide App)`
-      : '(Brew Guide App)';
+      ? `(@${username} · Cultura Brew)`
+      : '(Cultura Brew)';
     footer.innerText = signatureText;
 
     tempContainer.appendChild(footer);
@@ -333,35 +333,35 @@ export async function exportSelectedNotes({
       imageData,
       'brew-notes',
       {
-        title: '我的咖啡冲煮笔记',
-        text: '我的咖啡冲煮笔记',
-        dialogTitle: '分享我的咖啡冲煮笔记',
+        title: 'Мои заметки о заварке кофе',
+        text: 'Мои заметки о заварке кофе',
+        dialogTitle: 'Делюсь своими заметками о заварке кофе',
       }
     );
 
     if (shareOutcome === 'activation-required') {
-      onSuccess('笔记图片已生成，请再次点击分享');
+      onSuccess('Картинка с заметками готова, нажмите «Поделиться» ещё раз');
       return;
     }
 
     if (shareOutcome === 'cancelled') {
-      onSuccess('已取消分享');
+      onSuccess('Отправка отменена');
       return;
     }
 
-    onSuccess('笔记已保存为图片');
+    onSuccess('Заметки сохранены картинкой');
   } catch (error) {
     console.error('生成笔记图片失败:', error);
 
     // 提供更详细的错误信息
-    let errorMessage = '生成图片失败';
+    let errorMessage = 'Не удалось создать картинку';
     if (error instanceof Error) {
       if (error.message.includes('canvas')) {
-        errorMessage = '图片渲染失败，请检查图片是否正常显示';
+        errorMessage = 'Ошибка отрисовки, проверьте, что фото отображаются';
       } else if (error.message.includes('network')) {
-        errorMessage = '网络错误，请检查图片是否能正常加载';
+        errorMessage = 'Ошибка сети, проверьте, что фото загружаются';
       } else if (error.message.includes('timeout')) {
-        errorMessage = '图片加载超时，请重试';
+        errorMessage = 'Фото грузятся слишком долго, попробуйте ещё раз';
       }
     }
 

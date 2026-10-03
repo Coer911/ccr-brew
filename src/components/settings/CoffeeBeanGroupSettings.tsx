@@ -113,27 +113,27 @@ const getAgingDaysText = (dateStr: string): string => {
     const daysSinceRoast = Math.ceil(
       (todayDate.getTime() - roastDateOnly.getTime()) / (1000 * 60 * 60 * 24)
     );
-    return `养豆${daysSinceRoast}天`;
+    return `Отдых${daysSinceRoast} дн.`;
   } catch {
-    return '养豆0天';
+    return 'Отдых 0 дн.';
   }
 };
 
 const getFlavorStatusText = (bean: CoffeeBean) => {
-  if (bean.isInTransit) return '在途';
-  if (bean.isFrozen) return '冷冻';
+  if (bean.isInTransit) return 'В пути';
+  if (bean.isFrozen) return 'Заморожено';
   if (!bean.roastDate) return '';
 
   const flavorInfo = calculateFlavorInfo(bean);
 
-  if (flavorInfo.phase === '养豆期') {
-    return `养豆 ${flavorInfo.remainingDays}天`;
+  if (flavorInfo.phase === 'Отдых') {
+    return `Отдых ${flavorInfo.remainingDays} дн.`;
   }
-  if (flavorInfo.phase === '赏味期') {
-    return `赏味 ${flavorInfo.remainingDays}天`;
+  if (flavorInfo.phase === 'Лучший период') {
+    return `Лучший период ${flavorInfo.remainingDays} дн.`;
   }
-  if (flavorInfo.phase === '衰退期') {
-    return '已衰退';
+  if (flavorInfo.phase === 'Угасание') {
+    return 'Выдохлось';
   }
   return '';
 };
@@ -150,8 +150,8 @@ const formatPrice = (
 
   const pricePerGram = (priceNum / capacityNum).toFixed(2);
   return showTotalPrice
-    ? `${priceNum}元(${pricePerGram}元/克)`
-    : `${pricePerGram}元/克`;
+    ? `${priceNum} ₽ (${pricePerGram} ₽/г)`
+    : `${pricePerGram} ₽/г`;
 };
 
 const getBeanMetaParts = (
@@ -163,9 +163,9 @@ const getBeanMetaParts = (
   const displayDate = isGreenBean ? bean.purchaseDate : bean.roastDate;
 
   if (bean.isInTransit) {
-    parts.push('在途');
+    parts.push('В пути');
   } else if (bean.isFrozen) {
-    parts.push('冷冻');
+    parts.push('Заморожено');
   } else if (
     !isGreenBean &&
     displayDate &&
@@ -185,7 +185,7 @@ const getBeanMetaParts = (
 
   if (bean.capacity && bean.remaining) {
     parts.push(
-      `${formatNumber(bean.remaining)}/${formatNumber(bean.capacity)}克`
+      `${formatNumber(bean.remaining)}/${formatNumber(bean.capacity)} г`
     );
   }
 
@@ -249,7 +249,7 @@ const BeanThumbnail: React.FC<{
       {imageSource && !imageError ? (
         <Image
           src={imageSource}
-          alt={bean.name || '咖啡豆图片'}
+          alt={bean.name || 'Фото зерна'}
           fill
           sizes={size === 'xs' ? '20px' : size === 'sm' ? '36px' : '48px'}
           unoptimized
@@ -280,7 +280,7 @@ interface StackedDrawerProps {
 const StackedDrawer: React.FC<StackedDrawerProps> = ({
   isOpen,
   title,
-  doneLabel = '完成',
+  doneLabel = 'Готово',
   doneDisabled = false,
   onCancel,
   onDone,
@@ -319,7 +319,7 @@ const StackedDrawer: React.FC<StackedDrawerProps> = ({
                 onClick={onCancel}
                 className="cursor-pointer rounded-full bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-600 transition active:scale-95 dark:bg-neutral-800 dark:text-neutral-300"
               >
-                取消
+                Отмена
               </button>
               <Drawer.Title className="truncate px-3 text-center text-base font-semibold text-neutral-900 dark:text-neutral-50">
                 {title}
@@ -372,19 +372,19 @@ const GroupEditorDrawer: React.FC<GroupEditorDrawerProps> = ({
 }) => (
   <StackedDrawer
     isOpen={isOpen}
-    title={isNewGroup ? '新分组' : '编辑分组'}
+    title={isNewGroup ? 'Новая группа' : 'Изменить группу'}
     doneDisabled={!name.trim()}
     onCancel={onCancel}
     onDone={onDone}
     historyId="coffee-bean-group-editor-drawer"
   >
     <div className="min-h-0 flex-1 overflow-y-auto">
-      <SettingSection title="分组名称">
+      <SettingSection title="Название группы">
         <SettingRow vertical>
           <input
             value={name}
             onChange={event => onNameChange(event.target.value)}
-            placeholder="输入分组名称"
+            placeholder="Введите название группы"
             className="w-full bg-transparent text-sm text-neutral-900 outline-none placeholder:text-neutral-400 dark:text-neutral-50 dark:placeholder:text-neutral-500"
             autoComplete="off"
             id="bean-group-name-input"
@@ -392,7 +392,7 @@ const GroupEditorDrawer: React.FC<GroupEditorDrawerProps> = ({
         </SettingRow>
       </SettingSection>
 
-      <SettingSection title="包含的咖啡豆">
+      <SettingSection title="Зерно в группе">
         {selectedBeans.length === 0 ? (
           <button
             type="button"
@@ -403,7 +403,7 @@ const GroupEditorDrawer: React.FC<GroupEditorDrawerProps> = ({
               <Plus className="h-4 w-4" strokeWidth={2.25} />
             </div>
             <span className="min-w-0 flex-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">
-              添加咖啡豆
+              Добавить зерно
             </span>
             <ChevronRight className="h-4 w-4 text-neutral-400 dark:text-neutral-500" />
           </button>
@@ -419,7 +419,7 @@ const GroupEditorDrawer: React.FC<GroupEditorDrawerProps> = ({
                   <Plus className="h-4 w-4" strokeWidth={2.25} />
                 </div>
                 <span className="min-w-0 flex-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                  添加咖啡豆
+                  Добавить зерно
                 </span>
                 <ChevronRight className="h-4 w-4 text-neutral-400 dark:text-neutral-500" />
               </button>
@@ -447,9 +447,9 @@ const GroupEditorDrawer: React.FC<GroupEditorDrawerProps> = ({
                       type="button"
                       onClick={() => onRemoveBean(bean.id)}
                       className="shrink-0 cursor-pointer rounded-full px-2 py-1 text-sm font-medium text-neutral-500 transition active:bg-black/5 dark:text-neutral-400 dark:active:bg-white/5"
-                      title="移除咖啡豆"
+                      title="Убрать зерно"
                     >
-                      删除
+                      Удалить
                     </button>
                   </div>
                 </div>
@@ -460,7 +460,7 @@ const GroupEditorDrawer: React.FC<GroupEditorDrawerProps> = ({
       </SettingSection>
 
       {!isNewGroup && (
-        <SettingSection title="操作">
+        <SettingSection title="Действия">
           <button
             type="button"
             onClick={onDeleteGroup}
@@ -470,7 +470,7 @@ const GroupEditorDrawer: React.FC<GroupEditorDrawerProps> = ({
                 : 'text-neutral-600 dark:text-neutral-300'
             }`}
           >
-            {isDeleteConfirming ? '确认删除' : '删除分组'}
+            {isDeleteConfirming ? 'Удалить' : 'Удалить группу'}
           </button>
         </SettingSection>
       )}
@@ -645,7 +645,7 @@ const BeanPickerDrawer: React.FC<BeanPickerDrawerProps> = ({
   return (
     <StackedDrawer
       isOpen={isOpen}
-      title="包含咖啡豆"
+      title="Зерно в группе"
       onCancel={handleCancel}
       onDone={handleDone}
       historyId="coffee-bean-group-bean-picker-drawer"
@@ -718,7 +718,7 @@ const BeanPickerDrawer: React.FC<BeanPickerDrawerProps> = ({
               type="text"
               value={searchQuery}
               onChange={event => setSearchQuery(event.target.value)}
-              placeholder="搜索咖啡豆"
+              placeholder="Поиск зерна"
               className={`w-full border-none bg-transparent text-sm font-medium text-neutral-900 outline-none placeholder:text-neutral-400 dark:text-neutral-50 dark:placeholder:text-neutral-500 ${
                 selectedBeans.length > 0 ? 'h-8 pr-8 pl-8' : 'h-11 pr-10 pl-11'
               }`}
@@ -736,7 +736,7 @@ const BeanPickerDrawer: React.FC<BeanPickerDrawerProps> = ({
                 className={`absolute top-1/2 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full text-neutral-400 transition active:bg-black/5 dark:text-neutral-500 dark:active:bg-white/5 ${
                   selectedBeans.length > 0 ? 'right-0' : 'right-3'
                 }`}
-                title="清除搜索"
+                title="Очистить поиск"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -752,7 +752,7 @@ const BeanPickerDrawer: React.FC<BeanPickerDrawerProps> = ({
           >
             {filteredBeans.length === 0 ? (
               <div className="px-1 py-6 text-sm text-neutral-500 dark:text-neutral-400">
-                {searchQuery.trim() ? '没有找到匹配的咖啡豆' : '还没有咖啡豆'}
+                {searchQuery.trim() ? 'Ничего не найдено' : 'Зерна пока нет'}
               </div>
             ) : (
               <div className="space-y-3">
@@ -1104,7 +1104,7 @@ const CoffeeBeanGroupSettings: React.FC<CoffeeBeanGroupSettingsProps> = ({
   const groupSectionTitle = (
     <div className="flex items-center justify-between pl-3.5">
       <h3 className="text-sm font-semibold tracking-wider text-neutral-500 uppercase dark:text-neutral-400">
-        分组
+        Группы
       </h3>
       {orderedGroups.length > 1 && (
         <button
@@ -1112,7 +1112,7 @@ const CoffeeBeanGroupSettings: React.FC<CoffeeBeanGroupSettingsProps> = ({
           onClick={() => void toggleReorderMode()}
           className="flex cursor-pointer items-center rounded-full px-3 text-sm font-medium text-neutral-600 transition-transform active:scale-[0.96] dark:text-neutral-300"
         >
-          {isReorderMode ? '完成' : '编辑'}
+          {isReorderMode ? 'Готово' : 'Изменить'}
         </button>
       )}
     </div>
@@ -1120,10 +1120,10 @@ const CoffeeBeanGroupSettings: React.FC<CoffeeBeanGroupSettingsProps> = ({
 
   return (
     <>
-      <SettingPage title="分组" isVisible={isVisible} onClose={handleClose}>
+      <SettingPage title="Группы" isVisible={isVisible} onClose={handleClose}>
         <SettingSection
           title={groupSectionTitle}
-          footer="为不同咖啡豆创建分组，并在筛选分类中快速切换。"
+          footer="Создавайте группы зерна и быстро переключайтесь между ними в фильтрах."
         >
           {orderedGroups.length === 0 ? (
             <button
@@ -1132,7 +1132,7 @@ const CoffeeBeanGroupSettings: React.FC<CoffeeBeanGroupSettingsProps> = ({
               className="flex w-full cursor-pointer items-center px-3.5 py-3.5 text-left transition active:bg-black/5 dark:active:bg-white/5"
             >
               <span className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                创建分组
+                Создать группу
               </span>
             </button>
           ) : (
@@ -1144,7 +1144,7 @@ const CoffeeBeanGroupSettings: React.FC<CoffeeBeanGroupSettingsProps> = ({
                   className="flex w-full cursor-pointer items-center border-b border-black/5 py-3.5 text-left transition active:opacity-70 dark:border-white/5"
                 >
                   <span className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                    创建分组
+                    Создать группу
                   </span>
                 </button>
               </div>

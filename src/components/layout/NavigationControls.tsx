@@ -44,7 +44,7 @@ export const NavigationSettingsButton: React.FC<
   onPointerEnter,
   onFocus,
   placement = 'sidebar',
-  title = '设置',
+  title = 'Настройки',
   ariaLabel = title,
   className = '',
 }) => (
@@ -70,7 +70,7 @@ export const NavigationArrowButton: React.FC<NavigationArrowButtonProps> = ({
   className = '',
 }) => {
   const Icon = direction === 'collapse' ? ChevronLeft : ChevronRight;
-  const label = direction === 'collapse' ? '收起侧边栏' : '展开侧边栏';
+  const label = direction === 'collapse' ? 'Свернуть панель' : 'Развернуть панель';
   const title = `${label} (Cmd/Ctrl+B)`;
 
   return (

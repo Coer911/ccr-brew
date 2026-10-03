@@ -86,7 +86,7 @@ export const useCustomEquipmentStore = create<CustomEquipmentStore>()(
       } catch (error) {
         console.error('[CustomEquipmentStore] loadEquipments failed:', error);
         set({
-          error: '加载自定义器具失败',
+          error: 'Не удалось загрузить свои устройства',
           isLoading: false,
           initialized: false,
         });

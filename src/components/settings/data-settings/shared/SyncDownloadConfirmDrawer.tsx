@@ -23,7 +23,7 @@ interface SyncDownloadConfirmDrawerProps {
 
 export const SyncDownloadConfirmDrawer: React.FC<
   SyncDownloadConfirmDrawerProps
-> = ({ isOpen, onClose, onConfirm, serviceName = '云端' }) => {
+> = ({ isOpen, onClose, onConfirm, serviceName = 'Облако' }) => {
   return (
     <ActionDrawer
       isOpen={isOpen}
@@ -33,18 +33,18 @@ export const SyncDownloadConfirmDrawer: React.FC<
       <ActionDrawer.Icon icon={DataAlertIcon} />
       <ActionDrawer.Content>
         <p className="mb-2 text-base font-medium text-neutral-800 dark:text-neutral-200">
-          ⚠️ 数据覆盖警告
+          ⚠️ Данные будут перезаписаны
         </p>
         <p className="text-sm text-neutral-500 dark:text-neutral-400">
-          从{serviceName}下载数据将覆盖本地所有数据，此操作不可撤销。
+          Скачивание данных из{serviceName}заменит все данные на устройстве, отменить это нельзя.
         </p>
         <p className="mt-2 text-sm font-medium text-red-500 dark:text-red-400">
-          请确保您已备份重要数据！
+          Убедитесь, что важные данные сохранены!
         </p>
       </ActionDrawer.Content>
       <ActionDrawer.Actions>
         <ActionDrawer.SecondaryButton onClick={onClose}>
-          取消
+          Отмена
         </ActionDrawer.SecondaryButton>
         <ActionDrawer.PrimaryButton
           onClick={() => {
@@ -52,7 +52,7 @@ export const SyncDownloadConfirmDrawer: React.FC<
             onConfirm();
           }}
         >
-          确认下载
+          Скачать
         </ActionDrawer.PrimaryButton>
       </ActionDrawer.Actions>
     </ActionDrawer>

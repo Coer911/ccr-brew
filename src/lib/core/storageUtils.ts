@@ -89,7 +89,7 @@ export const StorageUtils = {
     if (storageType === StorageType.INDEXED_DB) {
       if (key === 'brewingNotes' || key === 'coffeeBeans') {
         throw new Error(
-          `${key} 不支持通过 Storage.set 写入，请使用 DataManager 的显式导入流程`
+          `${key} нельзя записать через Storage.set, используйте явный импорт DataManager`
         );
       }
 

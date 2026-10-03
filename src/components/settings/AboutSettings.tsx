@@ -112,19 +112,19 @@ const AboutSettings: React.FC<AboutSettingsProps> = ({ onClose }) => {
   }, []);
 
   return (
-    <SettingPage title="关于" isVisible={isVisible} onClose={handleClose}>
+    <SettingPage title="О приложении" isVisible={isVisible} onClose={handleClose}>
       <div className="px-6 pt-4 pb-6">
         <div className="space-y-4 text-base leading-relaxed font-medium">
           <p>
-            Hi，很高兴你能看到这里，这是一个因个人需求而生，在群友支持下持续维护的
+            Cultura Brew основан на открытом проекте Brew Guide (chu3), который появился из личной потребности и развивается при поддержке сообщества — это
             <span className="underline decoration-pink-500 decoration-wavy">
-              用爱发电项目
+              проект на энтузиазме
             </span>
-            。
+            .
           </p>
           {commitCount ? (
             <p>
-              通过
+              Через
               <a
                 href="https://github.com/chuthree/brew-guide/commits/main"
                 target="_blank"
@@ -134,42 +134,30 @@ const AboutSettings: React.FC<AboutSettingsProps> = ({ onClose }) => {
               >
                 {commitCount}
               </a>
-              次代码提交，最终变为了你现在看到的样子。
+              коммитов он стал таким, каким вы его видите.
             </p>
           ) : (
             <p>
-              通过
+              Через
               <span className="mx-0.5 inline-block h-4 w-8 animate-pulse rounded bg-neutral-200 align-middle dark:bg-neutral-700" />
-              次代码提交，最终变为了你现在看到的样子。
+              коммитов он стал таким, каким вы его видите.
             </p>
           )}
           <hr className="my-6" />
-          <CollapsibleSection title="隐私政策">
+          <CollapsibleSection title="Политика конфиденциальности">
             <p>
-              本应用不接入网页统计或第三方分析服务，不收集页面访问、设备信息等使用数据。
+              Приложение не использует веб-аналитику и сторонние сервисы статистики и не собирает данные о посещениях и устройствах.
             </p>
             <p>
-              所有咖啡豆和冲煮记录均存储在您的设备本地。如启用云同步，数据将同步至您自行配置的服务器（WebDAV/S3/Supabase），本应用不访问或存储这些数据。
+              Всё зерно и записи заварок хранятся на вашем устройстве. Если включить облачную синхронизацию, данные синхронизируются с вашим собственным сервером (WebDAV/S3/Supabase) — приложение их не видит и не хранит.
             </p>
             <p>
-              使用图片识别功能（咖啡豆/冲煮方案）时，图片会上传至服务器进行 AI
-              分析，处理完成后立即删除，不会保存。
+              При распознавании по фото (зерно/рецепты) фото отправляется на сервер для ИИ-анализа и сразу удаляется после обработки, без сохранения.
             </p>
+</CollapsibleSection>
+          <CollapsibleSection title="Благодарности открытому ПО">
             <p>
-              <a
-                href="https://chu3.top/brewguide/privacy"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={handleExternalUrlClick}
-                className="text-neutral-800 underline dark:text-neutral-200"
-              >
-                查看完整隐私说明
-              </a>
-            </p>
-          </CollapsibleSection>
-          <CollapsibleSection title="开源致谢">
-            <p>
-              本项目使用了{' '}
+              В проекте используется{' '}
               <a
                 href="https://www.isocons.app/"
                 target="_blank"
@@ -179,7 +167,7 @@ const AboutSettings: React.FC<AboutSettingsProps> = ({ onClose }) => {
               >
                 Isometric Icons
               </a>{' '}
-              图标库，采用{' '}
+              библиотека иконок по лицензии{' '}
               <a
                 href="https://creativecommons.org/licenses/by/4.0/"
                 target="_blank"
@@ -189,46 +177,32 @@ const AboutSettings: React.FC<AboutSettingsProps> = ({ onClose }) => {
               >
                 CC BY 4.0
               </a>{' '}
-              协议授权。
+              .
             </p>
           </CollapsibleSection>
-          <CollapsibleSection title="相关链接">
+          <CollapsibleSection title="Исходный код и лицензия">
+            <p>
+              Cultura Brew — модифицированная версия Brew Guide © 2026 chu3
+              (chuthree), распространяется по лицензии GPL-3.0-only.
+            </p>
             <p className="flex flex-col gap-1.5">
               <a
-                href="https://chu3.top/brewguide"
+                href="https://github.com/chuthree/brew-guide"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handleExternalUrlClick}
                 className="text-neutral-800 underline dark:text-neutral-200"
               >
-                官网
+                Исходный код оригинала (Brew Guide)
               </a>
               <a
-                href="https://chu3.top/brewguide/changelog"
+                href="https://www.gnu.org/licenses/gpl-3.0.html"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handleExternalUrlClick}
                 className="text-neutral-800 underline dark:text-neutral-200"
               >
-                更新日志
-              </a>
-              <a
-                href="https://chu3.top/brew2"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={handleExternalUrlClick}
-                className="text-neutral-800 underline dark:text-neutral-200"
-              >
-                brew2
-              </a>
-              <a
-                href="https://chu3.top/"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={handleExternalUrlClick}
-                className="text-neutral-800 underline dark:text-neutral-200"
-              >
-                开发者
+                Лицензия GPL-3.0
               </a>
             </p>
           </CollapsibleSection>

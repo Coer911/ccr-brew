@@ -36,7 +36,7 @@ export interface StatsMetadata {
   validNotes: number; // 有效记录数（排除容量调整等）
   actualDays: number; // 实际统计天数
   averageConsumptionPeriods: number; // 平均消耗使用的统计周期数
-  averageConsumptionUnit: '天' | '月'; // 平均消耗的统计单位
+  averageConsumptionUnit: 'День' | 'Месяц'; // 平均消耗的统计单位
   beansWithPrice: number; // 有价格信息的咖啡豆数量
   beansTotal: number; // 参与计算的咖啡豆总数
   todayNotes: number; // 今日记录数
@@ -277,7 +277,7 @@ const getDateKey = (
   }
   return {
     key: `${y}-${m.toString().padStart(2, '0')}`,
-    label: `${m}月`,
+    label: `${m} мес.`,
   };
 };
 
@@ -360,9 +360,9 @@ export const getTimeRange = (
 // ============================================================================
 
 const BEAN_TYPE_LABELS: Record<BeanType, string> = {
-  espresso: '意式豆',
-  filter: '手冲豆',
-  omni: '全能豆',
+  espresso: 'Для эспрессо',
+  filter: 'Для фильтра',
+  omni: 'Омни',
 };
 
 /** 计算总库存数据 */
@@ -722,7 +722,7 @@ export const useStatsData = (
             ? formatBeanDisplayName(bean)
             : note.coffeeBeanInfo?.roaster && note.coffeeBeanInfo?.name
               ? `${note.coffeeBeanInfo.roaster} ${note.coffeeBeanInfo.name}`
-              : note.coffeeBeanInfo?.name || '未知咖啡豆';
+              : note.coffeeBeanInfo?.name || 'Неизвестное зерно';
           brewingDetails.push({
             id: note.id,
             timestamp: ts,
@@ -765,7 +765,7 @@ export const useStatsData = (
             ? formatBeanDisplayName(bean)
             : note.coffeeBeanInfo?.roaster && note.coffeeBeanInfo?.name
               ? `${note.coffeeBeanInfo.roaster} ${note.coffeeBeanInfo.name}`
-              : note.coffeeBeanInfo?.name || '未知咖啡豆';
+              : note.coffeeBeanInfo?.name || 'Неизвестное зерно';
           todayBrewingDetails.push({
             id: note.id,
             timestamp: ts,
@@ -869,10 +869,10 @@ export const useStatsData = (
     brewingDetails.sort((a, b) => b.timestamp - a.timestamp);
     todayBrewingDetails.sort((a, b) => b.timestamp - a.timestamp);
 
-    const averageConsumptionUnit: '天' | '月' =
-      selectedDate && dateGroupingMode === 'year' ? '月' : '天';
+    const averageConsumptionUnit: 'День' | 'Месяц' =
+      selectedDate && dateGroupingMode === 'year' ? 'Месяц' : 'День';
     const averageConsumptionPeriods =
-      averageConsumptionUnit === '月' && effectiveDateRange
+      averageConsumptionUnit === 'Месяц' && effectiveDateRange
         ? calculateMonthsBetween(
             effectiveDateRange.start,
             effectiveDateRange.end

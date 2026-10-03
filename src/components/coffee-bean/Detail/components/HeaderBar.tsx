@@ -68,7 +68,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
   bean,
   tempBean,
   printEnabled,
-  saveButtonLabel = '保存',
+  saveButtonLabel = 'Сохранить',
   canGoToBrewing,
   canGoToNotes,
   onClose,
@@ -122,7 +122,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
       ? [
           {
             id: 'brewing',
-            label: '去冲煮',
+            label: 'Заварить',
             onClick: onGoToBrewing,
             color: 'default' as const,
           },
@@ -132,7 +132,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
       ? [
           {
             id: 'notes',
-            label: '去记录',
+            label: 'Записать',
             onClick: onGoToNotes,
             color: 'default' as const,
           },
@@ -222,7 +222,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
       console.error('保存咖啡豆失败:', error);
       showToast({
         type: 'error',
-        title: '保存失败，请重试',
+        title: 'Не удалось сохранить, попробуйте ещё раз',
         duration: 3000,
       });
     } finally {
@@ -257,7 +257,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
       >
         {!isAddMode && (
           <h2 className="max-w-full truncate px-2 text-center text-sm font-medium text-neutral-800 dark:text-neutral-100">
-            {displayName || '未命名'}
+            {displayName || 'Без названия'}
           </h2>
         )}
       </div>
@@ -276,7 +276,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
                 : 'cursor-not-allowed text-neutral-300 dark:text-neutral-600'
             }`}
           >
-            {isSaving ? `${saveButtonLabel}中` : saveButtonLabel}
+            {isSaving ? `${saveButtonLabel} в пути` : saveButtonLabel}
           </button>
         )}
 
@@ -288,7 +288,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
             className="flex h-8 items-center justify-center rounded-full bg-neutral-100 px-3 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700"
           >
             <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
-              去烘焙
+              Обжарить
             </span>
           </button>
         )}
@@ -334,7 +334,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
                   ? [
                       {
                         id: 'delete',
-                        label: '删除',
+                        label: 'Удалить',
                         onClick: onShowDeleteConfirm,
                         color: 'danger' as const,
                       },
@@ -344,7 +344,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
                   ? [
                       {
                         id: 'convertToGreen',
-                        label: '转为生豆',
+                        label: 'Перевести в зелёное',
                         onClick: () => onConvertToGreen(bean),
                         color: 'default' as const,
                       },
@@ -354,7 +354,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
                   ? [
                       {
                         id: 'print',
-                        label: '打印',
+                        label: 'Печать',
                         onClick: onPrint,
                         color: 'default' as const,
                       },
@@ -364,7 +364,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
                   ? [
                       {
                         id: 'share',
-                        label: '分享',
+                        label: 'Поделиться',
                         onClick: () => {
                           onClose();
                           setTimeout(() => {
@@ -383,7 +383,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
                   ? [
                       {
                         id: 'edit',
-                        label: '编辑',
+                        label: 'Изменить',
                         onClick: () => onEdit(bean),
                         color: 'default' as const,
                       },

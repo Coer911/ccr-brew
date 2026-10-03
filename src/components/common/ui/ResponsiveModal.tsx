@@ -217,7 +217,7 @@ const ResponsiveModal = forwardRef<ResponsiveModalHandle, ResponsiveModalProps>(
               aria-describedby={undefined}
             >
               {/* 无障碍标题 - 视觉隐藏 */}
-              <Drawer.Title className="sr-only">模态面板</Drawer.Title>
+              <Drawer.Title className="sr-only">Окно</Drawer.Title>
 
               {/* 内容区域 */}
               <div className="flex min-h-0 flex-1 flex-col overflow-hidden">

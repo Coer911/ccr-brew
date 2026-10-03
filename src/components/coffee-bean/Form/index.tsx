@@ -76,9 +76,9 @@ export interface CoffeeBeanFormHandle {
 }
 
 const steps: StepConfig[] = [
-  { id: 'basic', label: '基本信息' },
-  { id: 'detail', label: '详细信息' },
-  { id: 'flavor', label: '风味描述' },
+  { id: 'basic', label: 'Основное' },
+  { id: 'detail', label: 'Подробности' },
+  { id: 'flavor', label: 'Вкусовой профиль' },
 ];
 
 const getTodayLocalDateString = () => {
@@ -734,7 +734,7 @@ const CoffeeBeanForm = forwardRef<CoffeeBeanFormHandle, CoffeeBeanFormProps>(
         alert(
           error instanceof ImageProcessingError
             ? error.message
-            : '图片处理失败，请更换图片后重试'
+            : 'Не удалось обработать фото, попробуйте другое'
         );
       }
     };
@@ -754,7 +754,7 @@ const CoffeeBeanForm = forwardRef<CoffeeBeanFormHandle, CoffeeBeanFormProps>(
         alert(
           error instanceof ImageProcessingError
             ? error.message
-            : '背面图片处理失败，请更换图片后重试'
+            : 'Не удалось обработать фото сзади, попробуйте другое'
         );
       }
     };
@@ -852,7 +852,7 @@ const CoffeeBeanForm = forwardRef<CoffeeBeanFormHandle, CoffeeBeanFormProps>(
                   onClick={handleSubmit}
                   disabled={!canComplete}
                   className={`${buttonBaseClass} flex shrink-0 items-center gap-2 px-4 py-3`}
-                  title="快速保存"
+                  title="Быстро сохранить"
                   initial={{ scale: 0.8, opacity: 0, x: 15 }}
                   animate={{ scale: 1, opacity: canComplete ? 1 : 0.5, x: 0 }}
                   exit={{ scale: 0.8, opacity: 0, x: 15 }}
@@ -861,7 +861,7 @@ const CoffeeBeanForm = forwardRef<CoffeeBeanFormHandle, CoffeeBeanFormProps>(
                   transition={springTransition}
                 >
                   <Check className="h-4 w-4" strokeWidth="3" />
-                  <span className="font-medium">完成</span>
+                  <span className="font-medium">Готово</span>
                 </motion.button>
               )}
             </AnimatePresence>
@@ -877,7 +877,7 @@ const CoffeeBeanForm = forwardRef<CoffeeBeanFormHandle, CoffeeBeanFormProps>(
               className={`${buttonBaseClass} flex items-center justify-center ${isLastStep ? 'px-6 py-3' : 'p-4'}`}
             >
               {isLastStep ? (
-                <span className="font-medium">完成</span>
+                <span className="font-medium">Готово</span>
               ) : (
                 <ArrowRight className="h-4 w-4" strokeWidth="3" />
               )}

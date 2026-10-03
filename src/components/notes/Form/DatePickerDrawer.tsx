@@ -53,10 +53,10 @@ const DatePickerDrawer: React.FC<DatePickerDrawerProps> = ({
       </ActionDrawer.Content>
       <ActionDrawer.Actions>
         <ActionDrawer.SecondaryButton onClick={onClose}>
-          取消
+          Отмена
         </ActionDrawer.SecondaryButton>
         <ActionDrawer.PrimaryButton onClick={handleConfirm}>
-          确定
+          OK
         </ActionDrawer.PrimaryButton>
       </ActionDrawer.Actions>
     </ActionDrawer>

@@ -201,7 +201,7 @@ const getParamsDisplay = (note: BrewingNote): string => {
 
   if (
     note.equipment?.toLowerCase().includes('espresso') ||
-    note.equipment?.includes('意式')
+    note.equipment?.includes('Эспрессо')
   ) {
     const parts = [
       normalizedParams.coffee,
@@ -323,7 +323,7 @@ const NotesTableView: React.FC<NotesTableViewProps> = ({
     > = {
       date: columnHelper.accessor(row => row.timestamp, {
         id: 'date',
-        header: '日期',
+        header: 'Дата',
         cell: info => formatDateAbsolute(info.getValue()),
         sortingFn: basicSortingFn,
         ...getColumnSizing('date'),
@@ -333,7 +333,7 @@ const NotesTableView: React.FC<NotesTableViewProps> = ({
           resolveNoteBeanDisplayName(row, coffeeBeanLookup, roasterSettings),
         {
           id: 'bean',
-          header: '咖啡豆',
+          header: 'Зерно',
           cell: info => info.getValue() || <EmptyCell />,
           sortingFn: alphanumericSortingFn,
           ...getColumnSizing('bean'),
@@ -350,10 +350,10 @@ const NotesTableView: React.FC<NotesTableViewProps> = ({
         },
         {
           id: 'agingDays',
-          header: '养豆',
+          header: 'Отдых',
           cell: info => {
             const agingDays = info.getValue();
-            return agingDays >= 0 ? `${agingDays}天` : <EmptyCell />;
+            return agingDays >= 0 ? `${agingDays} дн.` : <EmptyCell />;
           },
           sortingFn: basicSortingFn,
           ...getColumnSizing('agingDays'),
@@ -363,7 +363,7 @@ const NotesTableView: React.FC<NotesTableViewProps> = ({
         row => getSchemeDisplay(row, equipmentNames),
         {
           id: 'scheme',
-          header: '方案',
+          header: 'Рецепт',
           cell: info => info.getValue() || <EmptyCell />,
           sortingFn: alphanumericSortingFn,
           ...getColumnSizing('scheme'),
@@ -371,7 +371,7 @@ const NotesTableView: React.FC<NotesTableViewProps> = ({
       ),
       params: columnHelper.accessor(row => getParamsDisplay(row), {
         id: 'params',
-        header: '参数',
+        header: 'Параметры',
         cell: info =>
           info.getValue() === '-' ? <EmptyCell /> : info.getValue(),
         sortingFn: alphanumericSortingFn,
@@ -379,7 +379,7 @@ const NotesTableView: React.FC<NotesTableViewProps> = ({
       }),
       tasteRatings: columnHelper.display({
         id: 'tasteRatings',
-        header: '评分维度',
+        header: 'Критерии оценки',
         cell: () => null,
         enableSorting: false,
         enableResizing: false,
@@ -387,7 +387,7 @@ const NotesTableView: React.FC<NotesTableViewProps> = ({
       }),
       totalRating: columnHelper.accessor(row => row.rating || 0, {
         id: 'totalRating',
-        header: '总评',
+        header: 'Итог',
         cell: info => {
           const rating = info.getValue();
           return rating > 0 ? rating : <EmptyCell />;
@@ -397,7 +397,7 @@ const NotesTableView: React.FC<NotesTableViewProps> = ({
       }),
       notes: columnHelper.accessor(row => row.notes || '', {
         id: 'notes',
-        header: '备注',
+        header: 'Заметка',
         cell: info => info.getValue() || <EmptyCell />,
         sortingFn: alphanumericSortingFn,
         ...getColumnSizing('notes'),
@@ -460,7 +460,7 @@ const NotesTableView: React.FC<NotesTableViewProps> = ({
               checked={selectedNotes.includes(note.id)}
               onChange={() => onToggleSelect?.(note.id)}
               onClick={event => event.stopPropagation()}
-              aria-label="选择笔记"
+              aria-label="Выбрать заметки"
               className="relative h-4 w-4 appearance-none rounded-sm border border-neutral-300 text-xs checked:bg-neutral-800 checked:after:absolute checked:after:top-1/2 checked:after:left-1/2 checked:after:-translate-x-1/2 checked:after:-translate-y-1/2 checked:after:text-white checked:after:content-['✓'] dark:border-neutral-700 dark:checked:bg-neutral-200 dark:checked:after:text-black"
             />
           );
@@ -533,7 +533,7 @@ const NotesTableView: React.FC<NotesTableViewProps> = ({
   if (notes.length === 0) {
     return (
       <div className="flex h-32 items-center justify-center text-xs leading-relaxed font-medium text-neutral-600 dark:text-neutral-400">
-        [ 暂无冲煮记录，请点击下方按钮添加 ]
+        [ Заварок пока нет, добавьте кнопкой ниже ]
       </div>
     );
   }
@@ -626,7 +626,7 @@ const NotesTableView: React.FC<NotesTableViewProps> = ({
                           {canResize && (
                             <div
                               role="separator"
-                              aria-label="调整列宽"
+                              aria-label="Ширина колонок"
                               aria-orientation="vertical"
                               className={`absolute top-0 right-0 z-20 h-full w-4 translate-x-1/2 cursor-col-resize touch-none ${
                                 isResizing

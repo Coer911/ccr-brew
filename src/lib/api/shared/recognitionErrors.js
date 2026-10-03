@@ -1,5 +1,5 @@
 export function normalizeRecognitionErrorMessage(message) {
-  const fallback = '识别失败，请稍后重试';
+  const fallback = 'Не удалось распознать, попробуйте позже';
   const text = String(message || '').trim();
   if (!text) return fallback;
 
@@ -15,7 +15,7 @@ export function normalizeRecognitionErrorMessage(message) {
       sanitized
     )
   ) {
-    return '识别服务鉴权异常，请稍后重试或联系管理员检查服务配置';
+    return 'Ошибка авторизации сервиса распознавания, попробуйте позже';
   }
 
   return sanitized;

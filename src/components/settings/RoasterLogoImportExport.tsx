@@ -78,7 +78,7 @@ const RoasterImportItem: React.FC<{
           {existingLogo ? (
             <Image
               src={existingLogo}
-              alt="现有"
+              alt="Есть"
               fill
               className="object-cover"
               unoptimized
@@ -117,7 +117,7 @@ const RoasterImportItem: React.FC<{
       onClick={() => onToggleSkip(config.roasterName)}
       className="shrink-0 text-xs text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
     >
-      {config.skip ? '恢复' : '跳过'}
+      {config.skip ? 'Вернуть' : 'Пропустить'}
     </button>
   </div>
 );
@@ -167,7 +167,7 @@ const RoasterLogoImportExport: React.FC<RoasterLogoImportExportProps> = ({
       const configsWithLogo = configs.filter(c => c.logoData);
 
       if (configsWithLogo.length === 0) {
-        showToast({ title: '没有可导出的烘焙商图标', type: 'info' });
+        showToast({ title: 'Нет логотипов обжарщиков для экспорта', type: 'info' });
         return;
       }
 
@@ -190,16 +190,16 @@ const RoasterLogoImportExport: React.FC<RoasterLogoImportExportProps> = ({
       await exportJsonFile({
         jsonData: JSON.stringify(exportData, null, 2),
         fileName,
-        title: '导出烘焙商图标',
-        text: '请选择保存位置',
-        dialogTitle: '导出烘焙商图标',
+        title: 'Экспорт логотипов обжарщиков',
+        text: 'Выберите, куда сохранить',
+        dialogTitle: 'Экспорт логотипов обжарщиков',
       });
 
       if (hapticFeedback) {
         hapticsUtils.success();
       }
       showToast({
-        title: `已导出 ${configsWithLogo.length} 个烘焙商图标`,
+        title: `Выгружено ${configsWithLogo.length} логотипов обжарщиков`,
         type: 'success',
       });
       handleClose();
@@ -208,7 +208,7 @@ const RoasterLogoImportExport: React.FC<RoasterLogoImportExportProps> = ({
       if (hapticFeedback) {
         hapticsUtils.error();
       }
-      showToast({ title: '导出失败', type: 'error' });
+      showToast({ title: 'Ошибка выгрузки', type: 'error' });
     }
   }, [hapticFeedback, handleClose]);
 
@@ -232,10 +232,10 @@ const RoasterLogoImportExport: React.FC<RoasterLogoImportExportProps> = ({
               return;
             }
 
-            reject(new Error('读取文件失败'));
+            reject(new Error('Не удалось прочитать файл'));
           };
           reader.onerror = () => {
-            reject(reader.error || new Error('读取文件失败'));
+            reject(reader.error || new Error('Не удалось прочитать файл'));
           };
           reader.readAsText(file);
         });
@@ -243,7 +243,7 @@ const RoasterLogoImportExport: React.FC<RoasterLogoImportExportProps> = ({
 
         // 验证数据格式
         if (!data.data || !Array.isArray(data.data)) {
-          throw new Error('无效的文件格式');
+          throw new Error('Неверный формат файла');
         }
 
         // 解析导入的配置
@@ -264,7 +264,7 @@ const RoasterLogoImportExport: React.FC<RoasterLogoImportExportProps> = ({
           });
 
         if (configs.length === 0) {
-          showToast({ title: '文件中没有有效的烘焙商图标', type: 'info' });
+          showToast({ title: 'В файле нет подходящих логотипов', type: 'info' });
           return;
         }
 
@@ -275,7 +275,7 @@ const RoasterLogoImportExport: React.FC<RoasterLogoImportExportProps> = ({
         if (hapticFeedback) {
           hapticsUtils.error();
         }
-        showToast({ title: '文件格式无效', type: 'error' });
+        showToast({ title: 'Неверный формат файла', type: 'error' });
       }
     },
     [existingRoasters, hapticFeedback]
@@ -338,7 +338,7 @@ const RoasterLogoImportExport: React.FC<RoasterLogoImportExportProps> = ({
       }
 
       showToast({
-        title: `已导入 ${importedCount} 个烘焙商图标`,
+        title: `Импортировано ${importedCount} логотипов обжарщиков`,
         type: 'success',
       });
       onImportComplete?.();
@@ -348,7 +348,7 @@ const RoasterLogoImportExport: React.FC<RoasterLogoImportExportProps> = ({
       if (hapticFeedback) {
         hapticsUtils.error();
       }
-      showToast({ title: '导入失败', type: 'error' });
+      showToast({ title: 'Ошибка импорта', type: 'error' });
       setImportStep('preview');
     } finally {
       setProcessing(false);
@@ -413,22 +413,22 @@ const RoasterLogoImportExport: React.FC<RoasterLogoImportExportProps> = ({
         <ActionDrawer.Icon icon={IosShareIcon} />
         <ActionDrawer.Content>
           <p className="text-neutral-500 dark:text-neutral-400">
-            将导出
+            Будет выгружено
             <span className="mx-1 text-neutral-800 dark:text-neutral-200">
               {configsWithLogo.length}
             </span>
-            个烘焙商图标，可分享给好友或备份到其他设备。
+            логотипов обжарщиков — можно поделиться с друзьями или перенести на другое устройство.
           </p>
         </ActionDrawer.Content>
         <ActionDrawer.Actions>
           <ActionDrawer.SecondaryButton onClick={handleClose}>
-            取消
+            Отмена
           </ActionDrawer.SecondaryButton>
           <ActionDrawer.PrimaryButton
             onClick={handleExport}
             disabled={configsWithLogo.length === 0}
           >
-            导出
+            Экспорт
           </ActionDrawer.PrimaryButton>
         </ActionDrawer.Actions>
       </ActionDrawer>
@@ -450,15 +450,15 @@ const RoasterLogoImportExport: React.FC<RoasterLogoImportExportProps> = ({
               <ActionDrawer.Icon icon={DownloadIcon} />
               <ActionDrawer.Content>
                 <p className="text-neutral-500 dark:text-neutral-400">
-                  选择烘焙商图标 JSON 文件进行导入。
+                  Выберите JSON-файл с логотипами обжарщиков для импорта.
                 </p>
               </ActionDrawer.Content>
               <ActionDrawer.Actions>
                 <ActionDrawer.SecondaryButton onClick={handleClose}>
-                  取消
+                  Отмена
                 </ActionDrawer.SecondaryButton>
                 <ActionDrawer.PrimaryButton onClick={triggerFileInput}>
-                  选择文件
+                  Выбрать файл
                 </ActionDrawer.PrimaryButton>
               </ActionDrawer.Actions>
             </>
@@ -468,11 +468,11 @@ const RoasterLogoImportExport: React.FC<RoasterLogoImportExportProps> = ({
             <>
               <div className="mb-3">
                 <h3 className="text-base font-medium text-neutral-800 dark:text-neutral-200">
-                  预览导入
+                  Что будет импортировано
                 </h3>
                 <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-                  {stats.toImport} 个待导入 · {stats.skipped} 个跳过 · 共{' '}
-                  {stats.total} 个
+                  {stats.toImport} к импорту · {stats.skipped} пропущено · всего{' '}
+                  {stats.total} шт.
                 </p>
               </div>
 
@@ -506,7 +506,7 @@ const RoasterLogoImportExport: React.FC<RoasterLogoImportExportProps> = ({
                 {importedConfigs.some(c => !c.matched) && (
                   <div className="pt-3 pb-1.5">
                     <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                      需要手动匹配
+                      Нужно сопоставить вручную
                     </span>
                   </div>
                 )}
@@ -540,13 +540,13 @@ const RoasterLogoImportExport: React.FC<RoasterLogoImportExportProps> = ({
                 <ActionDrawer.SecondaryButton
                   onClick={() => setImportStep('select')}
                 >
-                  返回
+                  Назад
                 </ActionDrawer.SecondaryButton>
                 <ActionDrawer.PrimaryButton
                   onClick={executeImport}
                   disabled={stats.toImport === 0}
                 >
-                  导入 ({stats.toImport})
+                  Импортировать ({stats.toImport})
                 </ActionDrawer.PrimaryButton>
               </ActionDrawer.Actions>
             </>
@@ -557,7 +557,7 @@ const RoasterLogoImportExport: React.FC<RoasterLogoImportExportProps> = ({
               <ActionDrawer.Icon icon={DownloadIcon} />
               <ActionDrawer.Content>
                 <p className="text-neutral-500 dark:text-neutral-400">
-                  正在导入烘焙商图标，请稍候...
+                  Импортируем логотипы обжарщиков, подождите...
                 </p>
               </ActionDrawer.Content>
             </>

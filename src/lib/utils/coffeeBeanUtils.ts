@@ -39,12 +39,12 @@ const hasWhitespaceSeparator = (value: string): boolean => /\s/.test(value);
 const isExcludedLegacyRoasterToken = (value: string): boolean => {
   const lowerCased = value.toLowerCase();
   const excludeWords = [
-    '豆',
+    'Зерно',
     'bean',
     'beans',
-    '手冲',
-    '意式',
-    '咖啡豆',
+    'Фильтр',
+    'Эспрессо',
+    'Зерно',
     'coffee',
   ];
   return excludeWords.includes(lowerCased);
@@ -411,7 +411,7 @@ export function getCoffeeBeanRoasterSuggestions(
 
   beans.forEach(bean => {
     const roaster = getBeanRoasterName(bean);
-    if (!roaster || roaster === '未知烘焙商') {
+    if (!roaster || roaster === 'Неизвестный обжарщик') {
       return;
     }
 

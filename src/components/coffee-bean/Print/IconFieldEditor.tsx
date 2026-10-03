@@ -59,8 +59,8 @@ const PlacementControls: React.FC<PlacementControlsProps> = ({
         type="button"
         onClick={onZoomOut}
         disabled={isProcessing}
-        aria-label="缩小图标"
-        title="缩小图标"
+        aria-label="Уменьшить логотип"
+        title="Уменьшить логотип"
         className={`flex h-8 w-8 items-center justify-center disabled:opacity-50 ${SOFT_BUTTON_CLASS}`}
       >
         <Minus className="h-3 w-3" />
@@ -69,8 +69,8 @@ const PlacementControls: React.FC<PlacementControlsProps> = ({
         type="button"
         onClick={onZoomIn}
         disabled={isProcessing}
-        aria-label="放大图标"
-        title="放大图标"
+        aria-label="Увеличить логотип"
+        title="Увеличить логотип"
         className={`flex h-8 w-8 items-center justify-center disabled:opacity-50 ${SOFT_BUTTON_CLASS}`}
       >
         <Plus className="h-3 w-3" />
@@ -79,8 +79,8 @@ const PlacementControls: React.FC<PlacementControlsProps> = ({
         type="button"
         onClick={onResetPlacement}
         disabled={isProcessing}
-        aria-label="复位图标位置"
-        title="复位图标位置"
+        aria-label="Вернуть логотип на место"
+        title="Вернуть логотип на место"
         className={`flex h-8 w-8 items-center justify-center disabled:opacity-50 ${SOFT_BUTTON_CLASS}`}
       >
         <RotateCcw className="h-3 w-3" />
@@ -149,7 +149,7 @@ export const IconFieldEditor: React.FC<IconFieldEditorProps> = ({
         type="file"
         accept={IMAGE_FILE_ACCEPT}
         className="hidden"
-        aria-label="选择图标图片"
+        aria-label="Выбрать картинку логотипа"
         onChange={onFileChange}
       />
 
@@ -166,8 +166,8 @@ export const IconFieldEditor: React.FC<IconFieldEditorProps> = ({
               false
             )}
           >
-            <IconSwatch icon={roasterIcon} label="烘焙商图标" />
-            <span className="min-w-0 truncate">烘焙商</span>
+            <IconSwatch icon={roasterIcon} label="Логотип обжарщика" />
+            <span className="min-w-0 truncate">Обжарщик</span>
           </button>
           <button
             type="button"
@@ -180,8 +180,8 @@ export const IconFieldEditor: React.FC<IconFieldEditorProps> = ({
               !hasCustomIcon
             )}
           >
-            <IconSwatch icon={customIcon || null} label="自定义图标" />
-            <span className="min-w-0 truncate">自定义</span>
+            <IconSwatch icon={customIcon || null} label="Свой логотип" />
+            <span className="min-w-0 truncate">Свой</span>
           </button>
         </div>
       )}
@@ -196,7 +196,7 @@ export const IconFieldEditor: React.FC<IconFieldEditorProps> = ({
               className={`flex h-8 items-center gap-1.5 px-2 text-xs font-medium disabled:opacity-50 ${SOFT_BUTTON_CLASS}`}
             >
               <Upload className="h-3 w-3" />
-              {isProcessing ? '处理中' : hasCustomIcon ? '更换' : '添加'}
+              {isProcessing ? 'Обработка' : hasCustomIcon ? 'Заменить' : 'Добавить'}
             </button>
             {hasCustomIcon && (
               <button
@@ -206,7 +206,7 @@ export const IconFieldEditor: React.FC<IconFieldEditorProps> = ({
                 className={`flex h-8 items-center gap-1.5 px-2 text-xs font-medium disabled:opacity-50 ${SOFT_BUTTON_CLASS}`}
               >
                 <X className="h-3 w-3" />
-                移除
+                Убрать
               </button>
             )}
           </div>

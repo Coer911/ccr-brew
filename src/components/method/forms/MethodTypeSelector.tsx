@@ -35,12 +35,12 @@ const MethodTypeSelector: React.FC<MethodTypeSelectorProps> = ({
     <BottomActionBar
       buttons={[
         {
-          text: '通用方案',
+          text: 'Общие рецепты',
           onClick: () => handleMethodTypeChange('common'),
           className: methodType === 'common' ? 'font-bold' : '',
         },
         {
-          text: '自定义方案',
+          text: 'Свой рецепт',
           onClick: () => handleMethodTypeChange('custom'),
           className: methodType === 'custom' ? 'font-bold' : '',
         },

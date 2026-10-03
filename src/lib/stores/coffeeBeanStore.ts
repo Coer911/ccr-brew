@@ -126,7 +126,7 @@ export const useCoffeeBeanStore = create<CoffeeBeanStore>()(
         finishLoading();
       } catch (error) {
         console.error('[CoffeeBeanStore] loadBeans failed:', error);
-        set({ error: '加载咖啡豆失败', isLoading: false, initialized: false });
+        set({ error: 'Не удалось загрузить зерно', isLoading: false, initialized: false });
         throw error;
       }
     },

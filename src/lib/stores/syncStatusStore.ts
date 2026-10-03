@@ -230,7 +230,7 @@ export const useSyncStatusStore = create<SyncStatusState>()(
           console.warn('[SyncStatus] 同步超时，自动重置状态');
           set({
             status: 'error',
-            errorMessage: '同步超时',
+            errorMessage: 'Время синхронизации истекло',
             _syncingTimeout: null,
           });
           currentState._scheduleReset(STATUS_AUTO_RESET_CONFIG.error);

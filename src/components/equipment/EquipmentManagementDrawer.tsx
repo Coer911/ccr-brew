@@ -105,8 +105,8 @@ const EquipmentRow: React.FC<EquipmentRowProps> = ({
       >
         <button
           type="button"
-          aria-label={`拖动调整 ${equipmentDisplayName} 排序`}
-          title="拖动排序"
+          aria-label={`Перетащите, чтобы изменить ${equipmentDisplayName} порядок`}
+          title="Перетащите для сортировки"
           onPointerDown={event => dragControls.start(event)}
           className="mr-3 cursor-grab rounded-md p-1 pl-0 transition-colors duration-150 active:cursor-grabbing"
         >
@@ -359,7 +359,7 @@ const EquipmentManagementDrawer: React.FC<EquipmentManagementDrawerProps> = ({
         setAllEquipments(prev => prev.filter(eq => eq.id !== equipment.id));
       } catch (error) {
         console.error('隐藏器具失败:', error);
-        alert('隐藏器具失败，请重试');
+        alert('Не удалось скрыть устройство, попробуйте ещё раз');
       }
       return;
     }
@@ -426,7 +426,7 @@ const EquipmentManagementDrawer: React.FC<EquipmentManagementDrawerProps> = ({
         <div className="px-6 pb-6">
           <motion.div className="mb-5 flex items-center justify-between">
             <h3 className="text-base font-medium text-neutral-900 dark:text-neutral-100">
-              器具列表
+              Список устройств
             </h3>
             <button
               type="button"
@@ -434,7 +434,7 @@ const EquipmentManagementDrawer: React.FC<EquipmentManagementDrawerProps> = ({
               className="flex items-center justify-center rounded-full bg-neutral-100 px-3 py-1 transition-all duration-150 active:scale-95 active:opacity-80 dark:bg-neutral-800"
             >
               <span className="text-sm font-medium text-neutral-800 dark:text-neutral-100">
-                + 添加器具
+                + Добавить устройство
               </span>
             </button>
           </motion.div>{' '}
@@ -463,14 +463,14 @@ const EquipmentManagementDrawer: React.FC<EquipmentManagementDrawerProps> = ({
             ) : (
               <div className="py-8 text-center">
                 <p className="mb-2 text-sm text-neutral-500 dark:text-neutral-400">
-                  暂无自定义器具
+                  Своих устройств пока нет
                 </p>
                 <button
                   type="button"
                   onClick={handleAddEquipment}
                   className="text-xs text-neutral-600 transition-colors duration-150 hover:text-neutral-800 hover:underline dark:text-neutral-400 dark:hover:text-neutral-200"
                 >
-                  点击添加
+                  Нажмите, чтобы добавить
                 </button>
               </div>
             )}

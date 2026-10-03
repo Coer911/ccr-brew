@@ -26,9 +26,9 @@ const getRoasterAltText = (
   beanData: CoffeeBean | Partial<CoffeeBean> | null,
   roasterSettings: RoasterSettings
 ): string => {
-  if (!beanData) return '烘焙商图标';
+  if (!beanData) return 'Логотип обжарщика';
   return (
-    getRoasterName(beanData as CoffeeBean, roasterSettings) || '烘焙商图标'
+    getRoasterName(beanData as CoffeeBean, roasterSettings) || 'Логотип обжарщика'
   );
 };
 
@@ -94,7 +94,7 @@ export const BeanImageSmall: React.FC<{
       return null;
     }
 
-    if (roasterName && roasterName !== '未知烘焙商') {
+    if (roasterName && roasterName !== 'Неизвестный обжарщик') {
       return configuredRoasterLogo;
     }
 
@@ -126,7 +126,7 @@ export const BeanImageSmall: React.FC<{
       ) : roasterLogo && !hasImageError(roasterLogo) ? (
         <Image
           src={roasterLogo}
-          alt={roasterName || '烘焙商图标'}
+          alt={roasterName || 'Логотип обжарщика'}
           fill
           className="object-cover"
           sizes="40px"
@@ -299,7 +299,7 @@ const BeanImageSection: React.FC<BeanImageSectionProps> = ({
       alert(
         error instanceof ImageProcessingError
           ? error.message
-          : '图片选择失败，请更换图片后重试'
+          : 'Не удалось выбрать фото, попробуйте другое'
       );
     }
   };
@@ -382,7 +382,7 @@ const AddModeImages: React.FC<{
         <div className="relative h-32 overflow-hidden bg-neutral-100 dark:bg-neutral-800">
           <Image
             src={tempFrontImage}
-            alt={tempBean.name || '咖啡豆正面'}
+            alt={tempBean.name || 'Пачка спереди'}
             height={192}
             width={192}
             className="h-full w-auto object-cover"
@@ -409,7 +409,7 @@ const AddModeImages: React.FC<{
         <div className="relative h-20 shrink-0 self-end overflow-hidden bg-neutral-100 dark:bg-neutral-800">
           <Image
             src={tempBackImage}
-            alt={tempBean.name || '咖啡豆背面'}
+            alt={tempBean.name || 'Пачка сзади'}
             height={80}
             width={80}
             className="h-full w-auto object-cover"
@@ -444,7 +444,7 @@ const AddModeImages: React.FC<{
         <div className="relative h-32 overflow-hidden bg-neutral-100 dark:bg-neutral-800">
           <Image
             src={tempFrontImage}
-            alt={tempBean.name || '咖啡豆正面'}
+            alt={tempBean.name || 'Пачка спереди'}
             height={192}
             width={192}
             className="h-full w-auto object-cover"
@@ -473,7 +473,7 @@ const AddModeImages: React.FC<{
             type="button"
             onClick={() => handleImageSelect('gallery', 'back')}
             className="flex h-full w-full items-center justify-center transition-colors hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80"
-            title="添加背面图片"
+            title="Добавить фото сзади"
           >
             <ImageIcon className="h-5 w-5 text-neutral-300 dark:text-neutral-600" />
           </button>
@@ -490,7 +490,7 @@ const AddModeImages: React.FC<{
           type="button"
           className="relative block h-32 cursor-pointer overflow-hidden bg-neutral-100 p-0 dark:bg-neutral-800"
           onClick={() => handleImageSelect('gallery', 'front')}
-          title="点击替换为自定义图片"
+          title="Нажмите, чтобы заменить своим фото"
         >
           <Image
             src={roasterLogo}
@@ -510,7 +510,7 @@ const AddModeImages: React.FC<{
           <div className="relative h-20 shrink-0 self-end overflow-hidden bg-neutral-100 dark:bg-neutral-800">
             <Image
               src={tempBackImage}
-              alt={tempBean.name || '咖啡豆背面'}
+              alt={tempBean.name || 'Пачка сзади'}
               height={80}
               width={80}
               className="h-full w-auto object-cover"
@@ -540,7 +540,7 @@ const AddModeImages: React.FC<{
               type="button"
               onClick={() => handleImageSelect('gallery', 'back')}
               className="flex h-full w-full items-center justify-center transition-colors hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80"
-              title="添加背面图片"
+              title="Добавить фото сзади"
             >
               <ImageIcon className="h-5 w-5 text-neutral-300 dark:text-neutral-600" />
             </button>
@@ -559,7 +559,7 @@ const AddModeImages: React.FC<{
             type="button"
             onClick={() => handleImageSelect('gallery', 'front')}
             className="flex h-full w-32 items-center justify-center transition-colors hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80"
-            title="添加正面图片"
+            title="Добавить фото спереди"
           >
             <ImageIcon className="h-6 w-6 text-neutral-300 dark:text-neutral-600" />
           </button>
@@ -567,7 +567,7 @@ const AddModeImages: React.FC<{
         <div className="relative h-20 shrink-0 self-end overflow-hidden bg-neutral-100 dark:bg-neutral-800">
           <Image
             src={tempBackImage}
-            alt={tempBean.name || '咖啡豆背面'}
+            alt={tempBean.name || 'Пачка сзади'}
             height={80}
             width={80}
             className="h-full w-auto object-cover"
@@ -603,7 +603,7 @@ const AddModeImages: React.FC<{
           type="button"
           onClick={() => handleImageSelect('camera', 'front')}
           className="flex h-full w-20 items-center justify-center transition-colors hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80"
-          title="拍照"
+          title="Сфотографировать"
         >
           <Camera className="h-5 w-5 text-neutral-300 dark:text-neutral-600" />
         </button>
@@ -613,7 +613,7 @@ const AddModeImages: React.FC<{
           type="button"
           onClick={() => handleImageSelect('gallery', 'front')}
           className="flex h-full w-32 items-center justify-center transition-colors hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80"
-          title="从相册选择"
+          title="Выбрать из галереи"
         >
           <ImageIcon className="h-6 w-6 text-neutral-300 dark:text-neutral-600" />
         </button>
@@ -649,7 +649,7 @@ const ViewModeImages: React.FC<{
         <div className="relative h-32 overflow-hidden bg-neutral-100 dark:bg-neutral-800">
           <Image
             src={bean.image}
-            alt={bean.name || '咖啡豆正面'}
+            alt={bean.name || 'Пачка спереди'}
             height={192}
             width={192}
             className="h-full w-auto object-cover"
@@ -667,7 +667,7 @@ const ViewModeImages: React.FC<{
           <div className="relative h-20 shrink-0 self-end overflow-hidden bg-neutral-100 dark:bg-neutral-800">
             <Image
               src={bean.backImage}
-              alt={bean.name || '咖啡豆背面'}
+              alt={bean.name || 'Пачка сзади'}
               height={80}
               width={80}
               className="h-full w-auto object-cover"
@@ -710,7 +710,7 @@ const ViewModeImages: React.FC<{
           <div className="relative h-20 shrink-0 self-end overflow-hidden bg-neutral-100 dark:bg-neutral-800">
             <Image
               src={bean.backImage}
-              alt={bean.name || '咖啡豆背面'}
+              alt={bean.name || 'Пачка сзади'}
               height={80}
               width={80}
               className="h-full w-auto object-cover"

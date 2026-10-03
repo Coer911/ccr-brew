@@ -279,7 +279,7 @@ const ActionDrawer: React.FC<ActionDrawerProps> & {
           aria-describedby={undefined}
         >
           {/* 无障碍标题 - 视觉隐藏 */}
-          <Drawer.Title className="sr-only">操作面板</Drawer.Title>
+          <Drawer.Title className="sr-only">Действия</Drawer.Title>
 
           {/* 拖拽手柄 - 可选，提供视觉提示 */}
           {/* <Drawer.Handle className="mx-auto mt-4 h-1.5 w-12 shrink-0 rounded-full bg-neutral-300 dark:bg-neutral-600" /> */}

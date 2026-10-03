@@ -214,11 +214,11 @@ function formatTimeDiff(timestamp: number): string {
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
-  if (days > 0) return `${days} 天前`;
-  if (hours > 0) return `${hours} 小时前`;
-  if (minutes > 0) return `${minutes} 分钟前`;
-  if (seconds > 0) return `${seconds} 秒前`;
-  return '刚刚';
+  if (days > 0) return `${days} дн. назад`;
+  if (hours > 0) return `${hours} ч назад`;
+  if (minutes > 0) return `${minutes} мин назад`;
+  if (seconds > 0) return `${seconds} с назад`;
+  return 'Только что';
 }
 
 /**

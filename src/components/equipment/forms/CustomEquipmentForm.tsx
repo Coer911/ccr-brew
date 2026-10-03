@@ -139,20 +139,20 @@ const PRESET_OPTIONS = [
   },
   {
     value: 'clever',
-    label: '聪明杯',
+    label: 'Clever',
     animationType: 'clever',
     hasValve: true,
     defaultShapeIcon: '/images/icons/ui/v60-base.svg',
   },
   {
     value: 'espresso',
-    label: '意式咖啡机',
+    label: 'Эспрессо-машина',
     animationType: 'espresso',
     hasValve: false,
   },
   {
     value: 'custom',
-    label: '自定义器具',
+    label: 'Своё устройство',
     animationType: 'custom',
   },
 ] as const satisfies readonly EquipmentPresetOption[];
@@ -196,25 +196,25 @@ const isPresetEquipmentNameAvailable = (
 const DEFAULT_POUR_TYPES = [
   {
     id: 'system-center',
-    name: '中心注水',
+    name: 'Пролив в центр',
     pourType: 'center' as const,
-    description: '中心定点注水，降低萃取率',
+    description: 'Пролив точно в центр, экстракция ниже',
     isSystemDefault: true,
     previewFrames: 3,
   },
   {
     id: 'system-circle',
-    name: '绕圈注水',
+    name: 'Пролив по кругу',
     pourType: 'circle' as const,
-    description: '中心向外缓慢画圈注水，均匀萃取咖啡风味',
+    description: 'Медленные круги от центра наружу, равномерная экстракция',
     isSystemDefault: true,
     previewFrames: 4,
   },
   {
     id: 'system-ice',
-    name: '添加冰块',
+    name: 'Добавить лёд',
     pourType: 'ice' as const,
-    description: '适用于冰滴和冰手冲咖啡',
+    description: 'Для холодной капельной заварки и айс-пуровера',
     isSystemDefault: true,
     previewFrames: 4,
   },
@@ -222,7 +222,7 @@ const DEFAULT_POUR_TYPES = [
     id: 'system-bypass',
     name: 'Bypass',
     pourType: 'bypass' as const,
-    description: '冲煮完成后添加到咖啡液中，调节浓度和口感',
+    description: 'Добавляется в напиток после заварки, регулирует крепость и вкус',
     isSystemDefault: true,
     previewFrames: 1,
   },
@@ -533,12 +533,12 @@ const CustomEquipmentForm = forwardRef<
       const newErrors: Record<string, string> = {};
 
       if (!equipment.name?.trim()) {
-        newErrors.name = '请输入器具名称';
+        newErrors.name = 'Введите название устройства';
       } else if (
         !isPresetEquipmentNameAvailable(equipment.name, initialEquipment?.id) ||
         !(await isEquipmentNameAvailable(equipment.name, initialEquipment?.id))
       ) {
-        newErrors.name = '器具名称已存在';
+        newErrors.name = 'Устройство с таким названием уже есть';
       }
 
       setErrors(newErrors);
@@ -816,7 +816,7 @@ const CustomEquipmentForm = forwardRef<
         for (let i = 0; i < animation.previewFrames; i++) {
           frames.push({
             url: `/images/pour-animations/${animation.pourType}/frame-${i + 1}.png`,
-            label: `帧 ${i + 1}`,
+            label: `Кадр ${i + 1}`,
           });
         }
         return frames;
@@ -1038,7 +1038,7 @@ const CustomEquipmentForm = forwardRef<
       if (activeDrawerPage === 'equipment-picker') {
         return {
           key: 'equipment-picker',
-          title: '选择器具',
+          title: 'Выберите устройство',
           doneDisabled: false,
           canGoBack: true,
         };
@@ -1048,10 +1048,10 @@ const CustomEquipmentForm = forwardRef<
         return {
           key: `animation-${currentEditingAnimation.id}`,
           title: currentEditingAnimation.id.startsWith('system-')
-            ? `编辑${currentEditingAnimation.name}动画`
+            ? `Изменить ${currentEditingAnimation.name} анимацию`
             : currentEditingAnimation.customAnimationSvg
-              ? '编辑注水动画'
-              : '添加注水动画',
+              ? 'Изменить анимацию пролива'
+              : 'Добавить анимацию пролива',
           doneDisabled: !currentEditingAnimation.name.trim(),
           canGoBack: true,
         };
@@ -1060,7 +1060,7 @@ const CustomEquipmentForm = forwardRef<
       if (showDrawingCanvas) {
         return {
           key: 'drawing',
-          title: '绘制自定义杯型',
+          title: 'Нарисовать свою форму',
           doneDisabled: false,
           canGoBack: true,
         };
@@ -1071,8 +1071,8 @@ const CustomEquipmentForm = forwardRef<
           key: `valve-${valveEditMode}`,
           title:
             valveEditMode === 'closed'
-              ? '绘制阀门关闭状态'
-              : '绘制阀门开启状态',
+              ? 'Нарисовать закрытый клапан'
+              : 'Нарисовать открытый клапан',
           doneDisabled: false,
           canGoBack: true,
         };
@@ -1080,7 +1080,7 @@ const CustomEquipmentForm = forwardRef<
 
       return {
         key: 'form',
-        title: initialEquipment ? '编辑器具' : '添加器具',
+        title: initialEquipment ? 'Изменить устройство' : 'Добавить устройство',
         doneDisabled: !equipment.name?.trim() || isSubmitting,
         canGoBack: false,
       };
@@ -1144,11 +1144,11 @@ const CustomEquipmentForm = forwardRef<
       return (
         <div>
           <SettingSection
-            title="注水方式名称"
+            title="Название способа пролива"
             footer={
               currentEditingAnimation.isSystemDefault
-                ? '系统注水方式只能调整动画，名称不可修改。'
-                : '用于在注水方式卡片中显示，建议简短明确。'
+                ? 'У системных способов пролива можно менять только анимацию, не название.'
+                : 'Показывается на карточке способа пролива, лучше коротко.'
             }
           >
             <SettingRow vertical>
@@ -1157,7 +1157,7 @@ const CustomEquipmentForm = forwardRef<
                 value={currentEditingAnimation.name}
                 onChange={handlePourAnimationNameChange}
                 className="w-full bg-transparent text-sm leading-none text-neutral-900 outline-none placeholder:text-neutral-400 read-only:text-neutral-500 dark:text-neutral-50 dark:placeholder:text-neutral-500 dark:read-only:text-neutral-400"
-                placeholder="例如：中心注水"
+                placeholder="Например: пролив в центр"
                 readOnly={currentEditingAnimation.isSystemDefault}
                 maxLength={20}
               />
@@ -1165,9 +1165,9 @@ const CustomEquipmentForm = forwardRef<
           </SettingSection>
 
           <SettingSection
-            title="动画帧"
+            title="Кадры анимации"
             contentShape="none"
-            footer="在画布上绘制水流轨迹，使用帧缩略图切换帧，多帧会按顺序播放。"
+            footer="Рисуйте струю на холсте, переключайте кадры миниатюрами — кадры проигрываются по порядку."
           >
             <div
               ref={canvasContainerRef}
@@ -1215,7 +1215,7 @@ const CustomEquipmentForm = forwardRef<
                     }
                   }}
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200/50 bg-white dark:border-neutral-700 dark:bg-neutral-800"
-                  aria-label="减小线条粗细"
+                  aria-label="Тоньше линия"
                 >
                   <Minus className="size-4" strokeWidth={2.2} />
                 </button>
@@ -1227,7 +1227,7 @@ const CustomEquipmentForm = forwardRef<
                       width: `${strokeWidth}px`,
                       height: `${strokeWidth}px`,
                     }}
-                    aria-label={`笔触大小: ${strokeWidth}`}
+                    aria-label={`Толщина кисти: ${strokeWidth}`}
                   />
                 </div>
 
@@ -1242,7 +1242,7 @@ const CustomEquipmentForm = forwardRef<
                     }
                   }}
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200/50 bg-white dark:border-neutral-700 dark:bg-neutral-800"
-                  aria-label="增加线条粗细"
+                  aria-label="Толще линия"
                 >
                   <Plus className="size-4" strokeWidth={2.2} />
                 </button>
@@ -1253,7 +1253,7 @@ const CustomEquipmentForm = forwardRef<
                   type="button"
                   onClick={handleTogglePlayback}
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200/50 bg-white dark:border-neutral-700 dark:bg-neutral-800"
-                  aria-label={isPlaying ? '暂停' : '播放'}
+                  aria-label={isPlaying ? 'Пауза' : 'Пуск'}
                 >
                   {isPlaying ? (
                     <Pause className="size-4" strokeWidth={2.2} />
@@ -1266,7 +1266,7 @@ const CustomEquipmentForm = forwardRef<
                   type="button"
                   onClick={() => animationEditorRef.current?.undo()}
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200/50 bg-white dark:border-neutral-700 dark:bg-neutral-800"
-                  aria-label="撤销"
+                  aria-label="Отменить"
                 >
                   <RotateCcw className="size-4" strokeWidth={2.2} />
                 </button>
@@ -1275,7 +1275,7 @@ const CustomEquipmentForm = forwardRef<
                   type="button"
                   onClick={handleDeleteCurrentFrame}
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200/50 bg-white dark:border-neutral-700 dark:bg-neutral-800"
-                  aria-label="删除帧"
+                  aria-label="Удалить кадр"
                 >
                   <Trash2 className="size-4" strokeWidth={2.2} />
                 </button>
@@ -1324,7 +1324,7 @@ const CustomEquipmentForm = forwardRef<
               type="button"
               onClick={() => handleStrokeWidthChange(strokeWidth - 1)}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200/50 bg-white dark:border-neutral-700 dark:bg-neutral-800"
-              aria-label="减小线条粗细"
+              aria-label="Тоньше линия"
             >
               <span className="text-lg font-medium">−</span>
             </button>
@@ -1336,7 +1336,7 @@ const CustomEquipmentForm = forwardRef<
                   width: `${strokeWidth}px`,
                   height: `${strokeWidth}px`,
                 }}
-                aria-label={`笔触大小: ${strokeWidth}`}
+                aria-label={`Толщина кисти: ${strokeWidth}`}
               />
             </div>
 
@@ -1344,7 +1344,7 @@ const CustomEquipmentForm = forwardRef<
               type="button"
               onClick={() => handleStrokeWidthChange(strokeWidth + 1)}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200/50 bg-white dark:border-neutral-700 dark:bg-neutral-800"
-              aria-label="增加线条粗细"
+              aria-label="Толще линия"
             >
               <span className="text-lg font-medium">+</span>
             </button>
@@ -1356,7 +1356,7 @@ const CustomEquipmentForm = forwardRef<
               type="button"
               onClick={() => setShowReference(!showReference)}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200/50 bg-white dark:border-neutral-700 dark:bg-neutral-800"
-              aria-label={showReference ? '隐藏底图' : '显示底图'}
+              aria-label={showReference ? 'Скрыть подложку' : 'Показать подложку'}
             >
               <svg
                 width="18"
@@ -1389,7 +1389,7 @@ const CustomEquipmentForm = forwardRef<
               type="button"
               onClick={() => canvasRef.current?.undo()}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200/50 bg-white dark:border-neutral-700 dark:bg-neutral-800"
-              aria-label="撤销"
+              aria-label="Отменить"
             >
               <svg
                 width="18"
@@ -1412,7 +1412,7 @@ const CustomEquipmentForm = forwardRef<
               type="button"
               onClick={() => canvasRef.current?.clear()}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200/50 bg-white dark:border-neutral-700 dark:bg-neutral-800"
-              aria-label="清除"
+              aria-label="Очистить"
             >
               <svg
                 width="18"
@@ -1480,7 +1480,7 @@ const CustomEquipmentForm = forwardRef<
               type="button"
               onClick={() => handleStrokeWidthChange(strokeWidth - 1)}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200/50 bg-white dark:border-neutral-700 dark:bg-neutral-800"
-              aria-label="减小线条粗细"
+              aria-label="Тоньше линия"
             >
               <span className="text-lg font-medium">−</span>
             </button>
@@ -1492,7 +1492,7 @@ const CustomEquipmentForm = forwardRef<
                   width: `${strokeWidth}px`,
                   height: `${strokeWidth}px`,
                 }}
-                aria-label={`笔触大小: ${strokeWidth}`}
+                aria-label={`Толщина кисти: ${strokeWidth}`}
               />
             </div>
 
@@ -1500,7 +1500,7 @@ const CustomEquipmentForm = forwardRef<
               type="button"
               onClick={() => handleStrokeWidthChange(strokeWidth + 1)}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200/50 bg-white dark:border-neutral-700 dark:bg-neutral-800"
-              aria-label="增加线条粗细"
+              aria-label="Толще линия"
             >
               <span className="text-lg font-medium">+</span>
             </button>
@@ -1518,7 +1518,7 @@ const CustomEquipmentForm = forwardRef<
                 setValveEditMode(newMode);
               }}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200/50 bg-white dark:border-neutral-700 dark:bg-neutral-800"
-              aria-label={`切换到${valveEditMode === 'closed' ? '开启' : '关闭'}状态`}
+              aria-label={`Переключить на ${valveEditMode === 'closed' ? 'Открыт' : 'Закрыть'} `}
             >
               <svg
                 width="18"
@@ -1544,7 +1544,7 @@ const CustomEquipmentForm = forwardRef<
               type="button"
               onClick={() => setShowReference(!showReference)}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200/50 bg-white dark:border-neutral-700 dark:bg-neutral-800"
-              aria-label={showReference ? '隐藏底图' : '显示底图'}
+              aria-label={showReference ? 'Скрыть подложку' : 'Показать подложку'}
             >
               <svg
                 width="18"
@@ -1577,7 +1577,7 @@ const CustomEquipmentForm = forwardRef<
               type="button"
               onClick={() => canvasRef.current?.undo()}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200/50 bg-white dark:border-neutral-700 dark:bg-neutral-800"
-              aria-label="撤销"
+              aria-label="Отменить"
             >
               <svg
                 width="18"
@@ -1600,7 +1600,7 @@ const CustomEquipmentForm = forwardRef<
               type="button"
               onClick={() => canvasRef.current?.clear()}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200/50 bg-white dark:border-neutral-700 dark:bg-neutral-800"
-              aria-label="清除"
+              aria-label="Очистить"
             >
               <svg
                 width="18"
@@ -1622,13 +1622,13 @@ const CustomEquipmentForm = forwardRef<
         </div>
 
         <div className="mt-4 rounded-lg bg-neutral-100 p-3 text-xs text-neutral-500 dark:bg-neutral-900 dark:text-neutral-400">
-          <h4 className="mb-1 font-medium">阀门绘制提示</h4>
+          <h4 className="mb-1 font-medium">Как рисовать клапан</h4>
           <ul className="list-disc space-y-1 pl-4">
             <li>
-              当前绘制：{valveEditMode === 'closed' ? '关闭' : '开启'}状态的阀门
+              Сейчас рисуете:{valveEditMode === 'closed' ? 'Закрыть' : 'Открыт'}клапан в состоянии
             </li>
             <li>
-              使用
+              Выбрать
               <span className="mx-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-neutral-200 dark:bg-neutral-700">
                 <svg
                   width="10"
@@ -1646,11 +1646,11 @@ const CustomEquipmentForm = forwardRef<
                   />
                 </svg>
               </span>
-              按钮切换阀门状态
+              Кнопкой переключается состояние клапана
             </li>
-            <li>器具显示为底图，另一状态的阀门显示为参考</li>
-            <li>简单明了的形状更易于识别</li>
-            <li>完成后点击右上角保存</li>
+            <li>Устройство показано подложкой, клапан в другом состоянии — для сравнения</li>
+            <li>Простые формы узнаются легче</li>
+            <li>В конце нажмите «Сохранить» справа вверху</li>
           </ul>
         </div>
       </div>
@@ -1679,7 +1679,7 @@ const CustomEquipmentForm = forwardRef<
             <div className="relative h-full w-full">
               <Image
                 src={activeCupReference.iconUrl}
-                alt="杯型背景"
+                alt="Подложка формы"
                 fill
                 className="object-contain invert-0 dark:invert"
                 sizes="(max-width: 768px) 100vw, 300px"
@@ -1688,7 +1688,7 @@ const CustomEquipmentForm = forwardRef<
               {activeCupReference.hasValve && (
                 <Image
                   src="/images/icons/ui/valve-closed.svg"
-                  alt="阀门背景"
+                  alt="Подложка клапана"
                   fill
                   className="object-contain invert-0 dark:invert"
                   sizes="(max-width: 768px) 100vw, 300px"
@@ -1771,7 +1771,7 @@ const CustomEquipmentForm = forwardRef<
 
               return (
                 <div className="px-3 text-center text-xs text-neutral-400 dark:text-neutral-500">
-                  预览注水动画
+                  Предпросмотр анимации пролива
                 </div>
               );
             })()}
@@ -1784,7 +1784,7 @@ const CustomEquipmentForm = forwardRef<
       <div>
         <SettingSection contentShape="card">
           <SettingVerticalSelector
-            ariaLabel="器具类型"
+            ariaLabel="Тип устройства"
             value={selectedPreset}
             options={PRESET_OPTIONS}
             onChange={handlePresetSelect}
@@ -1797,14 +1797,14 @@ const CustomEquipmentForm = forwardRef<
     // 渲染主要表单内容
     const renderFormContent = () => (
       <div>
-        <SettingSection title="器具名称">
+        <SettingSection title="Название устройства">
           <SettingRow vertical>
             <input
               type="text"
               value={equipment.name || ''}
               onChange={e => handleChange('name', e.target.value)}
               className="w-full bg-transparent text-sm leading-none text-neutral-900 outline-none placeholder:text-neutral-400 dark:text-neutral-50 dark:placeholder:text-neutral-500"
-              placeholder="输入器具名称"
+              placeholder="Введите название устройства"
               autoComplete="off"
             />
             {errors.name && (
@@ -1815,7 +1815,7 @@ const CustomEquipmentForm = forwardRef<
           </SettingRow>
         </SettingSection>
 
-        <SettingSection title="器具">
+        <SettingSection title="Устройство">
           {canEditEquipmentType ? (
             <button
               type="button"
@@ -1823,7 +1823,7 @@ const CustomEquipmentForm = forwardRef<
               className="flex w-full cursor-pointer items-center gap-3 px-3.5 py-3.5 text-left transition active:bg-black/5 dark:active:bg-white/5"
             >
               <span className="min-w-0 flex-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                类型
+                Тип
               </span>
               <span className="shrink-0 text-sm font-medium text-neutral-500 dark:text-neutral-400">
                 {selectedPresetInfo.label}
@@ -1831,7 +1831,7 @@ const CustomEquipmentForm = forwardRef<
               <ChevronRight className="h-4 w-4 shrink-0 text-neutral-400 dark:text-neutral-500" />
             </button>
           ) : (
-            <SettingRow label="类型">
+            <SettingRow label="Тип">
               <span className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
                 {selectedPresetInfo.label}
               </span>
@@ -1840,17 +1840,17 @@ const CustomEquipmentForm = forwardRef<
         </SettingSection>
 
         {shouldShowCustomShapeControls && (
-          <SettingSection title="杯型" contentShape="none">
+          <SettingSection title="Форма" contentShape="none">
             <SettingCardSelector<CupShapeType>
-              ariaLabel="杯型"
+              ariaLabel="Форма"
               value={cupShapeType}
               options={[
                 ...(selectedPreset === 'custom'
                   ? []
-                  : [{ value: 'default' as const, label: '默认杯型' }]),
+                  : [{ value: 'default' as const, label: 'Стандартная форма' }]),
                 {
                   value: 'custom' as const,
-                  label: equipment.customShapeSvg ? '自定义杯型' : '添加杯型',
+                  label: equipment.customShapeSvg ? 'Своя форма' : 'Добавить форму',
                 },
               ]}
               onChange={handleCupShapeChange}
@@ -1858,8 +1858,8 @@ const CustomEquipmentForm = forwardRef<
                 option.value === 'custom'
                   ? {
                       ariaLabel: equipment.customShapeSvg
-                        ? '编辑杯型'
-                        : '绘制杯型',
+                        ? 'Изменить форму'
+                        : 'Нарисовать форму',
                       onClick: handleCustomCupShapePreviewClick,
                     }
                   : undefined
@@ -1905,7 +1905,7 @@ const CustomEquipmentForm = forwardRef<
                         selectedPresetInfo.defaultShapeIcon ||
                         '/images/icons/ui/v60-base.svg'
                       }
-                      alt="杯型背景"
+                      alt="Подложка формы"
                       fill
                       className="object-contain invert-0 dark:invert"
                       sizes="(max-width: 768px) 100vw, 300px"
@@ -1914,7 +1914,7 @@ const CustomEquipmentForm = forwardRef<
                     {equipment.hasValve && (
                       <Image
                         src="/images/icons/ui/valve-closed.svg"
-                        alt="阀门背景"
+                        alt="Подложка клапана"
                         fill
                         className="object-contain invert-0 dark:invert"
                         sizes="(max-width: 768px) 100vw, 300px"
@@ -1929,7 +1929,7 @@ const CustomEquipmentForm = forwardRef<
         )}
 
         {shouldShowPourAnimationControls && (
-          <SettingSection title="注水方式" contentShape="none">
+          <SettingSection title="Способ пролива" contentShape="none">
             <div className="grid grid-cols-2 gap-3">
               {customPourAnimations.map(animation => (
                 <div
@@ -1938,11 +1938,11 @@ const CustomEquipmentForm = forwardRef<
                 >
                   <div className="mb-2 flex min-h-5 min-w-0 items-center gap-2">
                     <span className="min-w-0 flex-1 truncate text-sm leading-none font-medium text-neutral-800 dark:text-neutral-200">
-                      {animation.name || '未命名注水方式'}
+                      {animation.name || 'Способ пролива без названия'}
                     </span>
                     {animation.isSystemDefault && (
                       <span className="shrink-0 rounded-full bg-neutral-200 px-1.5 py-0.5 text-[10px] leading-none font-medium text-neutral-500 dark:bg-neutral-700 dark:text-neutral-300">
-                        系统
+                        Системный
                       </span>
                     )}
                     {!animation.isSystemDefault && (
@@ -1950,7 +1950,7 @@ const CustomEquipmentForm = forwardRef<
                         type="button"
                         onClick={() => handleEditPourAnimation(animation)}
                         className="flex size-5 shrink-0 items-center justify-center rounded-full text-neutral-400 focus-visible:ring-2 focus-visible:ring-neutral-400/60 focus-visible:outline-none dark:text-neutral-500 dark:focus-visible:ring-neutral-500/70"
-                        aria-label={`编辑${animation.name || '注水方式'}`}
+                        aria-label={`Изменить ${animation.name || 'Способы пролива'}`}
                       >
                         <Pencil className="size-3.5" strokeWidth={2.2} />
                       </button>
@@ -1959,7 +1959,7 @@ const CustomEquipmentForm = forwardRef<
                       type="button"
                       onClick={() => handleDeletePourAnimation(animation.id)}
                       className="flex size-5 shrink-0 items-center justify-center rounded-full text-neutral-400 focus-visible:ring-2 focus-visible:ring-neutral-400/60 focus-visible:outline-none dark:text-neutral-500 dark:focus-visible:ring-neutral-500/70"
-                      aria-label={`删除${animation.name || '注水方式'}`}
+                      aria-label={`Удалить ${animation.name || 'Способы пролива'}`}
                     >
                       <Trash2 className="size-3.5" strokeWidth={2.2} />
                     </button>
@@ -1969,7 +1969,7 @@ const CustomEquipmentForm = forwardRef<
                       type="button"
                       onClick={() => handleEditPourAnimation(animation)}
                       className="flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden rounded-md bg-neutral-50 focus-visible:ring-2 focus-visible:ring-neutral-400/60 focus-visible:outline-none dark:bg-neutral-900/80 dark:focus-visible:ring-neutral-500/70"
-                      aria-label={`编辑${animation.name || '注水方式'}预览`}
+                      aria-label={`Изменить ${animation.name || 'Способы пролива'} — просмотр`}
                     >
                       {renderPourAnimationPreview(animation)}
                     </button>
@@ -1984,14 +1984,14 @@ const CustomEquipmentForm = forwardRef<
               <div className="flex min-w-0 flex-col rounded-lg bg-neutral-100 p-2.5 text-left dark:bg-neutral-800/80">
                 <div className="mb-2 flex min-h-5 min-w-0 items-center gap-2">
                   <span className="min-w-0 flex-1 truncate text-sm leading-none font-medium text-neutral-800 dark:text-neutral-200">
-                    添加注水方式
+                    Добавить способ пролива
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={handleAddPourAnimation}
                   className="flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden rounded-md bg-neutral-50 focus-visible:ring-2 focus-visible:ring-neutral-400/60 focus-visible:outline-none dark:bg-neutral-900/80 dark:focus-visible:ring-neutral-500/70"
-                  aria-label="添加注水方式"
+                  aria-label="Добавить способ пролива"
                 >
                   <div className="relative h-full w-full">
                     {renderPourBaseLayer()}
@@ -2009,13 +2009,13 @@ const CustomEquipmentForm = forwardRef<
         )}
 
         {onImport && (
-          <SettingSection title="操作">
+          <SettingSection title="Действия">
             <button
               type="button"
               onClick={onImport}
               className="flex w-full cursor-pointer items-center px-3.5 py-3.5 text-left text-sm font-medium text-neutral-600 transition active:bg-black/5 dark:text-neutral-300 dark:active:bg-white/5"
             >
-              导入器具
+              Импорт устройства
             </button>
           </SettingSection>
         )}

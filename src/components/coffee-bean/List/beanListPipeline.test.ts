@@ -233,12 +233,12 @@ describe('beanListPipeline', () => {
       name: 'Structured Bean',
       blendComponents: [
         {
-          country: '埃塞俄比亚',
-          region: '西达摩',
-          estate: '博纳',
-          processingStation: '沃卡',
+          country: 'Эфиопия',
+          region: 'Сидамо',
+          estate: 'Бона',
+          processingStation: 'Вока',
           altitude: '2100m',
-          process: '水洗',
+          process: 'Мытая',
           batch: 'A12',
         },
       ],
@@ -246,22 +246,22 @@ describe('beanListPipeline', () => {
     const legacyBean = buildBean({
       id: 'legacy',
       name: 'Legacy Bean',
-      blendComponents: [{ origin: '哥伦比亚 蕙兰' }],
+      blendComponents: [{ origin: 'Колумбия Уила' }],
     });
     const snapshot = createSnapshot([structuredBean, legacyBean]);
 
     expect(
-      searchBeanRecords(snapshot.filteredRecords, '博纳').map(
+      searchBeanRecords(snapshot.filteredRecords, 'Бона').map(
         record => record.bean.id
       )
     ).toEqual(['structured']);
     expect(
-      searchBeanRecords(snapshot.filteredRecords, '沃卡').map(
+      searchBeanRecords(snapshot.filteredRecords, 'Вока').map(
         record => record.bean.id
       )
     ).toEqual(['structured']);
     expect(
-      searchBeanRecords(snapshot.filteredRecords, '蕙兰').map(
+      searchBeanRecords(snapshot.filteredRecords, 'Уила').map(
         record => record.bean.id
       )
     ).toEqual(['legacy']);
@@ -270,19 +270,19 @@ describe('beanListPipeline', () => {
   it('keeps origin filtering on the legacy origin field only', () => {
     const structuredBean = buildBean({
       id: 'structured',
-      blendComponents: [{ origin: '旧产地', country: '埃塞俄比亚' }],
+      blendComponents: [{ origin: 'Старый регион', country: 'Эфиопия' }],
     });
     const legacyBean = buildBean({
       id: 'legacy',
-      blendComponents: [{ origin: '埃塞俄比亚 西达摩' }],
+      blendComponents: [{ origin: 'Эфиопия Сидамо' }],
     });
     const snapshot = createSnapshot([structuredBean, legacyBean], {
       filterMode: 'origin',
-      selectedOrigin: '埃塞俄比亚',
+      selectedOrigin: 'Эфиопия',
     });
 
     expect(snapshot.filteredBeans.map(bean => bean.id)).toEqual([]);
-    expect(snapshot.availableOrigins).toEqual(['埃塞俄比亚 西达摩', '旧产地']);
+    expect(snapshot.availableOrigins).toEqual(['Старый регион', 'Эфиопия Сидамо']);
   });
 
   it('uses enabled structured field values as independent category values', () => {
@@ -290,33 +290,33 @@ describe('beanListPipeline', () => {
       id: 'structured',
       blendComponents: [
         {
-          origin: '旧产地',
-          country: '埃塞俄比亚',
+          origin: 'Старый регион',
+          country: 'Эфиопия',
           region: '耶加雪菲',
-          estate: '班驰玛吉',
-          processingStation: '沃卡',
+          estate: 'Банчи Маджи',
+          processingStation: 'Вока',
           altitude: '1200',
         },
       ],
     });
     const snapshot = createSnapshot([structuredBean], {
       filterMode: 'country',
-      selectedOrigin: '埃塞俄比亚',
+      selectedOrigin: 'Эфиопия',
     });
 
     expect(snapshot.filteredBeans.map(bean => bean.id)).toEqual(['structured']);
-    expect(snapshot.availableBeanFieldValues.origin).toEqual(['旧产地']);
-    expect(snapshot.availableBeanFieldValues.country).toEqual(['埃塞俄比亚']);
+    expect(snapshot.availableBeanFieldValues.origin).toEqual(['Старый регион']);
+    expect(snapshot.availableBeanFieldValues.country).toEqual(['Эфиопия']);
     expect(snapshot.availableBeanFieldValues.region).toEqual(['耶加雪菲']);
-    expect(snapshot.availableBeanFieldValues.estate).toEqual(['班驰玛吉']);
+    expect(snapshot.availableBeanFieldValues.estate).toEqual(['Банчи Маджи']);
     expect(snapshot.availableBeanFieldValues.processingStation).toEqual([
-      '沃卡',
+      'Вока',
     ]);
     expect(snapshot.availableBeanFieldValues.altitude).toEqual(['1200']);
 
     const stationSnapshot = createSnapshot([structuredBean], {
       filterMode: 'processingStation',
-      selectedOrigin: '沃卡',
+      selectedOrigin: 'Вока',
     });
     expect(stationSnapshot.filteredBeans.map(bean => bean.id)).toEqual([
       'structured',

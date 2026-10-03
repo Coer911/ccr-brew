@@ -149,7 +149,7 @@ const SuggestionDropdown = React.forwardRef<
                   {removable && (
                     <button
                       type="button"
-                      aria-label={`移除 ${suggestion}`}
+                      aria-label={`Убрать ${suggestion}`}
                       onMouseDown={event => {
                         event.preventDefault();
                         event.stopPropagation();

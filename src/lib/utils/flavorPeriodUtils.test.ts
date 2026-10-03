@@ -21,7 +21,7 @@ describe('flavorPeriodUtils', () => {
 
   it('keeps roast-level presets for default flavor period values', () => {
     expect(
-      getDefaultFlavorPeriodByRoastLevelSync('浅烘', {
+      getDefaultFlavorPeriodByRoastLevelSync('Светлая', {
         light: { startDay: 7, endDay: 0 },
         medium: { startDay: 0, endDay: 0 },
         dark: { startDay: 0, endDay: 0 },
@@ -33,12 +33,12 @@ describe('flavorPeriodUtils', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-05-10T12:00:00'));
 
-    expect(calculateFlavorInfo({ ...bean, startDay: 14 }).phase).toBe('养豆期');
+    expect(calculateFlavorInfo({ ...bean, startDay: 14 }).phase).toBe('Отдых');
 
     vi.setSystemTime(new Date('2026-05-20T12:00:00'));
 
     expect(calculateFlavorInfo({ ...bean, startDay: 14 })).toEqual({
-      phase: '未知',
+      phase: 'Неизвестно',
       remainingDays: 0,
     });
   });

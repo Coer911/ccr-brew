@@ -207,7 +207,7 @@ export class OfflineQueueManager {
           } else {
             const canRetry = await this.markFailed(
               operation.id,
-              '同步失败，等待下次重试'
+              'Ошибка синхронизации, повторим позже'
             );
             if (!canRetry) {
               failed++;

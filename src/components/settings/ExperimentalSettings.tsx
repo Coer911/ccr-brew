@@ -131,7 +131,7 @@ const ExperimentalSettings: React.FC<ExperimentalSettingsProps> = ({
     if (value && !/^https?:\/\//i.test(value)) {
       showToast({
         type: 'error',
-        title: '请输入有效的接口地址（需以 http:// 或 https:// 开头）',
+        title: 'Введите корректный адрес API (начинается с http:// или https://)',
       });
       return;
     }
@@ -172,12 +172,12 @@ const ExperimentalSettings: React.FC<ExperimentalSettingsProps> = ({
       });
       showToast({
         type: 'success',
-        title: `连接成功（${result.durationMs}ms）`,
+        title: `Подключено (${result.durationMs}ms）`,
       });
     } catch (error) {
       showToast({
         type: 'error',
-        title: error instanceof Error ? error.message : '测试失败',
+        title: error instanceof Error ? error.message : 'Проверка не прошла',
       });
     } finally {
       setIsTestingConfig(false);
@@ -196,9 +196,9 @@ const ExperimentalSettings: React.FC<ExperimentalSettingsProps> = ({
   );
 
   return (
-    <SettingPage title="实验性功能" isVisible={isVisible} onClose={handleClose}>
-      <SettingSection title="设置">
-        <SettingRow label="设置全局搜索" isLast>
+    <SettingPage title="Экспериментальные функции" isVisible={isVisible} onClose={handleClose}>
+      <SettingSection title="Настройки">
+        <SettingRow label="Глобальный поиск в настройках" isLast>
           <SettingToggle
             checked={settings.experimentalSettingsSearchEnabled || false}
             onChange={checked =>
@@ -216,9 +216,9 @@ const ExperimentalSettings: React.FC<ExperimentalSettingsProps> = ({
           />
 
           <SettingSection
-            footer="开启后，分享咖啡豆会生成包含图片的压缩包；添加咖啡豆时也会显示选择压缩包入口。"
+            footer="Если включить, «Поделиться зерном» создаёт архив с фото, а при добавлении зерна появляется выбор архива."
           >
-            <SettingRow label="分享导入压缩包" isLast>
+            <SettingRow label="Импорт архивов через «Поделиться»" isLast>
               <SettingToggle
                 checked={settings.experimentalBeanSharePackageEnabled || false}
                 onChange={checked =>
@@ -234,20 +234,12 @@ const ExperimentalSettings: React.FC<ExperimentalSettingsProps> = ({
         <SettingSection
           footer={
             <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              使用你自己的模型API用于识别咖啡豆，以获得更准确的结果。
-              <a
-                className="ml-1 text-neutral-600 underline underline-offset-2 dark:text-neutral-300"
-                href="https://chu3.top/brewguide-help/custom-bean-recognition-api"
-                target="_blank"
-                rel="noreferrer"
-                onClick={handleExternalUrlClick}
-              >
-                查看教程
-              </a>
+              Используйте API своей модели для распознавания зерна — так точнее.
+
             </p>
           }
         >
-          <SettingRow label="自定义识别咖啡豆 API">
+          <SettingRow label="Свой API распознавания зерна">
             <SettingToggle
               checked={settings.experimentalBeanRecognitionEnabled || false}
               onChange={checked =>
@@ -286,7 +278,7 @@ const ExperimentalSettings: React.FC<ExperimentalSettingsProps> = ({
                     onClick={() => setShowApiKey(v => !v)}
                     className="text-xs text-neutral-500 dark:text-neutral-400"
                   >
-                    {showApiKey ? '隐藏' : '显示'}
+                    {showApiKey ? 'Скрыть' : 'Показать'}
                   </button>
                 </div>
                 <input
@@ -330,7 +322,7 @@ const ExperimentalSettings: React.FC<ExperimentalSettingsProps> = ({
                     onClick={restoreDefaultPrompt}
                     className="text-xs text-neutral-500 dark:text-neutral-400"
                   >
-                    重置
+                    Сбросить
                   </button>
                 </div>
                 <textarea
@@ -344,16 +336,16 @@ const ExperimentalSettings: React.FC<ExperimentalSettingsProps> = ({
 
               <button
                 type="button"
-                data-settings-search-id={makeSettingRowSearchId('测试连接')}
+                data-settings-search-id={makeSettingRowSearchId('Проверить подключение')}
                 onClick={testConfig}
                 disabled={isTestingConfig}
                 className={`w-full rounded-xl px-3 py-2 text-sm font-medium transition-colors ${
                   isTestingConfig
                     ? 'bg-neutral-200 text-neutral-500 dark:bg-neutral-700 dark:text-neutral-400'
                     : 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900'
-                } ${getSearchHighlightClass('测试连接')}`}
+                } ${getSearchHighlightClass('Проверить подключение')}`}
               >
-                {isTestingConfig ? '测试中...' : '测试连接'}
+                {isTestingConfig ? 'Проверяем...' : 'Проверить подключение'}
               </button>
             </div>
           )}
@@ -362,11 +354,11 @@ const ExperimentalSettings: React.FC<ExperimentalSettingsProps> = ({
 
       {showNoteExperiments && (
         <SettingSection
-          title="笔记"
-          footer="添加笔记和快捷扣除时，使用分类栏选中的日期。"
+          title="Заметки"
+          footer="При добавлении заметок и быстром списании использовать дату, выбранную в фильтре."
         >
           <SettingRow
-            label="同步筛选日期"
+            label="Синхронизировать дату фильтра"
             isLast={!settings.syncNewNoteDateWithSelectedDate}
           >
             <SettingToggle
@@ -377,7 +369,7 @@ const ExperimentalSettings: React.FC<ExperimentalSettingsProps> = ({
             />
           </SettingRow>
           {settings.syncNewNoteDateWithSelectedDate && (
-            <SettingRow label="快捷扣除" isSubSetting isLast>
+            <SettingRow label="Быстрое списание" isSubSetting isLast>
               <SettingToggle
                 checked={
                   settings.syncQuickDecrementDateWithSelectedDate || false

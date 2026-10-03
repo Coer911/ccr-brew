@@ -182,9 +182,9 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
   // 获取日期标签和占位符文本
   const getDateLabelAndPlaceholder = () => {
     if (isGreenBean(bean)) {
-      return { label: '购买日期', placeholder: '选择购买日期' };
+      return { label: 'Дата покупки', placeholder: 'Выберите дату покупки' };
     }
-    return { label: '烘焙日期', placeholder: '选择烘焙日期' };
+    return { label: 'Дата обжарки', placeholder: 'Выберите дату обжарки' };
   };
 
   const { label: dateLabel, placeholder: datePlaceholder } =
@@ -268,8 +268,8 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
   };
 
   const renderAddSideImageButton = (imageType: 'front' | 'back') => {
-    const label = imageType === 'front' ? '正面图' : '背面图';
-    const title = imageType === 'front' ? '添加正面图片' : '添加背面图片';
+    const label = imageType === 'front' ? 'Спереди' : 'Сзади';
+    const title = imageType === 'front' ? 'Добавить фото спереди' : 'Добавить фото сзади';
 
     return (
       <button
@@ -297,7 +297,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
     >
       <div className="w-full space-y-2">
         <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-          咖啡豆图片
+          Фото зерна
         </label>
         {/* 图片选择区 - 多种状态，烘焙商图标仅用于显示，不存储到数据 */}
         <div className="flex w-full items-end gap-2">
@@ -307,7 +307,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded bg-neutral-200/40 dark:bg-neutral-800/60">
                 <Image
                   src={bean.image}
-                  alt="咖啡豆正面"
+                  alt="Пачка спереди"
                   className="object-cover"
                   fill
                   sizes="64px"
@@ -323,7 +323,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded bg-neutral-200/40 dark:bg-neutral-800/60">
                 <Image
                   src={bean.backImage}
-                  alt="咖啡豆背面"
+                  alt="Пачка сзади"
                   className="object-cover"
                   fill
                   sizes="64px"
@@ -343,7 +343,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded bg-neutral-200/40 dark:bg-neutral-800/60">
                 <Image
                   src={bean.image}
-                  alt="咖啡豆正面"
+                  alt="Пачка спереди"
                   className="object-cover"
                   fill
                   sizes="64px"
@@ -364,11 +364,11 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
               <div
                 className="relative h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded bg-neutral-200/40 dark:bg-neutral-800/60"
                 onClick={() => handleImageSelect('gallery', 'front')}
-                title="点击替换为自定义图片"
+                title="Нажмите, чтобы заменить своим фото"
               >
                 <Image
                   src={roasterLogo}
-                  alt="烘焙商图标"
+                  alt="Логотип обжарщика"
                   className="object-cover opacity-40"
                   fill
                   sizes="64px"
@@ -383,7 +383,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
                 <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded bg-neutral-200/40 dark:bg-neutral-800/60">
                   <Image
                     src={bean.backImage}
-                    alt="咖啡豆背面"
+                    alt="Пачка сзади"
                     className="object-cover"
                     fill
                     sizes="64px"
@@ -408,7 +408,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded bg-neutral-200/40 dark:bg-neutral-800/60">
                 <Image
                   src={bean.backImage}
-                  alt="咖啡豆背面"
+                  alt="Пачка сзади"
                   className="object-cover"
                   fill
                   sizes="64px"
@@ -429,7 +429,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
                 type="button"
                 onClick={() => handleImageSelect('camera', 'front')}
                 className="flex h-16 w-16 shrink-0 items-center justify-center rounded bg-neutral-200/40 transition-colors hover:bg-neutral-200/60 dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
-                title="拍照"
+                title="Сфотографировать"
               >
                 <Camera className="h-5 w-5 text-neutral-300 dark:text-neutral-600" />
               </button>
@@ -437,7 +437,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
                 type="button"
                 onClick={() => handleImageSelect('gallery', 'front')}
                 className="flex h-16 w-16 shrink-0 items-center justify-center rounded bg-neutral-200/40 transition-colors hover:bg-neutral-200/60 dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
-                title="从相册选择"
+                title="Выбрать из галереи"
               >
                 <ImageIcon className="h-5 w-5 text-neutral-300 dark:text-neutral-600" />
               </button>
@@ -450,11 +450,11 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
               type="button"
               onClick={() => onBeanChange('image')(recognitionImage)}
               className="group relative h-16 w-16 shrink-0 overflow-hidden rounded bg-neutral-200/40 transition-colors dark:bg-neutral-800/60"
-              title="使用识别图片作为正面"
+              title="Сделать распознанное фото лицевым"
             >
               <Image
                 src={recognitionImage}
-                alt="识别图片"
+                alt="Распознанное фото"
                 className="object-cover"
                 fill
                 sizes="64px"
@@ -473,12 +473,12 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
         <div className="grid w-full grid-cols-2 gap-4">
           <div className="space-y-2">
             <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-              {isGreenBean(bean) ? '生豆商' : '烘焙商'}
+              {isGreenBean(bean) ? 'Поставщик' : 'Обжарщик'}
             </label>
             <AutocompleteInput
               value={bean.roaster || ''}
               onChange={onBeanChange('roaster')}
-              placeholder={isGreenBean(bean) ? '生豆商名称' : '烘焙商名称'}
+              placeholder={isGreenBean(bean) ? 'Название поставщика' : 'Название обжарщика'}
               suggestions={roasterPresetSuggestions.suggestions}
               clearable
               inputMode="text"
@@ -488,19 +488,19 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
           </div>
           <div className="space-y-2">
             <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-              咖啡豆名称 <span className="text-red-500">*</span>
+              Название зерна <span className="text-red-500">*</span>
             </label>
             <AutocompleteInput
               value={bean.name || ''}
               onChange={onBeanChange('name')}
-              placeholder="咖啡豆名称"
+              placeholder="Название зерна"
               suggestions={[]}
               required
               clearable
               inputMode="text"
               onBlur={() => {
                 if (!bean.name?.trim()) {
-                  onBeanChange('name')('未命名咖啡豆');
+                  onBeanChange('name')('Зерно без названия');
                 }
               }}
             />
@@ -510,22 +510,22 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
         /* 关闭独立输入：单个输入框，用户输入完整名称 */
         <div className="w-full space-y-2">
           <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-            咖啡豆名称 <span className="text-red-500">*</span>{' '}
+            Название зерна <span className="text-red-500">*</span>{' '}
             <span className="ml-1 text-xs text-neutral-400 dark:text-neutral-500">
-              (格式：{isGreenBean(bean) ? '生豆商' : '烘焙商'} 咖啡豆名称)
+              (формат: {isGreenBean(bean) ? 'Поставщик' : 'Обжарщик'} название зерна)
             </span>
           </label>
           <AutocompleteInput
             value={bean.name || ''}
             onChange={onBeanChange('name')}
-            placeholder="输入咖啡豆名称"
+            placeholder="Введите название зерна"
             suggestions={[]}
             required
             clearable
             inputMode="text"
             onBlur={() => {
               if (!bean.name?.trim()) {
-                onBeanChange('name')('未命名咖啡豆');
+                onBeanChange('name')('Зерно без названия');
               }
             }}
           />
@@ -535,7 +535,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
       <div className="grid w-full grid-cols-2 gap-6">
         <div className="space-y-2">
           <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-            {isInRoastingMode ? '烘焙量(g)' : '库存量(g)'}
+            {isInRoastingMode ? 'Обжарено (г)' : 'Запас (г)'}
           </label>
           <div className="flex w-full items-center justify-start gap-2">
             <div className="flex-1">
@@ -549,7 +549,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
                   handleRemainingBlur();
                   validateRemaining();
                 }}
-                placeholder={isInRoastingMode ? '熟豆量' : '剩余量'}
+                placeholder={isInRoastingMode ? 'Обжаренное' : 'Остаток'}
                 className="w-full border-b border-neutral-300 bg-transparent py-2 text-center outline-none dark:border-neutral-700"
               />
             </div>
@@ -561,7 +561,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
                 step="0.1"
                 value={capacityValue}
                 onChange={e => handleCapacityChange(e.target.value)}
-                placeholder={isInRoastingMode ? '生豆量' : '总量'}
+                placeholder={isInRoastingMode ? 'Зелёное' : 'Всего'}
                 className="w-full border-b border-neutral-300 bg-transparent py-2 text-center outline-none dark:border-neutral-700"
                 onBlur={() => {
                   onBeanChange('capacity')(capacityValue);
@@ -587,17 +587,17 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
               type="button"
               onClick={onRepurchase}
               className="mt-1 flex items-center text-xs font-bold text-neutral-500 transition-colors hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200"
-              title="续购"
+              title="Докупить"
             >
               <CornerDownRight className="mr-1 h-3 w-3" />
-              续购
+              Докупить
             </button>
           )}
         </div>
 
         <div className="space-y-2">
           <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-            {isInRoastingMode ? '脱水率' : '价格(¥)'}
+            {isInRoastingMode ? 'Усушка' : 'Цена (₽)'}
           </label>
           {isInRoastingMode ? (
             <div className="relative w-full">
@@ -609,7 +609,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
                 onChange={e => handleMoistureChange(e.target.value)}
                 onFocus={() => setIsMoistureFocused(true)}
                 onBlur={handleMoistureBlur}
-                placeholder="自动计算"
+                placeholder="Рассчитать"
                 className="w-full border-b border-neutral-300 bg-transparent py-2 text-left outline-none dark:border-neutral-700"
               />
               <span className="absolute top-2 right-0 text-neutral-500">%</span>
@@ -618,7 +618,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
             <AutocompleteInput
               value={bean.price || ''}
               onChange={onBeanChange('price')}
-              placeholder="例如：88"
+              placeholder="Например: 890"
               clearable={false}
               suggestions={[]}
               inputType="number"
@@ -633,12 +633,12 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
       <div className="grid w-full grid-cols-2 gap-6">
         <div className="space-y-2">
           <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
-            烘焙度
+            Обжарка
           </label>
           <AutocompleteInput
             value={bean.roastLevel || ''}
             onChange={onBeanChange('roastLevel')}
-            placeholder="选择烘焙度"
+            placeholder="Выберите обжарку"
             suggestions={roastLevelSuggestions.suggestions}
             readOnly
             clearable
@@ -659,14 +659,14 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
                 onClick={toggleInTransitState}
                 className={`text-xs ${bean.isInTransit ? 'text-neutral-700 dark:text-neutral-300' : 'text-neutral-600 dark:text-neutral-400'} underline`}
               >
-                {bean.isInTransit ? '取消在途状态' : '设为在途'}
+                {bean.isInTransit ? 'Снять «в пути»' : 'Отметить «в пути»'}
               </button>
             )}
           </div>
           <div className="relative flex w-full items-center justify-start">
             {bean.isInTransit && !isGreenBean(bean) ? (
               <div className="w-full border-b border-neutral-300 bg-transparent py-2 text-neutral-500 opacity-50 dark:border-neutral-700 dark:text-neutral-400">
-                在途中...
+                В пути...
               </div>
             ) : (
               <DatePicker

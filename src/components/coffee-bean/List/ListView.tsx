@@ -73,7 +73,7 @@ const BeanImage: React.FC<{
       return null;
     }
 
-    if (roasterName && roasterName !== '未知烘焙商') {
+    if (roasterName && roasterName !== 'Неизвестный обжарщик') {
       return configuredRoasterLogo;
     }
 
@@ -88,7 +88,7 @@ const BeanImage: React.FC<{
       {beanImage && !hasImageError ? (
         <Image
           src={beanImage}
-          alt={bean.name || '咖啡豆图片'}
+          alt={bean.name || 'Фото зерна'}
           width={56}
           height={56}
           className="h-full w-full object-cover"
@@ -100,7 +100,7 @@ const BeanImage: React.FC<{
       ) : roasterLogo && !hasImageError ? (
         <Image
           src={roasterLogo}
-          alt={roasterName || '烘焙商图标'}
+          alt={roasterName || 'Логотип обжарщика'}
           width={56}
           height={56}
           className="h-full w-full object-cover"
@@ -238,15 +238,15 @@ const CoffeeBeanList: React.FC<CoffeeBeanListProps> = ({
   // 计算赏味期信息
   const getFlavorInfo = useCallback((bean: CoffeeBean) => {
     if (bean.isInTransit) {
-      return { phase: '在途', status: '在途' };
+      return { phase: 'В пути', status: 'В пути' };
     }
 
     if (!bean.roastDate) {
-      return { phase: '未知', status: '未知' };
+      return { phase: 'Неизвестно', status: 'Неизвестно' };
     }
 
     if (bean.isFrozen) {
-      return { phase: '冷冻', status: '冷冻' };
+      return { phase: 'Заморожено', status: 'Заморожено' };
     }
 
     const flavorInfo = calculateFlavorInfo(bean);
@@ -271,12 +271,12 @@ const CoffeeBeanList: React.FC<CoffeeBeanListProps> = ({
     const remainingDays = flavorInfo.remainingDays;
     let status = '';
 
-    if (phase === '养豆期') {
-      status = `养豆 ${remainingDays}天`;
-    } else if (phase === '赏味期') {
-      status = `赏味 ${remainingDays}天`;
-    } else if (phase === '衰退期') {
-      status = '已衰退';
+    if (phase === 'Отдых') {
+      status = `Отдых ${remainingDays} дн.`;
+    } else if (phase === 'Лучший период') {
+      status = `Лучший период ${remainingDays} дн.`;
+    } else if (phase === 'Угасание') {
+      status = 'Выдохлось';
     } else {
       status = '';
     }
@@ -323,9 +323,9 @@ const CoffeeBeanList: React.FC<CoffeeBeanListProps> = ({
       const daysSinceRoast = Math.ceil(
         (todayDate.getTime() - roastDateOnly.getTime()) / (1000 * 60 * 60 * 24)
       );
-      return `养豆${daysSinceRoast}天`;
+      return `Отдых${daysSinceRoast} дн.`;
     } catch {
-      return '养豆0天';
+      return 'Отдых 0 дн.';
     }
   }, []);
 
@@ -338,9 +338,9 @@ const CoffeeBeanList: React.FC<CoffeeBeanListProps> = ({
       const pricePerGram = (priceNum / capacityNum).toFixed(2);
 
       if (showTotalPrice) {
-        return `${priceNum}元(${pricePerGram}元/克)`;
+        return `${priceNum} ₽ (${pricePerGram} ₽/г)`;
       } else {
-        return `${pricePerGram}元/克`;
+        return `${pricePerGram} ₽/г`;
       }
     },
     [showTotalPrice]
@@ -348,11 +348,11 @@ const CoffeeBeanList: React.FC<CoffeeBeanListProps> = ({
 
   const getStatusDotColor = useCallback((phase: string): string => {
     const colors: Record<string, string> = {
-      养豆期: 'bg-amber-400',
-      赏味期: 'bg-green-400',
-      衰退期: 'bg-red-400',
-      在途: 'bg-blue-400',
-      冷冻: 'bg-cyan-400',
+      Отдых: 'bg-amber-400',
+      'Лучший период': 'bg-green-400',
+      Угасание: 'bg-red-400',
+      'В пути': 'bg-blue-400',
+      Заморожено: 'bg-cyan-400',
     };
     return colors[phase] || 'bg-neutral-400';
   }, []);
@@ -398,12 +398,12 @@ const CoffeeBeanList: React.FC<CoffeeBeanListProps> = ({
             <div className="flex flex-col justify-center gap-y-1.5">
               {/* 选项名称 */}
               <div className="line-clamp-2 text-xs leading-tight font-medium text-neutral-800 dark:text-neutral-100">
-                不使用咖啡豆
+                Без зерна
               </div>
 
               {/* 描述信息 */}
               <div className="text-xs leading-relaxed font-medium tracking-wide text-neutral-600 dark:text-neutral-400">
-                <span className="inline">跳过咖啡豆选择</span>
+                <span className="inline">Пропустить выбор зерна</span>
               </div>
             </div>
           </div>
@@ -429,7 +429,7 @@ const CoffeeBeanList: React.FC<CoffeeBeanListProps> = ({
               {/* 右侧内容区域 */}
               <div className="flex h-14 min-w-0 flex-1 flex-col justify-center">
                 <div className="text-xs text-neutral-500 dark:text-neutral-400">
-                  没有找到匹配&quot;{searchQuery.trim()}&quot;的咖啡豆
+                  Ничего не найдено по &quot;{searchQuery.trim()}&quot;
                 </div>
               </div>
             </div>
@@ -462,7 +462,7 @@ const CoffeeBeanList: React.FC<CoffeeBeanListProps> = ({
 
                   {showStatusDots &&
                     bean.roastDate &&
-                    flavorInfo.phase !== '未知' && (
+                    flavorInfo.phase !== 'Неизвестно' && (
                       <div
                         className={`absolute -right-0.5 -bottom-0.5 h-2 w-2 rounded-full ${getStatusDotColor(flavorInfo.phase)} border-2 border-neutral-50 dark:border-neutral-900`}
                       />
@@ -484,9 +484,9 @@ const CoffeeBeanList: React.FC<CoffeeBeanListProps> = ({
                       return displayDate || bean.isInTransit ? (
                         <span className="inline whitespace-nowrap">
                           {bean.isInTransit
-                            ? '在途'
+                            ? 'В пути'
                             : bean.isFrozen
-                              ? '冷冻'
+                              ? 'Заморожено'
                               : !isGreenBean &&
                                   displayDate &&
                                   dateDisplayMode === 'flavorPeriod'
@@ -512,7 +512,7 @@ const CoffeeBeanList: React.FC<CoffeeBeanListProps> = ({
                     {bean.capacity && bean.remaining && (
                       <span className="inline whitespace-nowrap">
                         {formatNumber(bean.remaining)}/
-                        {formatNumber(bean.capacity)}克
+                        {formatNumber(bean.capacity)}г
                         {showPrice && bean.price && bean.capacity && (
                           <span className="mx-2 text-neutral-400 dark:text-neutral-600">
                             ·

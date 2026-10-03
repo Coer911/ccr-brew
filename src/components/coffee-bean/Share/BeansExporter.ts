@@ -116,14 +116,14 @@ export async function exportSelectedBeans({
   onComplete,
 }: BeansExporterProps) {
   if (selectedBeans.length === 0) {
-    onError('请选择至少一个咖啡豆');
+    onError('Выберите хотя бы одно зерно');
     return;
   }
 
   try {
     // 从原始列表中找出选中的咖啡豆元素
     if (!beansContainerRef.current) {
-      onError('找不到咖啡豆容器');
+      onError('Не найден контейнер зерна');
       return;
     }
 
@@ -163,9 +163,9 @@ export async function exportSelectedBeans({
     const beansSummary = calculateBeansSummary(selectedBeans, beansData);
 
     // 构建概要文本
-    let summaryText = `${selectedBeans.length} 款咖啡豆`;
+    let summaryText = `${selectedBeans.length} шт. зерна`;
     if (beansSummary.total > 0) {
-      summaryText += `，剩余 ${formatBeanSummaryWeightWithLimit(
+      summaryText += `, осталось ${formatBeanSummaryWeightWithLimit(
         beansSummary.total,
         maxDisplayWeight,
         limitMode
@@ -179,13 +179,13 @@ export async function exportSelectedBeans({
         const details = buildBeanSummaryDetailItems(
           [
             beansSummary.espressoCount > 0
-              ? { label: '意式', weight: beansSummary.espresso }
+              ? { label: 'Эспрессо', weight: beansSummary.espresso }
               : null,
             beansSummary.filterCount > 0
-              ? { label: '手冲', weight: beansSummary.filter }
+              ? { label: 'Фильтр', weight: beansSummary.filter }
               : null,
             beansSummary.omniCount > 0
-              ? { label: '全能', weight: beansSummary.omni }
+              ? { label: 'Универсальная', weight: beansSummary.omni }
               : null,
           ].filter(Boolean) as Array<{ label: string; weight: number }>,
           maxDisplayWeight,
@@ -215,7 +215,7 @@ export async function exportSelectedBeans({
     tabBar.innerHTML = `
       <div style="border-bottom: 1px solid ${isDarkMode ? '#404040' : '#e5e5e5'};">
         <div style="font-size: 12px; font-weight: 500; color: ${isDarkMode ? '#f5f5f5' : '#262626'}; position: relative; padding-bottom: 6px; display: inline-block;">
-          咖啡豆库存
+          Запасы зерна
           <div style="position: absolute; bottom: -1px; left: 0; right: 0; height: 1px; background-color: ${isDarkMode ? '#f5f5f5' : '#262626'};"></div>
         </div>
       </div>
@@ -367,8 +367,8 @@ export async function exportSelectedBeans({
 
     // 签名：(@用户名 · Brew Guide App)
     const signatureText = username
-      ? `(@${username} · Brew Guide App)`
-      : '(Brew Guide App)';
+      ? `(@${username} · Cultura Brew)`
+      : '(Cultura Brew)';
     footer.innerText = signatureText;
 
     tempContainer.appendChild(footer);
@@ -411,27 +411,27 @@ export async function exportSelectedBeans({
     );
 
     if (shareOutcome === 'activation-required') {
-      onSuccess('咖啡豆图片已生成，请再次点击分享');
+      onSuccess('Картинка с зерном готова, нажмите «Поделиться» ещё раз');
       return;
     }
 
     if (shareOutcome === 'cancelled') {
-      onSuccess('已取消分享');
+      onSuccess('Отправка отменена');
       return;
     }
 
-    onSuccess('咖啡豆已保存为图片');
+    onSuccess('Зерно сохранено картинкой');
   } catch (error) {
     console.error('生成咖啡豆图片失败:', error);
 
-    let errorMessage = '生成图片失败';
+    let errorMessage = 'Не удалось создать картинку';
     if (error instanceof Error) {
       if (error.message.includes('canvas')) {
-        errorMessage = '图片渲染失败，请检查咖啡豆图片是否正常显示';
+        errorMessage = 'Ошибка отрисовки, проверьте, что фото зерна отображаются';
       } else if (error.message.includes('network')) {
-        errorMessage = '网络错误，请检查图片是否能正常加载';
+        errorMessage = 'Ошибка сети, проверьте, что фото загружаются';
       } else if (error.message.includes('timeout')) {
-        errorMessage = '图片加载超时，请重试';
+        errorMessage = 'Фото грузятся слишком долго, попробуйте ещё раз';
       }
     }
 

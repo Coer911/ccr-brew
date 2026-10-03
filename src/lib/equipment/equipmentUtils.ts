@@ -130,7 +130,7 @@ export const equipmentUtils = {
     {
       type: 'addButton' as const,
       id: 'add',
-      name: '添加器具',
+      name: 'Добавить устройство',
       isSelected: false,
       isCustom: false,
       onClick: onAddClick,

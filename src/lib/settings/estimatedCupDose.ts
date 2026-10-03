@@ -13,9 +13,9 @@ export const DEFAULT_ESTIMATED_CUP_DOSE_SETTINGS: EstimatedCupDoseSettings = {
 };
 
 export const ESTIMATED_CUP_DOSE_ITEMS = [
-  { key: 'filter', label: '手冲豆' },
-  { key: 'espresso', label: '意式豆' },
-  { key: 'omni', label: '全能豆' },
+  { key: 'filter', label: 'Для фильтра' },
+  { key: 'espresso', label: 'Для эспрессо' },
+  { key: 'omni', label: 'Омни' },
 ] as const satisfies ReadonlyArray<{
   key: EstimatedCupBeanType;
   label: string;

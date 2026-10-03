@@ -83,7 +83,7 @@ const NoteItemStandard: React.FC<NoteItemProps> = ({
     if (
       note.equipment &&
       (note.equipment.toLowerCase().includes('espresso') ||
-        note.equipment.includes('意式'))
+        note.equipment.includes('Эспрессо'))
     ) {
       return true;
     }
@@ -107,7 +107,7 @@ const NoteItemStandard: React.FC<NoteItemProps> = ({
     if (equipmentName) return equipmentName;
 
     const notePreview = note.notes?.trim();
-    return notePreview || '未命名记录';
+    return notePreview || 'Запись без названия';
   }, [beanName, equipmentName, note.method, note.notes]);
 
   const paramTexts = React.useMemo(() => {
@@ -161,7 +161,7 @@ const NoteItemStandard: React.FC<NoteItemProps> = ({
 
       openImageViewer({
         url: noteImage,
-        alt: beanName || '笔记图片',
+        alt: beanName || 'Фото заметки',
         sourceElement: event.currentTarget,
       });
     },
@@ -185,12 +185,12 @@ const NoteItemStandard: React.FC<NoteItemProps> = ({
             >
               {imageError ? (
                 <div className="absolute inset-0 flex items-center justify-center text-xs text-neutral-500 dark:text-neutral-400">
-                  加载失败
+                  Ошибка загрузки
                 </div>
               ) : (
                 <Image
                   src={noteImage}
-                  alt={beanName || '笔记图片'}
+                  alt={beanName || 'Фото заметки'}
                   height={48}
                   width={48}
                   unoptimized
@@ -301,7 +301,7 @@ const NoteItemStandard: React.FC<NoteItemProps> = ({
           {note.rating > 0 && (
             <div className="text-xs font-medium tracking-wide text-neutral-600 dark:text-neutral-400">
               {isShareMode
-                ? `总体评分 ${formatRating(note.rating)}`
+                ? `Общая оценка ${formatRating(note.rating)}`
                 : formatRating(note.rating)}
             </div>
           )}

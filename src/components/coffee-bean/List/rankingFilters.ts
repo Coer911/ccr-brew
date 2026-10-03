@@ -46,7 +46,7 @@ export const getRankingDateKey = (
 
 export const getRankingRoaster = (bean: CoffeeBean): string | null => {
   const roaster = getBeanRoasterName(bean).trim();
-  return roaster && roaster !== '未知烘焙商' ? roaster : null;
+  return roaster && roaster !== 'Неизвестный обжарщик' ? roaster : null;
 };
 
 export const matchesRankingFilter = (
@@ -111,23 +111,23 @@ export const formatRankingDateLabel = (
   const day = Number(dayText);
 
   if (groupingMode === 'year') {
-    return year === now.getFullYear() ? '今年' : `${year}年`;
+    return year === now.getFullYear() ? 'В этом году' : `${year} г.`;
   }
 
   if (groupingMode === 'month') {
     if (year === now.getFullYear()) {
-      return month === now.getMonth() + 1 ? '本月' : `${month}月`;
+      return month === now.getMonth() + 1 ? 'В этом месяце' : `${month} мес.`;
     }
-    return `${year}年${month}月`;
+    return `${year} г. ${month} мес.`;
   }
 
   const todayUtc = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
   const targetUtc = Date.UTC(year, month - 1, day);
   const dayDifference = Math.round((todayUtc - targetUtc) / 86_400_000);
 
-  if (dayDifference === 0) return '今天';
-  if (dayDifference === 1) return '昨天';
-  if (dayDifference === 2) return '前天';
+  if (dayDifference === 0) return 'Сегодня';
+  if (dayDifference === 1) return 'Вчера';
+  if (dayDifference === 2) return 'Позавчера';
   return year === now.getFullYear()
     ? `${month}/${day}`
     : `${year}/${month}/${day}`;

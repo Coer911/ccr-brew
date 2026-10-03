@@ -7,9 +7,9 @@ describe('normalizeBrewingNote', () => {
     const note = {
       id: 'note-cli',
       timestamp: 1781665593757,
-      method: '挂耳包',
+      method: 'Дрип-пакет',
       rating: 4.4,
-      notes: 'CLI 写入的记录',
+      notes: 'Запись из CLI',
     } as BrewingNote;
 
     const normalized = normalizeBrewingNote(note);

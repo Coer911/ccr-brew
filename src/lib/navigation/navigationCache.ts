@@ -14,19 +14,19 @@ import {
 const MODULE_NAME = 'navigation';
 
 // 主标签页类型定义
-export type MainTabType = '冲煮' | '咖啡豆' | '笔记';
+export type MainTabType = 'Заварка' | 'Зерно' | 'Заметки';
 
 // 默认主标签页
-const DEFAULT_MAIN_TAB: MainTabType = '冲煮';
+const DEFAULT_MAIN_TAB: MainTabType = 'Заварка';
 const NAVIGATION_TAB_TO_MAIN_TAB: Record<MainNavigationTab, MainTabType> = {
-  brewing: '冲煮',
-  coffeeBean: '咖啡豆',
-  notes: '笔记',
+  brewing: 'Заварка',
+  coffeeBean: 'Зерно',
+  notes: 'Заметки',
 };
 const MAIN_TAB_TO_NAVIGATION_TAB: Record<MainTabType, MainNavigationTab> = {
-  冲煮: 'brewing',
-  咖啡豆: 'coffeeBean',
-  笔记: 'notes',
+  Заварка: 'brewing',
+  Зерно: 'coffeeBean',
+  Заметки: 'notes',
 };
 
 /**
@@ -36,7 +36,7 @@ const MAIN_TAB_TO_NAVIGATION_TAB: Record<MainTabType, MainNavigationTab> = {
 export const getMainTabPreference = (): MainTabType => {
   const value = getStringState(MODULE_NAME, 'activeMainTab', DEFAULT_MAIN_TAB);
   // 验证值是否有效
-  const validTabs: MainTabType[] = ['冲煮', '咖啡豆', '笔记'];
+  const validTabs: MainTabType[] = ['Заварка', 'Зерно', 'Заметки'];
   return validTabs.includes(value as MainTabType)
     ? (value as MainTabType)
     : DEFAULT_MAIN_TAB;

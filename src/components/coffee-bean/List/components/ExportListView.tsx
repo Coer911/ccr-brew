@@ -110,7 +110,7 @@ const ExportListView: React.FC<ExportListViewProps> = ({
               display: 'inline-block',
             }}
           >
-            {settings?.simplifiedViewLabels ? '库存' : '咖啡豆库存'}
+            {settings?.simplifiedViewLabels ? 'Запасы' : 'Запасы зерна'}
             <div
               style={{
                 position: 'absolute',
@@ -191,7 +191,7 @@ const ExportListView: React.FC<ExportListViewProps> = ({
                   color: isDarkMode ? '#737373' : '#a3a3a3',
                 }}
               >
-                用完的咖啡豆
+                Закончившееся зерно
               </div>
             </div>
           )}

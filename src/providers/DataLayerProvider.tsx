@@ -77,7 +77,7 @@ export function DataLayerProvider({ children }: DataLayerProviderProps) {
           setState({
             isInitialized: false,
             isInitializing: false,
-            error: error instanceof Error ? error.message : '初始化失败',
+            error: error instanceof Error ? error.message : 'Ошибка инициализации',
           });
         }
       }

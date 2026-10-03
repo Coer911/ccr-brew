@@ -64,7 +64,7 @@ const EquipmentImportFilePicker = forwardRef<
         const data = extractJsonFromText(jsonText);
 
         if (!data) {
-          throw new Error('无效的导入数据格式');
+          throw new Error('Неверный формат данных для импорта');
         }
 
         const exportData = data as {
@@ -73,7 +73,7 @@ const EquipmentImportFilePicker = forwardRef<
         };
 
         if (!exportData.equipment) {
-          throw new Error('无效的器具导出文件格式，缺少equipment字段');
+          throw new Error('Неверный файл экспорта устройства: нет поля equipment');
         }
 
         const existingEquipment = existingEquipments.find(
@@ -82,7 +82,7 @@ const EquipmentImportFilePicker = forwardRef<
 
         if (existingEquipment) {
           throw new Error(
-            `已存在同名器具"${exportData.equipment.name}"，请修改后再导入`
+            `Устройство «${exportData.equipment.name}» уже есть, переименуйте и импортируйте снова`
           );
         }
 
@@ -93,13 +93,13 @@ const EquipmentImportFilePicker = forwardRef<
 
         showToast({
           type: 'success',
-          title: '器具导入成功',
+          title: 'Устройство импортировано',
           duration: 2000,
         });
       } catch (error) {
         showToast({
           type: 'error',
-          title: (error as Error).message || '导入失败',
+          title: (error as Error).message || 'Ошибка импорта',
           duration: 3000,
         });
       } finally {
@@ -114,7 +114,7 @@ const EquipmentImportFilePicker = forwardRef<
       if (!file.name.endsWith('.json') && file.type !== 'application/json') {
         showToast({
           type: 'error',
-          title: '请选择JSON文件',
+          title: 'Выберите JSON-файл',
           duration: 3000,
         });
         return;
@@ -130,7 +130,7 @@ const EquipmentImportFilePicker = forwardRef<
 
         showToast({
           type: 'error',
-          title: '读取文件失败，请重试',
+          title: 'Не удалось прочитать файл, попробуйте ещё раз',
           duration: 3000,
         });
       };
@@ -138,7 +138,7 @@ const EquipmentImportFilePicker = forwardRef<
         setIsImporting(false);
         showToast({
           type: 'error',
-          title: '读取文件失败，请重试',
+          title: 'Не удалось прочитать файл, попробуйте ещё раз',
           duration: 3000,
         });
       };
@@ -162,7 +162,7 @@ const EquipmentImportFilePicker = forwardRef<
       }
 
       if (!file.path) {
-        throw new Error('无法读取文件');
+        throw new Error('Не удаётся прочитать файл');
       }
 
       const response = await fetch(file.path);
@@ -171,7 +171,7 @@ const EquipmentImportFilePicker = forwardRef<
     } catch (error) {
       showToast({
         type: 'error',
-        title: (error as Error).message || '选择文件失败，请重试',
+        title: (error as Error).message || 'Не удалось выбрать файл, попробуйте ещё раз',
         duration: 3000,
       });
       setIsImporting(false);

@@ -7,14 +7,14 @@ type PourTypeOption = {
 };
 
 const POUR_TYPE_LABELS: Record<string, string> = {
-  extraction: '萃取浓缩',
-  beverage: '饮料',
-  other: '其他',
-  center: '中心注水',
-  circle: '绕圈注水',
-  ice: '添加冰块',
+  extraction: 'Экстракция',
+  beverage: 'Напиток',
+  other: 'Другое',
+  center: 'Пролив в центр',
+  circle: 'Пролив по кругу',
+  ice: 'Добавить лёд',
   bypass: 'Bypass',
-  wait: '等待',
+  wait: 'Ожидание',
 };
 
 const ESPRESSO_POUR_TYPES = ['extraction', 'beverage', 'other'] as const;
@@ -157,7 +157,7 @@ export const isEspressoMachine = (
  * @returns 注水方式的中文名称
  */
 export const getPourTypeName = (pourType?: string): string => {
-  if (!pourType) return '请选择注水方式';
+  if (!pourType) return 'Выберите способ пролива';
 
   return POUR_TYPE_LABELS[pourType] || pourType;
 };

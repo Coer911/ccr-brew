@@ -89,7 +89,7 @@ export async function isPersisted(): Promise<boolean> {
  */
 export async function requestPersist(): Promise<boolean> {
   if (!isPersistentStorageSupported()) {
-    throw new Error('当前浏览器不支持持久化存储');
+    throw new Error('Этот браузер не поддерживает постоянное хранилище');
   }
 
   try {

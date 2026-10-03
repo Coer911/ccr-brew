@@ -45,7 +45,7 @@ describe('getInventoryAllClickAction', () => {
       getInventoryAllClickAction({
         selectedBeanType: 'filter',
         filterMode: 'country',
-        selectedOrigin: '埃塞俄比亚',
+        selectedOrigin: 'Эфиопия',
       })
     ).toBe('clear-origin');
   });

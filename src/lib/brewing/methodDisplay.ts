@@ -52,13 +52,13 @@ export const getEspressoParamRows = (
   const extractionTime = getEspressoExtractionTime(method, override);
 
   return [
-    { label: '咖啡粉', value: override?.coffee ?? method.params.coffee },
-    { label: '研磨度', value: override?.grindSize ?? method.params.grindSize },
+    { label: 'Кофе', value: override?.coffee ?? method.params.coffee },
+    { label: 'Помол', value: override?.grindSize ?? method.params.grindSize },
     {
-      label: '萃取时长',
+      label: 'Время экстракции',
       value: extractionTime === undefined ? '-' : `${extractionTime}s`,
     },
-    { label: '液重', value: getEspressoLiquidWeight(method, override) },
+    { label: 'Выход', value: getEspressoLiquidWeight(method, override) },
   ];
 };
 

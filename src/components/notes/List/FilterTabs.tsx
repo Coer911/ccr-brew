@@ -76,9 +76,9 @@ const formatDateLabel = (
     // 按年分组
     const year = parseInt(dateStr, 10);
     if (year === currentYear) {
-      return '今年';
+      return 'В этом году';
     }
-    return `${year}年`;
+    return `${year} г.`;
   } else if (groupingMode === 'month') {
     // 按月分组
     const [year, month] = dateStr.split('-');
@@ -87,11 +87,11 @@ const formatDateLabel = (
 
     if (yearNum === currentYear) {
       if (monthNum === currentMonth) {
-        return '本月';
+        return 'В этом месяце';
       }
-      return `${monthNum}月`;
+      return `${monthNum} мес.`;
     }
-    return `${year}年${monthNum}月`;
+    return `${year} г. ${monthNum} мес.`;
   } else {
     // 按日分组 - 优化显示逻辑
     const [year, month, day] = dateStr.split('-');
@@ -107,15 +107,15 @@ const formatDateLabel = (
 
     // 今天
     if (diffDays === 0) {
-      return '今天';
+      return 'Сегодня';
     }
     // 昨天
     else if (diffDays === 1) {
-      return '昨天';
+      return 'Вчера';
     }
     // 前天
     else if (diffDays === 2) {
-      return '前天';
+      return 'Позавчера';
     }
     // 其他日期：当年显示月/日，其他年份显示年/月/日
     else if (yearNum === currentYear) {
@@ -251,11 +251,11 @@ const getSortOption = (type: string, order: string): SortOption => {
 
 const getSortOrderLabel = (type: string, order: string) => {
   if (type === 'time') {
-    return order === 'desc' ? '最新' : '最早';
+    return order === 'desc' ? 'Сначала новые' : 'Сначала старые';
   } else if (type === 'rating') {
-    return order === 'desc' ? '最高' : '最低';
+    return order === 'desc' ? 'Сначала лучшие' : 'Сначала худшие';
   }
-  return '最新';
+  return 'Сначала новые';
 };
 
 // 筛选模式选择组件
@@ -271,20 +271,20 @@ const FilterModeSection: React.FC<FilterModeSectionProps> = ({
   return (
     <div>
       <div className="mb-2 text-xs font-medium text-neutral-700 dark:text-neutral-300">
-        分类
+        Категория
       </div>
       <div className="flex flex-wrap items-center gap-2">
         <FilterButton
           isActive={filterMode === 'equipment'}
           onClick={() => onFilterModeChange('equipment')}
         >
-          按器具
+          По устройствам
         </FilterButton>
         <FilterButton
           isActive={filterMode === 'date'}
           onClick={() => onFilterModeChange('date')}
         >
-          按日期
+          По датам
         </FilterButton>
       </div>
     </div>
@@ -304,7 +304,7 @@ const DateGroupingSection: React.FC<DateGroupingSectionProps> = ({
   return (
     <div>
       <div className="mb-2 text-xs font-medium text-neutral-700 dark:text-neutral-300">
-        时间分组
+        Группировка по времени
       </div>
       <div className="flex flex-wrap items-center gap-2">
         <FilterButton
@@ -353,7 +353,7 @@ const ViewModeSection: React.FC<ViewModeSectionProps> = ({
   return (
     <div>
       <div className="mb-2 text-xs font-medium text-neutral-700 dark:text-neutral-300">
-        显示
+        Вид
       </div>
       <div className="flex flex-wrap items-center gap-2">
         <FilterButton
@@ -369,7 +369,7 @@ const ViewModeSection: React.FC<ViewModeSectionProps> = ({
             }
           }}
         >
-          列表
+          Список
         </FilterButton>
         <FilterButton
           isActive={viewMode === 'table'}
@@ -383,7 +383,7 @@ const ViewModeSection: React.FC<ViewModeSectionProps> = ({
             onViewModeChange('table');
           }}
         >
-          表格
+          Таблица
         </FilterButton>
         <FilterButton
           isActive={
@@ -399,7 +399,7 @@ const ViewModeSection: React.FC<ViewModeSectionProps> = ({
           }}
           disabled={!hasImageNotes}
         >
-          图片流
+          Галерея
         </FilterButton>
         <FilterButton
           isActive={
@@ -415,7 +415,7 @@ const ViewModeSection: React.FC<ViewModeSectionProps> = ({
           }}
           disabled={!hasImageNotes}
         >
-          带日期图片流
+          Галерея по датам
         </FilterButton>
       </div>
     </div>
@@ -438,7 +438,7 @@ const SortSection: React.FC<SortSectionProps> = ({
   return (
     <div>
       <div className="mb-2 text-xs font-medium text-neutral-700 dark:text-neutral-300">
-        排序
+        Сортировка
       </div>
       <div className="space-y-3">
         {/* 排序方式 */}
@@ -450,7 +450,7 @@ const SortSection: React.FC<SortSectionProps> = ({
               onSortChange(newOption);
             }}
           >
-            时间
+            Время
           </FilterButton>
           <FilterButton
             isActive={currentType === 'rating'}
@@ -459,7 +459,7 @@ const SortSection: React.FC<SortSectionProps> = ({
               onSortChange(newOption);
             }}
           >
-            评分
+            Оценка
           </FilterButton>
         </div>
 
@@ -698,7 +698,7 @@ const FilterTabs: React.FC<FilterTabsProps> = memo(function FilterTabs({
                   layoutId={`notes-${filterMode}-underline`}
                 >
                   <span onDoubleClick={() => onSmartToggleImageFlow?.()}>
-                    全部
+                    Всё
                   </span>
                 </TabButton>
 
@@ -794,7 +794,7 @@ const FilterTabs: React.FC<FilterTabsProps> = memo(function FilterTabs({
                                 dataTab="today"
                                 layoutId="notes-date-underline"
                               >
-                                今天
+                                Сегодня
                               </TabButton>
 
                               {/* 昨天 - 始终显示 */}
@@ -812,7 +812,7 @@ const FilterTabs: React.FC<FilterTabsProps> = memo(function FilterTabs({
                                 dataTab="yesterday"
                                 layoutId="notes-date-underline"
                               >
-                                昨天
+                                Вчера
                               </TabButton>
 
                               {/* 前天 - 始终显示 */}
@@ -830,7 +830,7 @@ const FilterTabs: React.FC<FilterTabsProps> = memo(function FilterTabs({
                                 dataTab="dayBeforeYesterday"
                                 layoutId="notes-date-underline"
                               >
-                                前天
+                                Позавчера
                               </TabButton>
                             </>
                           );
@@ -890,7 +890,7 @@ const FilterTabs: React.FC<FilterTabsProps> = memo(function FilterTabs({
                   onClick={handleSearchClick}
                   className="flex items-center pb-1.5 text-xs font-medium whitespace-nowrap text-neutral-600 dark:text-neutral-400"
                 >
-                  <span className="relative">搜索</span>
+                  <span className="relative">Поиск</span>
                 </button>
 
                 {/* 右侧固定按钮的左侧渐变遮罩 */}
@@ -907,7 +907,7 @@ const FilterTabs: React.FC<FilterTabsProps> = memo(function FilterTabs({
                   value={searchQuery}
                   onChange={onSearchChange}
                   onKeyDown={onSearchKeyDown}
-                  placeholder="搜索笔记..."
+                  placeholder="Поиск по заметкам..."
                   className="w-full border-none bg-transparent pr-2 text-xs font-medium text-neutral-800 placeholder-neutral-400 outline-hidden dark:text-neutral-100 dark:placeholder-neutral-500"
                   autoComplete="off"
                   autoFocus
@@ -936,7 +936,7 @@ const FilterTabs: React.FC<FilterTabsProps> = memo(function FilterTabs({
                   style={{ maxHeight: '3.5rem' }}
                 >
                   <div className="shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                    历史搜索:
+                    Недавние запросы:
                   </div>
                   {searchHistory.map((item, index) => (
                     <button
@@ -1014,7 +1014,7 @@ const FilterTabs: React.FC<FilterTabsProps> = memo(function FilterTabs({
                       tableColumnOptions.length > 0 && (
                         <div>
                           <div className="mb-2 text-xs font-medium text-neutral-700 dark:text-neutral-300">
-                            表格列
+                            Колонки таблицы
                           </div>
                           <div className="flex flex-wrap items-center gap-2">
                             {tableColumnOptions.map(column => (

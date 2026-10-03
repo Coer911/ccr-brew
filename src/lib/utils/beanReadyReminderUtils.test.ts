@@ -8,7 +8,7 @@ import {
 const baseBean: CoffeeBean = {
   id: 'bean-1',
   timestamp: 1,
-  name: '埃塞俄比亚 水洗',
+  name: 'Эфиопия мытая',
   roaster: 'Brew Guide',
   roastDate: '2026-05-13',
   startDay: 10,
@@ -30,13 +30,13 @@ describe('buildBeanReadyReminderItems', () => {
     expect(today).toMatchObject([
       {
         beanId: 'bean-1',
-        coffeeBean: 'Brew Guide 埃塞俄比亚 水洗',
+        coffeeBean: 'Brew Guide Эфиопия мытая',
         daysUntilReady: 0,
-        daysText: '当天',
+        daysText: 'В тот же день',
         readyDate: '2026-05-23',
       },
     ]);
-    expect(tomorrow[0]?.daysText).toBe('1天后');
+    expect(tomorrow[0]?.daysText).toBe('1 дн. спустя');
   });
 
   it('only includes the nearest two days', () => {
@@ -87,7 +87,7 @@ describe('buildBeanReadyReminderItems', () => {
   });
 
   it('formats day labels', () => {
-    expect(formatBeanReadyReminderDays(0)).toBe('当天');
-    expect(formatBeanReadyReminderDays(1)).toBe('1天后');
+    expect(formatBeanReadyReminderDays(0)).toBe('В тот же день');
+    expect(formatBeanReadyReminderDays(1)).toBe('1 дн. спустя');
   });
 });

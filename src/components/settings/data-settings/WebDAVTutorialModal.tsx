@@ -95,7 +95,7 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
   // 测试连接
   const testConnection = useCallback(async () => {
     if (!formData.url || !formData.username || !formData.password) {
-      showToast({ type: 'error', title: '请填写完整的配置信息' });
+      showToast({ type: 'error', title: 'Заполните все настройки' });
       return;
     }
 
@@ -119,13 +119,13 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
         });
         goToNextStep();
       } else {
-        showToast({ type: 'error', title: '连接失败，请检查配置信息' });
+        showToast({ type: 'error', title: 'Ошибка подключения, проверьте настройки' });
       }
     } catch (error) {
       console.error('WebDAV 连接测试失败:', error);
       showToast({
         type: 'error',
-        title: error instanceof Error ? error.message : '连接失败',
+        title: error instanceof Error ? error.message : 'Ошибка подключения',
       });
     } finally {
       setIsConnecting(false);
@@ -140,12 +140,12 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
       </div>
       <ActionDrawer.Content>
         <p className="text-neutral-500 dark:text-neutral-400">
-          只需
+          Всего
           <span className="text-neutral-800 dark:text-neutral-200">
             {' '}
-            简单三步
+            три простых шага
           </span>
-          ，即可开启云同步。你的咖啡数据，从此在所有设备上保持一致。
+          — и облачная синхронизация включена. Ваши кофейные данные будут одинаковыми на всех устройствах.
         </p>
       </ActionDrawer.Content>
       <div className="flex flex-col gap-2">
@@ -154,14 +154,14 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
           onClick={goToNextStep}
           className="w-full rounded-full bg-neutral-900 px-4 py-3 text-sm font-medium text-white dark:bg-white dark:text-neutral-900"
         >
-          开始配置
+          Начать настройку
         </motion.button>
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={handleClose}
           className="w-full rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
         >
-          稍后再说
+          Потом
         </motion.button>
       </div>
     </>
@@ -175,7 +175,7 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
       </div>
       <ActionDrawer.Content>
         <p className="text-neutral-500 dark:text-neutral-400">
-          前往应用商店下载
+          Заведите
           <a
             href="https://www.jianguoyun.com/s/downloads"
             target="_blank"
@@ -184,9 +184,9 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
             className="text-neutral-800 underline dark:text-neutral-200"
           >
             {' '}
-            坚果云
+            Яндекс Диск
           </a>
-          。这是一款支持 WebDAV 协议的国内云存储服务，稳定可靠。
+          . Это облачное хранилище с поддержкой WebDAV, стабильное и надёжное.
         </p>
       </ActionDrawer.Content>
       <div className="flex flex-col gap-2">
@@ -195,14 +195,14 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
           onClick={goToNextStep}
           className="w-full rounded-full bg-neutral-900 px-4 py-3 text-sm font-medium text-white dark:bg-white dark:text-neutral-900"
         >
-          已下载，下一步
+          Готово, дальше
         </motion.button>
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={goBack}
           className="w-full rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
         >
-          返回
+          Назад
         </motion.button>
       </div>
     </>
@@ -217,20 +217,20 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
       <ActionDrawer.Content>
         <div className="space-y-3">
           <p className="text-neutral-500 dark:text-neutral-400">
-            打开坚果云完成
+            Откройте Яндекс ID и
             <span className="text-neutral-800 dark:text-neutral-200">
               {' '}
-              注册登录
+              войдите в аккаунт
             </span>
-            。在
+            . В разделе
             <span className="text-neutral-800 dark:text-neutral-200">
               {' '}
-              设置 → 第三方应用管理
+              Безопасность → Пароли приложений
             </span>{' '}
-            中，添加应用密码，名称填写
+            создайте пароль для Диска с названием
             <span className="text-neutral-800 dark:text-neutral-200">
               {' '}
-              Brew Guide
+              Cultura Brew
             </span>
             。
           </p>
@@ -242,14 +242,14 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
           onClick={goToNextStep}
           className="w-full rounded-full bg-neutral-900 px-4 py-3 text-sm font-medium text-white dark:bg-white dark:text-neutral-900"
         >
-          已创建应用密码，下一步
+          Пароль приложения создан, дальше
         </motion.button>
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={goBack}
           className="w-full rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
         >
-          返回
+          Назад
         </motion.button>
       </div>
     </>
@@ -263,12 +263,12 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
       </div>
       <ActionDrawer.Content>
         <p className="text-neutral-500 dark:text-neutral-400">
-          输入坚果云
+          Введите логин Яндекса
           <span className="text-neutral-800 dark:text-neutral-200">
             {' '}
-            第三方应用管理
+            и пароль приложения
           </span>{' '}
-          页面中的账号和应用密码。
+          из раздела «Пароли приложений».
         </p>
       </ActionDrawer.Content>
       <div className="flex flex-col gap-2">
@@ -277,7 +277,7 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
           {/* 服务器地址 */}
           <div>
             <label className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-400">
-              服务器地址
+              Адрес сервера
             </label>
             <input
               type="url"
@@ -293,7 +293,7 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
           {/* 账号 */}
           <div>
             <label className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-400">
-              账号
+              Логин
             </label>
             <input
               type="email"
@@ -304,7 +304,7 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
                   username: e.target.value,
                 }))
               }
-              placeholder="坚果云登录邮箱"
+              placeholder="Логин Яндекса"
               autoComplete="email"
               className="w-full rounded-2xl bg-neutral-100 px-4 py-3 text-sm text-neutral-800 placeholder:text-neutral-400 focus:ring-2 focus:ring-neutral-300 focus:outline-none dark:bg-neutral-800 dark:text-white dark:placeholder:text-neutral-500 dark:focus:ring-neutral-600"
             />
@@ -313,7 +313,7 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
           {/* 应用密码 */}
           <div>
             <label className="mb-1 block text-xs font-medium text-neutral-600 dark:text-neutral-400">
-              应用密码
+              Пароль приложения
             </label>
             <div className="relative">
               <input
@@ -325,7 +325,7 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
                     password: e.target.value,
                   }))
                 }
-                placeholder="坚果云应用密码"
+                placeholder="Пароль приложения Яндекса"
                 autoComplete="current-password"
                 className="w-full rounded-2xl bg-neutral-100 px-4 py-3 pr-10 text-sm text-neutral-800 placeholder:text-neutral-400 focus:ring-2 focus:ring-neutral-300 focus:outline-none dark:bg-neutral-800 dark:text-white dark:placeholder:text-neutral-500 dark:focus:ring-neutral-600"
               />
@@ -351,7 +351,7 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
             onClick={goBack}
             className="flex-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
           >
-            上一步
+            Назад
           </motion.button>
           <motion.button
             whileTap={
@@ -367,7 +367,7 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
                 : 'bg-neutral-100 text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500'
             }`}
           >
-            {isConnecting ? '连接中...' : '测试连接'}
+            {isConnecting ? 'Подключаемся...' : 'Проверить подключение'}
           </motion.button>
         </div>
       </div>
@@ -383,9 +383,9 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
       <ActionDrawer.Content>
         <p className="text-neutral-500 dark:text-neutral-400">
           <span className="text-neutral-800 dark:text-neutral-200">
-            一切就绪。
+            Всё готово.
           </span>
-          云同步已配置完成，你可以随时手动上传或下载咖啡数据。
+          Облачная синхронизация настроена, загружайте и скачивайте данные когда угодно.
         </p>
       </ActionDrawer.Content>
       <div className="flex flex-col gap-2">
@@ -394,7 +394,7 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
           onClick={handleClose}
           className="w-full rounded-full bg-neutral-900 px-4 py-3 text-sm font-medium text-white dark:bg-white dark:text-neutral-900"
         >
-          完成
+          Готово
         </motion.button>
       </div>
     </>

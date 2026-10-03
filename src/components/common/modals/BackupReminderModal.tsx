@@ -30,18 +30,18 @@ const BackupReminderModal: React.FC<BackupReminderModalProps> = ({
   const handleBackupNow = useCallback(async () => {
     setIsLoading(true);
     setExportStatus('exporting');
-    setExportMessage('正在备份…');
+    setExportMessage('Делаем резервную копию…');
 
     try {
       const jsonData = await DataManagerUtil.exportAllData();
       const exportResult = await exportDataAsJsonFile(jsonData);
 
       if (exportResult.mode === 'native-share') {
-        setExportMessage('备份完成。');
+        setExportMessage('Резервная копия готова.');
       } else if (exportResult.mode === 'android-document') {
-        setExportMessage('备份完成，文件已保存。');
+        setExportMessage('Резервная копия готова, файл сохранён.');
       } else {
-        setExportMessage('备份完成。');
+        setExportMessage('Резервная копия готова.');
       }
 
       // 标记备份完成
@@ -51,7 +51,7 @@ const BackupReminderModal: React.FC<BackupReminderModalProps> = ({
     } catch (error) {
       console.error('导出失败:', error);
       setExportStatus('error');
-      setExportMessage('备份没有成功，请再试一次。');
+      setExportMessage('Не удалось сделать копию, попробуйте ещё раз.');
     } finally {
       setIsLoading(false);
     }
@@ -72,25 +72,25 @@ const BackupReminderModal: React.FC<BackupReminderModalProps> = ({
   const getReminderMessage = () => {
     switch (reminderType) {
       case 'hasDataNeverBackedUp':
-        return '你已经留下了不少冲煮记录和咖啡豆信息，现在备份一下，更放心。';
+        return 'У вас накопилось немало заварок и зерна — сделайте резервную копию, так спокойнее.';
       case 'firstTimeAfterDays':
-        return '定期备份，无论换机还是重装，你的咖啡数据都还在。';
+        return 'С резервными копиями ваши кофейные данные сохранятся при смене телефона или переустановке.';
       case 'periodicReminder':
-        return '距上次备份已经有一段时间了，现在备份一下吧。';
+        return 'С прошлой копии прошло немало времени, давайте сделаем новую.';
       default:
-        return '定期备份，让你的咖啡数据始终安全。';
+        return 'Регулярные копии — и ваши кофейные данные в безопасности.';
     }
   };
 
   const message = exportMessage || getReminderMessage();
   const primaryText =
     exportStatus === 'exporting'
-      ? '备份中…'
+      ? 'Копируем…'
       : exportStatus === 'success'
-        ? '好'
+        ? 'Хорошо'
         : exportStatus === 'error'
-          ? '再试一次'
-          : '现在备份';
+          ? 'Ещё раз'
+          : 'Сделать копию';
   const handlePrimaryClick = useCallback(() => {
     if (exportStatus === 'success') {
       onClose();
@@ -112,7 +112,7 @@ const BackupReminderModal: React.FC<BackupReminderModalProps> = ({
             onClick={handleRemindLater}
             disabled={isLoading}
           >
-            以后再说
+            Потом
           </ActionDrawer.SecondaryButton>
         )}
         <ActionDrawer.PrimaryButton

@@ -9,7 +9,7 @@ const baseCandidate: QuickRecordConversionCandidate = {
   noteId: 'note-1',
   canUseNotesModule: true,
   canUseCoffeeBeanModule: true,
-  notes: '少量备注',
+  notes: 'Короткая заметка',
 };
 
 describe('canSwitchPlainNoteToQuickRecord', () => {

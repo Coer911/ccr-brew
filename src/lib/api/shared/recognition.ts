@@ -17,12 +17,12 @@ export { normalizeRecognitionErrorMessage } from './recognitionErrors';
 
 export function validateRecognitionImageFile(file: File): void {
   if (!isSupportedSourceImageFile(file)) {
-    throw new Error('不支持的文件类型，请上传 JPG、PNG、WebP 或 HEIF 图片');
+    throw new Error('Неподдерживаемый тип файла, загрузите JPG, PNG, WebP или HEIF');
   }
 
   if (file.size > RECOGNITION_UPLOAD_CONFIG.maxSize) {
     const maxSizeMB = RECOGNITION_UPLOAD_CONFIG.maxSize / (1024 * 1024);
-    throw new Error(`文件过大，请上传不超过 ${maxSizeMB}MB 的图片`);
+    throw new Error(`Файл слишком большой, загрузите фото не больше ${maxSizeMB} МБ`);
   }
 
   if (
@@ -30,6 +30,6 @@ export function validateRecognitionImageFile(file: File): void {
     file.name.includes('/') ||
     file.name.includes('\\')
   ) {
-    throw new Error('文件名包含非法字符');
+    throw new Error('Имя файла содержит недопустимые символы');
   }
 }

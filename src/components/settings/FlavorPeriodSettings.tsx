@@ -72,7 +72,7 @@ const FlavorPeriodSettings: React.FC<FlavorPeriodSettingsProps> = ({
     filteredRoasters.join('\n')
   );
   const isRoasterPresetHighlighted =
-    highlightedSettingId === makeSettingRowSearchId('烘焙商特定预设');
+    highlightedSettingId === makeSettingRowSearchId('Настройки для обжарщиков');
 
   // 关闭处理函数（带动画）
   const handleCloseWithAnimation = React.useCallback(() => {
@@ -206,7 +206,7 @@ const FlavorPeriodSettings: React.FC<FlavorPeriodSettingsProps> = ({
     <div className="flex items-center space-x-3">
       <div className="flex items-center space-x-1">
         <span className="text-sm text-neutral-500 dark:text-neutral-400">
-          养豆
+          Отдых
         </span>
         <input
           type="number"
@@ -225,12 +225,12 @@ const FlavorPeriodSettings: React.FC<FlavorPeriodSettingsProps> = ({
           className="w-12 rounded border border-neutral-200/50 bg-neutral-100 px-2 py-1 text-center text-xs focus:ring-1 focus:ring-neutral-500 focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-800"
         />
         <span className="text-sm text-neutral-500 dark:text-neutral-400">
-          天
+          дн.
         </span>
       </div>
       <div className="flex items-center space-x-1">
         <span className="text-sm text-neutral-500 dark:text-neutral-400">
-          赏味
+          Лучший период
         </span>
         <input
           type="number"
@@ -249,21 +249,21 @@ const FlavorPeriodSettings: React.FC<FlavorPeriodSettingsProps> = ({
           className="w-12 rounded border border-neutral-200/50 bg-neutral-100 px-2 py-1 text-center text-xs focus:ring-1 focus:ring-neutral-500 focus:outline-hidden dark:border-neutral-700 dark:bg-neutral-800"
         />
         <span className="text-sm text-neutral-500 dark:text-neutral-400">
-          天
+          дн.
         </span>
       </div>
     </div>
   );
 
   return (
-    <SettingPage title="赏味期" isVisible={isVisible} onClose={handleClose}>
+    <SettingPage title="Лучший период" isVisible={isVisible} onClose={handleClose}>
       <div className="mt-4">
         {/* 全局默认预设 */}
         <SettingSection
-          title="全局默认预设"
-          footer="添加咖啡豆时，会根据烘焙度自动设定赏味期。"
+          title="Общие настройки"
+          footer="При добавлении зерна лучший период ставится автоматически по степени обжарки."
         >
-          <SettingRow label="浅烘">
+          <SettingRow label="Светлая">
             {renderFlavorInputs(
               settings.customFlavorPeriod?.light?.startDay || 0,
               settings.customFlavorPeriod?.light?.endDay || 0,
@@ -273,7 +273,7 @@ const FlavorPeriodSettings: React.FC<FlavorPeriodSettingsProps> = ({
               '60'
             )}
           </SettingRow>
-          <SettingRow label="中烘">
+          <SettingRow label="Средняя">
             {renderFlavorInputs(
               settings.customFlavorPeriod?.medium?.startDay || 0,
               settings.customFlavorPeriod?.medium?.endDay || 0,
@@ -283,7 +283,7 @@ const FlavorPeriodSettings: React.FC<FlavorPeriodSettingsProps> = ({
               '60'
             )}
           </SettingRow>
-          <SettingRow label="深烘" isLast>
+          <SettingRow label="Тёмная" isLast>
             {renderFlavorInputs(
               settings.customFlavorPeriod?.dark?.startDay || 0,
               settings.customFlavorPeriod?.dark?.endDay || 0,
@@ -298,7 +298,7 @@ const FlavorPeriodSettings: React.FC<FlavorPeriodSettingsProps> = ({
         {/* 烘焙商特定预设 */}
         {roasters.length > 0 && (
           <div
-            data-settings-search-id={makeSettingRowSearchId('烘焙商特定预设')}
+            data-settings-search-id={makeSettingRowSearchId('Настройки для обжарщиков')}
             className={`transition-colors ${
               isRoasterPresetHighlighted
                 ? 'bg-neutral-200/70 dark:bg-neutral-700/45'
@@ -306,12 +306,12 @@ const FlavorPeriodSettings: React.FC<FlavorPeriodSettingsProps> = ({
             }`}
           >
             <SettingSection
-              title={`烘焙商特定预设 (${filteredRoasters.length})`}
-              footer="为特定烘焙商设置专属的赏味期，优先级高于全局默认预设。"
+              title={`Настройки для обжарщиков (${filteredRoasters.length})`}
+              footer="Задайте свой лучший период для конкретных обжарщиков — он важнее общих настроек."
             >
               {filteredRoasters.length === 0 ? (
                 <div className="px-3.5 py-6 text-sm text-neutral-500 dark:text-neutral-400">
-                  没有找到匹配的烘焙商
+                  Обжарщик не найден
                 </div>
               ) : (
                 filteredRoasters.map((roaster, index) => {
@@ -364,7 +364,7 @@ const FlavorPeriodSettings: React.FC<FlavorPeriodSettingsProps> = ({
                             <div className="space-y-2.5 border-t border-black/5 pt-3 dark:border-white/5">
                               <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
-                                  浅烘
+                                  Светлая
                                 </span>
                                 {renderFlavorInputs(
                                   flavorPeriod.light.startDay,
@@ -383,13 +383,13 @@ const FlavorPeriodSettings: React.FC<FlavorPeriodSettingsProps> = ({
                                       'endDay',
                                       val
                                     ),
-                                  '默认',
-                                  '默认'
+                                  'По умолчанию',
+                                  'По умолчанию'
                                 )}
                               </div>
                               <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
-                                  中烘
+                                  Средняя
                                 </span>
                                 {renderFlavorInputs(
                                   flavorPeriod.medium.startDay,
@@ -408,13 +408,13 @@ const FlavorPeriodSettings: React.FC<FlavorPeriodSettingsProps> = ({
                                       'endDay',
                                       val
                                     ),
-                                  '默认',
-                                  '默认'
+                                  'По умолчанию',
+                                  'По умолчанию'
                                 )}
                               </div>
                               <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
-                                  深烘
+                                  Тёмная
                                 </span>
                                 {renderFlavorInputs(
                                   flavorPeriod.dark.startDay,
@@ -433,8 +433,8 @@ const FlavorPeriodSettings: React.FC<FlavorPeriodSettingsProps> = ({
                                       'endDay',
                                       val
                                     ),
-                                  '默认',
-                                  '默认'
+                                  'По умолчанию',
+                                  'По умолчанию'
                                 )}
                               </div>
                             </div>
@@ -459,7 +459,7 @@ const FlavorPeriodSettings: React.FC<FlavorPeriodSettingsProps> = ({
       <SettingsSearchBar
         query={searchQuery}
         firstResult={null}
-        placeholder="搜索烘焙商"
+        placeholder="Поиск обжарщика"
         position="fixed"
         onQueryChange={setSearchQuery}
         onSelect={() => {}}

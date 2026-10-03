@@ -107,9 +107,9 @@ export const resetFontZoom = (): void => {
  * @returns 格式化的显示文本
  */
 export const getZoomDisplayText = (zoomLevel: number): string => {
-  if (zoomLevel < 0.9) return '小';
-  if (zoomLevel > 1.1) return '大';
-  return '标准';
+  if (zoomLevel < 0.9) return 'Мелкий';
+  if (zoomLevel > 1.1) return 'Крупный';
+  return 'Обычный';
 };
 
 // 导出默认对象

@@ -91,11 +91,11 @@ export function formatSyncDiagnostic(
 ): string[] {
   if (!diagnostic) return [];
 
-  const lines = ['--- 最近一次请求诊断 ---'];
-  pushDiagnosticLine(lines, '服务', diagnostic.provider);
-  pushDiagnosticLine(lines, '操作', diagnostic.operation);
-  pushDiagnosticLine(lines, '对象', diagnostic.target);
-  pushDiagnosticLine(lines, '方法', diagnostic.method);
+  const lines = ['--- Диагностика последнего запроса ---'];
+  pushDiagnosticLine(lines, 'Сервис', diagnostic.provider);
+  pushDiagnosticLine(lines, 'Действие', diagnostic.operation);
+  pushDiagnosticLine(lines, 'Объект', diagnostic.target);
+  pushDiagnosticLine(lines, 'Метод', diagnostic.method);
   pushDiagnosticLine(lines, 'URL', redactSyncDiagnosticUrl(diagnostic.url));
 
   if (typeof diagnostic.status === 'number') {
@@ -105,13 +105,13 @@ export function formatSyncDiagnostic(
   }
 
   if (typeof diagnostic.ok === 'boolean') {
-    lines.push(`请求成功: ${diagnostic.ok ? '是' : '否'}`);
+    lines.push(`Запрос успешен: ${diagnostic.ok ? 'да' : 'нет'}`);
   }
 
-  pushDiagnosticLine(lines, '错误', diagnostic.error);
+  pushDiagnosticLine(lines, 'Ошибка', diagnostic.error);
   pushDiagnosticLine(
     lines,
-    '响应片段',
+    'Фрагмент ответа',
     normalizeDiagnosticText(diagnostic.responseSnippet, 300)
   );
 
@@ -122,8 +122,8 @@ export function formatSyncDiagnostic(
     .map(([key, value]) => `${key}=${value}`)
     .join(', ');
 
-  pushDiagnosticLine(lines, '附加信息', detailText);
-  lines.push('注: URL 中的签名、Token、Credential 已脱敏');
+  pushDiagnosticLine(lines, 'Дополнительно', detailText);
+  lines.push('Примечание: подписи, токены и ключи в URL скрыты');
   return lines;
 }
 
@@ -175,19 +175,19 @@ export function buildSyncErrorLogs(
   message: string,
   errors: string[]
 ): string[] {
-  const directionText = direction === 'upload' ? '上传' : '下载';
+  const directionText = direction === 'upload' ? 'Загрузить в облако' : 'Скачать из облака';
   const logs: string[] = [
-    `=== ${serviceName} ${directionText}错误日志 ===`,
+    `=== ${serviceName} ${directionText} — журнал ошибок ===`,
     '',
-    `时间: ${new Date().toLocaleString('zh-CN')}`,
-    `操作: ${directionText}`,
+    `Время: ${new Date().toLocaleString('zh-CN')}`,
+    `Действие: ${directionText}`,
     '',
-    `--- 错误信息 ---`,
+    `--- Ошибка ---`,
     message,
   ];
 
   if (errors.length > 0) {
-    logs.push('', `--- 详细错误 (${errors.length} 项) ---`);
+    logs.push('', `--- Подробная ошибка (${errors.length} шт.) ---`);
     errors.forEach((err, index) => {
       logs.push(`${index + 1}. ${err}`);
     });
@@ -197,7 +197,7 @@ export function buildSyncErrorLogs(
   if (typeof window !== 'undefined') {
     logs.push(
       '',
-      '--- 环境信息 ---',
+      '--- Окружение ---',
       `URL: ${window.location.href}`,
       `User Agent: ${navigator.userAgent}`
     );

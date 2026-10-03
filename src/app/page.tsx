@@ -191,7 +191,7 @@ const DETAIL_NAVIGATION_DELAY_MS = IOS_TRANSITION_CONFIG.duration;
 const createBlankBrewingNoteDraft = (): Partial<BrewingNoteData> => ({
   coffeeBeanInfo: {
     name: '',
-    roastLevel: '中度烘焙',
+    roastLevel: 'Средняя обжарка',
     roastDate: '',
   },
   taste: { ...EMPTY_NOTE_TASTE },
@@ -207,7 +207,7 @@ const createBrewingNoteDraftFromBean = (
   beanId: bean.id,
   coffeeBeanInfo: {
     name: bean.name,
-    roastLevel: bean.roastLevel || '中度烘焙',
+    roastLevel: bean.roastLevel || 'Средняя обжарка',
     roastDate: bean.roastDate || '',
     roaster: bean.roaster,
   },
@@ -748,13 +748,13 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
   );
 
   const hasActiveNavigationContent =
-    activeMainTab === '咖啡豆'
+    activeMainTab === 'Зерно'
       ? navigationState.visibleTabs.coffeeBean && hasNavigationCoffeeBeans
-      : activeMainTab === '笔记'
+      : activeMainTab === 'Заметки'
         ? navigationState.visibleTabs.notes && hasNavigationBrewingNotes
         : true;
   const isNavigationContentCollapsible =
-    activeMainTab !== '冲煮' && hasActiveNavigationContent;
+    activeMainTab !== 'Заварка' && hasActiveNavigationContent;
   const isDesktopNavigationCollapsible =
     isDesktopLayout && isNavigationContentCollapsible;
   const isMobileNavigationCollapsible =
@@ -895,7 +895,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
     async (method: Method) => {
       setDeleteConfirmData({
         itemName: method.name,
-        itemType: '方案',
+        itemType: 'Рецепт',
         onConfirm: () => executeDeleteCustomMethod(method),
       });
       setShowDeleteConfirm(true);
@@ -909,14 +909,14 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
       setConfirmDrawerData({
         message: (
           <>
-            确定要隐藏方案
+            Скрыть рецепт
             <span className="text-neutral-800 dark:text-neutral-200">
               「{method.name}」
             </span>
-            吗？隐藏的方案可以在设置中恢复。
+            ? Скрытые рецепты можно вернуть в настройках.
           </>
         ),
-        confirmText: '确认隐藏',
+        confirmText: 'Скрыть',
         onConfirm: () => executeHideMethod(method),
       });
       setShowConfirmDrawer(true);
@@ -988,7 +988,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
 
         showToast({
           type: 'success',
-          title: '转换成功',
+          title: 'Преобразовано',
           duration: 2000,
         });
 
@@ -996,7 +996,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
       } else {
         showToast({
           type: 'error',
-          title: result.error || '转换失败',
+          title: result.error || 'Не удалось преобразовать',
           duration: 3000,
         });
       }
@@ -1004,7 +1004,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
       console.error('转换失败:', error);
       showToast({
         type: 'error',
-        title: '转换失败',
+        title: 'Не удалось преобразовать',
         duration: 2000,
       });
     }
@@ -1039,7 +1039,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
     // 只有当冲煮 tab 可见且当前在冲煮 tab 时，才调整冲煮步骤
     if (
       isBrewingTabVisible &&
-      activeMainTab === '冲煮' &&
+      activeMainTab === 'Заварка' &&
       activeBrewingStep !== initialBrewingStep
     ) {
       navigateToStep(initialBrewingStep);
@@ -1356,7 +1356,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
     setSelectedCoffeeBean(null);
     setSelectedCoffeeBeanData(null);
 
-    if (activeMainTab === '冲煮' && activeBrewingStep === 'coffeeBean') {
+    if (activeMainTab === 'Заварка' && activeBrewingStep === 'coffeeBean') {
       navigateToStep('method', { force: true });
     }
   }, [
@@ -1371,7 +1371,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
   useEffect(() => {
     if (
       navigationState.visibleTabs.notes ||
-      activeMainTab !== '冲煮' ||
+      activeMainTab !== 'Заварка' ||
       activeBrewingStep !== 'notes'
     ) {
       return;
@@ -1514,8 +1514,8 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
 
   const openBeanDetailInInventory = useCallback(
     (bean: CoffeeBean) => {
-      saveMainTabPreference('咖啡豆');
-      setActiveMainTab('咖啡豆');
+      saveMainTabPreference('Зерно');
+      setActiveMainTab('Зерно');
 
       if (currentBeanView !== VIEW_OPTIONS.INVENTORY) {
         setCurrentBeanView(VIEW_OPTIONS.INVENTORY);
@@ -1577,7 +1577,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
       if (!bean) {
         showToast({
           type: 'error',
-          title: '咖啡豆不存在或已被删除',
+          title: 'Зерно не найдено или удалено',
           duration: 2000,
         });
         setShowBeanReadyReminder(false);
@@ -1605,8 +1605,8 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
       beanUnitPrice: number;
       beanInfo?: CoffeeBean | null;
     }) => {
-      saveMainTabPreference('笔记');
-      setActiveMainTab('笔记');
+      saveMainTabPreference('Заметки');
+      setActiveMainTab('Заметки');
 
       startContentDetailTransition(() => {
         setNoteDetailData(detail);
@@ -1679,7 +1679,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
         console.error('加载完整笔记失败:', error);
         showToast({
           type: 'error',
-          title: '加载笔记失败，请稍后重试',
+          title: 'Не удалось загрузить заметки, попробуйте позже',
           duration: 2000,
         });
       }
@@ -1811,7 +1811,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
   // 简化的主标签切换处理
   useEffect(() => {
     // 只在从其他标签切换到冲煮标签时处理
-    if (activeMainTab !== '冲煮' || prevMainTabRef.current === '冲煮') {
+    if (activeMainTab !== 'Заварка' || prevMainTabRef.current === 'Заварка') {
       prevMainTabRef.current = activeMainTab;
       return;
     }
@@ -1983,7 +1983,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
             coffeeBeanInfo: selectedCoffeeBeanData
               ? {
                   name: selectedCoffeeBeanData.name,
-                  roastLevel: selectedCoffeeBeanData.roastLevel || '中度烘焙',
+                  roastLevel: selectedCoffeeBeanData.roastLevel || 'Средняя обжарка',
                   roastDate: selectedCoffeeBeanData.roastDate || '',
                   roaster: selectedCoffeeBeanData.roaster,
                 }
@@ -2003,7 +2003,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
         console.error('自动扣除咖啡豆失败:', error);
         showToast({
           type: 'error',
-          title: '自动扣除失败',
+          title: 'Не удалось списать автоматически',
           duration: 2500,
         });
       }
@@ -2016,11 +2016,11 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
 
     if (didDeductCoffee && navigationState.visibleTabs.coffeeBean) {
       modalHistory.clearAndNavigate();
-      saveMainTabPreference('咖啡豆');
+      saveMainTabPreference('Зерно');
       setShowHistory(false);
       setCurrentBeanView(VIEW_OPTIONS.INVENTORY);
       saveStringState('coffee-beans', 'viewMode', VIEW_OPTIONS.INVENTORY);
-      setActiveMainTab('咖啡豆');
+      setActiveMainTab('Зерно');
       return;
     }
 
@@ -2100,7 +2100,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
             coffeeBean: selectedCoffeeBeanData
               ? {
                   name: selectedCoffeeBeanData.name || '',
-                  roastLevel: selectedCoffeeBeanData.roastLevel || '中度烘焙',
+                  roastLevel: selectedCoffeeBeanData.roastLevel || 'Средняя обжарка',
                   roastDate: selectedCoffeeBeanData.roastDate || '',
                 }
               : null,
@@ -2321,7 +2321,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
   useEffect(() => {
     if (
       showComplete &&
-      activeMainTab === '冲煮' &&
+      activeMainTab === 'Заварка' &&
       activeBrewingStep === 'brewing' &&
       !hasAutoNavigatedToNotes
     ) {
@@ -2398,7 +2398,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
       );
 
       if (!extractedData) {
-        throw new Error('无法从输入中提取有效数据');
+        throw new Error('Не удалось извлечь данные из введённого текста');
       }
 
       // 检查是否是咖啡豆数据类型，通过类型守卫确保安全访问属性
@@ -2416,7 +2416,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
 
       // 确保提取的数据是咖啡豆或咖啡豆数组
       if (!isCoffeeBean(extractedData) && !isCoffeeBeanArray(extractedData)) {
-        throw new Error('导入的数据不是有效的咖啡豆信息（缺少咖啡豆名称）');
+        throw new Error('Импортированные данные не похожи на зерно (нет названия)');
       }
 
       const beansToImport = Array.isArray(extractedData)
@@ -2593,7 +2593,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
       }
 
       if (importCount === 0) {
-        throw new Error('没有导入任何有效咖啡豆数据');
+        throw new Error('Не импортировано ни одного зерна');
       }
 
       setShowImportBeanForm(false);
@@ -2609,7 +2609,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
 
       await new Promise(resolve => setTimeout(resolve, 100));
       handleBeanListChange();
-      handleMainTabClick('咖啡豆');
+      handleMainTabClick('Зерно');
 
       if (importCount === 1 && lastImportedBean) {
         setRecognitionImage(pendingRecognitionImage);
@@ -2627,8 +2627,8 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
     } catch (error) {
       // 导入失败
       alert(
-        '导入失败: ' +
-          (error instanceof Error ? error.message : '请检查数据格式')
+        'Ошибка импорта: ' +
+          (error instanceof Error ? error.message : 'Проверьте формат данных')
       );
     }
   };
@@ -2682,7 +2682,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
         setSelectedCoffeeBeanData(null);
 
         // 如果在冲煮页面，执行更彻底的重置
-        if (activeMainTab === '冲煮') {
+        if (activeMainTab === 'Заварка') {
           // 执行一次完整的状态重置
           resetBrewingState(false);
 
@@ -2732,7 +2732,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
       // 首次添加咖啡豆时，标记从咖啡豆步骤开始
       if (
         e.detail.isFirstBean &&
-        activeMainTab === '咖啡豆' &&
+        activeMainTab === 'Зерно' &&
         navigationState.visibleTabs.coffeeBean
       ) {
         localStorage.setItem('shouldStartFromCoffeeBeanStep', 'true');
@@ -2744,7 +2744,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
         setSelectedCoffeeBean(null);
         setSelectedCoffeeBeanData(null);
 
-        if (activeMainTab === '冲煮') {
+        if (activeMainTab === 'Заварка') {
           resetBrewingState(false);
           navigateToStep('method');
         }
@@ -2759,7 +2759,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
         setSelectedCoffeeBean(null);
         setSelectedCoffeeBeanData(null);
 
-        if (activeMainTab === '冲煮' && activeBrewingStep === 'coffeeBean') {
+        if (activeMainTab === 'Заварка' && activeBrewingStep === 'coffeeBean') {
           navigateToStep('method');
         }
       }
@@ -2813,7 +2813,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
         if (roastedAmount <= 0) {
           showToast({
             type: 'error',
-            title: '请填写烘焙后的容量',
+            title: 'Укажите вес после обжарки',
             duration: 2000,
           });
           return;
@@ -2844,7 +2844,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
         if (!result.success) {
           showToast({
             type: 'error',
-            title: result.error || '烘焙失败',
+            title: result.error || 'Ошибка обжарки',
             duration: 2000,
           });
           return;
@@ -2852,7 +2852,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
 
         showToast({
           type: 'success',
-          title: `烘焙成功，已创建熟豆`,
+          title: `Обжарка сохранена, создано обжаренное зерно`,
           duration: 2000,
         });
 
@@ -2896,7 +2896,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
       }, 50);
     } catch (_error) {
       // 保存咖啡豆失败
-      alert('保存失败，请重试');
+      alert('Не удалось сохранить, попробуйте ещё раз');
     }
   };
 
@@ -3017,24 +3017,24 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
       if (result.success) {
         const uploaded = result.uploadedCount ?? 0;
         if (uploaded > 0) {
-          return { success: true, message: `已上传 ${uploaded} 项` };
+          return { success: true, message: `Загружено: ${uploaded} шт.` };
         } else {
-          return { success: true, message: '数据已是最新' };
+          return { success: true, message: 'Данные актуальны' };
         }
       } else {
         return {
           success: false,
           message:
-            result.message === '未配置云同步服务'
-              ? '云同步未配置'
-              : result.message || '上传失败',
+            result.message === 'Облачная синхронизация не настроена'
+              ? 'Синхронизация не настроена'
+              : result.message || 'Ошибка загрузки',
         };
       }
     } catch (error) {
       console.error('下拉上传失败:', error);
       return {
         success: false,
-        message: error instanceof Error ? error.message : '上传失败',
+        message: error instanceof Error ? error.message : 'Ошибка загрузки',
       };
     }
   }, [settings]);
@@ -3226,7 +3226,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
   // 有豆且设置开启时：coffeeBean=0(起点), method=1, brewing=2, notes=3
   // 无豆或设置关闭时：method=0(起点), brewing=1, notes=2
   const getBrewingStepNumber = (): number => {
-    if (activeMainTab !== '冲煮') return 0;
+    if (activeMainTab !== 'Заварка') return 0;
 
     if (brewingStartStep === 'coffeeBean') {
       // 有咖啡豆且设置开启的流程
@@ -3258,14 +3258,14 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
   };
 
   const brewingStep = getBrewingStepNumber();
-  const isInBrewingFlow = activeMainTab === '冲煮' && brewingStep > 0;
-  const isBrewingMainTab = activeMainTab === '冲煮';
-  const isNotesMainTab = activeMainTab === '笔记';
-  const isBeansMainTab = activeMainTab === '咖啡豆';
+  const isInBrewingFlow = activeMainTab === 'Заварка' && brewingStep > 0;
+  const isBrewingMainTab = activeMainTab === 'Заварка';
+  const isNotesMainTab = activeMainTab === 'Заметки';
+  const isBeansMainTab = activeMainTab === 'Зерно';
   const shouldShowBrewingTimer =
     activeBrewingStep === 'brewing' && currentBrewingMethod && !showHistory;
   const shouldSuppressBrewingNavigation =
-    activeMainTab === '冲煮' &&
+    activeMainTab === 'Заварка' &&
     activeBrewingStep === 'brewing' &&
     isTimerRunning &&
     !showComplete &&
@@ -3275,7 +3275,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
     !isNavigationActuallyCollapsed && !shouldSuppressBrewingNavigation;
 
   useEffect(() => {
-    if (activeMainTab !== '冲煮' || !currentBrewingMethod) return;
+    if (activeMainTab !== 'Заварка' || !currentBrewingMethod) return;
     if (activeBrewingStep !== 'method' && activeBrewingStep !== 'brewing') {
       return;
     }
@@ -3339,8 +3339,8 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
 
   const handleCreateNoteFromBean = useCallback(
     (bean: CoffeeBean) => {
-      saveMainTabPreference('笔记');
-      setActiveMainTab('笔记');
+      saveMainTabPreference('Заметки');
+      setActiveMainTab('Заметки');
       setNoteFormDraftSource('prefilled');
       setCurrentEditingNote(createBrewingNoteDraftFromBean(bean));
       setShowNoteFormModal(true);
@@ -3407,11 +3407,11 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
       setCurrentEditingNote({});
 
       // 事件触发已在 store 中自动完成
-      saveMainTabPreference('笔记');
-      setActiveMainTab('笔记');
+      saveMainTabPreference('Заметки');
+      setActiveMainTab('Заметки');
     } catch (_error) {
       // 保存冲煮笔记失败
-      alert('保存失败，请重试');
+      alert('Не удалось сохранить, попробуйте ещё раз');
     }
   };
 
@@ -3462,11 +3462,11 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
       const { showToast } =
         await import('@/components/common/feedback/LightToast');
       showToast({
-        title: isNewNote ? '笔记已复制' : '笔记已更新',
+        title: isNewNote ? 'Заметка скопирована' : 'Заметка обновлена',
         type: 'success',
       });
     } catch (_error) {
-      alert('保存失败，请重试');
+      alert('Не удалось сохранить, попробуйте ещё раз');
     }
   };
 
@@ -3507,14 +3507,14 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
       // setEditingEquipment(undefined);
     } catch (_error) {
       // 保存器具失败
-      alert('保存器具失败，请重试');
+      alert('Не удалось сохранить устройство, попробуйте ещё раз');
     }
   };
 
   const handleDeleteEquipment = async (equipment: CustomEquipment) => {
     setDeleteConfirmData({
       itemName: equipment.name,
-      itemType: '器具',
+      itemType: 'Устройства',
       onConfirm: async () => {
         try {
           await deleteCustomEquipment(equipment.id);
@@ -3524,7 +3524,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
           if (process.env.NODE_ENV === 'development') {
             console.error('删除器具失败:', error);
           }
-          alert('删除器具失败，请重试');
+          alert('Не удалось удалить устройство, попробуйте ещё раз');
         }
       },
     });
@@ -3567,14 +3567,14 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
       await copyEquipmentToClipboard(equipment, methods);
       showToast({
         type: 'success',
-        title: '器具配置已导出',
+        title: 'Настройки устройства экспортированы',
         duration: 2000,
       });
     } catch (error) {
       console.error('导出器具失败:', error);
       showToast({
         type: 'error',
-        title: '导出失败，请重试',
+        title: 'Ошибка экспорта, попробуйте ещё раз',
         duration: 2000,
       });
     }
@@ -3971,8 +3971,8 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
   ) : isMobileNavigationActuallyCollapsed ? (
     <NavigationSettingsButton
       placement="inline"
-      title="显示导航"
-      ariaLabel="显示导航"
+      title="Показать навигацию"
+      ariaLabel="Показать навигацию"
       onClick={handleMobileExpandNavigation}
     />
   ) : null;
@@ -4079,7 +4079,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
                 ? 'pt-safe-top'
                 : ''
             } ${
-              activeMainTab === '冲煮' &&
+              activeMainTab === 'Заварка' &&
               activeBrewingStep === 'brewing' &&
               currentBrewingMethod &&
               !showHistory
@@ -4238,8 +4238,8 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
               <BrewingHistory
                 isOpen={isNotesMainTab}
                 onClose={() => {
-                  saveMainTabPreference('冲煮');
-                  setActiveMainTab('冲煮');
+                  saveMainTabPreference('Заварка');
+                  setActiveMainTab('Заварка');
                   setShowHistory(false);
                 }}
                 onAddNote={handleAddNote}
@@ -4463,7 +4463,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
                         if (result.success) {
                           showToast({
                             type: 'success',
-                            title: '已复制到剪贴板',
+                            title: 'Скопировано в буфер обмена',
                             duration: 2000,
                           });
 
@@ -4473,7 +4473,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
                         } else {
                           showToast({
                             type: 'error',
-                            title: '复制失败',
+                            title: 'Не удалось скопировать',
                             duration: 2000,
                           });
                         }
@@ -4525,7 +4525,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
                               if (!preview.success || !preview.preview) {
                                 showToast({
                                   type: 'error',
-                                  title: preview.error || '无法转换',
+                                  title: preview.error || 'Невозможно преобразовать',
                                   duration: 3000,
                                 });
                                 return;
@@ -4563,7 +4563,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
                               console.error('预览转换失败:', error);
                               showToast({
                                 type: 'error',
-                                title: '转换失败',
+                                title: 'Не удалось преобразовать',
                                 duration: 2000,
                               });
                             }
@@ -4688,7 +4688,7 @@ const PourOverRecipes = ({ initialHasBeans }: { initialHasBeans: boolean }) => {
 
       {/* 页面级别的视图选择覆盖层 - 独立渲染，不受父容器转场影响 */}
       <AnimatePresence>
-        {showViewDropdown && activeMainTab === '咖啡豆' && (
+        {showViewDropdown && activeMainTab === 'Зерно' && (
           <>
             {/* 模糊背景 - 移动设备优化的动画 */}
             <motion.div

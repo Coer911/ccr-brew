@@ -5,15 +5,9 @@ import { Capacitor } from '@capacitor/core';
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import PWAInstallGuideDrawer from '@/components/layout/PWAInstallGuideDrawer';
-import { APP_VERSION } from '@/lib/core/config';
-import {
-  getDesktopDownloadUrl,
-  getOfflineAndroidDownloadUrl,
-} from '@/lib/utils/downloadUrls';
 import {
   type BeforeInstallPromptEvent,
   getIsAndroid,
-  getIsDesktop,
   getIsIOS,
   getIsStandalone,
   getIsWeChat,
@@ -51,8 +45,6 @@ export default function PWAInstallBanner() {
   const isNative = useMemo(() => Capacitor.isNativePlatform?.() === true, []);
   const isIOS = useMemo(() => getIsIOS(), []);
   const isWeChat = useMemo(() => getIsWeChat(), []);
-  const isAndroid = useMemo(() => getIsAndroid(), []);
-  const isDesktop = useMemo(() => getIsDesktop(), []);
   const [onboardingStatus, setOnboardingStatus] = useState<
     'unknown' | 'open' | 'closed'
   >(() => {
@@ -144,28 +136,24 @@ export default function PWAInstallBanner() {
   }
 
   const description = isWeChat
-    ? '不建议在微信内打开，请点右上角“…”选择“在浏览器打开”'
-    : '添加到主屏，离线可用';
+    ? 'Откройте в обычном браузере: нажмите «…» вверху справа и выберите «Открыть в браузере»'
+    : 'Добавьте на главный экран — работает офлайн';
 
   const showPwaInstallButton = !isWeChat && (isIOS || Boolean(deferredPrompt));
-  const showDesktopDownloads = isDesktop && !isWeChat;
-  const showAndroidDownload = isAndroid && !isWeChat;
-  const desktopDownloadUrl = getDesktopDownloadUrl();
-  const androidDownloadUrl = getOfflineAndroidDownloadUrl(APP_VERSION);
 
   return (
     <div className="pt-safe-top relative z-50 mx-auto w-full max-w-6xl border-b border-neutral-200/50 bg-neutral-50 px-6 pb-3 dark:border-neutral-800/50 dark:bg-neutral-900">
       <div className="flex items-center gap-3">
         <Image
           src="/images/icons/app/icon-192x192-contained.png"
-          alt="Brew Guide APP"
+          alt="Cultura Brew"
           className="h-11 w-11"
           width={44}
           height={44}
         />
         <div className="min-w-0 flex-1">
           <div className="truncate text-[13px] font-semibold text-neutral-900 dark:text-neutral-100">
-            Brew Guide APP
+            Cultura Brew
           </div>
           <div className="text-[12px] leading-relaxed text-neutral-600 dark:text-neutral-400">
             {description}
@@ -178,44 +166,14 @@ export default function PWAInstallBanner() {
               onClick={handleInstall}
               className="rounded-full bg-neutral-900 px-3 py-1 text-[12px] font-medium text-white transition hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
             >
-              安装
+              Установить
             </button>
-          )}
-          {showDesktopDownloads && (
-            <div className="flex items-center gap-1">
-              <a
-                href={desktopDownloadUrl}
-                className="rounded-full bg-neutral-100 px-2 py-1 text-[11px] font-medium text-neutral-800 transition hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700"
-              >
-                Windows
-              </a>
-              <a
-                href={desktopDownloadUrl}
-                className="rounded-full bg-neutral-100 px-2 py-1 text-[11px] font-medium text-neutral-800 transition hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700"
-              >
-                macOS
-              </a>
-              <a
-                href={desktopDownloadUrl}
-                className="rounded-full bg-neutral-100 px-2 py-1 text-[11px] font-medium text-neutral-800 transition hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700"
-              >
-                Linux
-              </a>
-            </div>
-          )}
-          {showAndroidDownload && (
-            <a
-              href={androidDownloadUrl}
-              className="rounded-full bg-neutral-100 px-2 py-1 text-[11px] font-medium text-neutral-800 transition hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700"
-            >
-              Android APK
-            </a>
           )}
           <button
             type="button"
             onClick={handleDismiss}
             className="inline-flex h-8 w-8 items-center justify-center rounded-full text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
-            aria-label="关闭"
+            aria-label="Закрыть"
           >
             <X size={16} />
           </button>

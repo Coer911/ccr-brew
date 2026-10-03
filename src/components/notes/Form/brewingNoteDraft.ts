@@ -24,7 +24,7 @@ const DEFAULT_TASTE = {
 
 const DEFAULT_COFFEE_BEAN_INFO = {
   name: '',
-  roastLevel: '中度烘焙',
+  roastLevel: 'Средняя обжарка',
   roastDate: '',
   roaster: undefined,
 };
@@ -53,7 +53,7 @@ const normalizeCoffeeBeanInfo = (
     const bean = note.coffeeBean as CoffeeBean;
     return {
       name: note.coffeeBean.name || '',
-      roastLevel: bean.roastLevel || '中度烘焙',
+      roastLevel: bean.roastLevel || 'Средняя обжарка',
       roastDate: bean.roastDate || '',
       roaster: bean.roaster,
     };

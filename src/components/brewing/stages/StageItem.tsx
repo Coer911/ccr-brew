@@ -143,7 +143,7 @@ const StageItem: React.FC<StageItemProps> = React.memo(
 
     const isWaitingStage = step.type === 'wait';
     const isBypassStep = step.pourType === 'bypass';
-    const isCurrentStage = activeTab === '注水' && index === currentStage;
+    const isCurrentStage = activeTab === 'Пролив' && index === currentStage;
     const isCollapsibleDivider = Boolean(step.onToggleCollapse);
     const waterText =
       stepDisplayMode === 'independent'
@@ -159,10 +159,10 @@ const StageItem: React.FC<StageItemProps> = React.memo(
     }, []);
 
     const opacityStyle = useMemo(() => {
-      if (activeTab === '方案' && step.isNoStageMethod) {
+      if (activeTab === 'Рецепт' && step.isNoStageMethod) {
         return 'opacity-50';
       }
-      if (activeTab === '注水' && !isCurrentStage) {
+      if (activeTab === 'Пролив' && !isCurrentStage) {
         return 'opacity-50';
       }
       return '';
@@ -182,17 +182,17 @@ const StageItem: React.FC<StageItemProps> = React.memo(
     const actionMenuItems = useMemo(() => {
       const items = [];
       if (onEdit) {
-        items.push({ id: 'edit', label: '编辑', onClick: onEdit });
+        items.push({ id: 'edit', label: 'Изменить', onClick: onEdit });
       }
       if (onDelete) {
         items.push({
           id: 'delete',
-          label: step.isCommonMethod ? '隐藏' : '删除',
+          label: step.isCommonMethod ? 'Скрыть' : 'Удалить',
           onClick: onDelete,
         });
       }
       if (onShare) {
-        items.push({ id: 'share', label: '分享', onClick: onShare });
+        items.push({ id: 'share', label: 'Поделиться', onClick: onShare });
       }
       return items;
     }, [onEdit, onDelete, onShare, step.isCommonMethod]);
@@ -233,14 +233,14 @@ const StageItem: React.FC<StageItemProps> = React.memo(
       if (
         stepDisplayMode === 'time' &&
         isWaitingStage &&
-        activeTab === '注水'
+        activeTab === 'Пролив'
       ) {
         return null;
       }
 
       return (
         <div
-          className={`group relative border-l ${isWaitingStage ? 'border-dashed' : ''} border-neutral-200/50 pl-6 dark:border-neutral-800/50 ${activeTab === '注水' ? 'select-text' : ''} ${textStyle} ${opacityStyle}`}
+          className={`group relative border-l ${isWaitingStage ? 'border-dashed' : ''} border-neutral-200/50 pl-6 dark:border-neutral-800/50 ${activeTab === 'Пролив' ? 'select-text' : ''} ${textStyle} ${opacityStyle}`}
         >
           {isCurrentStage && (
             <motion.div
@@ -251,7 +251,7 @@ const StageItem: React.FC<StageItemProps> = React.memo(
             />
           )}
           <div
-            className={activeTab !== '注水' ? 'cursor-pointer' : ''}
+            className={activeTab !== 'Пролив' ? 'cursor-pointer' : ''}
             onClick={handleClick}
           >
             <>
@@ -265,7 +265,7 @@ const StageItem: React.FC<StageItemProps> = React.memo(
                   >
                     {step.title}
                   </h3>
-                  {activeTab === '注水' &&
+                  {activeTab === 'Пролив' &&
                     selectedMethod &&
                     step.originalIndex !== undefined &&
                     step.items && (
@@ -375,7 +375,7 @@ const StageItem: React.FC<StageItemProps> = React.memo(
                 )}
               </div>
               <div className="mt-2">
-                {activeTab === '注水' && step.items ? (
+                {activeTab === 'Пролив' && step.items ? (
                   <p className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
                     {step.items[1]}
                   </p>

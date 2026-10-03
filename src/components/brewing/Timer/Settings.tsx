@@ -104,7 +104,7 @@ const BrewingTimerSettings: React.FC<BrewingTimerSettingsProps> = ({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                计时器设置
+                Настройки таймера
               </h3>
               <button
                 type="button"
@@ -131,16 +131,16 @@ const BrewingTimerSettings: React.FC<BrewingTimerSettingsProps> = ({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  步骤时间显示
+                  Время этапа
                 </span>
                 <SettingSelector
                   value={localLayoutSettings?.stepDisplayMode || 'cumulative'}
                   options={[
-                    { value: 'independent', label: '独立' },
-                    { value: 'cumulative', label: '累计' },
-                    { value: 'time', label: '时间' },
+                    { value: 'independent', label: 'Отдельно' },
+                    { value: 'cumulative', label: 'Нарастающим итогом' },
+                    { value: 'time', label: 'Время' },
                   ]}
-                  ariaLabel="步骤时间显示"
+                  ariaLabel="Время этапа"
                   onChange={value => {
                     const newSettings = {
                       ...localLayoutSettings,
@@ -155,7 +155,7 @@ const BrewingTimerSettings: React.FC<BrewingTimerSettingsProps> = ({
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  显示流速
+                  Показывать скорость пролива
                 </span>
                 <label className="relative inline-flex cursor-pointer items-center">
                   <input
@@ -171,7 +171,7 @@ const BrewingTimerSettings: React.FC<BrewingTimerSettingsProps> = ({
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  可视化冲煮
+                  Визуализация заварки
                 </span>
                 <label className="relative inline-flex cursor-pointer items-center">
                   <input
@@ -187,7 +187,7 @@ const BrewingTimerSettings: React.FC<BrewingTimerSettingsProps> = ({
               </div>
               <div className="space-y-2">
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  进度条高度：{localLayoutSettings?.progressBarHeight || 4}px
+                  Высота шкалы прогресса:{localLayoutSettings?.progressBarHeight || 4}px
                 </span>
                 <input
                   type="range"
@@ -208,16 +208,16 @@ const BrewingTimerSettings: React.FC<BrewingTimerSettingsProps> = ({
 
               <div className="flex items-center justify-between">
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  数据显示字体大小
+                  Размер шрифта данных
                 </span>
                 <SettingSelector
                   value={localLayoutSettings?.dataFontSize || '2xl'}
                   options={[
-                    { value: '2xl', label: '标准' },
-                    { value: '3xl', label: '大' },
-                    { value: '4xl', label: '特大' },
+                    { value: '2xl', label: 'Обычный' },
+                    { value: '3xl', label: 'Крупный' },
+                    { value: '4xl', label: 'Очень крупный' },
                   ]}
-                  ariaLabel="数据显示字体大小"
+                  ariaLabel="Размер шрифта данных"
                   onChange={value => {
                     const newSettings = {
                       ...localLayoutSettings,

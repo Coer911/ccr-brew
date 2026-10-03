@@ -57,14 +57,14 @@ export const LayoutSettings: React.FC<LayoutSettingsProps> = ({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
-          布局设置
+          Макет
         </div>
         <button
           type="button"
           onClick={onReset}
           className="flex items-center gap-1 px-2 py-1 text-xs text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300"
         >
-          <RotateCcw className="h-3 w-3" /> 重置布局
+          <RotateCcw className="h-3 w-3" /> Сбросить макет
         </button>
       </div>
 
@@ -75,7 +75,7 @@ export const LayoutSettings: React.FC<LayoutSettingsProps> = ({
           onClick={onToggleOrientation}
           className="rounded bg-neutral-100 px-3 py-2 text-xs font-medium hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700"
         >
-          {config.orientation === 'landscape' ? '横向 ↔' : '纵向 ↕'}
+          {config.orientation === 'landscape' ? 'Горизонтально ↔' : 'Вертикально ↕'}
         </button>
         <button
           type="button"
@@ -90,7 +90,7 @@ export const LayoutSettings: React.FC<LayoutSettingsProps> = ({
       <div className="grid grid-cols-3 gap-2">
         <div data-vaul-no-drag>
           <ElasticSlider
-            label="边距"
+            label="Поля"
             min={1}
             max={8}
             step={1}
@@ -105,12 +105,12 @@ export const LayoutSettings: React.FC<LayoutSettingsProps> = ({
             handleClassName={PRINT_SETTINGS_SLIDER_HANDLE_CLASS_NAME}
             hashMarkClassName={PRINT_SETTINGS_SLIDER_HASH_MARK_CLASS_NAME}
             textClassName={PRINT_SETTINGS_SLIDER_TEXT_CLASS_NAME}
-            aria-label="打印边距"
+            aria-label="Поля печати"
           />
         </div>
         <div data-vaul-no-drag>
           <ElasticSlider
-            label="字号"
+            label="Размер шрифта"
             min={6}
             max={24}
             step={1}
@@ -125,12 +125,12 @@ export const LayoutSettings: React.FC<LayoutSettingsProps> = ({
             handleClassName={PRINT_SETTINGS_SLIDER_HANDLE_CLASS_NAME}
             hashMarkClassName={PRINT_SETTINGS_SLIDER_HASH_MARK_CLASS_NAME}
             textClassName={PRINT_SETTINGS_SLIDER_TEXT_CLASS_NAME}
-            aria-label="打印字号"
+            aria-label="Размер шрифта печати"
           />
         </div>
         <div data-vaul-no-drag>
           <ElasticSlider
-            label="字重"
+            label="Насыщенность шрифта"
             min={300}
             max={900}
             step={100}
@@ -145,7 +145,7 @@ export const LayoutSettings: React.FC<LayoutSettingsProps> = ({
             handleClassName={PRINT_SETTINGS_SLIDER_HANDLE_CLASS_NAME}
             hashMarkClassName={PRINT_SETTINGS_SLIDER_HASH_MARK_CLASS_NAME}
             textClassName={PRINT_SETTINGS_SLIDER_TEXT_CLASS_NAME}
-            aria-label="打印字重"
+            aria-label="Насыщенность шрифта печати"
           />
         </div>
       </div>

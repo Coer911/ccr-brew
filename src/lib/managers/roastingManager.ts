@@ -121,25 +121,25 @@ export const RoastingManager = {
       const storedGreenBean =
         await getCoffeeBeanStore().getBeanById(greenBeanId);
       if (!storedGreenBean) {
-        return { success: false, error: '找不到生豆记录' };
+        return { success: false, error: 'Запись о зелёном зерне не найдена' };
       }
       const greenBean = await mergeBeanWithStoredImages(storedGreenBean);
 
       // 确认是生豆
       const beanState = greenBean.beanState || 'roasted';
       if (beanState !== 'green') {
-        return { success: false, error: '只能烘焙生豆' };
+        return { success: false, error: 'Обжаривать можно только зелёное зерно' };
       }
 
       // 2. 检查剩余量是否足够
       const currentRemaining = parseFloat(greenBean.remaining || '0');
       if (currentRemaining < roastedAmount) {
-        return { success: false, error: '生豆剩余量不足' };
+        return { success: false, error: 'Зелёного зерна не хватает' };
       }
 
       // 2.1 检查剩余量是否为0（边界情况）
       if (currentRemaining <= 0) {
-        return { success: false, error: '生豆已用完，无法继续烘焙' };
+        return { success: false, error: 'Зелёное зерно закончилось, обжаривать нечего' };
       }
 
       // 3. 扣除生豆容量
@@ -152,7 +152,7 @@ export const RoastingManager = {
       );
 
       if (!updatedGreenBean) {
-        return { success: false, error: '更新生豆容量失败' };
+        return { success: false, error: 'Не удалось обновить вес зелёного зерна' };
       }
 
       // 4. 如果提供了熟豆数据，创建或更新熟豆记录
@@ -210,13 +210,13 @@ export const RoastingManager = {
             timestamp: Date.now() + 1, // +1ms 确保在烘焙记录之后
             coffeeBeanInfo: {
               name: roastedBean.name,
-              roastLevel: roastedBean.roastLevel || '未知',
+              roastLevel: roastedBean.roastLevel || 'Неизвестно',
               roastDate: roastedBean.roastDate,
               roaster: roastedBean.roaster,
             },
             rating: 0,
             taste: {},
-            notes: '烘焙时已使用',
+            notes: 'Использовано при обжарке',
             source: 'quick-decrement',
             beanId: roastedBean.id,
             quickDecrementAmount: decrementAmount,
@@ -232,13 +232,13 @@ export const RoastingManager = {
         timestamp: Date.now(),
         coffeeBeanInfo: {
           name: greenBean.name,
-          roastLevel: greenBean.roastLevel || '未知',
+          roastLevel: greenBean.roastLevel || 'Неизвестно',
           roastDate: greenBean.roastDate,
           roaster: greenBean.roaster,
         },
         rating: 0,
         taste: {},
-        notes: `烘焙了 ${roastedAmount}g 生豆${roastedBean ? ` → ${formatBeanDisplayName(roastedBean)}` : ''}`,
+        notes: `Обжарено ${roastedAmount} г зелёного зерна${roastedBean ? ` → ${formatBeanDisplayName(roastedBean)}` : ''}`,
         source: 'roasting',
         beanId: greenBeanId,
         changeRecord: {
@@ -270,7 +270,7 @@ export const RoastingManager = {
       console.error('烘焙生豆失败:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '烘焙失败',
+        error: error instanceof Error ? error.message : 'Ошибка обжарки',
       };
     }
   },
@@ -300,13 +300,13 @@ export const RoastingManager = {
       // 1. 获取生豆信息（用于生成熟豆名称）
       const greenBean = await getCoffeeBeanStore().getBeanById(greenBeanId);
       if (!greenBean) {
-        return { success: false, error: '找不到生豆记录' };
+        return { success: false, error: 'Запись о зелёном зерне не найдена' };
       }
 
       // 2. 检查剩余量是否为0（边界情况）
       const currentRemaining = parseFloat(greenBean.remaining || '0');
       if (currentRemaining <= 0) {
-        return { success: false, error: '生豆已用完，无法继续烘焙' };
+        return { success: false, error: 'Зелёное зерно закончилось, обжаривать нечего' };
       }
 
       // 3. 获取所有豆子用于生成名称
@@ -345,7 +345,7 @@ export const RoastingManager = {
       console.error('简单烘焙失败:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '烘焙失败',
+        error: error instanceof Error ? error.message : 'Ошибка обжарки',
       };
     }
   },
@@ -394,17 +394,17 @@ export const RoastingManager = {
       // 1. 获取烘焙记录
       const note = await getBrewingNoteById(noteId);
       if (!note) {
-        return { success: false, error: '找不到烘焙记录' };
+        return { success: false, error: 'Запись об обжарке не найдена' };
       }
 
       // 确认是烘焙记录
       if (note.source !== 'roasting') {
-        return { success: false, error: '该记录不是烘焙记录' };
+        return { success: false, error: 'Это не запись об обжарке' };
       }
 
       const roastingRecord = note.changeRecord?.roastingRecord;
       if (!roastingRecord) {
-        return { success: false, error: '烘焙记录数据不完整' };
+        return { success: false, error: 'Неполные данные записи об обжарке' };
       }
 
       let restoredGreenBean: CoffeeBean | undefined;
@@ -461,7 +461,7 @@ export const RoastingManager = {
       console.error('删除烘焙记录失败:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '删除失败',
+        error: error instanceof Error ? error.message : 'Не удалось удалить',
       };
     }
   },
@@ -575,21 +575,21 @@ export const RoastingManager = {
       const storedOriginalBean =
         await getCoffeeBeanStore().getBeanById(roastedBeanId);
       if (!storedOriginalBean) {
-        return { success: false, error: '找不到咖啡豆记录' };
+        return { success: false, error: 'Запись о зерне не найдена' };
       }
       const originalBean = await mergeBeanWithStoredImages(storedOriginalBean);
 
       // 确认是熟豆
       const beanState = originalBean.beanState || 'roasted';
       if (beanState !== 'roasted') {
-        return { success: false, error: '只能将熟豆转换为生豆' };
+        return { success: false, error: 'В зелёное можно перевести только обжаренное зерно' };
       }
 
       // 确认没有来源生豆（避免转换已经是烘焙产生的熟豆）
       if (originalBean.sourceGreenBeanId) {
         return {
           success: false,
-          error: '该熟豆已关联生豆来源，无法转换',
+          error: 'Это обжаренное зерно уже связано с зелёным, перевести нельзя',
         };
       }
 
@@ -753,13 +753,13 @@ export const RoastingManager = {
         timestamp: Date.now(),
         coffeeBeanInfo: {
           name: greenBean.name,
-          roastLevel: greenBean.roastLevel || '未知',
+          roastLevel: greenBean.roastLevel || 'Неизвестно',
           roastDate: greenBean.purchaseDate,
           roaster: greenBean.roaster,
         },
         rating: 0,
         taste: {},
-        notes: `从熟豆转换：烘焙了 ${formatNumber(roastedAmount)}g 生豆 → ${formatBeanDisplayName(newRoastedBean)}`,
+        notes: `Из обжаренного: обжарено ${formatNumber(roastedAmount)} г зелёного → ${formatBeanDisplayName(newRoastedBean)}`,
         source: 'roasting',
         beanId: greenBean.id,
         changeRecord: {
@@ -826,7 +826,7 @@ export const RoastingManager = {
       console.error('转换熟豆为生豆失败:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '转换失败',
+        error: error instanceof Error ? error.message : 'Не удалось преобразовать',
       };
     }
   },
@@ -866,18 +866,18 @@ export const RoastingManager = {
       const originalBean =
         await getCoffeeBeanStore().getBeanById(roastedBeanId);
       if (!originalBean) {
-        return { success: false, error: '找不到咖啡豆记录' };
+        return { success: false, error: 'Запись о зерне не найдена' };
       }
 
       const beanState = originalBean.beanState || 'roasted';
       if (beanState !== 'roasted') {
-        return { success: false, error: '只能将熟豆转换为生豆' };
+        return { success: false, error: 'В зелёное можно перевести только обжаренное зерно' };
       }
 
       if (originalBean.sourceGreenBeanId) {
         return {
           success: false,
-          error: '该熟豆已关联生豆来源，无法转换',
+          error: 'Это обжаренное зерно уже связано с зелёным, перевести нельзя',
         };
       }
 
@@ -971,7 +971,7 @@ export const RoastingManager = {
       console.error('预览转换失败:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '预览失败',
+        error: error instanceof Error ? error.message : 'Ошибка предпросмотра',
       };
     }
   },

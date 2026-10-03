@@ -27,12 +27,12 @@ type Tab = 'text' | 'bean-image' | 'note-image';
 type ShareRatingStyle = 'number' | 'dots' | 'bar';
 
 const DEFAULT_TAB_LABELS: Record<Tab, string> = {
-  text: '文案',
-  'note-image': '记录图片',
-  'bean-image': '豆子图片',
+  text: 'Текст',
+  'note-image': 'Фото заварки',
+  'bean-image': 'Фото зерна',
 };
 
-const DEFAULT_SHARE_TAGS = '#咖啡 #手冲咖啡 #咖啡笔记 #BrewGuide';
+const DEFAULT_SHARE_TAGS = '#кофе #пуровер #кофейныезаметки #CulturaBrew';
 const HEADER_ICON_BUTTON_CLASS =
   'flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-500 transition-colors hover:text-neutral-800 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100';
 const HEADER_TEXT_BUTTON_CLASS =
@@ -42,9 +42,9 @@ const RATING_STYLE_OPTIONS: Array<{
   value: ShareRatingStyle;
   label: string;
 }> = [
-  { value: 'number', label: '数字' },
-  { value: 'dots', label: '圆点' },
-  { value: 'bar', label: '刻度' },
+  { value: 'number', label: 'Цифры' },
+  { value: 'dots', label: 'Точки' },
+  { value: 'bar', label: 'Шкала' },
 ];
 
 const formatTasteRatingValue = (value: number): string => {
@@ -91,7 +91,7 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
 
   // 统一的复制功能
   const { copyText, failureDrawerProps } = useCopy({
-    successMessage: '文案已复制',
+    successMessage: 'Текст скопирован',
   });
 
   // 从 Store 获取咖啡豆数据
@@ -253,7 +253,7 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
         const ctx = canvas.getContext('2d');
 
         if (!ctx) {
-          reject(new Error('无法创建 Canvas 上下文'));
+          reject(new Error('Не удалось создать Canvas'));
           return;
         }
 
@@ -289,7 +289,7 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
       };
 
       img.onerror = () => {
-        reject(new Error('图片加载失败'));
+        reject(new Error('Не удалось загрузить картинку'));
       };
 
       img.src = imageSrc;
@@ -316,9 +316,9 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
         dataUrl,
         filename,
         {
-          title: '分享图片',
-          text: '分享图片',
-          dialogTitle: '保存图片',
+          title: 'Поделиться картинкой',
+          text: 'Поделиться картинкой',
+          dialogTitle: 'Сохранить картинку',
         }
       );
 
@@ -326,14 +326,14 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
         type: shareOutcome === 'cancelled' ? 'info' : 'success',
         title:
           shareOutcome === 'activation-required'
-            ? '图片已生成，请再次点击分享'
+            ? 'Картинка готова, нажмите «Поделиться» ещё раз'
             : shareOutcome === 'cancelled'
-              ? '已取消分享'
-              : '图片已生成',
+              ? 'Отправка отменена'
+              : 'Картинка готова',
       });
     } catch (error) {
       console.error('Failed to generate image:', error);
-      showToast({ type: 'error', title: '生成图片失败' });
+      showToast({ type: 'error', title: 'Не удалось создать картинку' });
     } finally {
       setIsGenerating(false);
     }
@@ -352,7 +352,7 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
       formatNoteBeanDisplayName(note.coffeeBeanInfo, {
         roasterFieldEnabled,
         roasterSeparator,
-      }) || '咖啡分享';
+      }) || 'Кофейная заметка';
     parts.push(`${beanName}`);
     parts.push(''); // 空行分隔标题和内容
 
@@ -373,29 +373,29 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
     if (isEspresso && normalizedParams) {
       // 意式：粉量、研磨度、萃取时间、液重
       if (normalizedParams.coffee && normalizedParams.coffee !== '0')
-        params.push(`粉量 ${cleanValue(normalizedParams.coffee)}g`);
+        params.push(`Доза ${cleanValue(normalizedParams.coffee)}g`);
 
       if (normalizedParams.grindSize)
-        params.push(`研磨度 ${normalizedParams.grindSize}`);
+        params.push(`Помол ${normalizedParams.grindSize}`);
 
       if (note.totalTime && note.totalTime > 0)
-        params.push(`时间 ${note.totalTime}s`);
+        params.push(`Время ${note.totalTime}s`);
 
       if (normalizedParams.water && normalizedParams.water !== '0')
-        params.push(`液重 ${cleanValue(normalizedParams.water)}g`);
+        params.push(`Выход ${cleanValue(normalizedParams.water)}g`);
     } else if (normalizedParams) {
       // 手冲：粉量、粉水比、研磨度、水温
       if (normalizedParams.coffee && normalizedParams.coffee !== '0')
-        params.push(`粉量 ${cleanValue(normalizedParams.coffee)}g`);
+        params.push(`Доза ${cleanValue(normalizedParams.coffee)}g`);
 
       if (normalizedParams.ratio && normalizedParams.ratio !== '1:0')
-        params.push(`粉水比 ${normalizedParams.ratio}`);
+        params.push(`Соотношение ${normalizedParams.ratio}`);
 
       if (normalizedParams.grindSize)
-        params.push(`研磨度 ${normalizedParams.grindSize}`);
+        params.push(`Помол ${normalizedParams.grindSize}`);
 
       if (normalizedParams.temp && normalizedParams.temp !== '0')
-        params.push(`水温 ${cleanValue(normalizedParams.temp)}°C`);
+        params.push(`Темп. воды ${cleanValue(normalizedParams.temp)}°C`);
     }
 
     if (params.length > 0) {
@@ -433,7 +433,7 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
 
     // Rating
     if (note.rating && note.rating > 0) {
-      parts.push(`评分：${note.rating}/5`);
+      parts.push(`Оценка: ${note.rating}/5`);
     }
 
     // Notes
@@ -479,8 +479,8 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
               type="button"
               onClick={handleCloseSettings}
               className={HEADER_ICON_BUTTON_CLASS}
-              title="返回"
-              aria-label="返回"
+              title="Назад"
+              aria-label="Назад"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -521,7 +521,7 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
 
           {isSettingsOpen && (
             <div className="absolute left-1/2 -translate-x-1/2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
-              分享设置
+              Настройки картинки
             </div>
           )}
 
@@ -530,10 +530,10 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
               type="button"
               onClick={handleResetShareSettings}
               className={HEADER_TEXT_BUTTON_CLASS}
-              title="恢复默认"
-              aria-label="恢复默认"
+              title="По умолчанию"
+              aria-label="По умолчанию"
             >
-              还原
+              Вернуть
             </button>
           ) : (
             <button
@@ -541,7 +541,7 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
               onClick={handleOpenSettings}
               className={HEADER_TEXT_BUTTON_CLASS}
             >
-              设置
+              Настройки
             </button>
           )}
         </div>
@@ -550,7 +550,7 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
           <div className="space-y-5">
             <div>
               <div className="mb-2 text-xs font-medium tracking-wide text-neutral-500 dark:text-neutral-400">
-                风味评分
+                Оценка вкуса
               </div>
               <div className="grid grid-cols-3 rounded-full bg-neutral-100 p-1 dark:bg-neutral-800">
                 {RATING_STYLE_OPTIONS.map(option => {
@@ -576,10 +576,10 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
 
             <div className="space-y-2">
               <div className="text-xs font-medium tracking-wide text-neutral-500 dark:text-neutral-400">
-                标签文本
+                Текст подписи
               </div>
               <input
-                aria-label="标签文本"
+                aria-label="Текст подписи"
                 value={shareTags}
                 onChange={event => handleShareTagsChange(event.target.value)}
                 placeholder={DEFAULT_SHARE_TAGS}
@@ -591,7 +591,7 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
               onClick={handleCloseSettings}
               className="w-full"
             >
-              完成
+              Готово
             </ActionDrawer.PrimaryButton>
           </div>
         ) : (
@@ -618,7 +618,7 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
                 onClick={onClose}
                 className="w-full"
               >
-                取消
+                Отмена
               </ActionDrawer.SecondaryButton>
               <ActionDrawer.PrimaryButton
                 onClick={
@@ -628,10 +628,10 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
                 className="w-full"
               >
                 {isGenerating
-                  ? '生成中...'
+                  ? 'Готовим...'
                   : activeTab === 'text'
-                    ? '复制文案'
-                    : '保存图片'}
+                    ? 'Скопировать текст'
+                    : 'Сохранить картинку'}
               </ActionDrawer.PrimaryButton>
             </div>
           </>

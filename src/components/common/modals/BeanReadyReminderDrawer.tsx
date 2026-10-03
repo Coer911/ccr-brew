@@ -37,7 +37,7 @@ const BeanReadyReminderDrawer: React.FC<BeanReadyReminderDrawerProps> = ({
               >
                 {item.coffeeBean}
               </button>
-              {item.daysUntilReady === 0 ? '，今天可以喝了' : '，明天可以喝了'}
+              {item.daysUntilReady === 0 ? ', сегодня можно пить' : ', завтра можно пить'}
             </React.Fragment>
           ))}
           。
@@ -45,7 +45,7 @@ const BeanReadyReminderDrawer: React.FC<BeanReadyReminderDrawerProps> = ({
       </ActionDrawer.Content>
       <ActionDrawer.Actions>
         <ActionDrawer.PrimaryButton onClick={onClose}>
-          知道了
+          Понятно
         </ActionDrawer.PrimaryButton>
       </ActionDrawer.Actions>
     </ActionDrawer>

@@ -121,7 +121,7 @@ export class MetadataManager {
           : null;
 
       if (!success) {
-        throw new Error(errorDetail || '上传元数据失败');
+        throw new Error(errorDetail || 'Не удалось загрузить метаданные');
       }
     } catch (error) {
       console.error('保存远程元数据失败:', error);

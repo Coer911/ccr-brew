@@ -50,8 +50,8 @@ const selectPeriodByRoastLevel = (
   periods: FlavorPeriodMap | undefined
 ) => {
   const roastLevelStr = typeof roastLevel === 'string' ? roastLevel : '';
-  if (roastLevelStr.includes('浅')) return normalizePeriod(periods?.light);
-  if (roastLevelStr.includes('深')) return normalizePeriod(periods?.dark);
+  if (/светл/i.test(roastLevelStr)) return normalizePeriod(periods?.light);
+  if (/тёмн/i.test(roastLevelStr)) return normalizePeriod(periods?.dark);
   return normalizePeriod(periods?.medium);
 };
 
@@ -105,7 +105,7 @@ export const getDefaultFlavorPeriodByRoastLevel = (
   const { customFlavorPeriod } = flavorSettings;
 
   // 如果提供了有效的烘焙商名称，尝试获取烘焙商特定的配置
-  if (roasterName && roasterName !== '未知烘焙商') {
+  if (roasterName && roasterName !== 'Неизвестный обжарщик') {
     const roasterConfig = getRoasterConfigSync(roasterName);
 
     // 使用烘焙商的简单设置
@@ -166,7 +166,7 @@ export const getDefaultFlavorPeriodByRoastLevelSync = (
     effectiveCustomFlavorPeriod || defaultSettings.customFlavorPeriod;
 
   // 如果提供了有效的烘焙商名称，尝试获取烘焙商特定的配置
-  if (roasterName && roasterName !== '未知烘焙商') {
+  if (roasterName && roasterName !== 'Неизвестный обжарщик') {
     const roasterConfig = getRoasterConfigSync(roasterName);
 
     // 使用烘焙商的简单设置
@@ -207,15 +207,15 @@ export const calculateFlavorInfo = (
 ): FlavorInfo => {
   // 处理特殊状态
   if (bean.isInTransit) {
-    return { phase: '在途', remainingDays: 0, status: '在途中' };
+    return { phase: 'В пути', remainingDays: 0, status: 'В пути' };
   }
 
   if (bean.isFrozen) {
-    return { phase: '冷冻', remainingDays: 0, status: '冷冻' };
+    return { phase: 'Заморожено', remainingDays: 0, status: 'Заморожено' };
   }
 
   if (!bean.roastDate) {
-    return { phase: '未知', remainingDays: 0, status: '未设置烘焙日期' };
+    return { phase: 'Неизвестно', remainingDays: 0, status: 'Дата обжарки не указана' };
   }
 
   // 计算天数差
@@ -242,25 +242,25 @@ export const calculateFlavorInfo = (
   if (startDay > 0 && daysSinceRoast < startDay) {
     // 养豆期
     return {
-      phase: '养豆期',
+      phase: 'Отдых',
       remainingDays: startDay - daysSinceRoast,
-      status: `还需养豆 ${startDay - daysSinceRoast} 天`,
+      status: `Ещё отдыхать ${startDay - daysSinceRoast} дн.`,
     };
   } else if (endDay > 0 && daysSinceRoast <= endDay) {
     // 赏味期
     return {
-      phase: '赏味期',
+      phase: 'Лучший период',
       remainingDays: endDay - daysSinceRoast,
-      status: `剩余 ${endDay - daysSinceRoast} 天`,
+      status: `Осталось ${endDay - daysSinceRoast} дн.`,
     };
   } else if (endDay > 0) {
     // 衰退期
     return {
-      phase: '衰退期',
+      phase: 'Угасание',
       remainingDays: 0,
-      status: '已过赏味期',
+      status: 'Лучший период прошёл',
     };
   }
 
-  return { phase: '未知', remainingDays: 0 };
+  return { phase: 'Неизвестно', remainingDays: 0 };
 };

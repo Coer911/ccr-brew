@@ -73,7 +73,7 @@ import {
 import { openRescueMode } from '@/lib/rescue/rescueMode';
 
 // 统一类型定义
-type MainTabType = '冲煮' | '咖啡豆' | '笔记';
+type MainTabType = 'Заварка' | 'Зерно' | 'Заметки';
 type BrewingStep = 'coffeeBean' | 'method' | 'brewing' | 'notes';
 
 interface EditableParams {
@@ -376,13 +376,13 @@ const useNavigation = (
 ) => {
   const canGoBack = useCallback((): boolean => {
     // 如果当前在笔记页面，不显示返回按钮
-    if (activeMainTab === '笔记') return false;
+    if (activeMainTab === 'Заметки') return false;
 
     // 如果当前在咖啡豆页面，不显示返回按钮
-    if (activeMainTab === '咖啡豆') return false;
+    if (activeMainTab === 'Зерно') return false;
 
     // 只有在冲煮页面才考虑返回逻辑
-    if (activeMainTab !== '冲煮') return false;
+    if (activeMainTab !== 'Заварка') return false;
 
     // 咖啡豆步骤是第一步，不显示返回按钮
     if (activeBrewingStep === 'coffeeBean') return false;
@@ -487,7 +487,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
 
   // 计算当前选中的 tab 标识（用于滚动定位）
   const getSelectedTabId = useCallback(() => {
-    if (activeMainTab === '咖啡豆') {
+    if (activeMainTab === 'Зерно') {
       if (isCurrentViewPinned && currentBeanView) {
         return currentBeanView;
       }
@@ -563,7 +563,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
   // 处理当所有非固定视图都被禁用时，如果当前处于咖啡豆主标签页，需要跳转
   useEffect(() => {
     if (
-      activeMainTab === '咖啡豆' &&
+      activeMainTab === 'Зерно' &&
       !isCurrentViewPinned &&
       availableViewsCount === 0
     ) {
@@ -573,9 +573,9 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
       } else {
         // 如果没有固定视图，跳转到其他可见的主标签页
         if (visibleTabs.brewing) {
-          setActiveMainTab('冲煮');
+          setActiveMainTab('Заварка');
         } else if (visibleTabs.notes) {
-          setActiveMainTab('笔记');
+          setActiveMainTab('Заметки');
         }
       }
     }
@@ -630,8 +630,8 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
   } as const;
 
   const handlePinnedViewClick = (view: ViewOption) => {
-    if (activeMainTab !== '咖啡豆') {
-      handleMainTabClick('咖啡豆');
+    if (activeMainTab !== 'Зерно') {
+      handleMainTabClick('Зерно');
     }
     onBeanViewChange?.(view);
 
@@ -749,7 +749,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
         }
         showToast({
           type: 'success',
-          title: result.message || '上传成功',
+          title: result.message || 'Загружено',
           duration: 2000,
         });
       } else {
@@ -758,7 +758,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
         }
         showToast({
           type: 'error',
-          title: result.message || '上传失败',
+          title: result.message || 'Ошибка загрузки',
           duration: 2500,
         });
       }
@@ -774,7 +774,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
         await import('@/components/common/feedback/LightToast');
       showToast({
         type: 'error',
-        title: error instanceof Error ? error.message : '上传失败',
+        title: error instanceof Error ? error.message : 'Ошибка загрузки',
         duration: 2500,
       });
 
@@ -878,11 +878,11 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
   const getPullDisplayText = () => {
     switch (pullSyncStatus) {
       case 'ready':
-        return '松开上传';
+        return 'Отпустите, чтобы загрузить';
       case 'syncing':
-        return '正在上传...';
+        return 'Загружаем...';
       default:
-        return '下拉上传';
+        return 'Потяните, чтобы загрузить';
     }
   };
 
@@ -932,7 +932,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
   const handleBeanTabClick = () => {
     // 只剩两个可用视图时，点击直接切换视图，不弹出下拉
     if (
-      activeMainTab === '咖啡豆' &&
+      activeMainTab === 'Зерно' &&
       !isCurrentViewPinned &&
       availableViewsCount === 2
     ) {
@@ -949,12 +949,12 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
       return;
     }
     // 其余情况保持原有逻辑
-    if (activeMainTab === '咖啡豆' && !isCurrentViewPinned) {
+    if (activeMainTab === 'Зерно' && !isCurrentViewPinned) {
       if (availableViewsCount > 1) {
         onToggleViewDropdown?.();
       }
     } else {
-      handleMainTabClick('咖啡豆');
+      handleMainTabClick('Зерно');
       if (isCurrentViewPinned) {
         const targetView =
           lastUnpinnedViewRef.current || getFirstAvailableView();
@@ -1095,7 +1095,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
           break;
         }
         case 'time': {
-          const timeValue = value.replace(/[sS秒]/g, '');
+          const timeValue = value.replace(/[sS秒сС]/g, '');
           updateDisplayOverlay(prev => ({
             ...prev,
             time: timeValue,
@@ -1132,15 +1132,15 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
     saveMainTabPreference(tab);
 
     setActiveMainTab(tab);
-    if (tab === '笔记') {
+    if (tab === 'Заметки') {
       setShowHistory(true);
-    } else if (activeMainTab === '笔记') {
+    } else if (activeMainTab === 'Заметки') {
       setShowHistory(false);
     }
   };
 
   const shouldShowContent =
-    activeMainTab === '冲煮' &&
+    activeMainTab === 'Заварка' &&
     (!isTimerRunning || showComplete || activeBrewingStep === 'notes');
   const shouldShowParams = parameterInfo.method;
   const isNoCoffeeBeanMode =
@@ -1256,7 +1256,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
       />
 
       <AnimatePresence initial={false}>
-        {activeMainTab !== '冲煮' && (
+        {activeMainTab !== 'Заварка' && (
           <motion.div
             key="desktop-global-search"
             className="hidden overflow-hidden md:block"
@@ -1273,7 +1273,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
               settings={settings}
               customEquipments={customEquipments}
               onSelectBean={(bean, searchQuery) => {
-                handleMainTabClick('咖啡豆');
+                handleMainTabClick('Зерно');
                 window.dispatchEvent(
                   new CustomEvent('beanDetailOpened', {
                     detail: {
@@ -1289,7 +1289,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                 beanUnitPrice,
                 beanInfo,
               }) => {
-                handleMainTabClick('笔记');
+                handleMainTabClick('Заметки');
                 window.dispatchEvent(
                   new CustomEvent('noteDetailOpened', {
                     detail: {
@@ -1354,8 +1354,8 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                   {/* 设置入口按钮图标 - 扩大触碰区域 */}
                   <NavigationSettingsButton
                     placement="sidebar"
-                    title={canGoBack() && onBackClick ? '返回' : '设置'}
-                    ariaLabel={canGoBack() && onBackClick ? '返回' : '设置'}
+                    title={canGoBack() && onBackClick ? 'Назад' : 'Настройки'}
+                    ariaLabel={canGoBack() && onBackClick ? 'Назад' : 'Настройки'}
                     onClick={handleTitleClick}
                   >
                     <AnimatePresence mode="popLayout" initial={false}>
@@ -1457,10 +1457,10 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                     {visibleTabs.brewing && (
                       <div className="shrink-0">
                         <TabButton
-                          tab="冲煮"
-                          isActive={activeMainTab === '冲煮'}
-                          onClick={() => handleMainTabClick('冲煮')}
-                          dataTab="冲煮"
+                          tab="Заварка"
+                          isActive={activeMainTab === 'Заварка'}
+                          onClick={() => handleMainTabClick('Заварка')}
+                          dataTab="Заварка"
                         />
                       </div>
                     )}
@@ -1482,11 +1482,11 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                           }}
                           onClick={handleBeanTabClick}
                           aria-current={
-                            activeMainTab === '咖啡豆' && !isCurrentViewPinned
+                            activeMainTab === 'Зерно' && !isCurrentViewPinned
                               ? 'page'
                               : undefined
                           }
-                          aria-label="切换咖啡豆视图"
+                          aria-label="Переключить вид зерна"
                           aria-expanded={
                             availableViewsCount > 2
                               ? showViewDropdown
@@ -1501,18 +1501,18 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                           style={{
                             opacity:
                               showViewDropdown &&
-                              activeMainTab === '咖啡豆' &&
+                              activeMainTab === 'Зерно' &&
                               !isCurrentViewPinned
                                 ? 0
                                 : 1,
                             pointerEvents:
                               showViewDropdown &&
-                              activeMainTab === '咖啡豆' &&
+                              activeMainTab === 'Зерно' &&
                               !isCurrentViewPinned
                                 ? 'none'
                                 : 'auto',
                             ...(showViewDropdown &&
-                            activeMainTab === '咖啡豆' &&
+                            activeMainTab === 'Зерно' &&
                             !isCurrentViewPinned
                               ? { visibility: 'hidden' as const }
                               : {}),
@@ -1521,7 +1521,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                         >
                           <span
                             className={`relative inline-block ${
-                              activeMainTab === '咖啡豆' && !isCurrentViewPinned
+                              activeMainTab === 'Зерно' && !isCurrentViewPinned
                                 ? 'text-neutral-800 dark:text-neutral-100'
                                 : 'text-neutral-500 dark:text-neutral-400'
                             }`}
@@ -1535,13 +1535,13 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                             initial={false}
                             animate={{
                               width:
-                                activeMainTab === '咖啡豆' &&
+                                activeMainTab === 'Зерно' &&
                                 !isCurrentViewPinned &&
                                 availableViewsCount > 1
                                   ? '12px'
                                   : '0px',
                               marginLeft:
-                                activeMainTab === '咖啡豆' &&
+                                activeMainTab === 'Зерно' &&
                                 !isCurrentViewPinned &&
                                 availableViewsCount > 1
                                   ? '4px'
@@ -1553,7 +1553,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                             }}
                           >
                             <AnimatePresence mode="wait">
-                              {activeMainTab === '咖啡豆' &&
+                              {activeMainTab === 'Зерно' &&
                                 !isCurrentViewPinned &&
                                 availableViewsCount > 1 && (
                                   <motion.div
@@ -1607,7 +1607,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                               : VIEW_LABELS[view]
                           }
                           isActive={
-                            activeMainTab === '咖啡豆' &&
+                            activeMainTab === 'Зерно' &&
                             currentBeanView === view
                           }
                           onClick={() => handlePinnedViewClick(view)}
@@ -1619,10 +1619,10 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                     {visibleTabs.notes && (
                       <div className="shrink-0">
                         <TabButton
-                          tab="笔记"
-                          isActive={activeMainTab === '笔记'}
-                          onClick={() => handleMainTabClick('笔记')}
-                          dataTab="笔记"
+                          tab="Заметки"
+                          isActive={activeMainTab === 'Заметки'}
+                          onClick={() => handleMainTabClick('Заметки')}
+                          dataTab="Заметки"
                         />
                       </div>
                     )}

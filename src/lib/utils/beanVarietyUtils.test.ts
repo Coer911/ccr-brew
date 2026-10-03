@@ -28,23 +28,23 @@ describe('beanVarietyUtils structured bean fields', () => {
     const bean = buildBean({
       blendComponents: [
         {
-          origin: '埃塞俄比亚 西达摩',
-          country: '埃塞俄比亚',
-          region: '西达摩',
+          origin: 'Эфиопия Сидамо',
+          country: 'Эфиопия',
+          region: 'Сидамо',
           altitude: '2100m',
           batch: 'A12',
         },
       ],
     });
 
-    expect(getBeanOriginSummaries(bean)).toEqual(['埃塞俄比亚 西达摩']);
-    expect(getBeanCountries(bean)).toEqual(['埃塞俄比亚']);
-    expect(getBeanRegions(bean)).toEqual(['西达摩']);
+    expect(getBeanOriginSummaries(bean)).toEqual(['Эфиопия Сидамо']);
+    expect(getBeanCountries(bean)).toEqual(['Эфиопия']);
+    expect(getBeanRegions(bean)).toEqual(['Сидамо']);
     expect(getBeanAltitudes(bean)).toEqual(['2100m']);
     expect(getBeanBatches(bean)).toEqual(['A12']);
-    expect(extractUniqueOriginSummaries([bean])).toEqual(['埃塞俄比亚 西达摩']);
-    expect(extractUniqueCountries([bean])).toEqual(['埃塞俄比亚']);
-    expect(extractUniqueRegions([bean])).toEqual(['西达摩']);
+    expect(extractUniqueOriginSummaries([bean])).toEqual(['Эфиопия Сидамо']);
+    expect(extractUniqueCountries([bean])).toEqual(['Эфиопия']);
+    expect(extractUniqueRegions([bean])).toEqual(['Сидамо']);
     expect(extractUniqueAltitudes([bean])).toEqual(['2100m']);
     expect(extractUniqueBatches([bean])).toEqual(['A12']);
   });

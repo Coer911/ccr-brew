@@ -67,7 +67,7 @@ const resolveStartDay = (bean: CoffeeBean): number => {
 };
 
 export const formatBeanReadyReminderDays = (daysUntilReady: number): string =>
-  daysUntilReady === 0 ? '当天' : `${daysUntilReady}天后`;
+  daysUntilReady === 0 ? 'В тот же день' : `${daysUntilReady} дн. спустя`;
 
 export const buildBeanReadyReminderItems = (
   beans: CoffeeBean[],

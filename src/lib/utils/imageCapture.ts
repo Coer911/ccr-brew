@@ -82,13 +82,13 @@ async function galleryPhotoToFile(photo: GalleryPhoto, index: number) {
       blob = fileDataToBlob(data, fallbackType);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      throw new Error(`系统相册图片读取失败：${message}`);
+      throw new Error(`Не удалось прочитать фото из галереи: ${message}`);
     }
   } else {
     const response = await fetch(photo.webPath);
 
     if (!response.ok) {
-      throw new Error(`系统相册图片读取失败：HTTP ${response.status}`);
+      throw new Error(`Не удалось прочитать фото из галереи: HTTP ${response.status}`);
     }
 
     blob = await response.blob();
@@ -186,7 +186,7 @@ function captureImageWithHtmlInput(
       const timeout = setTimeout(() => {
         if (!isResolved) {
           cleanup();
-          reject(new Error('图片选择超时，请重试'));
+          reject(new Error('Время выбора фото истекло, попробуйте ещё раз'));
         }
       }, 60000); // 60秒超时
 
@@ -209,7 +209,7 @@ function captureImageWithHtmlInput(
             // 用户取消了选择
             isResolved = true;
             cleanup();
-            reject(new Error('未选择图片'));
+            reject(new Error('Фото не выбрано'));
             return;
           }
 
@@ -218,7 +218,7 @@ function captureImageWithHtmlInput(
           if (!isSupportedSourceImageFile(file)) {
             isResolved = true;
             cleanup();
-            reject(new Error('请上传 JPG、PNG、WebP 或 HEIF/HEIC 格式的图片'));
+            reject(new Error('Загрузите фото в формате JPG, PNG, WebP или HEIF/HEIC'));
             return;
           }
 
@@ -226,7 +226,7 @@ function captureImageWithHtmlInput(
           if (file.size > 50 * 1024 * 1024) {
             isResolved = true;
             cleanup();
-            reject(new Error('图片文件过大，请选择小于50MB的图片'));
+            reject(new Error('Файл слишком большой, выберите фото меньше 50 МБ'));
             return;
           }
 
@@ -241,7 +241,7 @@ function captureImageWithHtmlInput(
 
             const result = reader.result as string;
             if (!result) {
-              reject(new Error('图片读取失败'));
+              reject(new Error('Не удалось прочитать фото'));
               return;
             }
 
@@ -256,7 +256,7 @@ function captureImageWithHtmlInput(
 
             isResolved = true;
             cleanup();
-            reject(new Error('图片读取失败，请重试'));
+            reject(new Error('Не удалось прочитать фото, попробуйте ещё раз'));
           };
 
           // 开始读取文件
@@ -268,8 +268,8 @@ function captureImageWithHtmlInput(
           cleanup();
           reject(
             new Error(
-              '图片处理失败：' +
-                (error instanceof Error ? error.message : '未知错误')
+              'Не удалось обработать фото: ' +
+                (error instanceof Error ? error.message : 'Неизвестная ошибка')
             )
           );
         }
@@ -281,7 +281,7 @@ function captureImageWithHtmlInput(
 
         isResolved = true;
         cleanup();
-        reject(new Error('用户取消了图片选择'));
+        reject(new Error('Выбор фото отменён'));
       };
 
       // 监听窗口焦点变化，检测用户是否取消了选择
@@ -296,7 +296,7 @@ function captureImageWithHtmlInput(
             // 用户可能取消了选择
             isResolved = true;
             cleanup();
-            reject(new Error('图片选择被取消'));
+            reject(new Error('Выбор фото отменён'));
           }
         }, 1000);
       };
@@ -331,8 +331,8 @@ function captureImageWithHtmlInput(
     } catch (error) {
       reject(
         new Error(
-          '无法打开图片选择器：' +
-            (error instanceof Error ? error.message : '未知错误')
+          'Не удалось открыть выбор фото: ' +
+            (error instanceof Error ? error.message : 'Неизвестная ошибка')
         )
       );
     }

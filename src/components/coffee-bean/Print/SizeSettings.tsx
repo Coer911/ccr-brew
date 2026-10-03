@@ -50,7 +50,7 @@ export const SizeSettings: React.FC<SizeSettingsProps> = ({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
-          尺寸设置
+          Размер
         </div>
         <button
           type="button"
@@ -63,11 +63,11 @@ export const SizeSettings: React.FC<SizeSettingsProps> = ({
         >
           {editMode ? (
             <>
-              <Check className="h-3 w-3" /> 完成
+              <Check className="h-3 w-3" /> Готово
             </>
           ) : (
             <>
-              <Edit className="h-3 w-3" /> 编辑
+              <Edit className="h-3 w-3" /> Изменить
             </>
           )}
         </button>
@@ -113,7 +113,7 @@ export const SizeSettings: React.FC<SizeSettingsProps> = ({
               value={newWidth}
               onChange={e => setNewWidth(e.target.value)}
               className={inputClass}
-              placeholder="宽"
+              placeholder="Ширина"
             />
             <span className="text-xs text-neutral-400">×</span>
             <input
@@ -121,7 +121,7 @@ export const SizeSettings: React.FC<SizeSettingsProps> = ({
               value={newHeight}
               onChange={e => setNewHeight(e.target.value)}
               className={inputClass}
-              placeholder="高"
+              placeholder="Высота"
             />
             <span className="text-xs text-neutral-500 dark:text-neutral-400">
               mm
@@ -132,7 +132,7 @@ export const SizeSettings: React.FC<SizeSettingsProps> = ({
               disabled={!newWidth || !newHeight}
               className="flex h-7 items-center gap-1 rounded bg-neutral-800 px-2 text-xs font-medium text-white hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-700 dark:hover:bg-neutral-600"
             >
-              <Plus className="h-3 w-3" /> 添加
+              <Plus className="h-3 w-3" /> Добавить
             </button>
           </div>
           <button
@@ -140,7 +140,7 @@ export const SizeSettings: React.FC<SizeSettingsProps> = ({
             onClick={onResetSizes}
             className="flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300"
           >
-            <RotateCcw className="h-3 w-3" /> 重置为默认
+            <RotateCcw className="h-3 w-3" /> По умолчанию
           </button>
         </div>
       )}

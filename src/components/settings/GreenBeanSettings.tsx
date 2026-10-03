@@ -135,7 +135,7 @@ const GreenBeanSettings: React.FC<GreenBeanSettingsProps> = ({
     greenBeanRoastPresets.join(',')
   );
   const isPresetSectionHighlighted =
-    highlightedSettingId === makeSettingRowSearchId('预设快捷烘焙量');
+    highlightedSettingId === makeSettingRowSearchId('Быстрые веса обжарки');
   const [hasRevealedSearchDetails, setHasRevealedSearchDetails] =
     React.useState(false);
   const shouldRevealSearchDetails = shouldRevealGreenBeanSearchSettings(
@@ -153,13 +153,13 @@ const GreenBeanSettings: React.FC<GreenBeanSettingsProps> = ({
     hasRevealedSearchDetails;
 
   return (
-    <SettingPage title="生豆库" isVisible={isVisible} onClose={handleClose}>
+    <SettingPage title="Зелёное зерно" isVisible={isVisible} onClose={handleClose}>
       <SettingSection
-        title="生豆库"
-        footer="在咖啡豆库存概要中点击「咖啡豆」来切换生豆/熟豆库"
+        title="Зелёное зерно"
+        footer="В обзоре запасов нажмите «Зерно», чтобы переключаться между зелёным и обжаренным"
         className="-mt-4"
       >
-        <SettingRow label="启用生豆库" isLast>
+        <SettingRow label="Включить учёт зелёного зерна" isLast>
           <SettingToggle
             checked={settings.enableGreenBeanInventory || false}
             onChange={checked =>
@@ -171,10 +171,10 @@ const GreenBeanSettings: React.FC<GreenBeanSettingsProps> = ({
 
       {showGreenBeanDetails && (
         <>
-          <SettingSection title="快捷烘焙">
+          <SettingSection title="Быстрая обжарка">
             <SettingRow
-              label={'启用"全部烘焙"选项'}
-              description="显示ALL按钮，可一次性烘焙剩余库存"
+              label={'Включить «Обжарить всё»'}
+              description="Показывать кнопку ALL, чтобы обжарить весь остаток сразу"
             >
               <SettingToggle
                 checked={
@@ -187,8 +187,8 @@ const GreenBeanSettings: React.FC<GreenBeanSettingsProps> = ({
               />
             </SettingRow>
             <SettingRow
-              label="启用自定义烘焙量输入"
-              description="允许用户在快捷烘焙框中输入任意数字"
+              label="Разрешить свой вес обжарки"
+              description="Можно вводить любое число в окне быстрой обжарки"
               isLast
             >
               <SettingToggle
@@ -203,9 +203,9 @@ const GreenBeanSettings: React.FC<GreenBeanSettingsProps> = ({
             </SettingRow>
           </SettingSection>
 
-          <SettingSection title="预设快捷烘焙量">
+          <SettingSection title="Быстрые веса обжарки">
             <div
-              data-settings-search-id={makeSettingRowSearchId('预设快捷烘焙量')}
+              data-settings-search-id={makeSettingRowSearchId('Быстрые веса обжарки')}
               className={`p-4 transition-colors ${
                 isPresetSectionHighlighted
                   ? 'bg-neutral-200/70 dark:bg-neutral-700/45'
@@ -254,7 +254,7 @@ const GreenBeanSettings: React.FC<GreenBeanSettingsProps> = ({
                         addGreenBeanRoastPreset();
                       }
                     }}
-                    placeholder="克数"
+                    placeholder="Граммы"
                     className="w-16 rounded-l rounded-r-none bg-neutral-200 px-2 py-1.5 text-sm focus:ring-1 focus:ring-neutral-500 focus:outline-hidden dark:bg-neutral-700"
                   />
                   <button
@@ -272,29 +272,28 @@ const GreenBeanSettings: React.FC<GreenBeanSettingsProps> = ({
                 </div>
               </div>
               <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                点击预设值可以删除，输入克数后按回车或点击「+」可以添加新的预设值。
+                Нажмите на вес, чтобы удалить его; введите граммы и нажмите Enter или «+», чтобы добавить.
               </p>
             </div>
           </SettingSection>
 
           <SettingSection
-            title="数据转换"
+            title="Преобразование данных"
             footer={
               <div className="space-y-2 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
                 <p>
-                  在生豆库功能上线前，你可能用熟豆记录来管理生豆。此功能可将这些旧数据转换为正确的生豆库格式。
+                  До появления учёта зелёного зерна вы могли вести его как обжаренное. Эта функция переведёт старые записи в правильный формат.
                 </p>
                 <p>
-                  转换后，已用掉的部分会变成「烘焙记录 +
-                  新熟豆」，剩余部分保留在生豆中。原有的冲煮笔记会自动迁移到新熟豆，快捷扣除等变动记录会被清理。
+                  После преобразования израсходованная часть станет «обжаркой + новым обжаренным зерном», а остаток останется зелёным. Заметки о заварке перейдут к новому зерну, записи быстрого списания будут очищены.
                 </p>
                 <p className="text-neutral-400 dark:text-neutral-500">
-                  仅限未关联生豆来源的熟豆使用，数据变动较大，建议先备份。
+                  Только для обжаренного зерна без привязки к зелёному. Данные меняются сильно — сначала сделайте копию.
                 </p>
               </div>
             }
           >
-            <SettingRow label="熟豆转生豆" isLast>
+            <SettingRow label="Обжаренное → зелёное" isLast>
               <SettingToggle
                 checked={settings.enableConvertToGreen || false}
                 onChange={checked =>

@@ -20,16 +20,16 @@ export const getDateDisplayColumnLabel = (
   dateDisplayMode: DateDisplayMode,
   hasGreenBeans: boolean
 ): string => {
-  if (hasGreenBeans) return '购买日期';
+  if (hasGreenBeans) return 'Дата покупки';
 
   switch (dateDisplayMode) {
     case 'flavorPeriod':
-      return '赏味期';
+      return 'Лучший период';
     case 'agingDays':
-      return '养豆天数';
+      return 'Дней отдыха';
     case 'date':
     default:
-      return '日期';
+      return 'Дата';
   }
 };
 
@@ -39,25 +39,25 @@ export const TABLE_COLUMN_CONFIG: {
   greenBeanLabel?: string;
   defaultVisible: boolean;
 }[] = [
-  { key: 'roaster', label: '烘焙商', defaultVisible: false },
-  { key: 'name', label: '名称', defaultVisible: true },
+  { key: 'roaster', label: 'Обжарщик', defaultVisible: false },
+  { key: 'name', label: 'Название', defaultVisible: true },
   {
     key: 'flavorPeriod',
-    label: '赏味期',
-    greenBeanLabel: '购买日期',
+    label: 'Лучший период',
+    greenBeanLabel: 'Дата покупки',
     defaultVisible: true,
   },
-  { key: 'capacity', label: '容量', defaultVisible: true },
-  { key: 'price', label: '价格', defaultVisible: true },
-  { key: 'beanType', label: '类型', defaultVisible: false },
-  { key: 'origin', label: '产地', defaultVisible: false },
-  { key: 'estate', label: '庄园', defaultVisible: false },
-  { key: 'process', label: '处理法', defaultVisible: false },
-  { key: 'variety', label: '品种', defaultVisible: false },
-  { key: 'roastLevel', label: '烘焙度', defaultVisible: false },
-  { key: 'flavor', label: '风味', defaultVisible: false },
-  { key: 'rating', label: '评分', defaultVisible: false },
-  { key: 'notes', label: '备注', defaultVisible: true },
+  { key: 'capacity', label: 'Вес', defaultVisible: true },
+  { key: 'price', label: 'Цена', defaultVisible: true },
+  { key: 'beanType', label: 'Тип', defaultVisible: false },
+  { key: 'origin', label: 'Происхождение', defaultVisible: false },
+  { key: 'estate', label: 'Ферма', defaultVisible: false },
+  { key: 'process', label: 'Обработка', defaultVisible: false },
+  { key: 'variety', label: 'Разновидность', defaultVisible: false },
+  { key: 'roastLevel', label: 'Обжарка', defaultVisible: false },
+  { key: 'flavor', label: 'Вкусы', defaultVisible: false },
+  { key: 'rating', label: 'Оценка', defaultVisible: false },
+  { key: 'notes', label: 'Заметка', defaultVisible: true },
 ];
 
 export const getDefaultVisibleColumns = (): TableColumnKey[] =>

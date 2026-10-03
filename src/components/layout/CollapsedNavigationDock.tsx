@@ -79,8 +79,8 @@ export const CollapsedNavigationDockTrigger: React.FC<
     >
       <NavigationSettingsButton
         placement="inline"
-        title="显示导航"
-        ariaLabel="显示导航"
+        title="Показать навигацию"
+        ariaLabel="Показать навигацию"
         onClick={openOverlay}
         onPointerEnter={openOverlay}
         onFocus={openOverlay}

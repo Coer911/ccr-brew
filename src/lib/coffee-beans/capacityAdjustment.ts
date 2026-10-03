@@ -78,7 +78,7 @@ export async function createCapacityAdjustmentRecord(
   const changeType =
     changeAmount > 0 ? 'increase' : changeAmount < 0 ? 'decrease' : 'set';
 
-  const noteContent = '容量调整(不计入统计)';
+  const noteContent = 'Изменение остатка (не входит в статистику)';
   const adjustmentRecord: Omit<BrewingNote, 'id'> = {
     timestamp,
     source: 'capacity-adjustment',
@@ -87,7 +87,7 @@ export async function createCapacityAdjustmentRecord(
     method: '',
     coffeeBeanInfo: {
       name: bean.name || '',
-      roastLevel: bean.roastLevel || '中度烘焙',
+      roastLevel: bean.roastLevel || 'Средняя обжарка',
       roastDate: bean.roastDate,
       roaster: bean.roaster,
     },

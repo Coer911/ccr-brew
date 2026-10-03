@@ -648,16 +648,16 @@ const DataSettings: React.FC<DataSettingsProps> = ({
   );
 
   return (
-    <SettingPage title="数据与备份" isVisible={isVisible} onClose={handleClose}>
+    <SettingPage title="Данные и копии" isVisible={isVisible} onClose={handleClose}>
       {/* 云同步设置组 */}
       <div className="-mt-4 px-6 py-4">
         <h3 className="mb-3 text-sm font-medium tracking-wider text-neutral-500 uppercase dark:text-neutral-400">
-          云同步
+          Облачная синхронизация
         </h3>
 
         <div className="space-y-3">
           <SelectionDropdown
-            label="同步服务"
+            label="Сервис синхронизации"
             value={syncType}
             valueLabel={getCloudProviderLabel(syncType)}
             isOpen={showSyncTypeDropdown}
@@ -692,11 +692,11 @@ const DataSettings: React.FC<DataSettingsProps> = ({
             !webdavSettings.lastConnectionSuccess && (
               <button
                 type="button"
-                data-settings-search-id={makeSettingRowSearchId('引导式配置')}
+                data-settings-search-id={makeSettingRowSearchId('Пошаговая настройка')}
                 onClick={() => setShowWebDAVTutorial(true)}
-                className={`flex w-full items-center justify-between rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${getSearchHighlightClass('引导式配置')}`}
+                className={`flex w-full items-center justify-between rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${getSearchHighlightClass('Пошаговая настройка')}`}
               >
-                <span>引导式配置（推荐新手）</span>
+                <span>Пошаговая настройка (для новичков)</span>
                 <ChevronRight className="h-4 w-4 text-neutral-400" />
               </button>
             )}
@@ -705,15 +705,15 @@ const DataSettings: React.FC<DataSettingsProps> = ({
             supportsPullToSync &&
             isManualSyncConnected && (
               <div
-                data-settings-search-id={makeSettingRowSearchId('下拉上传')}
-                className={`flex items-center justify-between rounded bg-neutral-100 px-4 py-3 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('下拉上传')}`}
+                data-settings-search-id={makeSettingRowSearchId('Потяните, чтобы загрузить')}
+                className={`flex items-center justify-between rounded bg-neutral-100 px-4 py-3 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('Потяните, чтобы загрузить')}`}
               >
                 <div>
                   <div className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
-                    下拉上传
+                    Потянуть для загрузки
                   </div>
                   <div className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-                    在导航栏下拉可快速上传数据
+                    Потяните панель навигации вниз, чтобы быстро загрузить данные
                   </div>
                 </div>
                 <label className="relative inline-flex cursor-pointer items-center">
@@ -735,12 +735,12 @@ const DataSettings: React.FC<DataSettingsProps> = ({
       {syncType === 'supabase' && (
         <div className="px-6 py-4">
           <h3 className="mb-3 text-sm font-medium tracking-wider text-neutral-500 uppercase dark:text-neutral-400">
-            手动备份
+            Ручная копия
           </h3>
 
           <div className="space-y-3">
             <SelectionDropdown
-              label="备份服务"
+              label="Сервис копий"
               value={supabaseBackupProvider}
               valueLabel={getCloudProviderLabel(supabaseBackupProvider)}
               isOpen={showSupabaseBackupDropdown}
@@ -762,26 +762,26 @@ const DataSettings: React.FC<DataSettingsProps> = ({
               !webdavSettings.lastConnectionSuccess && (
                 <button
                   type="button"
-                  data-settings-search-id={makeSettingRowSearchId('引导式配置')}
+                  data-settings-search-id={makeSettingRowSearchId('Пошаговая настройка')}
                   onClick={() => setShowWebDAVTutorial(true)}
-                  className={`flex w-full items-center justify-between rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${getSearchHighlightClass('引导式配置')}`}
+                  className={`flex w-full items-center justify-between rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${getSearchHighlightClass('Пошаговая настройка')}`}
                 >
-                  <span>引导式配置（推荐新手）</span>
+                  <span>Пошаговая настройка (для новичков)</span>
                   <ChevronRight className="h-4 w-4 text-neutral-400" />
                 </button>
               )}
 
             {supportsPullToSync && isManualSyncConnected && (
               <div
-                data-settings-search-id={makeSettingRowSearchId('下拉上传')}
-                className={`flex items-center justify-between rounded bg-neutral-100 px-4 py-3 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('下拉上传')}`}
+                data-settings-search-id={makeSettingRowSearchId('Потяните, чтобы загрузить')}
+                className={`flex items-center justify-between rounded bg-neutral-100 px-4 py-3 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('Потяните, чтобы загрузить')}`}
               >
                 <div>
                   <div className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
-                    下拉上传
+                    Потянуть для загрузки
                   </div>
                   <div className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-                    在导航栏下拉可快速上传数据
+                    Потяните панель навигации вниз, чтобы быстро загрузить данные
                   </div>
                 </div>
                 <label className="relative inline-flex cursor-pointer items-center">
@@ -804,23 +804,23 @@ const DataSettings: React.FC<DataSettingsProps> = ({
       {!isPersisted && (
         <div className="px-6 py-4">
           <h3 className="mb-3 text-sm font-medium tracking-wider text-neutral-500 uppercase dark:text-neutral-400">
-            数据持久化
+            Сохранность данных
           </h3>
 
           <div className="space-y-3">
             {!isPWA && !isNativePlatform ? (
               <div
-                data-settings-search-id={makeSettingRowSearchId('持久化存储')}
-                className={`rounded bg-neutral-100 px-4 py-3 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('持久化存储')}`}
+                data-settings-search-id={makeSettingRowSearchId('Постоянное хранилище')}
+                className={`rounded bg-neutral-100 px-4 py-3 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('Постоянное хранилище')}`}
               >
                 <div className="flex items-center justify-between">
                   <div className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
-                    持久化存储
+                    Постоянное хранилище
                   </div>
                   <label className="relative inline-flex cursor-pointer items-center">
                     <input
                       type="checkbox"
-                      aria-label="持久化存储不可用"
+                      aria-label="Постоянное хранилище недоступно"
                       checked={false}
                       disabled={true}
                       readOnly
@@ -834,24 +834,23 @@ const DataSettings: React.FC<DataSettingsProps> = ({
 
                 <div className="text-xs text-neutral-600 dark:text-neutral-400">
                   <p>
-                    请将本应用添加到主屏幕以启用 PWA
-                    模式，即可使用持久化存储功能。
+                    Добавьте приложение на главный экран (режим PWA), чтобы включить постоянное хранилище.
                   </p>
                 </div>
               </div>
             ) : (
               <div
-                data-settings-search-id={makeSettingRowSearchId('持久化存储')}
-                className={`rounded bg-neutral-100 px-4 py-3 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('持久化存储')}`}
+                data-settings-search-id={makeSettingRowSearchId('Постоянное хранилище')}
+                className={`rounded bg-neutral-100 px-4 py-3 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('Постоянное хранилище')}`}
               >
                 <div className="flex items-center justify-between">
                   <div className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
-                    持久化存储
+                    Постоянное хранилище
                   </div>
                   <label className="relative inline-flex cursor-pointer items-center">
                     <input
                       type="checkbox"
-                      aria-label="开启持久化存储"
+                      aria-label="Включить постоянное хранилище"
                       checked={false}
                       onChange={handleRequestPersist}
                       disabled={isRequestingPersist}
@@ -865,11 +864,11 @@ const DataSettings: React.FC<DataSettingsProps> = ({
 
                 <div className="text-xs text-neutral-600 dark:text-neutral-400">
                   <p>
-                    开启后可保护应用数据不被浏览器自动清理。建议经常使用本应用的用户开启此功能，以确保数据安全。
+                    Защищает данные приложения от автоматической очистки браузером. Советуем включить, если пользуетесь приложением часто.
                   </p>
                   {storageEstimate && (
                     <p className="mt-2">
-                      当前已使用 {storageEstimate.usageFormatted} /{' '}
+                      Занято сейчас {storageEstimate.usageFormatted} /{' '}
                       {storageEstimate.quotaFormatted}
                     </p>
                   )}
@@ -884,17 +883,17 @@ const DataSettings: React.FC<DataSettingsProps> = ({
       {backupReminderSettings && (
         <div className="px-6 py-4">
           <h3 className="mb-3 text-sm font-medium tracking-wider text-neutral-500 uppercase dark:text-neutral-400">
-            备份提醒
+            Напоминание о копии
           </h3>
 
           <div className="space-y-3">
             {/* 备份提醒开关 */}
             <div
-              data-settings-search-id={makeSettingRowSearchId('备份提醒')}
-              className={`flex items-center justify-between rounded bg-neutral-100 px-4 py-3 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('备份提醒')}`}
+              data-settings-search-id={makeSettingRowSearchId('Напоминание о копии')}
+              className={`flex items-center justify-between rounded bg-neutral-100 px-4 py-3 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('Напоминание о копии')}`}
             >
               <div className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
-                备份提醒
+                Напоминание о копии
               </div>
               <label className="relative inline-flex cursor-pointer items-center">
                 <input
@@ -912,12 +911,12 @@ const DataSettings: React.FC<DataSettingsProps> = ({
             {/* 展开的频率设置 */}
             {backupReminderSettings.enabled && (
               <div
-                data-settings-search-id={makeSettingRowSearchId('提醒频率')}
-                className={`space-y-2 rounded bg-neutral-100 p-4 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('提醒频率')}`}
+                data-settings-search-id={makeSettingRowSearchId('Как часто')}
+                className={`space-y-2 rounded bg-neutral-100 p-4 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('Как часто')}`}
               >
                 <div className="flex items-center justify-between">
                   <div className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
-                    提醒频率
+                    Как часто
                   </div>
                   {nextReminderText && (
                     <div className="text-xs text-neutral-500 dark:text-neutral-400">
@@ -930,15 +929,15 @@ const DataSettings: React.FC<DataSettingsProps> = ({
                   options={[
                     {
                       value: BACKUP_REMINDER_INTERVALS.WEEKLY.toString(),
-                      label: '每周',
+                      label: 'Раз в неделю',
                     },
                     {
                       value: BACKUP_REMINDER_INTERVALS.BIWEEKLY.toString(),
-                      label: '每两周',
+                      label: 'Раз в две недели',
                     },
                     {
                       value: BACKUP_REMINDER_INTERVALS.MONTHLY.toString(),
-                      label: '每月',
+                      label: 'Раз в месяц',
                     },
                   ]}
                   onChange={value =>
@@ -946,7 +945,7 @@ const DataSettings: React.FC<DataSettingsProps> = ({
                       parseInt(value) as BackupReminderInterval
                     )
                   }
-                  ariaLabel="备份提醒频率"
+                  ariaLabel="Частота напоминаний о копии"
                   className="w-full"
                   fullWidth
                 />

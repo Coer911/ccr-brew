@@ -102,7 +102,7 @@ const MethodSelector: React.FC<MethodSelectorProps> = ({
 }) => {
   const isEspresso =
     selectedEquipment.toLowerCase().includes('espresso') ||
-    selectedEquipment.includes('意式');
+    selectedEquipment.includes('Эспрессо');
 
   const [editingValues, setEditingValues] = useState<EditingValues | null>(
     null
@@ -502,13 +502,13 @@ const MethodSelector: React.FC<MethodSelectorProps> = ({
           <div className="flex items-baseline justify-between">
             <div className="flex items-center gap-1">
               <h3 className="truncate text-xs font-medium tracking-wider text-neutral-800 dark:text-neutral-100">
-                不使用方案
+                Без рецепта
               </h3>
             </div>
           </div>
 
           <div className="mt-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-            跳过方案选择
+            Пропустить выбор рецепта
           </div>
         </div>
       </div>
@@ -562,7 +562,7 @@ const MethodSelector: React.FC<MethodSelectorProps> = ({
                   }}
                   className="text-xs font-medium text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
                 >
-                  [还原]
+                  [Вернуть]
                 </button>
               )}
             </div>
@@ -578,10 +578,10 @@ const MethodSelector: React.FC<MethodSelectorProps> = ({
                 </>
               ) : (
                 <>
-                  {renderDisplay('咖啡粉', displayParams.coffee)}
-                  {renderDisplay('粉水比', displayParams.ratio)}
-                  {renderDisplay('研磨度', displayParams.grindSize)}
-                  {renderDisplay('水温', displayParams.temp || '-')}
+                  {renderDisplay('Кофе', displayParams.coffee)}
+                  {renderDisplay('Соотношение', displayParams.ratio)}
+                  {renderDisplay('Помол', displayParams.grindSize)}
+                  {renderDisplay('Темп. воды', displayParams.temp || '-')}
                 </>
               )}
             </div>
@@ -592,7 +592,7 @@ const MethodSelector: React.FC<MethodSelectorProps> = ({
             >
               <div className="space-y-2">
                 {renderInput(
-                  '咖啡粉',
+                  'Кофе',
                   editingValues?.coffee ?? '',
                   v => updateParam('coffee', v),
                   'g'
@@ -601,7 +601,7 @@ const MethodSelector: React.FC<MethodSelectorProps> = ({
                   <>
                     <div className="flex items-center">
                       <label className="w-14 shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                        研磨度:
+                        Помол:
                       </label>
                       <GrindSizeInput
                         value={editingValues?.grindSize ?? ''}
@@ -613,13 +613,13 @@ const MethodSelector: React.FC<MethodSelectorProps> = ({
                       />
                     </div>
                     {renderInput(
-                      '萃取时长',
+                      'Время экстракции',
                       editingValues?.time ?? '',
                       v => updateParam('time', v),
                       's'
                     )}
                     {renderInput(
-                      '液重',
+                      'Выход',
                       editingValues?.water ?? '',
                       v => updateParam('water', v),
                       'g'
@@ -628,7 +628,7 @@ const MethodSelector: React.FC<MethodSelectorProps> = ({
                 ) : (
                   <>
                     {renderInput(
-                      '粉水比',
+                      'Соотношение',
                       editingValues?.ratio ?? '',
                       v => updateParam('ratio', v),
                       undefined,
@@ -637,7 +637,7 @@ const MethodSelector: React.FC<MethodSelectorProps> = ({
                     )}
                     <div className="flex items-center">
                       <label className="w-14 shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                        研磨度:
+                        Помол:
                       </label>
                       <GrindSizeInput
                         value={editingValues?.grindSize ?? ''}
@@ -649,7 +649,7 @@ const MethodSelector: React.FC<MethodSelectorProps> = ({
                       />
                     </div>
                     {renderInput(
-                      '水温',
+                      'Темп. воды',
                       editingValues?.temp ?? '',
                       v => updateParam('temp', v),
                       '°C'
@@ -671,11 +671,11 @@ const MethodSelector: React.FC<MethodSelectorProps> = ({
     <div className="py-3">
       {!selectedEquipment ? (
         <div className="border-l border-neutral-200/50 pl-6 text-xs text-neutral-500 dark:border-neutral-800/50 dark:text-neutral-400">
-          请先选择器具
+          Сначала выберите устройство
         </div>
       ) : !hasMethods ? (
         <div className="border-l border-neutral-200/50 pl-6 text-xs text-neutral-500 dark:border-neutral-800/50 dark:text-neutral-400">
-          没有可用方案，请前往设置中的“器具和方案”添加
+          Нет рецептов — добавьте их в настройках «Устройства и рецепты»
         </div>
       ) : (
         <div className="space-y-5">
@@ -685,7 +685,7 @@ const MethodSelector: React.FC<MethodSelectorProps> = ({
             <div className="flex items-center py-3">
               <div className="h-px grow bg-neutral-200 dark:bg-neutral-800" />
               <span className="px-2 text-xs text-neutral-500 dark:text-neutral-400">
-                通用方案
+                Общие рецепты
               </span>
               <div className="h-px grow bg-neutral-200 dark:bg-neutral-800" />
             </div>

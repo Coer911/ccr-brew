@@ -60,7 +60,7 @@ export const useFlavorDimensions = () => {
 
     // 如果历史标签中也没有，返回人性化的默认标签
     if (id.startsWith('custom_')) {
-      return '已删除的评分维度';
+      return 'Удалённый критерий оценки';
     }
 
     return id;

@@ -36,10 +36,10 @@ export const saveSelectedEquipmentPreference = (equipmentId: string): void => {
 };
 
 // 定义标签类型
-export type TabType = '咖啡豆' | '方案' | '注水' | '记录';
+export type TabType = 'Зерно' | 'Рецепт' | 'Пролив' | 'Записать';
 
 // 添加新的主导航类型
-export type MainTabType = '冲煮' | '笔记' | '咖啡豆';
+export type MainTabType = 'Заварка' | 'Заметки' | 'Зерно';
 
 // 修改冲煮步骤类型
 export type BrewingStep = 'coffeeBean' | 'method' | 'brewing' | 'notes';
@@ -79,17 +79,17 @@ export interface Step {
 }
 
 export interface Content {
-  咖啡豆: {
+  Зерно: {
     steps: Step[];
   };
-  方案: {
+  Рецепт: {
     steps: Step[];
     type: 'common' | 'custom';
   };
-  注水: {
+  Пролив: {
     steps: Step[];
   };
-  记录: {
+  Записать: {
     steps: Step[];
   };
 }
@@ -101,14 +101,14 @@ export function useBrewingState(initialBrewingStep?: BrewingStep) {
     if (typeof window !== 'undefined') {
       return getMainTabPreference();
     }
-    return '冲煮';
+    return 'Заварка';
   });
   // 修改默认步骤为方案或传入的参数
   const [activeBrewingStep, setActiveBrewingStep] = useState<BrewingStep>(
     initialBrewingStep || 'method'
   );
   const [activeTab, setActiveTab] = useState<TabType>(
-    initialBrewingStep === 'coffeeBean' ? '咖啡豆' : '方案'
+    initialBrewingStep === 'coffeeBean' ? 'Зерно' : 'Рецепт'
   );
 
   // 添加咖啡豆选择状态
@@ -200,9 +200,9 @@ export function useBrewingState(initialBrewingStep?: BrewingStep) {
       const { force = false } = options || {};
 
       // 切换到冲煮标签
-      if (activeMainTab !== '冲煮') {
-        saveMainTabPreference('冲煮');
-        setActiveMainTab('冲煮');
+      if (activeMainTab !== 'Заварка') {
+        saveMainTabPreference('Заварка');
+        setActiveMainTab('Заварка');
         setShowHistory(false);
         setTimeout(() => navigateToStep(step, options), 0);
         return false;
@@ -282,9 +282,9 @@ export function useBrewingState(initialBrewingStep?: BrewingStep) {
   const handleEquipmentSelect = useCallback(
     (equipmentName: string) => {
       // 切换到冲煮标签
-      if (activeMainTab !== '冲煮') {
-        saveMainTabPreference('冲煮');
-        setActiveMainTab('冲煮');
+      if (activeMainTab !== 'Заварка') {
+        saveMainTabPreference('Заварка');
+        setActiveMainTab('Заварка');
         setShowHistory(false);
         setTimeout(() => handleEquipmentSelect(equipmentName), 0);
         return equipmentName;
@@ -307,7 +307,7 @@ export function useBrewingState(initialBrewingStep?: BrewingStep) {
       setMethodType('common');
 
       // 导航到方案步骤
-      setActiveTab('方案');
+      setActiveTab('Рецепт');
       setActiveBrewingStep('method');
 
       // 显式更新参数栏为 method 状态（清空参数）
@@ -411,11 +411,11 @@ export function useBrewingState(initialBrewingStep?: BrewingStep) {
         // 跳转到笔记页面前，清空历史栈并清理浏览器历史
         modalHistory.clearAndNavigate();
 
-        setActiveMainTab('笔记');
+        setActiveMainTab('Заметки');
         setShowHistory(true);
         resetBrewingState();
       } catch (_error) {
-        alert('保存笔记时出错，请重试');
+        alert('Ошибка при сохранении заметки, попробуйте ещё раз');
       }
     },
     [
@@ -431,7 +431,7 @@ export function useBrewingState(initialBrewingStep?: BrewingStep) {
   const handleSaveCustomMethod = useCallback(
     async (method: Method) => {
       try {
-        if (!selectedEquipment) throw new Error('未选择设备');
+        if (!selectedEquipment) throw new Error('Устройство не выбрано');
 
         // 检查是否是从通用方案创建的新方案
         const methodWithFlags = method as Method & {
@@ -485,13 +485,13 @@ export function useBrewingState(initialBrewingStep?: BrewingStep) {
             await import('@/components/common/feedback/LightToast');
           showToast({
             type: 'success',
-            title: '已保存通用方案到自定义列表',
+            title: 'Общий рецепт сохранён в свои',
             duration: 2000,
           });
         }
       } catch (error) {
         console.error('保存方案失败:', error);
-        alert('保存方案失败，请重试');
+        alert('Не удалось сохранить рецепт, попробуйте ещё раз');
       }
     },
     [selectedEquipment, customMethods, editingMethod]
@@ -517,7 +517,7 @@ export function useBrewingState(initialBrewingStep?: BrewingStep) {
         }
       } catch (error) {
         console.error('删除方案失败:', error);
-        alert('删除方案失败，请重试');
+        alert('Не удалось удалить рецепт, попробуйте ещё раз');
       }
     },
     [selectedEquipment, selectedMethod]
@@ -542,7 +542,7 @@ export function useBrewingState(initialBrewingStep?: BrewingStep) {
           await import('@/components/common/feedback/LightToast');
         showToast({
           type: 'success',
-          title: '已隐藏方案',
+          title: 'Рецепт скрыт',
           duration: 2000,
         });
 
@@ -550,7 +550,7 @@ export function useBrewingState(initialBrewingStep?: BrewingStep) {
         window.dispatchEvent(new CustomEvent('settingsChanged'));
       } catch (error) {
         console.error('隐藏方案失败:', error);
-        alert('隐藏方案失败，请重试');
+        alert('Не удалось скрыть рецепт, попробуйте ещё раз');
       }
     },
     [selectedEquipment]
@@ -569,17 +569,17 @@ export function useBrewingState(initialBrewingStep?: BrewingStep) {
         Boolean(beanId && options.createdFromSearch)
       );
       setActiveBrewingStep('method');
-      setActiveTab('方案');
+      setActiveTab('Рецепт');
     },
     []
   );
 
   // 简化的content状态
   const [content, setContent] = useState<Content>({
-    咖啡豆: { steps: [] },
-    方案: { steps: [], type: 'common' },
-    注水: { steps: [] },
-    记录: { steps: [] },
+    Зерно: { steps: [] },
+    Рецепт: { steps: [], type: 'common' },
+    Пролив: { steps: [] },
+    Записать: { steps: [] },
   });
 
   // 优化的content更新 - 使用 useMemo 缓存计算结果
@@ -643,10 +643,10 @@ export function useBrewingState(initialBrewingStep?: BrewingStep) {
     // 批量更新，减少重渲染
     if (needsUpdate) {
       setContent({
-        咖啡豆: { steps: [] },
-        方案: { steps: newMethodSteps, type: methodType },
-        注水: { steps: newStageSteps },
-        记录: { steps: [] },
+        Зерно: { steps: [] },
+        Рецепт: { steps: newMethodSteps, type: methodType },
+        Пролив: { steps: newStageSteps },
+        Записать: { steps: [] },
       });
     }
   }, [

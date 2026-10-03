@@ -22,10 +22,10 @@ import SettingToggle from './atomic/SettingToggle';
 import { useScrollToHighlightedSetting } from './atomic/SettingSearchHighlightContext';
 import { makeSettingRowSearchId } from './settingsSearch';
 
-const ROASTER_SETTING_ID = makeSettingRowSearchId('烘焙商');
-const ROASTER_SEPARATOR_SETTING_ID = makeSettingRowSearchId('烘焙商分隔符');
+const ROASTER_SETTING_ID = makeSettingRowSearchId('Обжарщик');
+const ROASTER_SEPARATOR_SETTING_ID = makeSettingRowSearchId('Разделитель обжарщика');
 const ROASTER_SEPARATOR_OPTIONS: SettingSelectorOption<' ' | '/'>[] = [
-  { value: ' ', label: '空格' },
+  { value: ' ', label: 'Пробел' },
   { value: '/', label: '/' },
 ];
 const EMPTY_SCROLL_FADE = { top: false, bottom: false };
@@ -177,9 +177,9 @@ const BeanFieldSettingsDrawer: React.FC<BeanFieldSettingsDrawerProps> = ({
             className="overflow-x-hidden overflow-y-auto overscroll-contain"
             style={SCROLL_CONTAINER_STYLE}
           >
-            <SettingSection title="基础" className="-mx-6">
+            <SettingSection title="Основное" className="-mx-6">
               <SettingRow
-                label="烘焙商"
+                label="Обжарщик"
                 settingId={ROASTER_SETTING_ID}
                 isLast={!showRoasterSeparator}
               >
@@ -190,7 +190,7 @@ const BeanFieldSettingsDrawer: React.FC<BeanFieldSettingsDrawerProps> = ({
               </SettingRow>
               {showRoasterSeparator && (
                 <SettingRow
-                  label="烘焙商分隔符"
+                  label="Разделитель обжарщика"
                   settingId={ROASTER_SEPARATOR_SETTING_ID}
                   isLast
                   isSubSetting
@@ -198,7 +198,7 @@ const BeanFieldSettingsDrawer: React.FC<BeanFieldSettingsDrawerProps> = ({
                   <SettingSelector
                     value={settings.roasterSeparator || ' '}
                     options={ROASTER_SEPARATOR_OPTIONS}
-                    ariaLabel="烘焙商分隔符"
+                    ariaLabel="Разделитель обжарщика"
                     onChange={handleRoasterSeparatorChange}
                   />
                 </SettingRow>
@@ -222,7 +222,7 @@ const BeanFieldSettingsDrawer: React.FC<BeanFieldSettingsDrawerProps> = ({
                         definition.id
                       );
                       const label =
-                        definition.id === 'origin' ? '产地' : definition.label;
+                        definition.id === 'origin' ? 'Происхождение' : definition.label;
                       const settingId = makeSettingRowSearchId(label);
 
                       return (

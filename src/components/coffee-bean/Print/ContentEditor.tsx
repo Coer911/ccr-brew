@@ -104,12 +104,12 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
         const icon = await processThermalPrintIcon(file);
         onUpdateIcon(icon);
         onUpdateIconSource('custom');
-        showIconToast('success', '图标已添加');
+        showIconToast('success', 'Логотип добавлен');
       } catch (error) {
         const message =
           error instanceof Error
             ? error.message
-            : '图标处理失败，请更换图片后重试';
+            : 'Не удалось обработать логотип, попробуйте другое изображение';
         showIconToast('error', message);
       }
       setIsIconProcessing(false);
@@ -183,10 +183,10 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
   const activeVisible = activeField ? config.fields[activeField] : false;
   const activeStatusLabel =
     activeField === 'icon' && isIconProcessing
-      ? '处理中'
+      ? 'Обработка'
       : activeVisible
-        ? '显示中'
-        : '已隐藏';
+        ? 'Показано'
+        : 'Скрыто';
   const activeStatusButtonClass = activeVisible
     ? `opacity-100 text-neutral-700 dark:text-neutral-200 ${SOFT_BUTTON_CLASS}`
     : `opacity-60 text-neutral-700 hover:opacity-80 dark:text-neutral-200 ${SOFT_BUTTON_CLASS}`;
@@ -195,7 +195,7 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
-          字段内容
+          Содержимое полей
         </div>
         <button
           type="button"
@@ -203,7 +203,7 @@ export const ContentEditor: React.FC<ContentEditorProps> = ({
           className="flex items-center gap-1 rounded px-2 py-1 text-xs text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300"
         >
           <RotateCcw className="h-3 w-3" />
-          重置内容
+          Сбросить содержимое
         </button>
       </div>
 

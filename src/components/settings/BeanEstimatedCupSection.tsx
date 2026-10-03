@@ -85,14 +85,14 @@ const BeanEstimatedCupSection: React.FC<BeanEstimatedCupSectionProps> = ({
   );
 
   return (
-    <SettingSection title="概要" className="mt-6">
-      <SettingRow label="详细剩余量">
+    <SettingSection title="Кратко" className="mt-6">
+      <SettingRow label="Подробный остаток">
         <SettingToggle
           checked={settings.showBeanSummary || false}
           onChange={checked => handleChange('showBeanSummary', checked)}
         />
       </SettingRow>
-      <SettingRow label="预计杯数" isLast={!settings.showEstimatedCups}>
+      <SettingRow label="Примерно чашек" isLast={!settings.showEstimatedCups}>
         <SettingToggle
           checked={settings.showEstimatedCups || false}
           onChange={checked => handleChange('showEstimatedCups', checked)}
@@ -113,7 +113,7 @@ const BeanEstimatedCupSection: React.FC<BeanEstimatedCupSectionProps> = ({
                 value={estimatedCupDoseInputs[item.key]}
                 inputMode="decimal"
                 suffix="g"
-                placeholder="克重"
+                placeholder="Вес, г"
                 onChange={value =>
                   handleEstimatedCupDoseInputChange(item.key, value)
                 }

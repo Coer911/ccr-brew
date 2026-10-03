@@ -318,8 +318,8 @@ const TabContent: React.FC<TabContentProps> = ({
       localStorage.removeItem('brewingNoteInProgress');
 
       if (setActiveMainTab) {
-        saveMainTabPreference('笔记');
-        setActiveMainTab('笔记');
+        saveMainTabPreference('Заметки');
+        setActiveMainTab('Заметки');
       }
 
       if (resetBrewingState) {
@@ -327,7 +327,7 @@ const TabContent: React.FC<TabContentProps> = ({
         localStorage.setItem('shouldStartFromCoffeeBeanStep', 'true');
       }
     } catch {
-      alert('保存失败，请重试');
+      alert('Не удалось сохранить, попробуйте ещё раз');
     }
   };
 
@@ -337,8 +337,8 @@ const TabContent: React.FC<TabContentProps> = ({
       // 清除笔记进行中的标记
       localStorage.removeItem('brewingNoteInProgress');
 
-      saveMainTabPreference('笔记');
-      setActiveMainTab('笔记');
+      saveMainTabPreference('Заметки');
+      setActiveMainTab('Заметки');
       if (resetBrewingState) {
         resetBrewingState(false);
         localStorage.setItem('shouldStartFromCoffeeBeanStep', 'true');
@@ -401,7 +401,7 @@ const TabContent: React.FC<TabContentProps> = ({
 
   // 检查当前是否为意式咖啡方案
   const isEspressoMethod =
-    currentBrewingMethod?.name?.toLowerCase().includes('意式') ||
+    currentBrewingMethod?.name?.toLowerCase().includes('эспрессо') ||
     currentBrewingMethod?.name?.toLowerCase().includes('espresso') ||
     expandedStages?.some(
       stage => stage.pourType === 'extraction' || stage.pourType === 'beverage'
@@ -515,11 +515,11 @@ const TabContent: React.FC<TabContentProps> = ({
         setIsLongPressRandom(isLongPress);
         setShowRandomPicker(true);
       } else {
-        showToast({ type: 'info', title: '没有可用的咖啡豆', duration: 2000 });
+        showToast({ type: 'info', title: 'Нет доступного зерна', duration: 2000 });
       }
     } catch (error) {
       console.error('随机选择失败:', error);
-      showToast({ type: 'error', title: '随机选择失败', duration: 2000 });
+      showToast({ type: 'error', title: 'Не удалось выбрать случайно', duration: 2000 });
     }
   };
 
@@ -544,7 +544,7 @@ const TabContent: React.FC<TabContentProps> = ({
         });
       } catch (error) {
         console.error('创建咖啡豆失败:', error);
-        showToast({ type: 'error', title: '创建咖啡豆失败', duration: 2000 });
+        showToast({ type: 'error', title: 'Не удалось создать зерно', duration: 2000 });
       }
     },
     [addBean, onCoffeeBeanSelect, triggerHapticFeedback]
@@ -601,13 +601,13 @@ const TabContent: React.FC<TabContentProps> = ({
         await copyEquipmentToClipboard(equipment, methods);
         showToast({
           type: 'success',
-          title: '器具配置已导出',
+          title: 'Настройки устройства экспортированы',
           duration: 2000,
         });
       } catch (_error) {
         showToast({
           type: 'error',
-          title: '导出失败，请重试',
+          title: 'Ошибка экспорта, попробуйте ещё раз',
           duration: 2000,
         });
       }
@@ -618,7 +618,7 @@ const TabContent: React.FC<TabContentProps> = ({
   // 获取分享方案的处理函数 - 使用 useCallback 优化
   const getShareMethodHandler = useCallback(
     (step: Step) => {
-      if (activeTab !== '方案') return undefined;
+      if (activeTab !== 'Рецепт') return undefined;
 
       return () => {
         if (step.isCustom && customMethods[selectedEquipment!]) {
@@ -674,7 +674,7 @@ const TabContent: React.FC<TabContentProps> = ({
   const [beanScrollEl, setBeanScrollEl] = useState<HTMLElement | null>(null);
 
   // 渲染咖啡豆列表
-  if (activeTab === '咖啡豆' && canUseCoffeeBeanModule) {
+  if (activeTab === 'Зерно' && canUseCoffeeBeanModule) {
     return (
       <>
         <div
@@ -786,7 +786,7 @@ const TabContent: React.FC<TabContentProps> = ({
   }
 
   // 渲染笔记表单
-  if (activeTab === '记录') {
+  if (activeTab === 'Записать') {
     // 计算总时间：累加所有阶段的 duration
     const calculateTotalTime = () => {
       if (!showComplete || !currentBrewingMethod?.params?.stages) return 0;
@@ -823,7 +823,7 @@ const TabContent: React.FC<TabContentProps> = ({
 
   // 显示计时器动画 - 添加条件仅在"注水"标签时显示
   if (
-    activeTab === '注水' &&
+    activeTab === 'Пролив' &&
     !isEspressoMethod &&
     (settings.showBrewingVisualizer ?? true) &&
     isTimerRunning &&
@@ -854,7 +854,7 @@ const TabContent: React.FC<TabContentProps> = ({
 
   // 处理方案为空的情况
   const showEmptyMethodsMessage =
-    activeTab === '方案' &&
+    activeTab === 'Рецепт' &&
     selectedEquipment &&
     content[activeTab]?.steps.length === 0;
   const activeSteps = content[activeTab]?.steps || [];
@@ -882,17 +882,17 @@ const TabContent: React.FC<TabContentProps> = ({
       <div className="content-area m-6 space-y-4 md:mt-0">
         {showEmptyMethodsMessage ? (
           <div className="mt-4 flex h-32 items-center justify-center text-[10px] tracking-widest text-neutral-600 dark:text-neutral-400">
-            [ 当前器具暂无可用于冲煮的方案，请点击下方按钮添加 ]
+            [ Для этого устройства пока нет рецептов, добавьте кнопкой ниже ]
           </div>
         ) : (
           <>
             {activeSteps.map((step: Step, index: number) => {
               // 如果分隔符之后的项目处于折叠区间，则不显示
               const commonDividerIndex = content[activeTab]?.steps.findIndex(
-                (s: Step) => s.isDivider && s.dividerText === '通用方案'
+                (s: Step) => s.isDivider && s.dividerText === 'Общие рецепты'
               );
               const noStageDividerIndex = content[activeTab]?.steps.findIndex(
-                (s: Step) => s.isDivider && s.dividerText === '无步骤方案'
+                (s: Step) => s.isDivider && s.dividerText === 'Рецепт без этапов'
               );
 
               if (
@@ -912,7 +912,7 @@ const TabContent: React.FC<TabContentProps> = ({
 
               // 如果是注水标签，检查originalIndex变化来添加阶段分隔线（始终显示）
               const showStageDivider =
-                activeTab === '注水' &&
+                activeTab === 'Пролив' &&
                 index > 0 &&
                 step.originalIndex !== undefined &&
                 content[activeTab]?.steps[index - 1]?.originalIndex !==
@@ -922,7 +922,7 @@ const TabContent: React.FC<TabContentProps> = ({
 
               // 简化的编辑处理函数
               let editHandler;
-              if (activeTab === '方案') {
+              if (activeTab === 'Рецепт') {
                 if (step.isCustom && customMethods[selectedEquipment!]) {
                   const methodIndex = customMethods[
                     selectedEquipment!
@@ -944,7 +944,7 @@ const TabContent: React.FC<TabContentProps> = ({
 
               // 计算删除/隐藏方案的处理函数
               let deleteHandler;
-              if (activeTab === '方案') {
+              if (activeTab === 'Рецепт') {
                 if (step.isCustom && customMethods[selectedEquipment!]) {
                   // 自定义方案：可以删除
                   const methodIndex = customMethods[
@@ -985,7 +985,7 @@ const TabContent: React.FC<TabContentProps> = ({
 
               // 计算分享处理函数
               const shareHandler =
-                activeTab === '方案'
+                activeTab === 'Рецепт'
                   ? getShareMethodHandler(step)
                   : getShareEquipmentHandler(step);
 
@@ -1009,15 +1009,15 @@ const TabContent: React.FC<TabContentProps> = ({
                         ? {
                             ...step,
                             defaultCollapsed:
-                              step.dividerText === '通用方案'
+                              step.dividerText === 'Общие рецепты'
                                 ? isCommonMethodsCollapsed
-                                : step.dividerText === '无步骤方案'
+                                : step.dividerText === 'Рецепт без этапов'
                                   ? isNoStageMethodsCollapsed
                                   : step.defaultCollapsed,
                             onToggleCollapse:
-                              step.dividerText === '通用方案'
+                              step.dividerText === 'Общие рецепты'
                                 ? handleCommonMethodsCollapsedChange
-                                : step.dividerText === '无步骤方案'
+                                : step.dividerText === 'Рецепт без этапов'
                                   ? handleNoStageMethodsCollapsedChange
                                   : undefined,
                           }
@@ -1025,7 +1025,7 @@ const TabContent: React.FC<TabContentProps> = ({
                     }
                     index={index}
                     onClick={() => {
-                      if (activeTab === '方案' && !step.isDivider) {
+                      if (activeTab === 'Рецепт' && !step.isDivider) {
                         if (
                           step.isCustom &&
                           selectedEquipment &&
@@ -1078,17 +1078,17 @@ const TabContent: React.FC<TabContentProps> = ({
       </div>
 
       {/* 方案标签底部操作栏 */}
-      {activeTab === '方案' && (
+      {activeTab === 'Рецепт' && (
         <BottomActionBar
           buttons={[
             {
               icon: '+',
-              text: '新建方案',
+              text: 'Новый рецепт',
               onClick: () => setShowCustomForm(true),
             },
             {
               icon: '↓',
-              text: '导入方案',
+              text: 'Импорт рецепта',
               onClick: () => setShowImportForm(true),
             },
           ]}

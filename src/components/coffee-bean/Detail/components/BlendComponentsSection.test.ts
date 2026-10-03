@@ -5,17 +5,17 @@ describe('buildBlendComponentDisplayRows', () => {
   it('groups multiple blend components by field order', () => {
     const rows = buildBlendComponentDisplayRows([
       {
-        country: '埃塞俄比亚',
-        estate: '班驰玛吉',
-        processingStation: '沃卡',
-        process: '水洗',
+        country: 'Эфиопия',
+        estate: 'Банчи Маджи',
+        processingStation: 'Вока',
+        process: 'Мытая',
         variety: '74158',
         percentage: 60,
       },
       {
-        country: '肯尼亚',
-        estate: '奇安布',
-        process: '日晒',
+        country: 'Кения',
+        estate: 'Киамбу',
+        process: 'Натуральная',
         variety: 'SL28',
         percentage: 40,
       },
@@ -30,34 +30,34 @@ describe('buildBlendComponentDisplayRows', () => {
     ).toEqual([
       {
         field: 'country',
-        label: '产国',
-        values: ['埃塞俄比亚', '肯尼亚'],
+        label: 'Страна',
+        values: ['Эфиопия', 'Кения'],
       },
       {
         field: 'estate',
-        label: '庄园',
-        values: ['班驰玛吉', '奇安布'],
+        label: 'Ферма',
+        values: ['Банчи Маджи', 'Киамбу'],
       },
-      { field: 'processingStation', label: '处理站', values: ['沃卡'] },
-      { field: 'process', label: '处理法', values: ['水洗', '日晒'] },
-      { field: 'variety', label: '品种', values: ['74158', 'SL28'] },
-      { field: 'percentage', label: '比例', values: ['60%', '40%'] },
+      { field: 'processingStation', label: 'Станция обработки', values: ['Вока'] },
+      { field: 'process', label: 'Обработка', values: ['Мытая', 'Натуральная'] },
+      { field: 'variety', label: 'Разновидность', values: ['74158', 'SL28'] },
+      { field: 'percentage', label: 'Доля', values: ['60%', '40%'] },
     ]);
   });
 
   it('keeps legacy origin only for components without structured origin data', () => {
     const rows = buildBlendComponentDisplayRows([
-      { origin: '哥伦比亚 蕙兰', process: '水洗' },
+      { origin: 'Колумбия Уила', process: 'Мытая' },
       {
-        origin: '旧产地',
-        country: '埃塞俄比亚',
-        region: '西达摩',
-        process: '日晒',
+        origin: 'Старый регион',
+        country: 'Эфиопия',
+        region: 'Сидамо',
+        process: 'Натуральная',
       },
     ]);
 
     expect(rows.find(row => row.field === 'origin')?.entries).toEqual([
-      { componentIndex: 0, value: '哥伦比亚 蕙兰' },
+      { componentIndex: 0, value: 'Колумбия Уила' },
     ]);
   });
 });

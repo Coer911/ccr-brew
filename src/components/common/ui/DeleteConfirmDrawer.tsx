@@ -29,7 +29,7 @@ const DeleteConfirmDrawer: React.FC<DeleteConfirmDrawerProps> = ({
   onClose,
   onConfirm,
   itemName,
-  itemType = '项目',
+  itemType = 'элемент',
   itemSuffix,
   extraWarning,
   onExitComplete,
@@ -49,19 +49,19 @@ const DeleteConfirmDrawer: React.FC<DeleteConfirmDrawerProps> = ({
       <ActionDrawer.Icon icon={DeleteIcon} />
       <ActionDrawer.Content>
         <p className="text-neutral-500 dark:text-neutral-400">
-          确认删除{itemType}
+          Удалить{itemType}
           <span className="text-neutral-800 dark:text-neutral-200">
             「{itemName}」
           </span>
-          {itemSuffix}吗？{extraWarning || '此操作不可撤销。'}
+          {itemSuffix}?{extraWarning || 'Это действие нельзя отменить.'}
         </p>
       </ActionDrawer.Content>
       <ActionDrawer.Actions>
         <ActionDrawer.SecondaryButton onClick={onClose}>
-          取消
+          Отмена
         </ActionDrawer.SecondaryButton>
         <ActionDrawer.DangerButton onClick={handleConfirm}>
-          确认删除
+          Удалить
         </ActionDrawer.DangerButton>
       </ActionDrawer.Actions>
     </ActionDrawer>

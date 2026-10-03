@@ -32,7 +32,7 @@ const CoffeeBeanCreateOption: FC<CoffeeBeanCreateOptionProps> = ({
           {name}
         </div>
         <div className="text-xs leading-relaxed font-medium text-neutral-600 dark:text-neutral-400">
-          <span className="inline whitespace-nowrap">新建咖啡豆</span>
+          <span className="inline whitespace-nowrap">Новое зерно</span>
         </div>
       </div>
     </button>

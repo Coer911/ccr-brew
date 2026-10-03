@@ -26,7 +26,7 @@ import {
   SelectValue,
 } from '@/components/coffee-bean/ui/select';
 
-const PRESET_BEVERAGES = ['饮用水', '冰块', '纯牛奶', '厚椰乳', '燕麦奶'];
+const PRESET_BEVERAGES = ['Вода', 'Лёд', 'Молоко', 'Густое кокосовое молоко', 'Овсяное молоко'];
 const DISPLAY_MODE_STORAGE_KEY = 'stagesStepDisplayMode';
 
 // 显示模式：independent(独立) / cumulative(累计) / time(时间)
@@ -266,7 +266,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
     }
 
     const multipleMatch =
-      value.match(/^(\d+(\.\d+)?)(倍|[xX])$/) ||
+      value.match(/^(\d+(\.\d+)?)(倍|[xXхХ×])$/) ||
       value.match(/^[xX][\s]*(\d+(\.\d+)?)[\s]*$/);
     if (multipleMatch) {
       const multipleValue = parseFloat(multipleMatch[1]);
@@ -448,7 +448,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
     }
 
     const multipleMatch =
-      value.match(/^(\d+(\.\d+)?)(倍|[xX])$/) ||
+      value.match(/^(\d+(\.\d+)?)(倍|[xXхХ×])$/) ||
       value.match(/^[xX][\s]*(\d+(\.\d+)?)[\s]*$/);
     if (multipleMatch) {
       const multipleValue = parseFloat(multipleMatch[1]);
@@ -553,7 +553,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 text-xs font-medium text-neutral-600 dark:text-neutral-400">
             <span className="text-neutral-900 dark:text-neutral-100">
-              总时间: {formatTime(calculateTotalTime())}
+              Общее время: {formatTime(calculateTotalTime())}
             </span>
             <span className="h-3 w-px bg-neutral-300 dark:bg-neutral-700" />
             <span
@@ -561,7 +561,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
                 isEspresso ? 'max-w-[150px] truncate' : ''
               } text-neutral-900 dark:text-neutral-100`}
             >
-              {isEspresso ? '浓缩液重' : '总水量'}:{' '}
+              {isEspresso ? 'Выход эспрессо' : 'Всего воды'}:{' '}
               {isEspresso
                 ? formatEspressoTotalWater()
                 : `${calculateCurrentWater()}/${parseInt(totalWater) || 0}g`}
@@ -575,23 +575,23 @@ const StagesStep: React.FC<StagesStepProps> = ({
               className="flex cursor-pointer items-center gap-0.5 text-xs font-medium text-neutral-900 hover:text-neutral-700 dark:text-neutral-100 dark:hover:text-neutral-300"
               title={
                 displayMode === 'independent'
-                  ? '当前：独立模式（点击切换为累计模式）'
+                  ? 'Сейчас: отдельно (нажмите, чтобы считать нарастающим итогом)'
                   : displayMode === 'cumulative'
-                    ? '当前：累计模式（点击切换为时间模式）'
-                    : '当前：时间模式（点击切换为独立模式）'
+                    ? 'Сейчас: нарастающим итогом (нажмите для режима времени)'
+                    : 'Сейчас: режим времени (нажмите для отдельного режима)'
               }
             >
               {displayMode === 'cumulative' ? (
                 <>
-                  <Sigma className="h-3 w-3" /> 累计
+                  <Sigma className="h-3 w-3" /> Итогом
                 </>
               ) : displayMode === 'time' ? (
                 <>
-                  <Clock className="h-3 w-3" /> 时间
+                  <Clock className="h-3 w-3" /> Время
                 </>
               ) : (
                 <>
-                  <Hash className="h-3 w-3" /> 独立
+                  <Hash className="h-3 w-3" /> Отдельно
                 </>
               )}
             </button>
@@ -601,7 +601,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
               onClick={addStage}
               className="cursor-pointer text-xs font-medium text-neutral-900 hover:text-neutral-700 dark:text-neutral-100 dark:hover:text-neutral-300"
             >
-              + 添加步骤
+              + Добавить этап
             </button>
           </div>
         </div>
@@ -642,7 +642,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
                             handleTimeModeRemoveStage(timeModeIndex)
                           }
                           className="w-4 shrink-0 tabular-nums hover:text-red-500"
-                          title="删除等待"
+                          title="Убрать ожидание"
                         >
                           −
                         </button>
@@ -650,7 +650,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
                         <span className="w-4 shrink-0" />
                       )}
                       <span className="text-neutral-400 dark:text-neutral-500">
-                        等待 {formatDurationDisplay(waitDuration)}
+                        Ожидание {formatDurationDisplay(waitDuration)}
                       </span>
                     </div>
                   </div>
@@ -681,7 +681,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
                         type="button"
                         onClick={() => handleTimeModeRemoveStage(timeModeIndex)}
                         className="w-4 shrink-0 cursor-pointer text-neutral-400 tabular-nums hover:text-red-500 dark:text-neutral-500"
-                        title="删除此步骤"
+                        title="Удалить этот этап"
                       >
                         {stageNumber}
                       </button>
@@ -706,7 +706,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
                           variant="minimal"
                           className="inline-flex w-auto border-none p-0 shadow-none focus:ring-0"
                         >
-                          <SelectValue placeholder="选择" />
+                          <SelectValue placeholder="Выбрать" />
                         </SelectTrigger>
                         <SelectContent>
                           {pourTypeOptions
@@ -738,7 +738,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
                                 : 'text-red-600 dark:text-red-400'
                             }`}
                           >
-                            [{stage.valveStatus === 'open' ? '开阀' : '关阀'}]
+                            [{stage.valveStatus === 'open' ? 'клапан открыт' : 'клапан закрыт'}]
                           </button>
                         )}
                         {isEspresso && stage.pourType === 'beverage' ? (
@@ -751,7 +751,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
                               )
                             }
                             suggestions={beverageSuggestions}
-                            placeholder="饮料"
+                            placeholder="Напиток"
                             className="min-w-0 flex-1 truncate border-none bg-transparent py-0 outline-hidden placeholder:text-neutral-400 dark:placeholder:text-neutral-600"
                             onRemovePreset={handleRemoveBeverage}
                             isCustomPreset={isCustomBeverage}
@@ -767,7 +767,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
                                 e.target.value
                               )
                             }
-                            placeholder="名称"
+                            placeholder="Название"
                             className="min-w-0 flex-1 truncate bg-transparent outline-hidden placeholder:text-neutral-400 dark:placeholder:text-neutral-600"
                           />
                         )}
@@ -972,7 +972,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
                           e.target.value
                         )
                       }
-                      placeholder="输入说明"
+                      placeholder="Введите пояснение"
                       className="field-sizing-content min-w-0 flex-1 resize-none bg-transparent text-xs leading-relaxed font-medium text-neutral-500 outline-hidden placeholder:text-neutral-400 dark:text-neutral-400 dark:placeholder:text-neutral-600"
                     />
                   </div>
@@ -1005,7 +1005,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
                         type="button"
                         onClick={() => removeStage(index)}
                         className="w-4 shrink-0 cursor-pointer text-neutral-400 tabular-nums hover:text-red-500 dark:text-neutral-500"
-                        title="删除此步骤"
+                        title="Удалить этот этап"
                       >
                         {isWaitStage ? '−' : stageNumber}
                       </button>
@@ -1028,7 +1028,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
                           variant="minimal"
                           className="inline-flex w-auto border-none p-0 shadow-none focus:ring-0"
                         >
-                          <SelectValue placeholder="选择" />
+                          <SelectValue placeholder="Выбрать" />
                         </SelectTrigger>
                         <SelectContent>
                           {pourTypeOptions.map(opt => (
@@ -1056,7 +1056,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
                                 : 'text-red-600 dark:text-red-400'
                             }`}
                           >
-                            [{stage.valveStatus === 'open' ? '开阀' : '关阀'}]
+                            [{stage.valveStatus === 'open' ? 'клапан открыт' : 'клапан закрыт'}]
                           </button>
                         )}
                         {isEspresso && stage.pourType === 'beverage' ? (
@@ -1066,7 +1066,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
                               handleBeverageChange(index, value)
                             }
                             suggestions={beverageSuggestions}
-                            placeholder="饮料"
+                            placeholder="Напиток"
                             className="min-w-0 flex-1 truncate border-none bg-transparent py-0 outline-hidden placeholder:text-neutral-400 dark:placeholder:text-neutral-600"
                             onRemovePreset={handleRemoveBeverage}
                             isCustomPreset={isCustomBeverage}
@@ -1078,7 +1078,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
                             onChange={e =>
                               onStageChange(index, 'label', e.target.value)
                             }
-                            placeholder="名称"
+                            placeholder="Название"
                             className="min-w-0 flex-1 truncate bg-transparent outline-hidden placeholder:text-neutral-400 dark:placeholder:text-neutral-600"
                           />
                         )}
@@ -1214,7 +1214,7 @@ const StagesStep: React.FC<StagesStepProps> = ({
                       onChange={e =>
                         onStageChange(index, 'detail', e.target.value)
                       }
-                      placeholder="输入说明"
+                      placeholder="Введите пояснение"
                       className="field-sizing-content min-w-0 flex-1 resize-none bg-transparent text-xs leading-relaxed font-medium text-neutral-500 outline-hidden placeholder:text-neutral-400 dark:text-neutral-400 dark:placeholder:text-neutral-600"
                     />
                   </div>

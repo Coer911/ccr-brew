@@ -89,8 +89,8 @@ export default function CrashRecoveryNotice() {
 
   const title =
     report.source === 'data-integrity'
-      ? '检测到本地数据异常'
-      : '检测到上次启动异常中断';
+      ? 'Обнаружена ошибка в локальных данных'
+      : 'Прошлый запуск завершился аварийно';
 
   return (
     <div className="pointer-events-none fixed inset-x-0 top-[calc(env(safe-area-inset-top)+12px)] z-9998 flex justify-center px-4">
@@ -109,7 +109,7 @@ export default function CrashRecoveryNotice() {
             onClick={handleDismiss}
             className="rounded-full px-2 py-1 text-xs text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
           >
-            关闭
+            Закрыть
           </button>
         </div>
         <div className="mt-3 flex gap-2">
@@ -118,14 +118,14 @@ export default function CrashRecoveryNotice() {
             onClick={handleCopy}
             className="rounded-full bg-neutral-900 px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
           >
-            {copied ? '已复制' : '复制诊断'}
+            {copied ? 'Скопировано' : 'Скопировать диагностику'}
           </button>
           <button
             type="button"
             onClick={handleDismiss}
             className="rounded-full bg-neutral-100 px-4 py-2 text-xs font-medium text-neutral-700 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
           >
-            稍后处理
+            Позже
           </button>
         </div>
       </div>

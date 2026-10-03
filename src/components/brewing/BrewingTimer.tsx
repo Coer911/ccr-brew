@@ -351,7 +351,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
     // 构造咖啡豆信息
     const coffeeBeanInfo = {
       name: '',
-      roastLevel: '中度烘焙',
+      roastLevel: 'Средняя обжарка',
       roastDate: '',
     };
 
@@ -631,7 +631,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
       // 关闭笔记表单
       setShowNoteForm(false);
     } catch {
-      alert('保存失败，请重试');
+      alert('Не удалось сохранить, попробуйте ещё раз');
     }
   }, []);
 
@@ -803,29 +803,29 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
       if (e.detail && noteFormInitialData) {
         // 标准化烘焙度值，确保与下拉列表选项匹配
         const normalizeRoastLevel = (roastLevel?: string): string => {
-          if (!roastLevel) return '中度烘焙';
+          if (!roastLevel) return 'Средняя обжарка';
 
           // 如果已经是完整格式，直接返回
-          if (roastLevel.endsWith('烘焙')) return roastLevel;
+          if (roastLevel.endsWith('Обжарка')) return roastLevel;
 
           // 否则添加"烘焙"后缀
-          if (roastLevel === '极浅') return '极浅烘焙';
-          if (roastLevel === '浅度') return '浅度烘焙';
-          if (roastLevel === '中浅') return '中浅烘焙';
-          if (roastLevel === '中度') return '中度烘焙';
-          if (roastLevel === '中深') return '中深烘焙';
-          if (roastLevel === '深度') return '深度烘焙';
+          if (roastLevel === 'Очень светлая') return 'Очень светлая обжарка';
+          if (roastLevel === 'Светлая') return 'Светлая обжарка';
+          if (roastLevel === 'Светло-средняя') return 'Светло-средняя обжарка';
+          if (roastLevel === 'Средняя') return 'Средняя обжарка';
+          if (roastLevel === 'Средне-тёмная') return 'Средне-тёмная обжарка';
+          if (roastLevel === 'Тёмная') return 'Тёмная обжарка';
 
           // 尝试匹配部分字符串
-          if (roastLevel.includes('极浅')) return '极浅烘焙';
-          if (roastLevel.includes('浅')) return '浅度烘焙';
-          if (roastLevel.includes('中浅')) return '中浅烘焙';
-          if (roastLevel.includes('中深')) return '中深烘焙';
-          if (roastLevel.includes('深')) return '深度烘焙';
-          if (roastLevel.includes('中')) return '中度烘焙';
+          if (roastLevel.includes('Очень светлая')) return 'Очень светлая обжарка';
+          if (roastLevel.includes('Светлая')) return 'Светлая обжарка';
+          if (roastLevel.includes('Светло-средняя')) return 'Светло-средняя обжарка';
+          if (roastLevel.includes('Средне-тёмная')) return 'Средне-тёмная обжарка';
+          if (roastLevel.includes('Тёмная')) return 'Тёмная обжарка';
+          if (roastLevel.includes('Средняя')) return 'Средняя обжарка';
 
           // 默认返回中度烘焙
-          return '中度烘焙';
+          return 'Средняя обжарка';
         };
 
         // 更新笔记表单数据
@@ -1163,8 +1163,8 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
             >
               <span>
                 {hasStartedOnce && !isRunning && currentTime > 0
-                  ? '去记录'
-                  : '跳过当前阶段'}
+                  ? 'Записать'
+                  : 'Пропустить этап'}
               </span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -1215,7 +1215,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
                   <div className="flex flex-row items-baseline justify-between border-l-2 border-neutral-800 pl-3 dark:border-neutral-100">
                     <div className="text-left">
                       <div className="text-xs text-neutral-500 dark:text-neutral-400">
-                        当前阶段
+                        Текущий этап
                       </div>
                       <motion.div
                         key={resolvedCurrentStageIndex}
@@ -1231,14 +1231,14 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
                         {currentStage
                           ? currentStage.type === 'pour'
                             ? currentStage.label
-                            : `等待`
-                          : '完成冲煮'}
+                            : `Ожидание`
+                          : 'Завершить заварку'}
                       </motion.div>
                     </div>
                     <div className="flex flex-row items-baseline text-right">
                       <div className="mr-0">
                         <div className="text-xs text-neutral-500 dark:text-neutral-400">
-                          目标时间
+                          Целевое время
                         </div>
                         <motion.div
                           key={`time-${resolvedCurrentStageIndex}`}
@@ -1256,7 +1256,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
                         className={`${localShowFlowRate ? 'min-w-20' : 'min-w-24'}`}
                       >
                         <div className="text-xs text-neutral-500 dark:text-neutral-400">
-                          目标水量
+                          Целевой объём
                         </div>
                         <motion.div
                           key={`water-${resolvedCurrentStageIndex}`}
@@ -1281,7 +1281,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
                       {localShowFlowRate && (
                         <div className="min-w-14">
                           <div className="text-xs text-neutral-500 dark:text-neutral-400">
-                            流速
+                            Скорость
                           </div>
                           <motion.div
                             key={`flow-rate-${resolvedCurrentStageIndex}`}
@@ -1317,7 +1317,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
                       >
                         <div className="text-left">
                           <div className="flex items-center justify-start gap-2 text-xs text-neutral-500 dark:text-neutral-400">
-                            <span>下一步</span>
+                            <span>Далее</span>
                           </div>
                           <motion.div
                             initial={{
@@ -1331,7 +1331,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
                             <span className="text-sm font-medium tracking-wide text-neutral-600 dark:text-neutral-400">
                               {nextStage.type === 'pour'
                                 ? nextStage.label
-                                : `等待`}
+                                : `Ожидание`}
                             </span>
                           </motion.div>
                         </div>
@@ -1346,7 +1346,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
                         >
                           <div className="mr-0">
                             <div className="text-xs text-neutral-500 dark:text-neutral-400">
-                              目标时间
+                              Целевое время
                             </div>
                             <div className="mt-1 text-sm font-medium tracking-wide text-neutral-600 tabular-nums dark:text-neutral-400">
                               {formatTime(nextStage.endTime, true)}
@@ -1356,7 +1356,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
                             className={`${localShowFlowRate ? 'min-w-20' : 'min-w-24'}`}
                           >
                             <div className="text-xs text-neutral-500 dark:text-neutral-400">
-                              目标水量
+                              Целевой объём
                             </div>
                             <div className="mt-1 text-right text-sm font-medium tracking-wide text-neutral-600 tabular-nums dark:text-neutral-400">
                               {nextStage.water}
@@ -1365,7 +1365,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
                           {localShowFlowRate && (
                             <div className="min-w-14">
                               <div className="text-xs text-neutral-500 dark:text-neutral-400">
-                                流速
+                                Скорость
                               </div>
                               <div className="mt-1 text-right text-sm font-medium tracking-wide text-neutral-600 tabular-nums dark:text-neutral-400">
                                 {nextStage.type === 'pour' ? (
@@ -1552,7 +1552,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
           >
             <div className="flex flex-col items-start">
               <span className="mb-1 text-xs text-neutral-500 dark:text-neutral-400">
-                时间
+                Время
               </span>
               <div
                 className={`relative ${fontSizeClass} font-light tracking-widest text-neutral-800 dark:text-neutral-100`}
@@ -1599,7 +1599,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
 
             <div className="flex flex-col items-start">
               <span className="mb-1 text-xs text-neutral-500 dark:text-neutral-400">
-                水量
+                Вода
               </span>
               <div
                 className={`${fontSizeClass} font-light tracking-widest text-neutral-800 dark:text-neutral-100`}
@@ -1632,7 +1632,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
             {localShowFlowRate && (
               <div className="flex flex-col items-start">
                 <span className="mb-1 text-xs text-neutral-500 dark:text-neutral-400">
-                  流速
+                  Скорость
                 </span>
                 <div
                   className={`${fontSizeClass} font-light tracking-widest text-neutral-800 dark:text-neutral-100`}

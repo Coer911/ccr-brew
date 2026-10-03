@@ -13,7 +13,7 @@ const ConsumptionTrendChart: React.FC<ConsumptionTrendChartProps> = ({
   data,
   height = 60,
   className = '',
-  title = '消耗趋势',
+  title = 'Динамика расхода',
 }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -59,7 +59,7 @@ const ConsumptionTrendChart: React.FC<ConsumptionTrendChartProps> = ({
         <span>{title}</span>
         {isHovering && (
           <span className="ml-1">
-            · {displayData.date} · {formatNumber(displayData.value)} 克
+            · {displayData.date} · {formatNumber(displayData.value)} г
           </span>
         )}
       </div>

@@ -33,7 +33,7 @@ const RatingSection: React.FC<RatingSectionProps> = ({
           {/* 评分 */}
           <div className="flex items-start">
             <div className="w-16 shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-              评分
+              Оценка
             </div>
             <div className="text-xs font-medium text-neutral-800 dark:text-neutral-100">
               {ratingInfo.isAutoCalculated && (
@@ -49,7 +49,7 @@ const RatingSection: React.FC<RatingSectionProps> = ({
             bean.ratingNotes.trim() && (
               <div className="flex items-start">
                 <div className="w-16 shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                  评价
+                  Отзыв
                 </div>
                 <div className="text-xs font-medium whitespace-pre-line text-neutral-800 dark:text-neutral-100">
                   {bean?.ratingNotes}
@@ -61,14 +61,14 @@ const RatingSection: React.FC<RatingSectionProps> = ({
         // 无评价，显示添加提示
         <div className="flex items-start">
           <div className="w-16 shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-            评分
+            Оценка
           </div>
           <button
             type="button"
             onClick={onOpenRatingModal}
             className="text-xs font-medium text-neutral-400 transition-colors hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-400"
           >
-            + 添加评价
+            + Добавить отзыв
           </button>
         </div>
       )}

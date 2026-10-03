@@ -30,15 +30,15 @@ describe('sync diagnostics', () => {
       status: 403,
       statusText: 'Forbidden',
       ok: false,
-      error: 'WebDAV 错误: Forbidden',
+      error: 'Ошибка WebDAV: Forbidden',
       responseSnippet: '<error> Forbidden </error>',
       details: { remotePath: 'brew-guide' },
     });
 
-    expect(lines).toContain('服务: WebDAV');
-    expect(lines).toContain('操作: upload');
+    expect(lines).toContain('Сервис: WebDAV');
+    expect(lines).toContain('Действие: upload');
     expect(lines).toContain('HTTP: 403 Forbidden');
-    expect(lines).toContain('错误: WebDAV 错误: Forbidden');
-    expect(lines).toContain('附加信息: remotePath=brew-guide');
+    expect(lines).toContain('Ошибка: Ошибка WebDAV: Forbidden');
+    expect(lines).toContain('Дополнительно: remotePath=brew-guide');
   });
 });

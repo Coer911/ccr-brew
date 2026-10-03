@@ -10,16 +10,16 @@ import {
 } from '@/lib/navigation/navigationSwipe';
 
 export const DATE_GROUPING_LABELS: Record<DateGroupingMode, string> = {
-  year: '按年统计',
-  month: '按月统计',
-  day: '按日统计',
+  year: 'Статистика по годам',
+  month: 'Статистика по месяцам',
+  day: 'Статистика по дням',
 };
 
 // 短标签用于筛选按钮
 const DATE_GROUPING_SHORT_LABELS: Record<DateGroupingMode, string> = {
-  year: '按年',
-  month: '按月',
-  day: '按日',
+  year: 'По годам',
+  month: 'По месяцам',
+  day: 'По дням',
 };
 
 // Apple风格动画配置
@@ -71,9 +71,9 @@ const formatDateLabel = (
   if (groupingMode === 'year') {
     const year = parseInt(dateStr, 10);
     if (year === currentYear) {
-      return '今年';
+      return 'В этом году';
     }
-    return `${year}年`;
+    return `${year} г.`;
   } else if (groupingMode === 'month') {
     const [year, month] = dateStr.split('-');
     const monthNum = parseInt(month, 10);
@@ -81,11 +81,11 @@ const formatDateLabel = (
 
     if (yearNum === currentYear) {
       if (monthNum === currentMonth) {
-        return '本月';
+        return 'В этом месяце';
       }
-      return `${monthNum}月`;
+      return `${monthNum} мес.`;
     }
-    return `${year}年${monthNum}月`;
+    return `${year} г. ${monthNum} мес.`;
   } else {
     const [year, month, day] = dateStr.split('-');
     const yearNum = parseInt(year, 10);
@@ -98,9 +98,9 @@ const formatDateLabel = (
     const diffTime = todayDate.getTime() - targetDate.getTime();
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-    if (diffDays === 0) return '今天';
-    if (diffDays === 1) return '昨天';
-    if (diffDays === 2) return '前天';
+    if (diffDays === 0) return 'Сегодня';
+    if (diffDays === 1) return 'Вчера';
+    if (diffDays === 2) return 'Позавчера';
 
     if (yearNum === currentYear) {
       return `${monthNum}/${dayNum}`;
@@ -313,12 +313,12 @@ const StatsFilterBar: React.FC<StatsFilterBarProps> = ({
                   }
                   className="text-xs leading-none font-medium tracking-wide text-neutral-800 underline decoration-neutral-300 underline-offset-2 dark:text-neutral-100 dark:decoration-neutral-600"
                 >
-                  {beanStateType === 'roasted' ? '咖啡豆' : '生豆'}
+                  {beanStateType === 'roasted' ? 'Зерно' : 'Зелёное зерно'}
                 </button>
               </>
             )}
             <span className="text-xs leading-none font-medium tracking-wide text-neutral-800 dark:text-neutral-100">
-              {showBeanStateSwitch ? '' : '，'}数据周期 {dateRangeLabel}
+              {showBeanStateSwitch ? '' : '，'}Период {dateRangeLabel}
             </span>
           </div>
         </div>
@@ -336,7 +336,7 @@ const StatsFilterBar: React.FC<StatsFilterBarProps> = ({
                 className="mr-1"
                 dataTab="all"
               >
-                全部
+                Всё
               </TabButton>
 
               {/* 筛选图标按钮 */}
@@ -415,20 +415,20 @@ const StatsFilterBar: React.FC<StatsFilterBarProps> = ({
                   {showBeanStateSwitch && onBeanStateTypeChange && (
                     <div className="mb-4">
                       <div className="mb-2 text-xs font-medium text-neutral-700 dark:text-neutral-300">
-                        统计类型
+                        Тип статистики
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
                         <FilterButton
                           isActive={beanStateType === 'roasted'}
                           onClick={() => onBeanStateTypeChange('roasted')}
                         >
-                          熟豆
+                          Обжаренное
                         </FilterButton>
                         <FilterButton
                           isActive={beanStateType === 'green'}
                           onClick={() => onBeanStateTypeChange('green')}
                         >
-                          生豆
+                          Зелёное
                         </FilterButton>
                       </div>
                     </div>
@@ -437,7 +437,7 @@ const StatsFilterBar: React.FC<StatsFilterBarProps> = ({
                   {/* 时间分组 */}
                   <div className="mb-4">
                     <div className="mb-2 text-xs font-medium text-neutral-700 dark:text-neutral-300">
-                      时间分组
+                      Группировка по времени
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
                       <FilterButton

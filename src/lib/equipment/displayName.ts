@@ -3,7 +3,7 @@ export interface EquipmentDisplayNameSource {
   isCustom?: boolean;
 }
 
-export const CUSTOM_EQUIPMENT_DISPLAY_LABEL = '自定义';
+export const CUSTOM_EQUIPMENT_DISPLAY_LABEL = 'Своё';
 export const CUSTOM_EQUIPMENT_DISPLAY_SUFFIX = ` - ${CUSTOM_EQUIPMENT_DISPLAY_LABEL}`;
 
 export function getEquipmentDisplayParts(

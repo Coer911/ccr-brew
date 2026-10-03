@@ -125,11 +125,11 @@ export const SyncButtons: React.FC<SyncButtonsProps> = ({
         <span>
           {isUploading ? (
             <>
-              上传
+              Загрузить
               <AnimatedDots />
             </>
           ) : (
-            '上传'
+            'Загрузить в облако'
           )}
         </span>
       </button>
@@ -146,11 +146,11 @@ export const SyncButtons: React.FC<SyncButtonsProps> = ({
         <span>
           {isDownloading ? (
             <>
-              下载
+              Скачать
               <AnimatedDots />
             </>
           ) : (
-            '下载'
+            'Скачать из облака'
           )}
         </span>
       </button>
@@ -191,7 +191,7 @@ export const SyncButtons: React.FC<SyncButtonsProps> = ({
               )}
             </AnimatePresence>
           </div>
-          <span>备份</span>
+          <span>Копии</span>
         </button>
       )}
     </div>
