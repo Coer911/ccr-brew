@@ -1,0 +1,125 @@
+import type { BrewingNote } from '@/lib/core/config';
+import type { BrewingNoteData, CoffeeBean } from '@/types/app';
+import type { CoffeeBeanLookup } from '@/lib/notes/noteDisplay';
+import type { ReactNode } from 'react';
+import type { NavigationSwipeControl } from '@/lib/navigation/navigationSwipe';
+import type {
+  NotesTableColumnConfig,
+  NotesTableColumnKey,
+} from './List/tableColumns';
+
+// 排序类型定义
+export const SORT_OPTIONS = {
+  TIME_DESC: 'time_desc',
+  TIME_ASC: 'time_asc',
+  RATING_DESC: 'rating_desc',
+  RATING_ASC: 'rating_asc',
+} as const;
+
+export type SortOption = (typeof SORT_OPTIONS)[keyof typeof SORT_OPTIONS];
+
+export type NotesViewMode = 'list' | 'gallery' | 'table';
+
+// 日期分组粒度类型
+export type DateGroupingMode = 'year' | 'month' | 'day';
+
+// 日期分组粒度的显示名称
+export const DATE_GROUPING_LABELS: Record<DateGroupingMode, string> = {
+  year: '按年',
+  month: '按月',
+  day: '按日',
+};
+
+// 笔记历史组件属性
+export interface BrewingHistoryProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onAddNote?: (draft?: Partial<BrewingNoteData>) => void;
+  setAlternativeHeaderContent?: (content: React.ReactNode | null) => void;
+  setShowAlternativeHeader?: (show: boolean) => void;
+  settings?: import('@/components/settings/Settings').SettingsOptions; // 添加可选的设置参数
+  navigationToggleControl?: ReactNode;
+  navigationSwipeControl?: NavigationSwipeControl;
+}
+
+// 单个笔记项属性
+export interface NoteItemProps {
+  note: BrewingNote;
+  equipmentNames: Record<string, string>;
+  onEdit: (note: BrewingNote) => void;
+  onDelete: (noteId: string) => void;
+  onCopy?: (noteId: string) => void;
+  isShareMode?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: (noteId: string, enterShareMode?: boolean) => void;
+  // 是否为列表中的第一项（用于控制顶部间距）
+  isFirst?: boolean;
+  // 是否为列表中的最后一项（用于虚拟化下控制分割线）
+  isLast?: boolean;
+  // 评分维度评分处理函数（从父组件传入，避免每个子组件重复调用）
+  getValidTasteRatings?: (
+    taste: Record<string, number>
+  ) => Array<{ id: string; label: string; value: number }>;
+  // 咖啡豆列表（用于获取完整的咖啡豆信息，包括图片）
+  coffeeBeans?: CoffeeBean[];
+  coffeeBeanLookup?: CoffeeBeanLookup;
+  storedImageCount?: number;
+}
+
+// 筛选标签页属性
+export interface FilterTabsProps {
+  filterMode: 'equipment' | 'date';
+  selectedEquipment: string | null;
+  selectedDate: string | null;
+  dateGroupingMode: DateGroupingMode;
+  availableEquipments: string[];
+  availableDates: string[];
+  equipmentNames: Record<string, string>;
+  onFilterModeChange: (mode: 'equipment' | 'date') => void;
+  onEquipmentClick: (equipment: string | null) => void;
+  onDateClick: (date: string | null) => void;
+  onDateGroupingModeChange: (mode: DateGroupingMode) => void;
+  isSearching?: boolean;
+  searchQuery?: string;
+  onSearchClick?: () => void;
+  onSearchChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearchKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  // 新增排序相关props
+  sortOption?: SortOption;
+  onSortChange?: (option: SortOption) => void;
+  // 新增显示模式相关props
+  viewMode?: NotesViewMode;
+  onViewModeChange?: (mode: NotesViewMode) => void;
+  // 新增图片流模式相关props
+  isImageFlowMode?: boolean;
+  onToggleImageFlowMode?: () => void;
+  // 新增带日期图片流模式相关props
+  isDateImageFlowMode?: boolean;
+  onToggleDateImageFlowMode?: () => void;
+  // 智能切换图片流模式（用于双击"全部"）
+  onSmartToggleImageFlow?: () => void;
+  // 是否有图片笔记（用于禁用/启用图片流按钮）
+  hasImageNotes?: boolean;
+  // 新增设置参数
+  settings?: import('@/components/settings/Settings').SettingsOptions;
+  // 搜索历史相关props
+  searchHistory?: string[];
+  onSearchHistoryClick?: (query: string) => void;
+  searchAllScopeLabel?: string;
+  onSearchAllClick?: () => void;
+  tableColumnOptions?: NotesTableColumnConfig[];
+  tableVisibleColumns?: NotesTableColumnKey[];
+  onTableColumnsChange?: (columns: NotesTableColumnKey[]) => void;
+}
+
+// 添加笔记按钮属性
+export interface AddNoteButtonProps {
+  onAddNote: (draft?: Partial<BrewingNoteData>) => void;
+}
+
+// 消息提示组件属性
+export interface ToastProps {
+  visible: boolean;
+  message: string;
+  type: 'success' | 'error' | 'info';
+}

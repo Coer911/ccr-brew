@@ -1,0 +1,1011 @@
+import Dexie from 'dexie';
+import { BrewingNote, Method, CustomEquipment } from './config';
+import type { EstimatedCupDoseSettings } from '@/lib/settings/estimatedCupDose';
+import { CoffeeBean } from '@/types/app';
+import type { BeanFieldConfig } from '@/lib/coffee-beans/beanFields';
+import {
+  type CoffeeBeanImageRecord,
+  type CoffeeBeanImageThumbnailRecord,
+  splitCoffeeBeanImages,
+} from '@/lib/coffee-beans/imageRecords';
+import {
+  type BrewingNoteImageRecord,
+  type BrewingNoteImageThumbnailRecord,
+  splitBrewingNoteImages,
+} from '@/lib/notes/imageRecords';
+
+const MAX_COFFEE_BEAN_THUMBNAIL_DATA_URL_CHARS = 512 * 1024;
+
+const getUsableCoffeeBeanThumbnail = (
+  thumbnail: string | undefined
+): string | undefined =>
+  thumbnail && thumbnail.length <= MAX_COFFEE_BEAN_THUMBNAIL_DATA_URL_CHARS
+    ? thumbnail
+    : undefined;
+
+/**
+ * 研磨度历史记录
+ */
+export interface GrindSizeHistory {
+  grindSize: string;
+  timestamp: number;
+  equipment?: string; // 器具名称
+  method?: string; // 冲煮方案名称
+  coffeeBean?: string; // @deprecated 旧版仅存储显示名称
+  coffeeBeanName?: string; // 咖啡豆名称
+  coffeeBeanRoaster?: string; // 烘焙商名称
+}
+
+/**
+ * 磨豆机类型定义
+ */
+export interface Grinder {
+  id: string;
+  name: string;
+  currentGrindSize?: string;
+  /** 研磨度历史记录（最多保留最近10条） */
+  grindSizeHistory?: GrindSizeHistory[];
+}
+
+/**
+ * 风味评分维度类型定义
+ */
+export interface FlavorDimension {
+  id: string;
+  label: string;
+  order: number;
+  isDefault: boolean;
+}
+
+/**
+ * 默认风味评分维度
+ */
+export const DEFAULT_FLAVOR_DIMENSIONS: FlavorDimension[] = [
+  { id: 'acidity', label: '酸度', order: 0, isDefault: true },
+  { id: 'sweetness', label: '甜度', order: 1, isDefault: true },
+  { id: 'bitterness', label: '苦度', order: 2, isDefault: true },
+  { id: 'body', label: '口感', order: 3, isDefault: true },
+];
+
+/**
+ * 烘焙商赏味期设置
+ */
+export interface RoasterFlavorPeriod {
+  light: { startDay: number; endDay: number };
+  medium: { startDay: number; endDay: number };
+  dark: { startDay: number; endDay: number };
+}
+
+/**
+ * 烘焙商配置类型定义
+ */
+export interface RoasterConfig {
+  roasterName: string;
+  logoData?: string;
+  flavorPeriod?: RoasterFlavorPeriod;
+  updatedAt: number;
+}
+
+/**
+ * 咖啡豆自定义分组
+ */
+export interface CoffeeBeanGroup {
+  id: string;
+  name: string;
+  beanIds: string[];
+  order: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+/**
+ * 应用设置类型定义
+ * 统一管理所有用户设置，存储在 IndexedDB 中
+ */
+export interface AppSettings {
+  // 通用设置
+  notificationSound: boolean;
+  hapticFeedback: boolean;
+  showUpdatePrompt?: boolean;
+  textZoomLevel: number;
+  showFlowRate: boolean;
+  username: string;
+
+  // 布局设置
+  layoutSettings?: {
+    progressBarHeight?: number;
+    dataFontSize?: '2xl' | '3xl' | '4xl';
+    stepDisplayMode?: 'independent' | 'cumulative' | 'time'; // 步骤时间显示模式
+  };
+
+  // 雷达图设置
+  radarChartScale?: number; // 雷达图缩放比例 (0.5 - 1.1)
+  radarChartShape?: 'polygon' | 'circle'; // 雷达图形状
+  radarChartAlign?: 'left' | 'center'; // 雷达图对齐方式
+
+  // 咖啡豆显示设置
+  decrementPresets: number[];
+  enableAllDecrementOption: boolean;
+  enableCustomDecrementInput: boolean;
+  greenBeanRoastPresets: number[];
+  enableAllGreenBeanRoastOption: boolean;
+  enableCustomGreenBeanRoastInput: boolean;
+  simplifiedViewLabels: boolean;
+  dateDisplayMode: 'date' | 'flavorPeriod' | 'agingDays';
+  showFlavorInfo: boolean;
+  showBeanNotes: boolean;
+  showNoteContent: boolean;
+  limitNotesLines: boolean;
+  notesMaxLines: number;
+  showPrice: boolean;
+  showTotalPrice: boolean;
+  showStatusDots: boolean;
+  showBeanSummary: boolean;
+  showEstimatedCups: boolean;
+  estimatedCupDoseSettings: EstimatedCupDoseSettings;
+  enableBeanSummaryCapacityLimit: boolean;
+  beanSummaryMaxDisplayCapacity: number;
+  enableBeanSummaryOverflowWrap: boolean;
+
+  // 安全区域设置
+  safeAreaMargins?: {
+    top: number;
+    bottom: number;
+  };
+
+  // 导航栏设置
+  navigationSettings?: {
+    visibleTabs: {
+      brewing: boolean;
+      coffeeBean: boolean;
+      notes: boolean;
+    };
+    coffeeBeanViews: Record<string, boolean>;
+    pinnedViews: string[];
+  };
+
+  // 赏味期设置
+  customFlavorPeriod?: {
+    light: { startDay: number; endDay: number };
+    medium: { startDay: number; endDay: number };
+    dark: { startDay: number; endDay: number };
+  };
+
+  // 日历同步设置（仅控制同步策略，原生日历事件 ID 存在本机本地存储）
+  calendarSync?: {
+    enabled: boolean;
+  };
+  showBeanReadyReminderPopup: boolean;
+
+  // 备份提醒设置
+  backupReminder?: {
+    enabled: boolean;
+    interval: string;
+    lastBackupDate: string;
+    nextBackupDate: string;
+  };
+
+  // S3同步设置
+  s3Sync?: {
+    enabled: boolean;
+    accessKeyId: string;
+    secretAccessKey: string;
+    region: string;
+    bucketName: string;
+    prefix: string;
+    endpoint?: string;
+    syncMode: 'manual';
+    lastConnectionSuccess?: boolean;
+    enablePullToSync?: boolean;
+  };
+
+  // WebDAV同步设置
+  webdavSync?: {
+    enabled: boolean;
+    url: string;
+    username: string;
+    password: string;
+    remotePath: string;
+    syncMode: 'manual';
+    lastConnectionSuccess?: boolean;
+    enablePullToSync?: boolean;
+  };
+
+  // Supabase同步设置
+  supabaseSync?: {
+    enabled: boolean;
+    url: string;
+    anonKey: string;
+    lastConnectionSuccess?: boolean;
+    lastSyncTime?: number;
+  };
+
+  // 当前激活的云同步类型
+  activeSyncType?: 'none' | 's3' | 'webdav' | 'supabase';
+
+  // Supabase 主同步下的手动双备份提供商
+  supabaseBackupProvider?: 'none' | 's3' | 'webdav';
+
+  // 随机咖啡豆设置
+  randomCoffeeBeans?: {
+    enableLongPressRandomType: boolean;
+    defaultRandomType: 'espresso' | 'filter';
+    flavorPeriodRanges: {
+      aging: boolean;
+      optimal: boolean;
+      decline: boolean;
+      frozen: boolean;
+      inTransit: boolean;
+      unknown: boolean;
+    };
+  };
+
+  // 打印设置
+  enableBeanPrint?: boolean;
+  showBeanRating?: boolean;
+  beanRatingTenthStep?: boolean;
+
+  // 隐藏的通用方案设置
+  hiddenCommonMethods?: Record<string, string[]>;
+
+  // 隐藏的器具设置
+  hiddenEquipments?: string[];
+
+  // 系统预设器具名称覆盖，key 为系统器具 id。
+  equipmentNameOverrides?: Record<string, string>;
+
+  // 笔记设置
+  showFlavorRatingInForm: boolean;
+  showOverallRatingInForm: boolean;
+  flavorRatingFollowOverall: boolean;
+  flavorRatingHalfStep: boolean;
+  flavorRatingTenthStep: boolean;
+  overallRatingUseSlider: boolean;
+  showRatingDimensionsEntry: boolean;
+  showUnitPriceInNote: boolean;
+  showBeanAgingDaysInNote: boolean;
+  showFlavorInNote: boolean;
+  showNoteTimeInNote: boolean;
+  showCapacityAdjustmentRecords: boolean;
+  useClassicNotesListStyle?: boolean;
+  artisticShareRatingStyle?: 'number' | 'dots' | 'bar';
+  artisticShareTags?: string;
+
+  // 生豆库设置
+  enableGreenBeanInventory?: boolean;
+  enableConvertToGreen?: boolean;
+
+  // 识图设置
+  autoFillRecognitionImage?: boolean;
+  beanFieldConfig?: BeanFieldConfig;
+  showEstateField?: boolean;
+  immersiveAdd?: boolean;
+  experimentalBeanRecognitionEnabled?: boolean;
+  experimentalBeanRecognitionApiBaseUrl?: string;
+  experimentalBeanRecognitionApiKey?: string;
+  experimentalBeanRecognitionModel?: string;
+  experimentalBeanRecognitionPrompt?: string;
+  experimentalBeanSharePackageEnabled?: boolean;
+  experimentalSettingsSearchEnabled?: boolean;
+  syncNewNoteDateWithSelectedDate?: boolean;
+  syncQuickDecrementDateWithSelectedDate?: boolean;
+
+  // 菜单栏图标设置（桌面端）
+  showMenuBarIcon?: boolean;
+
+  // 自定义风味维度
+  flavorDimensions?: FlavorDimension[];
+  flavorDimensionHistoricalLabels?: Record<string, string>;
+
+  // 烘焙商配置
+  roasterConfigs?: RoasterConfig[];
+
+  // 咖啡豆自定义分组
+  coffeeBeanGroups?: CoffeeBeanGroup[];
+
+  // 器具排序
+  equipmentOrder?: string[];
+
+  // 方案参数覆盖（用户临时修改的参数，可还原）
+  // key 格式: `${equipmentId}:${methodId}`
+  methodParamOverrides?: Record<
+    string,
+    {
+      coffee?: string;
+      water?: string;
+      ratio?: string;
+      grindSize?: string;
+      temp?: string;
+      extractionTime?: number; // 意式萃取时长（秒）
+      modifiedAt: number;
+    }
+  >;
+
+  // 冲煮设置
+  showCoffeeBeanSelectionStep?: boolean; // 是否显示咖啡豆选择步骤，默认 true
+  showBrewingVisualizer?: boolean; // 是否显示可视化冲煮界面，默认 true
+
+  // 烘焙商字段设置
+  roasterFieldEnabled?: boolean; // 是否启用独立烘焙商字段，默认 true
+  roasterSeparator?: ' ' | '/'; // 烘焙商分隔符，默认空格
+  roasterMigrationCompleted?: boolean; // @deprecated 已废弃，按需迁移策略不再使用此标记
+
+  // 提示显示状态
+  emptyBeanTipShown?: boolean; // 用完咖啡豆提示是否已显示
+
+  // 注意: grinders 字段已迁移到独立的 grinders 表
+  // 此字段仅用于兼容旧数据导入，运行时不使用
+  grinders?: Grinder[];
+}
+
+/**
+ * SettingsOptions 类型别名
+ * 为保持向后兼容，提供 AppSettings 的别名
+ * 新代码应使用 AppSettings
+ */
+export type SettingsOptions = AppSettings;
+
+/**
+ * 应用数据库类 - 使用Dexie.js包装IndexedDB
+ *
+ * 版本历史：
+ * - v1: 基础结构 (brewingNotes, settings)
+ * - v2: 添加 coffeeBeans 表
+ * - v3: 添加 customEquipments, customMethods 表
+ * - v4: 重构 - 添加 grinders, yearlyReports, appSettings 表，统一数据管理
+ * - v7: 咖啡豆缩略图拆分到独立表，避免读取缩略图时反序列化原图
+ * - v8: 为冲煮记录增加 beanId 索引，详情页按咖啡豆懒查询关联记录
+ * - v9: 移除年度报告表
+ * - v10: 冲煮记录图片拆到独立表，避免列表加载反序列化原图
+ * - v11: 冲煮记录缩略图拆到独立表，避免图片流判断读取原图
+ */
+export class BrewGuideDB extends Dexie {
+  // 核心数据表
+  brewingNotes!: Dexie.Table<BrewingNote, string>;
+  coffeeBeans!: Dexie.Table<CoffeeBean, string>;
+  coffeeBeanImages!: Dexie.Table<CoffeeBeanImageRecord, string>;
+  coffeeBeanImageThumbnails!: Dexie.Table<
+    CoffeeBeanImageThumbnailRecord,
+    string
+  >;
+  brewingNoteImages!: Dexie.Table<BrewingNoteImageRecord, string>;
+  brewingNoteImageThumbnails!: Dexie.Table<
+    BrewingNoteImageThumbnailRecord,
+    string
+  >;
+
+  // 器具与方案表
+  customEquipments!: Dexie.Table<CustomEquipment, string>;
+  customMethods!: Dexie.Table<
+    { equipmentId: string; methods: Method[] },
+    string
+  >;
+
+  // 磨豆机表
+  grinders!: Dexie.Table<Grinder, string>;
+
+  // 应用设置表
+  appSettings!: Dexie.Table<{ id: string; data: AppSettings }, string>;
+
+  // 旧版设置表（兼容性保留）
+  settings!: Dexie.Table<{ key: string; value: string }, string>;
+
+  // 实时同步离线队列表
+  pendingOperations!: Dexie.Table<
+    {
+      id: string;
+      table: string;
+      type: 'upsert' | 'delete';
+      recordId: string;
+      data?: unknown;
+      timestamp: number;
+      retryCount: number;
+    },
+    string
+  >;
+
+  constructor() {
+    super('BrewGuideDB');
+
+    // 版本1：基础结构
+    this.version(1).stores({
+      brewingNotes: 'id, timestamp, equipment, method',
+      settings: 'key',
+    });
+
+    // 版本2：添加coffeeBeans表
+    this.version(2).stores({
+      brewingNotes: 'id, timestamp, equipment, method',
+      coffeeBeans: 'id, timestamp, name, type',
+      settings: 'key',
+    });
+
+    // 版本3：添加自定义器具和方案表
+    this.version(3).stores({
+      brewingNotes: 'id, timestamp, equipment, method',
+      coffeeBeans: 'id, timestamp, name, type',
+      settings: 'key',
+      customEquipments: 'id, name',
+      customMethods: 'equipmentId',
+    });
+
+    // 版本4：添加新表，统一数据管理
+    this.version(4)
+      .stores({
+        brewingNotes: 'id, timestamp, equipment, method',
+        coffeeBeans: 'id, timestamp, name, type',
+        settings: 'key',
+        customEquipments: 'id, name',
+        customMethods: 'equipmentId',
+        grinders: 'id, name',
+        yearlyReports: 'id, year, createdAt',
+        appSettings: 'id',
+      })
+      .upgrade(async () => {
+        console.log('开始数据库 v4 升级迁移...');
+        // 迁移将在数据库打开后通过 dbUtils.migrateToV4 完成
+      });
+
+    // 版本5：添加实时同步离线队列表
+    this.version(5).stores({
+      brewingNotes: 'id, timestamp, equipment, method',
+      coffeeBeans: 'id, timestamp, name, type',
+      settings: 'key',
+      customEquipments: 'id, name',
+      customMethods: 'equipmentId',
+      grinders: 'id, name',
+      yearlyReports: 'id, year, createdAt',
+      appSettings: 'id',
+      pendingOperations: 'id, table, recordId, timestamp',
+    });
+
+    // 版本6：咖啡豆图片从主记录拆分，降低日常加载内存
+    this.version(6).stores({
+      brewingNotes: 'id, timestamp, equipment, method',
+      coffeeBeans: 'id, timestamp, name, type',
+      coffeeBeanImages: 'beanId, updatedAt',
+      settings: 'key',
+      customEquipments: 'id, name',
+      customMethods: 'equipmentId',
+      grinders: 'id, name',
+      yearlyReports: 'id, year, createdAt',
+      appSettings: 'id',
+      pendingOperations: 'id, table, recordId, timestamp',
+    });
+
+    // 版本7：缩略图独立存储，读取列表缩略图时不再加载原图 payload
+    this.version(7).stores({
+      brewingNotes: 'id, timestamp, equipment, method',
+      coffeeBeans: 'id, timestamp, name, type',
+      coffeeBeanImages: 'beanId, updatedAt',
+      coffeeBeanImageThumbnails: 'beanId, updatedAt',
+      settings: 'key',
+      customEquipments: 'id, name',
+      customMethods: 'equipmentId',
+      grinders: 'id, name',
+      yearlyReports: 'id, year, createdAt',
+      appSettings: 'id',
+      pendingOperations: 'id, table, recordId, timestamp',
+    });
+
+    // 版本8：详情页按 beanId 查询关联记录，避免为单个详情页加载全量笔记
+    this.version(8).stores({
+      brewingNotes:
+        'id, timestamp, equipment, method, beanId, [beanId+timestamp]',
+      coffeeBeans: 'id, timestamp, name, type',
+      coffeeBeanImages: 'beanId, updatedAt',
+      coffeeBeanImageThumbnails: 'beanId, updatedAt',
+      settings: 'key',
+      customEquipments: 'id, name',
+      customMethods: 'equipmentId',
+      grinders: 'id, name',
+      yearlyReports: 'id, year, createdAt',
+      appSettings: 'id',
+      pendingOperations: 'id, table, recordId, timestamp',
+    });
+
+    // 版本9：移除年度报告表
+    this.version(9).stores({
+      brewingNotes:
+        'id, timestamp, equipment, method, beanId, [beanId+timestamp]',
+      coffeeBeans: 'id, timestamp, name, type',
+      coffeeBeanImages: 'beanId, updatedAt',
+      coffeeBeanImageThumbnails: 'beanId, updatedAt',
+      settings: 'key',
+      customEquipments: 'id, name',
+      customMethods: 'equipmentId',
+      grinders: 'id, name',
+      yearlyReports: null,
+      appSettings: 'id',
+      pendingOperations: 'id, table, recordId, timestamp',
+    });
+
+    // 版本10：冲煮记录图片从主记录拆分，降低日常加载内存
+    this.version(10).stores({
+      brewingNotes:
+        'id, timestamp, equipment, method, beanId, [beanId+timestamp]',
+      brewingNoteImages: 'noteId, updatedAt',
+      coffeeBeans: 'id, timestamp, name, type',
+      coffeeBeanImages: 'beanId, updatedAt',
+      coffeeBeanImageThumbnails: 'beanId, updatedAt',
+      settings: 'key',
+      customEquipments: 'id, name',
+      customMethods: 'equipmentId',
+      grinders: 'id, name',
+      yearlyReports: null,
+      appSettings: 'id',
+      pendingOperations: 'id, table, recordId, timestamp',
+    });
+
+    // 版本11：冲煮记录缩略图独立存储，列表/图片流只读取缩略图
+    this.version(11).stores({
+      brewingNotes:
+        'id, timestamp, equipment, method, beanId, [beanId+timestamp]',
+      brewingNoteImages: 'noteId, updatedAt',
+      brewingNoteImageThumbnails: 'noteId, updatedAt',
+      coffeeBeans: 'id, timestamp, name, type',
+      coffeeBeanImages: 'beanId, updatedAt',
+      coffeeBeanImageThumbnails: 'beanId, updatedAt',
+      settings: 'key',
+      customEquipments: 'id, name',
+      customMethods: 'equipmentId',
+      grinders: 'id, name',
+      yearlyReports: null,
+      appSettings: 'id',
+      pendingOperations: 'id, table, recordId, timestamp',
+    });
+  }
+}
+
+// 创建并导出数据库单例
+export const db = new BrewGuideDB();
+
+/**
+ * 数据库相关工具方法
+ */
+export const dbUtils = {
+  /**
+   * 初始化数据库并准备使用
+   */
+  async initialize(): Promise<void> {
+    try {
+      await db.open();
+      console.warn('数据库初始化成功');
+
+      // v4 迁移：从 localStorage 迁移数据到新表
+      await this.migrateToV4();
+
+      // v6 迁移：将咖啡豆图片拆到独立表，避免主 Store 整表加载图片
+      await this.migrateCoffeeBeanImages();
+
+      // v10 迁移：将冲煮记录图片拆到独立表，避免笔记列表整表加载图片
+      await this.migrateBrewingNoteImages();
+
+      if (process.env.NODE_ENV === 'development') {
+        setTimeout(() => this.logStorageInfo(), 1000);
+      }
+    } catch (error) {
+      console.error('数据库初始化失败:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * v4 迁移：从 localStorage 迁移数据到新的 IndexedDB 表
+   */
+  async migrateToV4(): Promise<void> {
+    try {
+      // 检查是否已完成 v4 迁移
+      const v4Migrated = await db.settings.get('v4_migrated');
+      if (v4Migrated && v4Migrated.value === 'true') {
+        // 即使已标记迁移完成，也要检查补充迁移（修复数据丢失问题）
+        await this.migrateAppSettings();
+        return;
+      }
+
+      console.warn('开始 v4 数据迁移...');
+
+      // 1. 迁移磨豆机数据
+      await this.migrateGrinders();
+
+      // 2. 迁移应用设置
+      await this.migrateAppSettings();
+
+      // 标记 v4 迁移完成
+      await db.settings.put({ key: 'v4_migrated', value: 'true' });
+      console.log('v4 数据迁移完成');
+    } catch (error) {
+      console.error('v4 数据迁移失败:', error);
+    }
+  },
+
+  /**
+   * 迁移磨豆机数据
+   */
+  async migrateGrinders(): Promise<void> {
+    try {
+      if (typeof localStorage === 'undefined') return;
+
+      // 检查是否已有数据
+      const existingCount = await db.grinders.count();
+      if (existingCount > 0) {
+        console.log('磨豆机数据已存在，跳过迁移');
+        return;
+      }
+
+      const settingsStr = localStorage.getItem('brewGuideSettings');
+      if (!settingsStr) return;
+
+      let settings = JSON.parse(settingsStr);
+
+      // 处理 Zustand persist 格式
+      if (settings?.state?.settings) {
+        settings = settings.state.settings;
+      }
+
+      if (settings.grinders && Array.isArray(settings.grinders)) {
+        await db.grinders.bulkPut(settings.grinders);
+        console.log(`已迁移 ${settings.grinders.length} 个磨豆机到 IndexedDB`);
+      }
+    } catch (error) {
+      console.error('迁移磨豆机数据失败:', error);
+    }
+  },
+
+  /**
+   * 迁移应用设置
+   */
+  async migrateAppSettings(): Promise<void> {
+    try {
+      if (typeof localStorage === 'undefined') return;
+
+      // 检查是否已有数据
+      const existing = await db.appSettings.get('main');
+
+      // 即使已有设置，也要检查是否需要补充迁移遗漏的数据
+      if (existing) {
+        let needsUpdate = false;
+
+        // 补充迁移 roaster-logos
+        const roasterLogosStr = localStorage.getItem('roaster-logos');
+        if (
+          roasterLogosStr &&
+          (!existing.data.roasterConfigs ||
+            existing.data.roasterConfigs.length === 0)
+        ) {
+          try {
+            const oldConfigs = JSON.parse(roasterLogosStr);
+            if (Array.isArray(oldConfigs) && oldConfigs.length > 0) {
+              existing.data.roasterConfigs = oldConfigs.map(
+                (config: {
+                  roasterName: string;
+                  logoData?: string;
+                  flavorPeriod?: RoasterFlavorPeriod;
+                  updatedAt?: number;
+                }) => ({
+                  roasterName: config.roasterName,
+                  logoData: config.logoData,
+                  flavorPeriod: config.flavorPeriod,
+                  updatedAt: config.updatedAt || Date.now(),
+                })
+              );
+              needsUpdate = true;
+              console.warn(
+                `已补充迁移 ${existing.data.roasterConfigs.length} 个烘焙商配置`
+              );
+            }
+          } catch {
+            // 忽略解析错误
+          }
+        }
+
+        // 补充迁移 customFlavorDimensions
+        const flavorDimensionsStr = localStorage.getItem(
+          'customFlavorDimensions'
+        );
+        if (
+          flavorDimensionsStr &&
+          (!existing.data.flavorDimensions ||
+            existing.data.flavorDimensions.length === 0)
+        ) {
+          try {
+            existing.data.flavorDimensions = JSON.parse(flavorDimensionsStr);
+            needsUpdate = true;
+            console.warn('已补充迁移自定义风味维度');
+          } catch {
+            // 忽略解析错误
+          }
+        }
+
+        // 补充迁移 flavorDimensionHistoricalLabels
+        const historicalLabelsStr = localStorage.getItem(
+          'flavorDimensionHistoricalLabels'
+        );
+        if (
+          historicalLabelsStr &&
+          (!existing.data.flavorDimensionHistoricalLabels ||
+            Object.keys(existing.data.flavorDimensionHistoricalLabels)
+              .length === 0)
+        ) {
+          try {
+            existing.data.flavorDimensionHistoricalLabels =
+              JSON.parse(historicalLabelsStr);
+            needsUpdate = true;
+            console.warn('已补充迁移风味维度历史标签');
+          } catch {
+            // 忽略解析错误
+          }
+        }
+
+        // 补充迁移 equipmentOrder
+        const equipmentOrderStr = localStorage.getItem('equipmentOrder');
+        if (
+          equipmentOrderStr &&
+          (!existing.data.equipmentOrder ||
+            existing.data.equipmentOrder.length === 0)
+        ) {
+          try {
+            const order = JSON.parse(equipmentOrderStr);
+            existing.data.equipmentOrder = order.equipmentIds || [];
+            needsUpdate = true;
+            console.warn('已补充迁移器具排序');
+          } catch {
+            // 忽略解析错误
+          }
+        }
+
+        if (needsUpdate) {
+          await db.appSettings.put(existing);
+        }
+        return;
+      }
+
+      const settingsStr = localStorage.getItem('brewGuideSettings');
+      if (!settingsStr) return;
+
+      let settings = JSON.parse(settingsStr);
+
+      // 处理 Zustand persist 格式
+      if (settings?.state?.settings) {
+        settings = settings.state.settings;
+      }
+
+      // 移除磨豆机数据（已单独迁移到 grinders 表）
+      delete settings.grinders;
+
+      // 迁移自定义风味维度（旧版本数据迁移）
+      const flavorDimensionsStr = localStorage.getItem(
+        'customFlavorDimensions'
+      );
+      if (flavorDimensionsStr) {
+        try {
+          settings.flavorDimensions = JSON.parse(flavorDimensionsStr);
+        } catch {
+          // 忽略解析错误
+        }
+      }
+
+      // 迁移风味维度历史标签（旧版本数据迁移）
+      const historicalLabelsStr = localStorage.getItem(
+        'flavorDimensionHistoricalLabels'
+      );
+      if (historicalLabelsStr) {
+        try {
+          settings.flavorDimensionHistoricalLabels =
+            JSON.parse(historicalLabelsStr);
+        } catch {
+          // 忽略解析错误
+        }
+      }
+
+      // 迁移烘焙商配置（旧版本数据迁移）
+      // 旧版本使用 'roaster-logos' 存储 RoasterConfig[]
+      const roasterLogosStr = localStorage.getItem('roaster-logos');
+      if (roasterLogosStr) {
+        try {
+          const oldConfigs = JSON.parse(roasterLogosStr);
+          if (Array.isArray(oldConfigs) && oldConfigs.length > 0) {
+            // 新版格式：直接使用 RoasterConfig[] 数组
+            settings.roasterConfigs = oldConfigs.map(
+              (config: {
+                roasterName: string;
+                logoData?: string;
+                flavorPeriod?: RoasterFlavorPeriod;
+                updatedAt?: number;
+              }) => ({
+                roasterName: config.roasterName,
+                logoData: config.logoData,
+                flavorPeriod: config.flavorPeriod,
+                updatedAt: config.updatedAt || Date.now(),
+              })
+            );
+            console.log(
+              `已迁移 ${settings.roasterConfigs.length} 个烘焙商配置`
+            );
+          }
+        } catch {
+          // 忽略解析错误
+        }
+      }
+
+      // 迁移器具排序
+      const equipmentOrderStr = localStorage.getItem('equipmentOrder');
+      if (equipmentOrderStr) {
+        try {
+          const order = JSON.parse(equipmentOrderStr);
+          settings.equipmentOrder = order.equipmentIds || [];
+        } catch {
+          // 忽略解析错误
+        }
+      }
+
+      await db.appSettings.put({ id: 'main', data: settings });
+      console.log('已迁移应用设置到 IndexedDB');
+    } catch (error) {
+      console.error('迁移应用设置失败:', error);
+    }
+  },
+
+  /**
+   * v6 迁移：将咖啡豆内联图片拆分到独立表
+   */
+  async migrateCoffeeBeanImages(): Promise<void> {
+    try {
+      let migratedBeanCount = 0;
+      let imageRecordCount = 0;
+
+      await db.transaction(
+        'rw',
+        db.coffeeBeans,
+        db.coffeeBeanImages,
+        db.coffeeBeanImageThumbnails,
+        async () => {
+          await db.coffeeBeans.each(async bean => {
+            const split = splitCoffeeBeanImages(bean);
+            if (!split.imageRecord) {
+              return;
+            }
+
+            const existingRecord = await db.coffeeBeanImages.get(bean.id);
+            const imageThumbnail = getUsableCoffeeBeanThumbnail(
+              existingRecord?.imageThumbnail
+            );
+            const backImageThumbnail = getUsableCoffeeBeanThumbnail(
+              existingRecord?.backImageThumbnail
+            );
+            await db.coffeeBeanImages.put({
+              ...split.imageRecord,
+              imageThumbnail,
+              backImageThumbnail,
+            });
+            if (imageThumbnail || backImageThumbnail) {
+              await db.coffeeBeanImageThumbnails.put({
+                beanId: bean.id,
+                imageThumbnail,
+                backImageThumbnail,
+                updatedAt: existingRecord?.updatedAt || Date.now(),
+              });
+            }
+            await db.coffeeBeans.put(split.bean);
+            migratedBeanCount += 1;
+          });
+
+          imageRecordCount = await db.coffeeBeanImages.count();
+        }
+      );
+
+      if (migratedBeanCount > 0) {
+        console.warn(
+          `已拆分 ${migratedBeanCount} 条咖啡豆图片记录，当前图片记录 ${imageRecordCount} 条`
+        );
+      }
+    } catch (error) {
+      console.error('拆分咖啡豆图片失败:', error);
+    }
+  },
+
+  async migrateBrewingNoteImages(): Promise<void> {
+    const migrated = await db.settings.get('brewingNoteImagesMigrated');
+    if (migrated?.value === 'true') return;
+
+    const noteIds = (await db.brewingNotes.toCollection().primaryKeys()).map(
+      String
+    );
+
+    for (const noteId of noteIds) {
+      const note = await db.brewingNotes.get(noteId);
+      if (!note?.image && (!note?.images || note.images.length === 0)) {
+        continue;
+      }
+
+      const split = splitBrewingNoteImages(note);
+      await db.transaction(
+        'rw',
+        db.brewingNotes,
+        db.brewingNoteImages,
+        async () => {
+          if (split.imageRecord) {
+            await db.brewingNoteImages.put(split.imageRecord);
+          }
+          await db.brewingNotes.put(split.note);
+        }
+      );
+    }
+
+    await db.settings.put({ key: 'brewingNoteImagesMigrated', value: 'true' });
+  },
+
+  /**
+   * 清除数据库数据
+   */
+  async clearAllData(): Promise<void> {
+    try {
+      await db.brewingNotes.clear();
+      await db.brewingNoteImages.clear();
+      await db.brewingNoteImageThumbnails.clear();
+      await db.coffeeBeans.clear();
+      await db.coffeeBeanImages.clear();
+      await db.coffeeBeanImageThumbnails.clear();
+      await db.customEquipments.clear();
+      await db.customMethods.clear();
+      await db.grinders.clear();
+      await db.appSettings.clear();
+      await db.settings.clear();
+      console.warn('数据库已清空');
+    } catch (error) {
+      console.error('清空数据库失败:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * 记录当前存储信息
+   */
+  async logStorageInfo(): Promise<void> {
+    try {
+      const [
+        noteCount,
+        beanCount,
+        grinderCount,
+        equipmentCount,
+        beanImageCount,
+        beanThumbnailCount,
+        noteImageCount,
+        noteThumbnailCount,
+      ] = await Promise.all([
+        db.brewingNotes.count(),
+        db.coffeeBeans.count(),
+        db.grinders.count(),
+        db.customEquipments.count(),
+        db.coffeeBeanImages.count(),
+        db.coffeeBeanImageThumbnails.count(),
+        db.brewingNoteImages.count(),
+        db.brewingNoteImageThumbnails.count(),
+      ]);
+
+      console.warn(`IndexedDB 存储信息:`);
+      console.warn(`- 笔记数量: ${noteCount}`);
+      console.warn(`- 咖啡豆数量: ${beanCount}`);
+      console.warn(`- 咖啡豆图片数量: ${beanImageCount}`);
+      console.warn(`- 咖啡豆缩略图数量: ${beanThumbnailCount}`);
+      console.warn(`- 笔记图片数量: ${noteImageCount}`);
+      console.warn(`- 笔记缩略图数量: ${noteThumbnailCount}`);
+      console.warn(`- 磨豆机数量: ${grinderCount}`);
+      console.warn(`- 自定义器具数量: ${equipmentCount}`);
+
+      try {
+        let keyCount = 0;
+        for (let i = 0; i < localStorage.length; i++) {
+          if (localStorage.key(i)) keyCount += 1;
+        }
+
+        console.warn(`localStorage 存储信息:`);
+        console.warn(`- key 数量: ${keyCount}`);
+      } catch (e) {
+        console.error('计算localStorage大小失败:', e);
+      }
+    } catch (error) {
+      console.error('记录存储信息失败:', error);
+    }
+  },
+};

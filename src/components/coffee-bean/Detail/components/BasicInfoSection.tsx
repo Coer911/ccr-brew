@@ -1,0 +1,486 @@
+'use client';
+
+import React, { useRef, useEffect } from 'react';
+import { CoffeeBean } from '@/types/app';
+import { DatePicker } from '@/components/common/ui/DatePicker';
+import HighlightText from '@/components/common/ui/HighlightText';
+import { useSettingsStore } from '@/lib/stores/settingsStore';
+import { formatBeanDisplayName } from '@/lib/utils/beanVarietyUtils';
+import AutocompleteInput from '@/components/common/forms/AutocompleteInput';
+import {
+  autofillBlendComponentsFromName,
+  useBlendComponentSuggestions,
+} from '@/components/coffee-bean/Form/hooks/useBlendComponentSuggestions';
+import {
+  getEnabledBeanFieldIds,
+  resolveBeanFieldConfig,
+} from '@/lib/coffee-beans/beanFields';
+import { useRoasterSuggestions } from '@/components/coffee-bean/Form/hooks/useCoffeeBeanFieldSuggestions';
+import {
+  formatNumber,
+  parseDateString,
+  getFlavorInfo,
+  getDaysSinceDateString,
+} from '../utils';
+
+interface BasicInfoSectionProps {
+  bean: CoffeeBean | null;
+  tempBean: Partial<CoffeeBean>;
+  isAddMode: boolean;
+  isEditMode: boolean;
+  searchQuery: string;
+  editingCapacity: boolean;
+  editingRemaining: boolean;
+  editingPrice: boolean;
+  setEditingCapacity: (editing: boolean) => void;
+  setEditingRemaining: (editing: boolean) => void;
+  setEditingPrice: (editing: boolean) => void;
+  handleUpdateField: (updates: Partial<CoffeeBean>) => Promise<void>;
+  handleCapacityBlur: (value: string) => void;
+  handleRemainingBlur: (value: string) => void;
+  handleRemainingQuickAction: (
+    event: React.MouseEvent<HTMLSpanElement>
+  ) => void;
+  handlePriceBlur: (value: string) => Promise<void>;
+  handleDateChange: (date: Date, field: 'roastDate' | 'purchaseDate') => void;
+  onRepurchase?: () => void;
+}
+
+const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
+  bean,
+  tempBean,
+  isAddMode,
+  isEditMode,
+  searchQuery,
+  editingCapacity,
+  editingRemaining,
+  editingPrice,
+  setEditingCapacity,
+  setEditingRemaining,
+  setEditingPrice,
+  handleUpdateField,
+  handleCapacityBlur,
+  handleRemainingBlur,
+  handleRemainingQuickAction,
+  handlePriceBlur,
+  handleDateChange,
+  onRepurchase,
+}) => {
+  const capacityInputRef = useRef<HTMLDivElement>(null);
+  const remainingInputRef = useRef<HTMLDivElement>(null);
+  const priceInputRef = useRef<HTMLDivElement>(null);
+  const blendComponentNameAutofillRef = useRef<
+    NonNullable<CoffeeBean['blendComponents']>
+  >([]);
+
+  // 获取烘焙商字段设置
+  const roasterFieldEnabled = useSettingsStore(
+    state => state.settings.roasterFieldEnabled
+  );
+  const roasterSeparator = useSettingsStore(
+    state => state.settings.roasterSeparator
+  );
+  const beanFieldConfig = useSettingsStore(
+    state => state.settings.beanFieldConfig
+  );
+  const showEstateField = useSettingsStore(
+    state => state.settings.showEstateField
+  );
+  const enabledBlendComponentFields = getEnabledBeanFieldIds(
+    resolveBeanFieldConfig({ beanFieldConfig, showEstateField })
+  );
+  const roasterSettings = {
+    roasterFieldEnabled,
+    roasterSeparator,
+  };
+  const currentBean = isAddMode ? tempBean : bean;
+  const isGreenBeanType = currentBean?.beanState === 'green';
+  const merchantLabel = isGreenBeanType ? '生豆商' : '烘焙商';
+  const fullNameInputLabel = `${merchantLabel}和咖啡豆名称`;
+  const fullNameInputHint = `格式：${merchantLabel} 咖啡豆名称`;
+  const flavorInfo = getFlavorInfo(bean);
+  const blendComponentSuggestions = useBlendComponentSuggestions();
+  const roasterSuggestions = useRoasterSuggestions(!!roasterFieldEnabled);
+
+  // 获取格式化后的显示名称
+  const displayName = bean ? formatBeanDisplayName(bean, roasterSettings) : '';
+
+  // 日期相关
+  const dateField = isGreenBeanType ? 'purchaseDate' : 'roastDate';
+  const dateLabel = isGreenBeanType ? '购买日期' : '烘焙日期';
+  const dateValue = isGreenBeanType
+    ? currentBean?.purchaseDate
+    : currentBean?.roastDate;
+  const priceNumber = parseFloat(currentBean?.price || '');
+  const capacityNumber = parseFloat(currentBean?.capacity || '');
+  const remainingText = currentBean?.remaining?.trim();
+  const remainingNumber =
+    remainingText && !Number.isNaN(parseFloat(remainingText))
+      ? parseFloat(remainingText)
+      : null;
+  const isOutOfStock = remainingNumber !== null && remainingNumber <= 0;
+  const hasValidUnitPrice =
+    !isNaN(priceNumber) && !isNaN(capacityNumber) && capacityNumber > 0;
+  const detailValueGapClass = isAddMode || isEditMode ? 'gap-2' : 'gap-1';
+  const agingDays =
+    !isAddMode &&
+    !isGreenBeanType &&
+    !isOutOfStock &&
+    !currentBean?.isInTransit &&
+    dateValue
+      ? getDaysSinceDateString(dateValue)
+      : null;
+
+  const handleNameChange = (name: string) => {
+    const currentComponents = currentBean?.blendComponents || [];
+    const autofillResult = autofillBlendComponentsFromName(
+      currentComponents,
+      name,
+      blendComponentSuggestions,
+      blendComponentNameAutofillRef.current,
+      enabledBlendComponentFields
+    );
+    blendComponentNameAutofillRef.current = autofillResult.autofillComponents;
+
+    void handleUpdateField({
+      name,
+      ...(autofillResult.changed
+        ? { blendComponents: autofillResult.components }
+        : {}),
+    });
+  };
+
+  // 聚焦输入框
+  useEffect(() => {
+    if (editingCapacity && capacityInputRef.current) {
+      capacityInputRef.current.focus();
+      // 将光标移到末尾
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.selectNodeContents(capacityInputRef.current);
+      range.collapse(false);
+      sel?.removeAllRanges();
+      sel?.addRange(range);
+    }
+  }, [editingCapacity]);
+
+  useEffect(() => {
+    if (editingRemaining && remainingInputRef.current) {
+      remainingInputRef.current.focus();
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.selectNodeContents(remainingInputRef.current);
+      range.collapse(false);
+      sel?.removeAllRanges();
+      sel?.addRange(range);
+    }
+  }, [editingRemaining]);
+
+  useEffect(() => {
+    if (editingPrice && priceInputRef.current) {
+      priceInputRef.current.focus();
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.selectNodeContents(priceInputRef.current);
+      range.collapse(false);
+      sel?.removeAllRanges();
+      sel?.addRange(range);
+    }
+  }, [editingPrice]);
+
+  return (
+    <>
+      {/* 名称输入/标题区域 */}
+      <div>
+        {isAddMode && roasterFieldEnabled ? (
+          <div className="grid w-full grid-cols-[minmax(7rem,max-content)_minmax(0,1fr)] items-end gap-3">
+            <AutocompleteInput
+              value={tempBean.roaster || ''}
+              onChange={value => {
+                void handleUpdateField({ roaster: value });
+              }}
+              placeholder={`${merchantLabel}名称`}
+              suggestions={roasterSuggestions.suggestions}
+              clearable
+              inputMode="text"
+              isCustomPreset={roasterSuggestions.isRemovableSuggestion}
+              onRemovePreset={roasterSuggestions.removeSuggestion}
+              containerClassName="min-w-28 max-w-[45vw] space-y-0"
+              className="field-sizing-content w-auto max-w-full min-w-28 border-dashed border-neutral-300 py-1 pr-5 text-sm font-medium text-neutral-800 placeholder:text-neutral-400 focus:border-neutral-500 dark:border-neutral-600 dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:border-neutral-400"
+            />
+            <input
+              id="bean-detail-form-title"
+              type="text"
+              value={tempBean.name || ''}
+              onChange={e => handleNameChange(e.target.value)}
+              placeholder="咖啡豆名称"
+              className="min-w-0 border-b border-dashed border-neutral-300 bg-transparent pb-1 text-sm font-medium text-neutral-800 outline-none placeholder:text-neutral-400 focus:border-neutral-500 dark:border-neutral-600 dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:border-neutral-400"
+            />
+          </div>
+        ) : isAddMode ? (
+          <input
+            id="bean-detail-form-title"
+            type="text"
+            value={tempBean.name || ''}
+            onChange={e => handleNameChange(e.target.value)}
+            placeholder={`输入${merchantLabel} 咖啡豆名称`}
+            aria-label={fullNameInputLabel}
+            title={fullNameInputHint}
+            className="w-full border-b border-dashed border-neutral-300 bg-transparent pb-1 text-sm font-medium text-neutral-800 outline-none placeholder:text-neutral-400 focus:border-neutral-500 dark:border-neutral-600 dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:border-neutral-400"
+          />
+        ) : (
+          <h2
+            id="bean-detail-title"
+            className="text-sm font-medium text-neutral-800 dark:text-neutral-100"
+          >
+            {searchQuery ? (
+              <HighlightText text={displayName} highlight={searchQuery} />
+            ) : (
+              displayName
+            )}
+          </h2>
+        )}
+      </div>
+
+      {/* 基础信息区域 */}
+      <div className="space-y-3">
+        {/* 容量/剩余量 */}
+        {(isAddMode || (currentBean?.capacity && currentBean?.remaining)) && (
+          <div className="flex items-start">
+            <div className="w-16 shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
+              容量
+            </div>
+            <div
+              className={`flex min-h-4 items-center ${detailValueGapClass} text-xs leading-4 font-medium`}
+            >
+              {/* 剩余量 */}
+              {editingRemaining ? (
+                <div
+                  ref={remainingInputRef}
+                  contentEditable
+                  suppressContentEditableWarning
+                  inputMode="decimal"
+                  onBlur={e => {
+                    handleRemainingBlur(e.currentTarget.textContent || '');
+                    setEditingRemaining(false);
+                  }}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleRemainingBlur(e.currentTarget.textContent || '');
+                      setEditingRemaining(false);
+                    }
+                  }}
+                  className="min-w-[1ch] cursor-text text-xs font-medium text-neutral-800 outline-none dark:text-neutral-100"
+                >
+                  {currentBean?.remaining
+                    ? formatNumber(currentBean.remaining)
+                    : ''}
+                </div>
+              ) : (
+                <span
+                  onClick={event => {
+                    if (isAddMode) {
+                      setEditingRemaining(true);
+                      return;
+                    }
+                    handleRemainingQuickAction(event);
+                  }}
+                  data-click-area="remaining-edit"
+                  className={`cursor-pointer ${
+                    currentBean?.remaining
+                      ? 'text-neutral-800 dark:text-neutral-100'
+                      : 'text-neutral-400 dark:text-neutral-500'
+                  }`}
+                >
+                  {currentBean?.remaining
+                    ? formatNumber(currentBean.remaining)
+                    : isAddMode
+                      ? '剩余'
+                      : '0'}
+                </span>
+              )}
+              <span className="text-neutral-400 dark:text-neutral-500">/</span>
+              {/* 总容量 */}
+              {editingCapacity ? (
+                <div
+                  ref={capacityInputRef}
+                  contentEditable
+                  suppressContentEditableWarning
+                  inputMode="decimal"
+                  onBlur={e => {
+                    handleCapacityBlur(e.currentTarget.textContent || '');
+                    setEditingCapacity(false);
+                  }}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleCapacityBlur(e.currentTarget.textContent || '');
+                      setEditingCapacity(false);
+                    }
+                  }}
+                  className="min-w-[1ch] cursor-text text-xs font-medium text-neutral-800 outline-none dark:text-neutral-100"
+                >
+                  {currentBean?.capacity
+                    ? formatNumber(currentBean.capacity)
+                    : ''}
+                </div>
+              ) : (
+                <span
+                  onClick={() => {
+                    if (isAddMode) {
+                      setEditingCapacity(true);
+                    }
+                  }}
+                  className={`${isAddMode ? 'cursor-pointer' : 'cursor-default'} ${
+                    currentBean?.capacity
+                      ? 'text-neutral-800 dark:text-neutral-100'
+                      : 'text-neutral-400 dark:text-neutral-500'
+                  }`}
+                >
+                  {currentBean?.capacity
+                    ? formatNumber(currentBean.capacity)
+                    : isAddMode
+                      ? '总量'
+                      : '0'}
+                </span>
+              )}
+              <span className="text-neutral-800 dark:text-neutral-100">克</span>
+
+              {isEditMode && onRepurchase && (
+                <>
+                  <div className="mx-1 h-3 w-px bg-neutral-200 dark:bg-neutral-700" />
+                  <button
+                    type="button"
+                    onClick={onRepurchase}
+                    className="cursor-pointer bg-neutral-100/50 px-1.5 py-0.5 text-xs font-medium whitespace-nowrap text-neutral-400 transition-colors hover:text-neutral-600 dark:bg-neutral-800/50 dark:text-neutral-500 dark:hover:text-neutral-300"
+                    title="续购"
+                  >
+                    续购
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* 价格 */}
+        {(isAddMode || currentBean?.price) && (
+          <div className="flex items-start">
+            <div className="w-16 shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
+              价格
+            </div>
+            <div className="flex items-center gap-1 text-xs font-medium">
+              {editingPrice ? (
+                <div
+                  ref={priceInputRef}
+                  contentEditable
+                  suppressContentEditableWarning
+                  inputMode="decimal"
+                  onBlur={e => {
+                    void handlePriceBlur(e.currentTarget.textContent || '');
+                  }}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      void handlePriceBlur(e.currentTarget.textContent || '');
+                    }
+                  }}
+                  className="min-w-[1ch] cursor-text text-xs font-medium text-neutral-800 outline-none dark:text-neutral-100"
+                >
+                  {currentBean?.price || ''}
+                </div>
+              ) : (
+                <span
+                  onClick={() => setEditingPrice(true)}
+                  className={`cursor-pointer ${
+                    currentBean?.price
+                      ? 'text-neutral-800 dark:text-neutral-100'
+                      : 'text-neutral-400 dark:text-neutral-500'
+                  }`}
+                >
+                  {currentBean?.price || (isAddMode ? '输入' : '')}
+                </span>
+              )}
+              {(isAddMode || currentBean?.price) && (
+                <span className="text-neutral-800 dark:text-neutral-100">
+                  元
+                  {hasValidUnitPrice &&
+                    ` (${(priceNumber / capacityNumber).toFixed(2)} 元/克)`}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* 日期 */}
+        {(isAddMode || dateValue || currentBean?.isInTransit) && (
+          <div className="flex items-center">
+            <div className="w-16 shrink-0 text-xs leading-4 font-medium text-neutral-500 dark:text-neutral-400">
+              {dateLabel}
+            </div>
+            <div
+              className={`flex min-h-4 items-center ${detailValueGapClass} text-xs leading-4 font-medium`}
+            >
+              {currentBean?.isInTransit ? (
+                <DatePicker
+                  date={undefined}
+                  onDateChange={date => handleDateChange(date, dateField)}
+                  placeholder="在途"
+                  className="w-auto leading-4 [&_button]:h-4 [&_button]:w-auto [&_button]:items-center [&_button]:justify-start [&_button]:border-0 [&_button]:py-0 [&_button]:text-xs [&_button]:leading-4 [&_button]:font-medium [&_button>span]:leading-4 [&_button>span]:text-neutral-800 dark:[&_button>span]:text-neutral-100"
+                  displayFormat="yyyy-MM-dd"
+                />
+              ) : (
+                <>
+                  <DatePicker
+                    date={parseDateString(dateValue)}
+                    onDateChange={date => handleDateChange(date, dateField)}
+                    placeholder={`选择${dateLabel}`}
+                    className="w-auto leading-4 [&_button]:h-4 [&_button]:w-auto [&_button]:items-center [&_button]:justify-start [&_button]:border-0 [&_button]:py-0 [&_button]:text-xs [&_button]:leading-4 [&_button]:font-medium [&_button>span]:leading-4"
+                    displayFormat="yyyy-MM-dd"
+                  />
+                  {agingDays !== null && agingDays > 0 && (
+                    <span className="whitespace-nowrap text-neutral-800 dark:text-neutral-100">
+                      {`(已养豆 ${agingDays} 天)`}
+                    </span>
+                  )}
+                  {/* 添加模式：在途状态选项 */}
+                  {isAddMode && (
+                    <>
+                      <div className="mx-1 h-3 w-px bg-neutral-200 dark:bg-neutral-700" />
+                      <span
+                        onClick={() => handleUpdateField({ isInTransit: true })}
+                        className="cursor-pointer bg-neutral-100/50 px-1.5 py-0.5 text-xs font-medium whitespace-nowrap text-neutral-400 dark:bg-neutral-800/50 dark:text-neutral-500"
+                      >
+                        在途
+                      </span>
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* 赏味期（仅熟豆且有烘焙日期时显示，添加模式下不显示因为下面有设置） */}
+        {!isGreenBeanType &&
+          !isOutOfStock &&
+          flavorInfo &&
+          flavorInfo.phase !== '未知' &&
+          flavorInfo.phase !== '在途' &&
+          !isAddMode && (
+            <div className="flex items-start">
+              <div className="w-16 shrink-0 text-xs font-medium text-neutral-500 dark:text-neutral-400">
+                赏味期
+              </div>
+              <div className="text-xs font-medium text-neutral-800 dark:text-neutral-100">
+                {flavorInfo.status}
+              </div>
+            </div>
+          )}
+      </div>
+    </>
+  );
+};
+
+export default BasicInfoSection;

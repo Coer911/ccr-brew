@@ -1,0 +1,479 @@
+import { Capacitor } from '@capacitor/core';
+import { CoffeeBean } from '@/types/app';
+import { EditableContent, PrintConfig, PrintIconSource } from './types';
+import { normalizeDate, parseDateToTimestamp } from '@/lib/utils/dateUtils';
+import { isPrintFieldVisible } from './fields';
+import { RoasterSettings } from '@/lib/utils/beanVarietyUtils';
+import { TempFileManager } from '@/lib/utils/tempFileManager';
+import type { ImageSaveOutcome } from '@/lib/utils/tempFileManager';
+
+// 格式化日期
+export const formatDate = (dateStr: string): string => {
+  try {
+    const timestamp = parseDateToTimestamp(dateStr);
+    const date = new Date(timestamp);
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  } catch {
+    return dateStr;
+  }
+};
+
+export const getLocalDateString = (date = new Date()): string => {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+};
+
+export const parseLocalDateString = (dateStr: string): Date | undefined => {
+  const match = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(
+    normalizeDate(dateStr.trim())
+  );
+
+  if (!match) {
+    return undefined;
+  }
+
+  const [, year, month, day] = match;
+  const parsedYear = Number(year);
+  const parsedMonth = Number(month);
+  const parsedDay = Number(day);
+  const date = new Date(parsedYear, parsedMonth - 1, parsedDay);
+
+  if (
+    date.getFullYear() !== parsedYear ||
+    date.getMonth() !== parsedMonth - 1 ||
+    date.getDate() !== parsedDay
+  ) {
+    return undefined;
+  }
+
+  return date;
+};
+
+export const getDisplayBeanName = (
+  content: Pick<EditableContent, 'roaster' | 'name'>
+): string => {
+  const beanName = content.name.trim();
+  const roaster = content.roaster.trim();
+
+  if (!beanName) {
+    return roaster;
+  }
+
+  return roaster ? `${roaster} ${beanName}` : beanName;
+};
+
+export const getResolvedPrintIcon = (
+  content: Pick<EditableContent, 'icon' | 'iconSource'>,
+  roasterIcon: string | null | undefined
+): string => {
+  if (content.iconSource === 'roaster') {
+    return roasterIcon || content.icon;
+  }
+
+  return content.icon;
+};
+
+// 生成风味行
+export const getFlavorLine = (flavors: string[]): string =>
+  flavors.filter(f => f.trim()).join(' / ');
+
+// 生成底部信息行（简洁模板用）
+export const getBottomInfoLine = (
+  c: EditableContent,
+  config: PrintConfig
+): string => {
+  const parts: string[] = [];
+  const weightValue = c.weight.trim();
+
+  if (isPrintFieldVisible('weight', config, c)) {
+    parts.push(
+      weightValue.toLowerCase().endsWith('g') ? weightValue : `${weightValue}g`
+    );
+  }
+  if (isPrintFieldVisible('roastDate', config, c)) {
+    parts.push(formatDate(c.roastDate));
+  }
+  if (config.fields.roastDate && config.fields.packDate && c.packDate.trim()) {
+    parts.push(`分装 ${formatDate(c.packDate)}`);
+  }
+  if (isPrintFieldVisible('process', config, c)) {
+    parts.push(c.process.trim());
+  }
+  if (isPrintFieldVisible('batch', config, c)) {
+    parts.push(c.batch.trim());
+  }
+  if (isPrintFieldVisible('variety', config, c)) {
+    parts.push(c.variety.trim());
+  }
+  if (isPrintFieldVisible('origin', config, c)) {
+    parts.push(c.origin.trim());
+  }
+  if (isPrintFieldVisible('country', config, c)) {
+    parts.push(c.country.trim());
+  }
+  if (isPrintFieldVisible('region', config, c)) {
+    parts.push(c.region.trim());
+  }
+  if (isPrintFieldVisible('estate', config, c)) {
+    parts.push(c.estate.trim());
+  }
+  if (isPrintFieldVisible('processingStation', config, c)) {
+    parts.push(c.processingStation.trim());
+  }
+  if (isPrintFieldVisible('altitude', config, c)) {
+    parts.push(c.altitude.trim());
+  }
+  if (isPrintFieldVisible('roastLevel', config, c)) {
+    parts.push(c.roastLevel.trim());
+  }
+  if (isPrintFieldVisible('notes', config, c)) {
+    parts.push(c.notes.trim());
+  }
+  return parts.join(' / ');
+};
+
+// 计算预览尺寸
+export const getPreviewDimensions = (config: PrintConfig) => {
+  const isLandscape = config.orientation === 'landscape';
+  return {
+    width: isLandscape ? `${config.height}mm` : `${config.width}mm`,
+    height: isLandscape ? `${config.width}mm` : `${config.height}mm`,
+  };
+};
+
+// 从 bean 提取组件信息
+const extractComponentInfo = (
+  bean: CoffeeBean,
+  field:
+    | 'origin'
+    | 'country'
+    | 'region'
+    | 'estate'
+    | 'processingStation'
+    | 'altitude'
+    | 'process'
+    | 'batch'
+    | 'variety'
+): string => {
+  if (!bean.blendComponents?.length) return '';
+  const values = new Set(
+    bean.blendComponents
+      .map(c => c[field])
+      .filter((v): v is string => typeof v === 'string' && v.trim() !== '')
+  );
+  return Array.from(values).join(', ');
+};
+
+// 从 bean 创建初始内容
+export const createInitialContent = (
+  bean: CoffeeBean | null,
+  _roasterSettings: RoasterSettings,
+  icon = '',
+  iconSource: PrintIconSource = 'custom',
+  defaultWeight = '',
+  packDate = getLocalDateString()
+): EditableContent => {
+  if (!bean) {
+    return {
+      name: '',
+      roaster: '',
+      origin: '',
+      country: '',
+      region: '',
+      estate: '',
+      processingStation: '',
+      altitude: '',
+      roastLevel: '',
+      roastDate: '',
+      packDate,
+      process: '',
+      batch: '',
+      variety: '',
+      flavor: [],
+      notes: '',
+      weight: defaultWeight,
+      icon,
+      iconSource,
+    };
+  }
+  return {
+    name: bean.name || '',
+    roaster: bean.roaster || '',
+    origin: extractComponentInfo(bean, 'origin'),
+    country: extractComponentInfo(bean, 'country'),
+    region: extractComponentInfo(bean, 'region'),
+    estate: extractComponentInfo(bean, 'estate'),
+    processingStation: extractComponentInfo(bean, 'processingStation'),
+    altitude: extractComponentInfo(bean, 'altitude'),
+    roastLevel: bean.roastLevel || '',
+    roastDate: bean.roastDate || '',
+    packDate,
+    process: extractComponentInfo(bean, 'process'),
+    batch: extractComponentInfo(bean, 'batch'),
+    variety: extractComponentInfo(bean, 'variety'),
+    flavor: bean.flavor || [],
+    notes: bean.notes || '',
+    weight: defaultWeight,
+    icon,
+    iconSource,
+  };
+};
+
+// 等待字体加载完成
+const waitForFonts = async (): Promise<void> => {
+  if (typeof document === 'undefined') return;
+  try {
+    // 等待所有字体加载，最多等待 2 秒
+    await Promise.race([
+      document.fonts.ready,
+      new Promise(resolve => setTimeout(resolve, 2000)),
+    ]);
+  } catch {
+    // 字体加载 API 不支持时忽略
+  }
+};
+
+const waitForImages = async (element: HTMLElement): Promise<void> => {
+  const images = Array.from(element.querySelectorAll('img'));
+  const backgroundIconSources = Array.from(
+    element.querySelectorAll<HTMLElement>('[data-print-icon-src]')
+  )
+    .map(icon => icon.dataset.printIconSrc)
+    .filter((src): src is string => Boolean(src));
+
+  await Promise.all(
+    images
+      .map(
+        image =>
+          new Promise<void>((resolve, reject) => {
+            if (image.complete) {
+              if (image.naturalWidth > 0) {
+                resolve();
+              } else {
+                reject(new Error('图片加载失败'));
+              }
+              return;
+            }
+
+            const cleanup = () => {
+              image.removeEventListener('load', handleLoad);
+              image.removeEventListener('error', handleError);
+            };
+            const handleLoad = () => {
+              cleanup();
+              resolve();
+            };
+            const handleError = () => {
+              cleanup();
+              reject(new Error('图片加载失败'));
+            };
+
+            image.addEventListener('load', handleLoad);
+            image.addEventListener('error', handleError);
+          })
+      )
+      .concat(
+        backgroundIconSources.map(
+          src =>
+            new Promise<void>((resolve, reject) => {
+              const image = new Image();
+              image.onload = () => resolve();
+              image.onerror = () => reject(new Error('图片加载失败'));
+              image.src = src;
+            })
+        )
+      )
+  );
+};
+
+// 将 Tailwind 类名转换为内联样式的映射表
+// 这确保了在所有设备上样式的一致性
+const inlineStylesFromClasses = (element: HTMLElement): void => {
+  const classMap: Record<string, Partial<CSSStyleDeclaration>> = {
+    // Flex 布局
+    flex: { display: 'flex' },
+    'flex-col': { flexDirection: 'column' },
+    'flex-1': { flex: '1 1 0%' },
+    'flex-wrap': { flexWrap: 'wrap' },
+    'content-start': { alignContent: 'flex-start' },
+    'justify-between': { justifyContent: 'space-between' },
+    'h-full': { height: '100%' },
+    'w-full': { width: '100%' },
+    // 间距
+    'space-y-1': { gap: '0.25rem' },
+    'gap-1': { gap: '0.25rem' },
+    'mb-1': { marginBottom: '0.25rem' },
+    'mb-1.5': { marginBottom: '0.375rem' },
+    'mt-1': { marginTop: '0.25rem' },
+    'pb-1': { paddingBottom: '0.25rem' },
+    // 文本
+    'text-center': { textAlign: 'center' },
+    'overflow-hidden': { overflow: 'hidden' },
+    'shrink-0': { flexShrink: '0' },
+  };
+
+  // 递归处理所有子元素
+  const processElement = (el: HTMLElement) => {
+    if (el.classList) {
+      el.classList.forEach(className => {
+        const styles = classMap[className];
+        if (styles) {
+          Object.assign(el.style, styles);
+        }
+      });
+    }
+    // 处理子元素
+    Array.from(el.children).forEach(child => {
+      if (child instanceof HTMLElement) {
+        processElement(child);
+      }
+    });
+  };
+
+  processElement(element);
+};
+
+// 归一化文本节点空白，避免导出时意外换行
+const normalizeTextNodes = (element: HTMLElement): void => {
+  if (typeof document === 'undefined') return;
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+  let node = walker.nextNode();
+  while (node) {
+    if (node.nodeValue) {
+      const normalized = node.nodeValue.replace(/[\t\r\n]+/g, ' ');
+      if (normalized !== node.nodeValue) {
+        node.nodeValue = normalized;
+      }
+    }
+    node = walker.nextNode();
+  }
+};
+
+// 保存预览为图片
+export async function savePreviewAsImage(
+  elementId: string,
+  bean: CoffeeBean | null,
+  preparedImageData?: string
+): Promise<{ outcome: ImageSaveOutcome; imageData: string }> {
+  const el = document.getElementById(elementId);
+  if (!el) throw new Error('预览元素未找到');
+
+  if (preparedImageData) {
+    const outcome = await TempFileManager.saveImageToGallery(preparedImageData);
+    return { outcome, imageData: preparedImageData };
+  }
+
+  // 1. 等待字体加载完成
+  await waitForFonts();
+  await waitForImages(el);
+
+  // 2. 等待浏览器渲染完成
+  await new Promise(resolve => requestAnimationFrame(resolve));
+  await new Promise(resolve => setTimeout(resolve, 100));
+
+  // 3. 克隆元素以避免修改原始 DOM
+  const clonedEl = el.cloneNode(true) as HTMLElement;
+
+  // 4. 将 Tailwind 类名转换为内联样式，确保跨设备一致性
+  inlineStylesFromClasses(clonedEl);
+
+  // 5. 复制原始元素的计算样式到克隆元素
+  const computedStyle = window.getComputedStyle(el);
+  clonedEl.style.width = computedStyle.width;
+  clonedEl.style.height = computedStyle.height;
+  clonedEl.style.padding = computedStyle.padding;
+  clonedEl.style.fontSize = computedStyle.fontSize;
+  clonedEl.style.fontWeight = computedStyle.fontWeight;
+  clonedEl.style.fontFamily = computedStyle.fontFamily;
+  clonedEl.style.lineHeight = computedStyle.lineHeight;
+  clonedEl.style.letterSpacing = computedStyle.letterSpacing;
+  clonedEl.style.wordBreak = computedStyle.wordBreak;
+  clonedEl.style.whiteSpace = 'normal';
+  clonedEl.style.backgroundColor = '#ffffff';
+  clonedEl.style.color = '#000000';
+
+  // 5.1 归一化文本节点空白，避免导出时因隐藏换行导致提前换行
+  normalizeTextNodes(clonedEl);
+
+  // 6. 创建离屏容器
+  const offscreenContainer = document.createElement('div');
+  offscreenContainer.style.cssText = `
+    position: fixed;
+    top: -9999px;
+    left: -9999px;
+    z-index: -1;
+    pointer-events: none;
+    visibility: visible;
+  `;
+  offscreenContainer.appendChild(clonedEl);
+  document.body.appendChild(offscreenContainer);
+  await waitForImages(clonedEl);
+
+  // 7. 再次等待渲染
+  await new Promise(resolve => requestAnimationFrame(resolve));
+  await new Promise(resolve => setTimeout(resolve, 50));
+
+  try {
+    const { toPng } = await import('html-to-image');
+    const imageData = await toPng(clonedEl, {
+      backgroundColor: '#ffffff',
+      pixelRatio: 6.37,
+      quality: 0.95,
+      // 跳过隐藏元素
+      filter: node => {
+        if (node instanceof HTMLElement) {
+          const style = getComputedStyle(node);
+          if (style.display === 'none' || style.visibility === 'hidden') {
+            return false;
+          }
+        }
+        return true;
+      },
+      // 确保样式被正确捕获
+      style: {
+        transform: 'none',
+      },
+    });
+
+    // 清理离屏容器
+    document.body.removeChild(offscreenContainer);
+
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const outcome = await TempFileManager.saveImageToGallery(imageData);
+        const { showToast } =
+          await import('@/components/common/feedback/LightToast');
+        showToast({ type: 'success', title: '已保存到相册' });
+        return { outcome, imageData };
+      } catch (error) {
+        console.error('保存到相册失败:', error);
+        const fileName = `${bean?.name || '咖啡豆标签'}-${new Date().toISOString().split('T')[0]}`;
+        await TempFileManager.shareImageFile(imageData, fileName, {
+          title: '咖啡豆标签',
+          text: `${bean?.name || '咖啡豆'}标签图片`,
+          dialogTitle: '保存标签图片',
+        });
+        return { outcome: 'shared', imageData };
+      }
+    }
+
+    const outcome = await TempFileManager.saveImageToGallery(imageData);
+    if (outcome === 'downloaded') {
+      const { showToast } =
+        await import('@/components/common/feedback/LightToast');
+      showToast({ type: 'success', title: '图片已保存' });
+    }
+    return { outcome, imageData };
+  } catch (error) {
+    // 确保清理离屏容器
+    if (document.body.contains(offscreenContainer)) {
+      document.body.removeChild(offscreenContainer);
+    }
+    throw error;
+  }
+}

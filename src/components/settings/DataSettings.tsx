@@ -1,0 +1,1003 @@
+'use client';
+
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { ChevronRight } from 'lucide-react';
+import { SettingsOptions } from './Settings';
+import { useSettingsStore } from '@/lib/stores/settingsStore';
+import {
+  BackupReminderSettings,
+  BackupReminderUtils,
+  BACKUP_REMINDER_INTERVALS,
+  BackupReminderInterval,
+} from '@/lib/utils/backupReminderUtils';
+import hapticsUtils from '@/lib/ui/haptics';
+import SettingPage from './atomic/SettingPage';
+import SettingSelector from './atomic/SettingSelector';
+import {
+  useSettingSearchHighlight,
+  useScrollToHighlightedSetting,
+} from './atomic';
+import { S3SyncSection } from './data-settings/S3SyncSection';
+import { WebDAVSyncSection } from './data-settings/WebDAVSyncSection';
+import { SupabaseSyncSection } from './data-settings/SupabaseSyncSection';
+import { DataManagementSection } from './data-settings/DataManagementSection';
+import WebDAVTutorialModal from './data-settings/WebDAVTutorialModal';
+import { Capacitor } from '@capacitor/core';
+import PersistentStorageManager, {
+  isPersistentStorageSupported,
+  isPWAMode,
+  type StorageEstimate,
+} from '@/lib/utils/persistentStorage';
+import { useModalHistory, modalHistory } from '@/lib/hooks/useModalHistory';
+import {
+  type CloudSyncType,
+  type S3SyncSettings,
+  type WebDAVSyncSettings,
+  type SupabaseSyncSettings,
+  normalizeS3Settings,
+  normalizeWebDAVSettings,
+  normalizeSupabaseSettings,
+} from '@/lib/hooks/useCloudSyncSettings';
+import {
+  type ManualSyncProvider,
+  getCloudProviderLabel,
+  getConnectedManualSyncProvider,
+  getResolvedActiveSyncType,
+  getSelectedManualSyncProvider,
+  getSupabaseBackupProvider,
+  isPullToSyncEnabled,
+} from '@/lib/sync/settings';
+import { makeSettingRowSearchId } from './settingsSearch';
+
+interface DataSettingsProps {
+  settings: SettingsOptions;
+  onClose: () => void;
+  handleChange: <K extends keyof SettingsOptions>(
+    key: K,
+    value: SettingsOptions[K]
+  ) => void | Promise<void>;
+  onDataChange?: () => void;
+}
+
+interface SelectionDropdownProps {
+  label: string;
+  value: string;
+  valueLabel: string;
+  isOpen: boolean;
+  options: Array<{
+    value: string;
+    label: string;
+  }>;
+  settingId?: string;
+  onToggle: () => void;
+  onSelect: (value: string) => void;
+}
+
+const SelectionDropdown: React.FC<SelectionDropdownProps> = ({
+  label,
+  value,
+  valueLabel,
+  isOpen,
+  options,
+  settingId,
+  onToggle,
+  onSelect,
+}) => {
+  const { highlightedSettingId } = useSettingSearchHighlight();
+  const resolvedSettingId = settingId ?? makeSettingRowSearchId(label);
+  const isHighlighted = highlightedSettingId === resolvedSettingId;
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        data-settings-search-id={resolvedSettingId}
+        onClick={onToggle}
+        className={`flex w-full items-center justify-between rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${
+          isHighlighted ? 'bg-neutral-200/70 dark:bg-neutral-700/45' : ''
+        }`}
+      >
+        <span>{label}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-neutral-500 dark:text-neutral-400">
+            {valueLabel}
+          </span>
+          <ChevronRight
+            className={`h-4 w-4 text-neutral-400 transition-transform ${isOpen ? 'rotate-90' : ''}`}
+          />
+        </div>
+      </button>
+
+      {isOpen && (
+        <div className="mt-2 space-y-2 rounded bg-neutral-100 p-2 dark:bg-neutral-800">
+          {options.map(option => (
+            <button
+              type="button"
+              key={option.value}
+              onClick={() => onSelect(option.value)}
+              className={`w-full rounded px-3 py-2 text-left text-sm transition-colors ${
+                value === option.value
+                  ? 'bg-neutral-200 font-medium text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100'
+                  : 'text-neutral-700 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-700'
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+function canUsePullToSync(): boolean {
+  if (typeof window === 'undefined') return false;
+
+  const hasTouchPoints =
+    typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0;
+  const hasCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+
+  return hasTouchPoints || hasCoarsePointer;
+}
+
+const DataSettings: React.FC<DataSettingsProps> = ({
+  settings: _settings,
+  onClose,
+  handleChange: _handleChange,
+  onDataChange,
+}) => {
+  // 使用 settingsStore 获取设置
+  const settings = useSettingsStore(state => state.settings) as SettingsOptions;
+  const updateSettings = useSettingsStore(state => state.updateSettings);
+
+  // 使用 settingsStore 的 handleChange
+  const handleChange = React.useCallback(
+    async <K extends keyof SettingsOptions>(
+      key: K,
+      value: SettingsOptions[K]
+    ) => {
+      await updateSettings({ [key]: value } as any);
+    },
+    [updateSettings]
+  );
+
+  const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  // 动画状态
+  const [isVisible, setIsVisible] = useState(false);
+
+  // 云同步设置
+  const [s3Settings, setS3Settings] = useState<S3SyncSettings>(() =>
+    normalizeS3Settings(settings.s3Sync)
+  );
+  const [webdavSettings, setWebDAVSettings] = useState<WebDAVSyncSettings>(() =>
+    normalizeWebDAVSettings(settings.webdavSync)
+  );
+  const [supabaseSettings, setSupabaseSettings] =
+    useState<SupabaseSyncSettings>(() =>
+      normalizeSupabaseSettings(settings.supabaseSync)
+    );
+
+  // 备份提醒设置
+  const [backupReminderSettings, setBackupReminderSettings] =
+    useState<BackupReminderSettings | null>(null);
+  const [nextReminderText, setNextReminderText] = useState('');
+
+  // 持久化存储状态
+  const [isPersisted, setIsPersisted] = useState<boolean>(false);
+  const [storageEstimate, setStorageEstimate] =
+    useState<StorageEstimate | null>(null);
+  const [isRequestingPersist, setIsRequestingPersist] = useState(false);
+  const [isNativePlatform, setIsNativePlatform] = useState(false);
+  const [isPWA, setIsPWA] = useState(false);
+  const [supportsPullToSync, setSupportsPullToSync] = useState(false);
+
+  // 云同步类型选择
+  const [showSyncTypeDropdown, setShowSyncTypeDropdown] = useState(false);
+  const [showSupabaseBackupDropdown, setShowSupabaseBackupDropdown] =
+    useState(false);
+  // WebDAV 教程弹窗
+  const [showWebDAVTutorial, setShowWebDAVTutorial] = useState(false);
+
+  // 云同步类型：使用本地 state 管理，确保 UI 即时响应
+  const [activeSyncType, setActiveSyncType] = useState<CloudSyncType>(() => {
+    return getResolvedActiveSyncType(settings);
+  });
+  const [supabaseBackupProvider, setSupabaseBackupProvider] =
+    useState<ManualSyncProvider>(() => getSupabaseBackupProvider(settings));
+
+  // syncType 直接使用本地 state
+  const syncType = activeSyncType;
+
+  const resolvedSyncSettings: SettingsOptions = {
+    ...settings,
+    activeSyncType: syncType,
+    supabaseBackupProvider,
+    s3Sync: s3Settings,
+    webdavSync: webdavSettings,
+    supabaseSync: supabaseSettings,
+  };
+
+  // 关闭处理函数（带动画）
+  const handleCloseWithAnimation = React.useCallback(() => {
+    setIsVisible(false);
+    window.dispatchEvent(new CustomEvent('subSettingsClosing'));
+    setTimeout(() => {
+      onCloseRef.current();
+    }, 350);
+  }, []);
+
+  // 使用统一的历史栈管理系统
+  useModalHistory({
+    id: 'data-settings',
+    isOpen: true, // 子设置页面挂载即为打开状态
+    onClose: handleCloseWithAnimation,
+    skipPageExitTransitionOnHistory: true,
+  });
+
+  // 动画初始化（入场动画）
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setIsVisible(true);
+      });
+    });
+  }, []);
+
+  // 检测平台
+  useEffect(() => {
+    const isNative = Capacitor.isNativePlatform();
+    setIsNativePlatform(isNative);
+
+    // 检测是否为 PWA 模式
+    if (!isNative) {
+      setIsPWA(isPWAMode());
+    }
+  }, []);
+
+  useEffect(() => {
+    const updatePullToSyncSupport = () => {
+      setSupportsPullToSync(canUsePullToSync());
+    };
+
+    updatePullToSyncSupport();
+
+    if (typeof window === 'undefined') return;
+
+    const mediaQuery = window.matchMedia('(pointer: coarse)');
+    mediaQuery.addEventListener('change', updatePullToSyncSupport);
+
+    return () => {
+      mediaQuery.removeEventListener('change', updatePullToSyncSupport);
+    };
+  }, []);
+
+  // 加载持久化存储状态
+  useEffect(() => {
+    const loadStorageStatus = async () => {
+      if (isNativePlatform) {
+        // Capacitor 原生平台，设置为已持久化状态并加载存储信息
+        setIsPersisted(true);
+
+        // 原生平台也可以获取存储估算
+        try {
+          const estimate = await PersistentStorageManager.getEstimate();
+          setStorageEstimate(estimate);
+        } catch (error) {
+          console.error('加载存储信息失败:', error);
+        }
+        return;
+      }
+
+      // Web 环境
+      if (!isPWA) {
+        // 非 PWA 模式，不加载持久化状态
+        return;
+      }
+
+      try {
+        const persisted = await PersistentStorageManager.checkPersisted();
+        setIsPersisted(persisted);
+
+        const estimate = await PersistentStorageManager.getEstimate();
+        setStorageEstimate(estimate);
+      } catch (error) {
+        console.error('加载存储状态失败:', error);
+      }
+    };
+
+    loadStorageStatus();
+  }, [isNativePlatform, isPWA]);
+
+  // 加载备份提醒设置
+  useEffect(() => {
+    const loadBackupReminderSettings = async () => {
+      try {
+        const reminderSettings = await BackupReminderUtils.getSettings();
+        setBackupReminderSettings(reminderSettings);
+        const nextText = await BackupReminderUtils.getNextReminderText();
+        setNextReminderText(nextText);
+      } catch (error) {
+        console.error('加载备份提醒设置失败:', error);
+      }
+    };
+    loadBackupReminderSettings();
+  }, []);
+
+  // 仅在组件首次加载时从 settings 中读取配置
+  // 之后的更新都通过本地状态管理，避免被 settings 覆盖
+
+  // 关闭处理
+  const handleClose = () => {
+    modalHistory.back();
+  };
+
+  // S3 设置变更处理 - 使用 ref 避免竞态问题
+  const s3SettingsRef = useRef(s3Settings);
+
+  useEffect(() => {
+    s3SettingsRef.current = s3Settings;
+  }, [s3Settings]);
+
+  const handleS3SettingChange = <K extends keyof S3SyncSettings>(
+    key: K,
+    value: S3SyncSettings[K]
+  ) => {
+    const newS3Settings: S3SyncSettings = {
+      ...s3SettingsRef.current,
+      [key]: value,
+    };
+
+    // 只有当修改配置参数（非 enabled、lastConnectionSuccess、enablePullToSync）时才清除连接状态
+    if (
+      key !== 'enabled' &&
+      key !== 'lastConnectionSuccess' &&
+      key !== 'enablePullToSync'
+    ) {
+      newS3Settings.lastConnectionSuccess = false;
+    }
+
+    // 更新 ref 以便下次调用使用最新状态
+    s3SettingsRef.current = newS3Settings;
+    setS3Settings(newS3Settings);
+    handleChange('s3Sync', newS3Settings);
+  };
+
+  // WebDAV 设置变更处理 - 使用函数式更新避免状态竞态
+  const webdavSettingsRef = useRef(webdavSettings);
+
+  useEffect(() => {
+    webdavSettingsRef.current = webdavSettings;
+  }, [webdavSettings]);
+
+  const handleWebDAVSettingChange = <K extends keyof WebDAVSyncSettings>(
+    key: K,
+    value: WebDAVSyncSettings[K]
+  ) => {
+    const newWebDAVSettings: WebDAVSyncSettings = {
+      ...webdavSettingsRef.current,
+      [key]: value,
+    };
+
+    // 只有当修改配置参数（非 enabled、lastConnectionSuccess、enablePullToSync）时才清除连接状态
+    if (
+      key !== 'enabled' &&
+      key !== 'lastConnectionSuccess' &&
+      key !== 'enablePullToSync'
+    ) {
+      newWebDAVSettings.lastConnectionSuccess = false;
+    }
+
+    // 更新 ref 以便下次调用使用最新状态
+    webdavSettingsRef.current = newWebDAVSettings;
+    setWebDAVSettings(newWebDAVSettings);
+    handleChange('webdavSync', newWebDAVSettings);
+  };
+
+  // Supabase 设置变更处理
+  const supabaseSettingsRef = useRef(supabaseSettings);
+
+  useEffect(() => {
+    supabaseSettingsRef.current = supabaseSettings;
+  }, [supabaseSettings]);
+
+  const handleSupabaseSettingChange = <K extends keyof SupabaseSyncSettings>(
+    key: K,
+    value: SupabaseSyncSettings[K]
+  ) => {
+    const newSupabaseSettings: SupabaseSyncSettings = {
+      ...supabaseSettingsRef.current,
+      [key]: value,
+    };
+
+    // 只有当修改配置参数（非 enabled 和 lastConnectionSuccess）时才清除连接状态
+    if (key !== 'enabled' && key !== 'lastConnectionSuccess') {
+      newSupabaseSettings.lastConnectionSuccess = false;
+    }
+
+    // 更新 ref 以便下次调用使用最新状态
+    supabaseSettingsRef.current = newSupabaseSettings;
+    setSupabaseSettings(newSupabaseSettings);
+    handleChange('supabaseSync', newSupabaseSettings);
+  };
+
+  /**
+   * 切换云同步类型
+   * 同时更新对应服务的 enabled 状态，确保 StorageProvider 能正确识别
+   */
+  const switchSyncType = useCallback(
+    (type: CloudSyncType) => {
+      setActiveSyncType(type);
+
+      (async () => {
+        const nextBackupProvider: ManualSyncProvider =
+          type === 'supabase' &&
+          (syncType === 's3' || syncType === 'webdav') &&
+          supabaseBackupProvider === 'none'
+            ? syncType
+            : supabaseBackupProvider;
+
+        // 如果之前是 Supabase，现在切走，断开连接
+        if (syncType === 'supabase' && type !== 'supabase') {
+          try {
+            const [{ getRealtimeSyncService }, { useSyncStatusStore }] =
+              await Promise.all([
+                import('@/lib/supabase/realtime'),
+                import('@/lib/stores/syncStatusStore'),
+              ]);
+            await getRealtimeSyncService().disconnect();
+
+            useSyncStatusStore.setState({
+              realtimeStatus: 'disconnected',
+              realtimeEnabled: false,
+              pendingChangesCount: 0,
+              isInitialSyncing: false,
+            });
+          } catch (e) {
+            console.error('断开同步连接失败:', e);
+          }
+        }
+
+        // 如果切换到 Supabase，确保其 enabled 为 true
+        if (type === 'supabase') {
+          const newSettings = { ...supabaseSettingsRef.current, enabled: true };
+          supabaseSettingsRef.current = newSettings;
+          setSupabaseSettings(newSettings);
+          await handleChange('supabaseSync', newSettings);
+
+          if (nextBackupProvider !== supabaseBackupProvider) {
+            setSupabaseBackupProvider(nextBackupProvider);
+            await handleChange('supabaseBackupProvider', nextBackupProvider);
+          }
+        }
+        // 如果切换到 S3
+        else if (type === 's3') {
+          const newSettings = { ...s3SettingsRef.current, enabled: true };
+          s3SettingsRef.current = newSettings;
+          setS3Settings(newSettings);
+          await handleChange('s3Sync', newSettings);
+        }
+        // 如果切换到 WebDAV
+        else if (type === 'webdav') {
+          const newSettings = { ...webdavSettingsRef.current, enabled: true };
+          webdavSettingsRef.current = newSettings;
+          setWebDAVSettings(newSettings);
+          await handleChange('webdavSync', newSettings);
+        }
+
+        await handleChange('activeSyncType', type);
+      })();
+
+      if (settings.hapticFeedback) {
+        hapticsUtils.light();
+      }
+    },
+    [syncType, supabaseBackupProvider, settings.hapticFeedback, handleChange]
+  );
+
+  const switchSupabaseBackupProvider = useCallback(
+    (provider: ManualSyncProvider) => {
+      setSupabaseBackupProvider(provider);
+
+      void (async () => {
+        if (provider === 's3') {
+          const newSettings = { ...s3SettingsRef.current, enabled: true };
+          s3SettingsRef.current = newSettings;
+          setS3Settings(newSettings);
+          await handleChange('s3Sync', newSettings);
+        } else if (provider === 'webdav') {
+          const newSettings = { ...webdavSettingsRef.current, enabled: true };
+          webdavSettingsRef.current = newSettings;
+          setWebDAVSettings(newSettings);
+          await handleChange('webdavSync', newSettings);
+        }
+
+        await handleChange('supabaseBackupProvider', provider);
+      })();
+
+      if (settings.hapticFeedback) {
+        hapticsUtils.light();
+      }
+    },
+    [handleChange, settings.hapticFeedback]
+  );
+
+  const selectedManualSyncType =
+    getSelectedManualSyncProvider(resolvedSyncSettings);
+  const isManualSyncConnected =
+    getConnectedManualSyncProvider(resolvedSyncSettings) !== 'none';
+  const isManualPullToSyncEnabled = isPullToSyncEnabled(resolvedSyncSettings);
+
+  const handlePullToSyncSettingChange = (enabled: boolean) => {
+    if (selectedManualSyncType === 's3') {
+      handleS3SettingChange('enablePullToSync', enabled);
+    } else if (selectedManualSyncType === 'webdav') {
+      handleWebDAVSettingChange('enablePullToSync', enabled);
+    }
+
+    if (settings.hapticFeedback) {
+      hapticsUtils.light();
+    }
+  };
+
+  const renderManualSyncSection = () => {
+    if (selectedManualSyncType === 's3') {
+      return (
+        <S3SyncSection
+          settings={s3Settings}
+          enabled={true}
+          hapticFeedback={settings.hapticFeedback}
+          onSettingChange={handleS3SettingChange}
+          onSyncComplete={onDataChange}
+          onEnable={() =>
+            syncType === 'supabase'
+              ? switchSupabaseBackupProvider('s3')
+              : switchSyncType('s3')
+          }
+        />
+      );
+    }
+
+    if (selectedManualSyncType === 'webdav') {
+      return (
+        <WebDAVSyncSection
+          settings={webdavSettings}
+          enabled={true}
+          hapticFeedback={settings.hapticFeedback}
+          onSettingChange={handleWebDAVSettingChange}
+          onSyncComplete={onDataChange}
+          onEnable={() =>
+            syncType === 'supabase'
+              ? switchSupabaseBackupProvider('webdav')
+              : switchSyncType('webdav')
+          }
+        />
+      );
+    }
+
+    return null;
+  };
+
+  // 备份提醒设置变更
+  const handleBackupReminderChange = async (enabled: boolean) => {
+    try {
+      await BackupReminderUtils.setEnabled(enabled);
+      const updatedSettings = await BackupReminderUtils.getSettings();
+      setBackupReminderSettings(updatedSettings);
+      const nextText = await BackupReminderUtils.getNextReminderText();
+      setNextReminderText(nextText);
+      if (settings.hapticFeedback) hapticsUtils.light();
+    } catch (error) {
+      console.error('更新备份提醒设置失败:', error);
+    }
+  };
+
+  const handleBackupIntervalChange = async (
+    interval: BackupReminderInterval
+  ) => {
+    try {
+      await BackupReminderUtils.updateInterval(interval);
+      const updatedSettings = await BackupReminderUtils.getSettings();
+      setBackupReminderSettings(updatedSettings);
+      const nextText = await BackupReminderUtils.getNextReminderText();
+      setNextReminderText(nextText);
+      if (settings.hapticFeedback) hapticsUtils.light();
+    } catch (error) {
+      console.error('更新备份提醒间隔失败:', error);
+    }
+  };
+
+  // 请求持久化存储
+  const handleRequestPersist = async () => {
+    if (isNativePlatform || !isPWA || !isPersistentStorageSupported()) {
+      return;
+    }
+
+    setIsRequestingPersist(true);
+    try {
+      const granted = await PersistentStorageManager.requestPersist();
+      setIsPersisted(granted);
+
+      if (settings.hapticFeedback) {
+        hapticsUtils.light();
+      }
+
+      // 刷新存储估算
+      const estimate = await PersistentStorageManager.getEstimate(true);
+      setStorageEstimate(estimate);
+    } catch (error) {
+      console.error('请求持久化存储失败:', error);
+    } finally {
+      setIsRequestingPersist(false);
+    }
+  };
+
+  const highlightedSettingId = useScrollToHighlightedSetting(
+    `${syncType}:${supabaseBackupProvider}:${backupReminderSettings?.enabled ?? false}:${isPersisted}:${isManualSyncConnected}`
+  );
+  const getSearchHighlightClass = React.useCallback(
+    (label: string) =>
+      highlightedSettingId === makeSettingRowSearchId(label)
+        ? 'bg-neutral-200/70 dark:bg-neutral-700/45'
+        : '',
+    [highlightedSettingId]
+  );
+
+  return (
+    <SettingPage title="数据与备份" isVisible={isVisible} onClose={handleClose}>
+      {/* 云同步设置组 */}
+      <div className="-mt-4 px-6 py-4">
+        <h3 className="mb-3 text-sm font-medium tracking-wider text-neutral-500 uppercase dark:text-neutral-400">
+          云同步
+        </h3>
+
+        <div className="space-y-3">
+          <SelectionDropdown
+            label="同步服务"
+            value={syncType}
+            valueLabel={getCloudProviderLabel(syncType)}
+            isOpen={showSyncTypeDropdown}
+            options={[
+              { value: 'none', label: getCloudProviderLabel('none') },
+              { value: 'webdav', label: getCloudProviderLabel('webdav') },
+              { value: 's3', label: getCloudProviderLabel('s3') },
+              { value: 'supabase', label: getCloudProviderLabel('supabase') },
+            ]}
+            onToggle={() => setShowSyncTypeDropdown(prev => !prev)}
+            onSelect={value => {
+              switchSyncType(value as CloudSyncType);
+              setShowSyncTypeDropdown(false);
+            }}
+          />
+
+          {syncType === 'supabase' && (
+            <SupabaseSyncSection
+              settings={supabaseSettings}
+              enabled={true}
+              hapticFeedback={settings.hapticFeedback}
+              onSettingChange={handleSupabaseSettingChange}
+              onSyncComplete={onDataChange}
+              onEnable={() => switchSyncType('supabase')}
+            />
+          )}
+
+          {syncType !== 'supabase' && renderManualSyncSection()}
+
+          {syncType !== 'supabase' &&
+            selectedManualSyncType === 'webdav' &&
+            !webdavSettings.lastConnectionSuccess && (
+              <button
+                type="button"
+                data-settings-search-id={makeSettingRowSearchId('引导式配置')}
+                onClick={() => setShowWebDAVTutorial(true)}
+                className={`flex w-full items-center justify-between rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${getSearchHighlightClass('引导式配置')}`}
+              >
+                <span>引导式配置（推荐新手）</span>
+                <ChevronRight className="h-4 w-4 text-neutral-400" />
+              </button>
+            )}
+
+          {syncType !== 'supabase' &&
+            supportsPullToSync &&
+            isManualSyncConnected && (
+              <div
+                data-settings-search-id={makeSettingRowSearchId('下拉上传')}
+                className={`flex items-center justify-between rounded bg-neutral-100 px-4 py-3 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('下拉上传')}`}
+              >
+                <div>
+                  <div className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                    下拉上传
+                  </div>
+                  <div className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+                    在导航栏下拉可快速上传数据
+                  </div>
+                </div>
+                <label className="relative inline-flex cursor-pointer items-center">
+                  <input
+                    type="checkbox"
+                    checked={isManualPullToSyncEnabled}
+                    onChange={e =>
+                      handlePullToSyncSettingChange(e.target.checked)
+                    }
+                    className="peer sr-only"
+                  />
+                  <div className="peer h-6 w-11 rounded-full bg-neutral-200 peer-checked:bg-neutral-600 after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full dark:bg-neutral-700 dark:peer-checked:bg-neutral-500"></div>
+                </label>
+              </div>
+            )}
+        </div>
+      </div>
+
+      {syncType === 'supabase' && (
+        <div className="px-6 py-4">
+          <h3 className="mb-3 text-sm font-medium tracking-wider text-neutral-500 uppercase dark:text-neutral-400">
+            手动备份
+          </h3>
+
+          <div className="space-y-3">
+            <SelectionDropdown
+              label="备份服务"
+              value={supabaseBackupProvider}
+              valueLabel={getCloudProviderLabel(supabaseBackupProvider)}
+              isOpen={showSupabaseBackupDropdown}
+              options={[
+                { value: 'none', label: getCloudProviderLabel('none') },
+                { value: 'webdav', label: getCloudProviderLabel('webdav') },
+                { value: 's3', label: getCloudProviderLabel('s3') },
+              ]}
+              onToggle={() => setShowSupabaseBackupDropdown(prev => !prev)}
+              onSelect={value => {
+                switchSupabaseBackupProvider(value as ManualSyncProvider);
+                setShowSupabaseBackupDropdown(false);
+              }}
+            />
+
+            {supabaseBackupProvider !== 'none' && renderManualSyncSection()}
+
+            {selectedManualSyncType === 'webdav' &&
+              !webdavSettings.lastConnectionSuccess && (
+                <button
+                  type="button"
+                  data-settings-search-id={makeSettingRowSearchId('引导式配置')}
+                  onClick={() => setShowWebDAVTutorial(true)}
+                  className={`flex w-full items-center justify-between rounded bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${getSearchHighlightClass('引导式配置')}`}
+                >
+                  <span>引导式配置（推荐新手）</span>
+                  <ChevronRight className="h-4 w-4 text-neutral-400" />
+                </button>
+              )}
+
+            {supportsPullToSync && isManualSyncConnected && (
+              <div
+                data-settings-search-id={makeSettingRowSearchId('下拉上传')}
+                className={`flex items-center justify-between rounded bg-neutral-100 px-4 py-3 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('下拉上传')}`}
+              >
+                <div>
+                  <div className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                    下拉上传
+                  </div>
+                  <div className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+                    在导航栏下拉可快速上传数据
+                  </div>
+                </div>
+                <label className="relative inline-flex cursor-pointer items-center">
+                  <input
+                    type="checkbox"
+                    checked={isManualPullToSyncEnabled}
+                    onChange={e =>
+                      handlePullToSyncSettingChange(e.target.checked)
+                    }
+                    className="peer sr-only"
+                  />
+                  <div className="peer h-6 w-11 rounded-full bg-neutral-200 peer-checked:bg-neutral-600 after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full dark:bg-neutral-700 dark:peer-checked:bg-neutral-500"></div>
+                </label>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {!isPersisted && (
+        <div className="px-6 py-4">
+          <h3 className="mb-3 text-sm font-medium tracking-wider text-neutral-500 uppercase dark:text-neutral-400">
+            数据持久化
+          </h3>
+
+          <div className="space-y-3">
+            {!isPWA && !isNativePlatform ? (
+              <div
+                data-settings-search-id={makeSettingRowSearchId('持久化存储')}
+                className={`rounded bg-neutral-100 px-4 py-3 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('持久化存储')}`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                    持久化存储
+                  </div>
+                  <label className="relative inline-flex cursor-pointer items-center">
+                    <input
+                      type="checkbox"
+                      aria-label="持久化存储不可用"
+                      checked={false}
+                      disabled={true}
+                      readOnly
+                      className="peer sr-only"
+                    />
+                    <div className="peer h-6 w-11 rounded-full bg-neutral-200 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] dark:bg-neutral-700"></div>
+                  </label>
+                </div>
+
+                <div className="my-3 border-t border-neutral-200/50 dark:border-neutral-700"></div>
+
+                <div className="text-xs text-neutral-600 dark:text-neutral-400">
+                  <p>
+                    请将本应用添加到主屏幕以启用 PWA
+                    模式，即可使用持久化存储功能。
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div
+                data-settings-search-id={makeSettingRowSearchId('持久化存储')}
+                className={`rounded bg-neutral-100 px-4 py-3 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('持久化存储')}`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                    持久化存储
+                  </div>
+                  <label className="relative inline-flex cursor-pointer items-center">
+                    <input
+                      type="checkbox"
+                      aria-label="开启持久化存储"
+                      checked={false}
+                      onChange={handleRequestPersist}
+                      disabled={isRequestingPersist}
+                      className="peer sr-only"
+                    />
+                    <div className="peer h-6 w-11 rounded-full bg-neutral-200 peer-checked:bg-neutral-600 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full dark:bg-neutral-700 dark:peer-checked:bg-neutral-500"></div>
+                  </label>
+                </div>
+
+                <div className="my-3 border-t border-neutral-200/50 dark:border-neutral-700"></div>
+
+                <div className="text-xs text-neutral-600 dark:text-neutral-400">
+                  <p>
+                    开启后可保护应用数据不被浏览器自动清理。建议经常使用本应用的用户开启此功能，以确保数据安全。
+                  </p>
+                  {storageEstimate && (
+                    <p className="mt-2">
+                      当前已使用 {storageEstimate.usageFormatted} /{' '}
+                      {storageEstimate.quotaFormatted}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* 备份提醒设置组 */}
+      {backupReminderSettings && (
+        <div className="px-6 py-4">
+          <h3 className="mb-3 text-sm font-medium tracking-wider text-neutral-500 uppercase dark:text-neutral-400">
+            备份提醒
+          </h3>
+
+          <div className="space-y-3">
+            {/* 备份提醒开关 */}
+            <div
+              data-settings-search-id={makeSettingRowSearchId('备份提醒')}
+              className={`flex items-center justify-between rounded bg-neutral-100 px-4 py-3 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('备份提醒')}`}
+            >
+              <div className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                备份提醒
+              </div>
+              <label className="relative inline-flex cursor-pointer items-center">
+                <input
+                  type="checkbox"
+                  checked={backupReminderSettings.enabled}
+                  onChange={e => {
+                    handleBackupReminderChange(e.target.checked);
+                  }}
+                  className="peer sr-only"
+                />
+                <div className="peer h-6 w-11 rounded-full bg-neutral-200 peer-checked:bg-neutral-600 after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full dark:bg-neutral-700 dark:peer-checked:bg-neutral-500"></div>
+              </label>
+            </div>
+
+            {/* 展开的频率设置 */}
+            {backupReminderSettings.enabled && (
+              <div
+                data-settings-search-id={makeSettingRowSearchId('提醒频率')}
+                className={`space-y-2 rounded bg-neutral-100 p-4 transition-colors dark:bg-neutral-800 ${getSearchHighlightClass('提醒频率')}`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                    提醒频率
+                  </div>
+                  {nextReminderText && (
+                    <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                      {nextReminderText}
+                    </div>
+                  )}
+                </div>
+                <SettingSelector
+                  value={backupReminderSettings.interval.toString()}
+                  options={[
+                    {
+                      value: BACKUP_REMINDER_INTERVALS.WEEKLY.toString(),
+                      label: '每周',
+                    },
+                    {
+                      value: BACKUP_REMINDER_INTERVALS.BIWEEKLY.toString(),
+                      label: '每两周',
+                    },
+                    {
+                      value: BACKUP_REMINDER_INTERVALS.MONTHLY.toString(),
+                      label: '每月',
+                    },
+                  ]}
+                  onChange={value =>
+                    handleBackupIntervalChange(
+                      parseInt(value) as BackupReminderInterval
+                    )
+                  }
+                  ariaLabel="备份提醒频率"
+                  className="w-full"
+                  fullWidth
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* 数据管理设置组 */}
+      <DataManagementSection onDataChange={onDataChange} />
+
+      {/* WebDAV 配置教程 */}
+      <WebDAVTutorialModal
+        isOpen={showWebDAVTutorial}
+        onClose={() => setShowWebDAVTutorial(false)}
+        onComplete={(config: {
+          url: string;
+          username: string;
+          password: string;
+        }) => {
+          // 更新 WebDAV 配置（不修改 enabled，只更新配置和连接状态）
+          const newWebDAVSettings: WebDAVSyncSettings = {
+            ...webdavSettings,
+            url: config.url,
+            username: config.username,
+            password: config.password,
+            lastConnectionSuccess: true,
+          };
+
+          // 立即更新本地 state
+          setWebDAVSettings(newWebDAVSettings);
+          webdavSettingsRef.current = newWebDAVSettings;
+
+          if (syncType !== 'supabase') {
+            setActiveSyncType('webdav');
+          }
+
+          // 异步持久化
+          if (syncType !== 'supabase') {
+            handleChange('activeSyncType', 'webdav');
+          } else {
+            handleChange('supabaseBackupProvider', 'webdav');
+          }
+          handleChange('webdavSync', newWebDAVSettings);
+
+          if (settings.hapticFeedback) hapticsUtils.light();
+        }}
+      />
+    </SettingPage>
+  );
+};
+
+export default DataSettings;

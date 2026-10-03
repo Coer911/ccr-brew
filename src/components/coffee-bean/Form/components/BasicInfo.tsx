@@ -1,0 +1,686 @@
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import {
+  Camera,
+  Image as ImageIcon,
+  X,
+  CornerDownRight,
+  Plus,
+} from 'lucide-react';
+import AutocompleteInput from '@/components/common/forms/AutocompleteInput';
+import { ExtendedCoffeeBean } from '../types';
+import { pageVariants, pageTransition } from '../constants';
+import { DatePicker } from '@/components/common/ui/DatePicker';
+import { captureImage } from '@/lib/utils/imageCapture';
+import {
+  getRoastProfileFromAmounts,
+  getRoastProfileFromMoistureLoss,
+} from '@/lib/utils/roastProfileUtils';
+import { usePresetSuggestions } from '../hooks/usePresetSuggestions';
+import { useRoastLevelSuggestions } from '../hooks/useCoffeeBeanFieldSuggestions';
+
+interface BasicInfoProps {
+  bean: Omit<ExtendedCoffeeBean, 'id' | 'timestamp'>;
+  onBeanChange: (
+    field: keyof Omit<ExtendedCoffeeBean, 'id' | 'timestamp'>
+  ) => (value: string) => void;
+  onImageUpload: (file: File) => void;
+  onBackImageUpload?: (file: File) => void;
+  editingRemaining: string | null;
+  validateRemaining: () => void;
+  handleCapacityBlur?: () => void;
+  toggleInTransitState: () => void;
+  isEdit?: boolean;
+  onRepurchase?: () => void;
+  /** 识别时使用的原始图片 base64（用于在表单中显示） */
+  recognitionImage?: string | null;
+  /** 容量变化时的回调，用于触发类型推断 */
+  onCapacityChange?: (capacity: string) => void;
+  /** 烘焙商图标（自动从烘焙商名称匹配获取） */
+  roasterLogo?: string | null;
+  /** 是否启用烘焙商字段 */
+  roasterFieldEnabled?: boolean;
+  /** 烘焙商建议列表 */
+  roasterSuggestions?: string[];
+  /** 当前是否处于“生豆转熟豆”烘焙流程（来源生豆ID） */
+  roastingSourceBeanId?: string | null;
+}
+
+// 判断是否为生豆
+const isGreenBean = (
+  bean: Omit<ExtendedCoffeeBean, 'id' | 'timestamp'>
+): boolean => {
+  return bean.beanState === 'green';
+};
+
+// 判断是否为“生豆转熟豆”的烘焙流程
+const isRoastingConversion = (
+  bean: Omit<ExtendedCoffeeBean, 'id' | 'timestamp'>,
+  roastingSourceBeanId?: string | null
+): boolean => {
+  return (
+    !!roastingSourceBeanId &&
+    bean.beanState === 'roasted' &&
+    !!bean.sourceGreenBeanId &&
+    bean.sourceGreenBeanId === roastingSourceBeanId
+  );
+};
+
+const BasicInfo: React.FC<BasicInfoProps> = ({
+  bean,
+  onBeanChange,
+  onImageUpload,
+  onBackImageUpload,
+  editingRemaining,
+  validateRemaining,
+  handleCapacityBlur,
+  toggleInTransitState,
+  isEdit = false,
+  onRepurchase,
+  recognitionImage,
+  onCapacityChange,
+  roasterLogo,
+  roasterFieldEnabled = false,
+  roasterSuggestions = [],
+  roastingSourceBeanId,
+}) => {
+  // 处理容量和剩余容量的状态
+  const [capacityValue, setCapacityValue] = useState('');
+  const [remainingValue, setRemainingValue] = useState('');
+  // 处理脱水率状态
+  const [moistureLoss, setMoistureLoss] = useState('');
+  const [isMoistureFocused, setIsMoistureFocused] = useState(false);
+  const roasterPresetSuggestions = usePresetSuggestions(
+    'roasters',
+    roasterSuggestions
+  );
+  const roastLevelSuggestions = useRoastLevelSuggestions();
+
+  const updateRoastLevel = (value: string) => {
+    if (bean.roastLevel !== value) {
+      onBeanChange('roastLevel')(value);
+    }
+  };
+
+  const syncRoastProfileFromAmounts = (capacity: string, remaining: string) => {
+    const roastProfile = getRoastProfileFromAmounts(capacity, remaining);
+    updateRoastLevel(roastProfile.roastLevel);
+  };
+
+  const syncRoastProfileFromMoistureLoss = (
+    nextMoistureLoss: string,
+    capacity: string,
+    normalizeDisplay: boolean = false
+  ) => {
+    const roastProfile = getRoastProfileFromMoistureLoss(
+      nextMoistureLoss,
+      capacity
+    );
+
+    if (normalizeDisplay) {
+      setMoistureLoss(
+        roastProfile.moistureLoss || nextMoistureLoss.replace(/[^\d.]/g, '')
+      );
+    }
+    updateRoastLevel(roastProfile.roastLevel);
+
+    if (roastProfile.roastedAmount) {
+      setRemainingValue(roastProfile.roastedAmount);
+      onBeanChange('remaining')(roastProfile.roastedAmount);
+    }
+  };
+
+  // 初始化和同步容量值
+  useEffect(() => {
+    setCapacityValue(bean.capacity || '');
+    setRemainingValue(
+      editingRemaining !== null ? editingRemaining : bean.remaining || ''
+    );
+  }, [bean.capacity, bean.remaining, editingRemaining]);
+
+  // 判断是否处于“生豆转熟豆”的烘焙流程（用于 UI 和逻辑控制）
+  const isInRoastingMode = isRoastingConversion(bean, roastingSourceBeanId);
+
+  const derivedMoistureLoss = isInRoastingMode
+    ? getRoastProfileFromAmounts(capacityValue, remainingValue).moistureLoss
+    : '';
+  const displayedMoistureLoss = isMoistureFocused
+    ? moistureLoss
+    : derivedMoistureLoss;
+
+  // 处理日期变化 - 根据豆子状态决定更新哪个字段
+  const handleDateChange = (date: Date) => {
+    // 使用本地时间格式化为 YYYY-MM-DD，避免时区问题
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+
+    // 生豆使用 purchaseDate，熟豆使用 roastDate
+    if (isGreenBean(bean)) {
+      onBeanChange('purchaseDate')(formattedDate);
+    } else {
+      onBeanChange('roastDate')(formattedDate);
+    }
+  };
+
+  // 解析日期字符串为Date对象 - 根据豆子状态获取对应日期
+  const parseDisplayDate = (): Date | undefined => {
+    const dateStr = isGreenBean(bean) ? bean.purchaseDate : bean.roastDate;
+    if (!dateStr) return undefined;
+    // 如果是完整的日期格式 YYYY-MM-DD
+    if (dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      // 使用本地时间创建Date对象，避免时区偏移
+      const [year, month, day] = dateStr.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    }
+    // 如果只是年份，返回undefined让DatePicker显示placeholder
+    return undefined;
+  };
+
+  // 获取日期标签和占位符文本
+  const getDateLabelAndPlaceholder = () => {
+    if (isGreenBean(bean)) {
+      return { label: '购买日期', placeholder: '选择购买日期' };
+    }
+    return { label: '烘焙日期', placeholder: '选择烘焙日期' };
+  };
+
+  const { label: dateLabel, placeholder: datePlaceholder } =
+    getDateLabelAndPlaceholder();
+
+  // 处理容量变化 - 只更新本地状态，不触发主表单更新
+  const handleCapacityChange = (value: string) => {
+    setCapacityValue(value);
+
+    if (isInRoastingMode && remainingValue) {
+      syncRoastProfileFromAmounts(value, remainingValue);
+    }
+  };
+
+  // 处理剩余容量变化 - 只更新本地状态，不触发烘焙度计算
+  const handleRemainingChange = (value: string) => {
+    // 确保剩余容量不大于总容量
+    if (capacityValue && parseFloat(value) > parseFloat(capacityValue)) {
+      value = capacityValue;
+    }
+    setRemainingValue(value);
+    onBeanChange('remaining')(value);
+
+    if (isInRoastingMode) {
+      syncRoastProfileFromAmounts(capacityValue, value);
+    }
+  };
+
+  // 处理剩余容量输入框失焦 - 此时才计算脱水率和烘焙度
+  const handleRemainingBlur = () => {
+    if (isInRoastingMode) {
+      syncRoastProfileFromAmounts(capacityValue, remainingValue);
+    }
+  };
+
+  // 处理脱水率手动输入变化
+  const handleMoistureChange = (value: string) => {
+    setMoistureLoss(value);
+
+    if (isInRoastingMode) {
+      syncRoastProfileFromMoistureLoss(value, capacityValue);
+    }
+  };
+
+  // 处理脱水率输入框失焦
+  const handleMoistureBlur = () => {
+    setIsMoistureFocused(false);
+
+    if (isInRoastingMode) {
+      syncRoastProfileFromMoistureLoss(moistureLoss, capacityValue, true);
+    }
+  };
+
+  // 处理图片选择逻辑 (相册或拍照)
+  const handleImageSelect = async (
+    source: 'camera' | 'gallery',
+    imageType: 'front' | 'back' = 'front'
+  ) => {
+    try {
+      // 获取图片（已经是base64格式）
+      const result = await captureImage({ source });
+
+      // 将 dataUrl 转换为 File 对象并传递给父组件处理
+      const response = await fetch(result.dataUrl);
+      const blob = await response.blob();
+      const file = new File([blob], `image.${result.format}`, {
+        type: `image/${result.format}`,
+      });
+
+      // 根据类型使用不同的回调函数处理文件（父组件会进行压缩）
+      if (imageType === 'back' && onBackImageUpload) {
+        onBackImageUpload(file);
+      } else {
+        onImageUpload(file);
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('打开相机/相册失败:', error);
+      }
+    }
+  };
+
+  const renderAddSideImageButton = (imageType: 'front' | 'back') => {
+    const label = imageType === 'front' ? '正面图' : '背面图';
+    const title = imageType === 'front' ? '添加正面图片' : '添加背面图片';
+
+    return (
+      <button
+        type="button"
+        onClick={() => handleImageSelect('gallery', imageType)}
+        className="flex h-16 w-16 shrink-0 items-center justify-center rounded bg-neutral-200/40 transition-colors hover:bg-neutral-200/60 dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
+        title={title}
+      >
+        <span className="text-[11px] font-medium text-neutral-300 dark:text-neutral-600">
+          {label}
+        </span>
+      </button>
+    );
+  };
+
+  return (
+    <motion.div
+      key="basic-step"
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={pageVariants}
+      transition={pageTransition}
+      className="mx-auto flex h-full max-w-md flex-col items-center justify-center space-y-8"
+    >
+      <div className="w-full space-y-2">
+        <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
+          咖啡豆图片
+        </label>
+        {/* 图片选择区 - 多种状态，烘焙商图标仅用于显示，不存储到数据 */}
+        <div className="flex w-full items-end gap-2">
+          {bean.image && bean.backImage ? (
+            /* 状态: 用户正面图 + 用户背面图 */
+            <>
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded bg-neutral-200/40 dark:bg-neutral-800/60">
+                <Image
+                  src={bean.image}
+                  alt="咖啡豆正面"
+                  className="object-cover"
+                  fill
+                  sizes="64px"
+                />
+                <button
+                  type="button"
+                  onClick={() => onBeanChange('image')('')}
+                  className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-neutral-800/80 text-white transition-colors hover:bg-red-500 dark:bg-neutral-200/80 dark:text-neutral-800 dark:hover:bg-red-500 dark:hover:text-white"
+                >
+                  <X className="h-2.5 w-2.5" />
+                </button>
+              </div>
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded bg-neutral-200/40 dark:bg-neutral-800/60">
+                <Image
+                  src={bean.backImage}
+                  alt="咖啡豆背面"
+                  className="object-cover"
+                  fill
+                  sizes="64px"
+                />
+                <button
+                  type="button"
+                  onClick={() => onBeanChange('backImage')('')}
+                  className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-neutral-800/80 text-white transition-colors hover:bg-red-500 dark:bg-neutral-200/80 dark:text-neutral-800 dark:hover:bg-red-500 dark:hover:text-white"
+                >
+                  <X className="h-2.5 w-2.5" />
+                </button>
+              </div>
+            </>
+          ) : bean.image && !bean.backImage ? (
+            /* 状态: 用户正面图 + 添加背面按钮 */
+            <>
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded bg-neutral-200/40 dark:bg-neutral-800/60">
+                <Image
+                  src={bean.image}
+                  alt="咖啡豆正面"
+                  className="object-cover"
+                  fill
+                  sizes="64px"
+                />
+                <button
+                  type="button"
+                  onClick={() => onBeanChange('image')('')}
+                  className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-neutral-800/80 text-white transition-colors hover:bg-red-500 dark:bg-neutral-200/80 dark:text-neutral-800 dark:hover:bg-red-500 dark:hover:text-white"
+                >
+                  <X className="h-2.5 w-2.5" />
+                </button>
+              </div>
+              {renderAddSideImageButton('back')}
+            </>
+          ) : !bean.image && roasterLogo ? (
+            /* 状态: 烘焙商图标作为底图（半透明，提示可替换） */
+            <>
+              <div
+                className="relative h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded bg-neutral-200/40 dark:bg-neutral-800/60"
+                onClick={() => handleImageSelect('gallery', 'front')}
+                title="点击替换为自定义图片"
+              >
+                <Image
+                  src={roasterLogo}
+                  alt="烘焙商图标"
+                  className="object-cover opacity-40"
+                  fill
+                  sizes="64px"
+                />
+                {/* 居中的相册图标，始终显示 */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <ImageIcon className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
+                </div>
+              </div>
+              {bean.backImage ? (
+                /* 有背面图 */
+                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded bg-neutral-200/40 dark:bg-neutral-800/60">
+                  <Image
+                    src={bean.backImage}
+                    alt="咖啡豆背面"
+                    className="object-cover"
+                    fill
+                    sizes="64px"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => onBeanChange('backImage')('')}
+                    className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-neutral-800/80 text-white transition-colors hover:bg-red-500 dark:bg-neutral-200/80 dark:text-neutral-800 dark:hover:bg-red-500 dark:hover:text-white"
+                  >
+                    <X className="h-2.5 w-2.5" />
+                  </button>
+                </div>
+              ) : (
+                /* 无背面图，显示添加按钮 */
+                renderAddSideImageButton('back')
+              )}
+            </>
+          ) : !bean.image && bean.backImage ? (
+            /* 状态: 无正面图 + 有用户背面图 */
+            <>
+              {renderAddSideImageButton('front')}
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded bg-neutral-200/40 dark:bg-neutral-800/60">
+                <Image
+                  src={bean.backImage}
+                  alt="咖啡豆背面"
+                  className="object-cover"
+                  fill
+                  sizes="64px"
+                />
+                <button
+                  type="button"
+                  onClick={() => onBeanChange('backImage')('')}
+                  className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-neutral-800/80 text-white transition-colors hover:bg-red-500 dark:bg-neutral-200/80 dark:text-neutral-800 dark:hover:bg-red-500 dark:hover:text-white"
+                >
+                  <X className="h-2.5 w-2.5" />
+                </button>
+              </div>
+            </>
+          ) : (
+            /* 状态: 无任何图片 → 拍照 + 相册 */
+            <>
+              <button
+                type="button"
+                onClick={() => handleImageSelect('camera', 'front')}
+                className="flex h-16 w-16 shrink-0 items-center justify-center rounded bg-neutral-200/40 transition-colors hover:bg-neutral-200/60 dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
+                title="拍照"
+              >
+                <Camera className="h-5 w-5 text-neutral-300 dark:text-neutral-600" />
+              </button>
+              <button
+                type="button"
+                onClick={() => handleImageSelect('gallery', 'front')}
+                className="flex h-16 w-16 shrink-0 items-center justify-center rounded bg-neutral-200/40 transition-colors hover:bg-neutral-200/60 dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
+                title="从相册选择"
+              >
+                <ImageIcon className="h-5 w-5 text-neutral-300 dark:text-neutral-600" />
+              </button>
+            </>
+          )}
+
+          {/* 识别图片（如果有且无自定义正面图） - 点击使用此图片作为正面 */}
+          {recognitionImage && !bean.image && (
+            <button
+              type="button"
+              onClick={() => onBeanChange('image')(recognitionImage)}
+              className="group relative h-16 w-16 shrink-0 overflow-hidden rounded bg-neutral-200/40 transition-colors dark:bg-neutral-800/60"
+              title="使用识别图片作为正面"
+            >
+              <Image
+                src={recognitionImage}
+                alt="识别图片"
+                className="object-cover"
+                fill
+                sizes="64px"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-black/40">
+                <Plus className="h-6 w-6 text-white drop-shadow-md" />
+              </div>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* 烘焙商/生豆商和咖啡豆名称 */}
+      {roasterFieldEnabled ? (
+        /* 启用独立输入：两个并排的输入框 */
+        <div className="grid w-full grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
+              {isGreenBean(bean) ? '生豆商' : '烘焙商'}
+            </label>
+            <AutocompleteInput
+              value={bean.roaster || ''}
+              onChange={onBeanChange('roaster')}
+              placeholder={isGreenBean(bean) ? '生豆商名称' : '烘焙商名称'}
+              suggestions={roasterPresetSuggestions.suggestions}
+              clearable
+              inputMode="text"
+              isCustomPreset={roasterPresetSuggestions.isRemovableSuggestion}
+              onRemovePreset={roasterPresetSuggestions.removeSuggestion}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
+              咖啡豆名称 <span className="text-red-500">*</span>
+            </label>
+            <AutocompleteInput
+              value={bean.name || ''}
+              onChange={onBeanChange('name')}
+              placeholder="咖啡豆名称"
+              suggestions={[]}
+              required
+              clearable
+              inputMode="text"
+              onBlur={() => {
+                if (!bean.name?.trim()) {
+                  onBeanChange('name')('未命名咖啡豆');
+                }
+              }}
+            />
+          </div>
+        </div>
+      ) : (
+        /* 关闭独立输入：单个输入框，用户输入完整名称 */
+        <div className="w-full space-y-2">
+          <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
+            咖啡豆名称 <span className="text-red-500">*</span>{' '}
+            <span className="ml-1 text-xs text-neutral-400 dark:text-neutral-500">
+              (格式：{isGreenBean(bean) ? '生豆商' : '烘焙商'} 咖啡豆名称)
+            </span>
+          </label>
+          <AutocompleteInput
+            value={bean.name || ''}
+            onChange={onBeanChange('name')}
+            placeholder="输入咖啡豆名称"
+            suggestions={[]}
+            required
+            clearable
+            inputMode="text"
+            onBlur={() => {
+              if (!bean.name?.trim()) {
+                onBeanChange('name')('未命名咖啡豆');
+              }
+            }}
+          />
+        </div>
+      )}
+
+      <div className="grid w-full grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
+            {isInRoastingMode ? '烘焙量(g)' : '库存量(g)'}
+          </label>
+          <div className="flex w-full items-center justify-start gap-2">
+            <div className="flex-1">
+              <input
+                type="number"
+                inputMode="decimal"
+                step="0.1"
+                value={remainingValue}
+                onChange={e => handleRemainingChange(e.target.value)}
+                onBlur={() => {
+                  handleRemainingBlur();
+                  validateRemaining();
+                }}
+                placeholder={isInRoastingMode ? '熟豆量' : '剩余量'}
+                className="w-full border-b border-neutral-300 bg-transparent py-2 text-center outline-none dark:border-neutral-700"
+              />
+            </div>
+            <span className="text-neutral-300 dark:text-neutral-700">/</span>
+            <div className="flex-1">
+              <input
+                type="number"
+                inputMode="decimal"
+                step="0.1"
+                value={capacityValue}
+                onChange={e => handleCapacityChange(e.target.value)}
+                placeholder={isInRoastingMode ? '生豆量' : '总量'}
+                className="w-full border-b border-neutral-300 bg-transparent py-2 text-center outline-none dark:border-neutral-700"
+                onBlur={() => {
+                  onBeanChange('capacity')(capacityValue);
+
+                  // 烘焙模式下，如果已有剩余量，计算脱水率和烘焙度
+                  if (isInRoastingMode && remainingValue) {
+                    syncRoastProfileFromAmounts(capacityValue, remainingValue);
+                  }
+
+                  // 触发容量变化回调，用于类型推断
+                  onCapacityChange?.(capacityValue);
+
+                  // 调用主表单的失焦处理函数（用于其他逻辑）
+                  handleCapacityBlur?.();
+                }}
+              />
+            </div>
+          </div>
+
+          {/* 续购按钮 - 只在编辑模式下显示，且不在烘焙模式下显示 */}
+          {isEdit && onRepurchase && !isInRoastingMode && (
+            <button
+              type="button"
+              onClick={onRepurchase}
+              className="mt-1 flex items-center text-xs font-bold text-neutral-500 transition-colors hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200"
+              title="续购"
+            >
+              <CornerDownRight className="mr-1 h-3 w-3" />
+              续购
+            </button>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
+            {isInRoastingMode ? '脱水率' : '价格(¥)'}
+          </label>
+          {isInRoastingMode ? (
+            <div className="relative w-full">
+              <input
+                type="number"
+                inputMode="decimal"
+                step="0.1"
+                value={displayedMoistureLoss}
+                onChange={e => handleMoistureChange(e.target.value)}
+                onFocus={() => setIsMoistureFocused(true)}
+                onBlur={handleMoistureBlur}
+                placeholder="自动计算"
+                className="w-full border-b border-neutral-300 bg-transparent py-2 text-left outline-none dark:border-neutral-700"
+              />
+              <span className="absolute top-2 right-0 text-neutral-500">%</span>
+            </div>
+          ) : (
+            <AutocompleteInput
+              value={bean.price || ''}
+              onChange={onBeanChange('price')}
+              placeholder="例如：88"
+              clearable={false}
+              suggestions={[]}
+              inputType="number"
+              inputMode="decimal"
+              allowDecimal={true}
+              maxDecimalPlaces={2}
+            />
+          )}
+        </div>
+      </div>
+
+      <div className="grid w-full grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
+            烘焙度
+          </label>
+          <AutocompleteInput
+            value={bean.roastLevel || ''}
+            onChange={onBeanChange('roastLevel')}
+            placeholder="选择烘焙度"
+            suggestions={roastLevelSuggestions.suggestions}
+            readOnly
+            clearable
+            dropdownPlacement="top-start"
+            className="pr-6 text-base"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
+              {dateLabel}
+            </label>
+            {/* 在途状态按钮仅对熟豆显示 */}
+            {!isGreenBean(bean) && (
+              <button
+                type="button"
+                onClick={toggleInTransitState}
+                className={`text-xs ${bean.isInTransit ? 'text-neutral-700 dark:text-neutral-300' : 'text-neutral-600 dark:text-neutral-400'} underline`}
+              >
+                {bean.isInTransit ? '取消在途状态' : '设为在途'}
+              </button>
+            )}
+          </div>
+          <div className="relative flex w-full items-center justify-start">
+            {bean.isInTransit && !isGreenBean(bean) ? (
+              <div className="w-full border-b border-neutral-300 bg-transparent py-2 text-neutral-500 opacity-50 dark:border-neutral-700 dark:text-neutral-400">
+                在途中...
+              </div>
+            ) : (
+              <DatePicker
+                date={parseDisplayDate()}
+                onDateChange={handleDateChange}
+                placeholder={datePlaceholder}
+                className="w-full"
+              />
+            )}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+export default BasicInfo;

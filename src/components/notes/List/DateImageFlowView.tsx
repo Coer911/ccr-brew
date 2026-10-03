@@ -1,0 +1,218 @@
+'use client';
+
+import React, { useMemo } from 'react';
+import Image from 'next/image';
+import { BrewingNote } from '@/lib/core/config';
+import { formatNoteBeanDisplayName } from '@/lib/utils/beanVarietyUtils';
+import { useSettingsStore } from '@/lib/stores/settingsStore';
+import {
+  useBrewingNoteImageIds,
+  useBrewingNoteImagesWhenVisible,
+} from '@/lib/hooks/useBrewingNoteImages';
+
+interface DateImageFlowViewProps {
+  notes: BrewingNote[];
+  onNoteClick: (note: BrewingNote) => void;
+  isShareMode?: boolean;
+  selectedNotes?: string[];
+  onToggleSelect?: (noteId: string, enterShareMode?: boolean) => void;
+}
+
+interface GroupedNotes {
+  [date: string]: BrewingNote[];
+}
+
+// 中文日期格式化函数
+const formatChineseDate = (
+  timestamp: number,
+  showYear: boolean = true
+): string => {
+  const date = new Date(timestamp);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  if (showYear) {
+    return `${year}年${month}月${day}日`;
+  } else {
+    return `${month}月${day}日`;
+  }
+};
+
+// 获取日期的年份
+const getYear = (timestamp: number): number => {
+  return new Date(timestamp).getFullYear();
+};
+
+const DateImageFlowView: React.FC<DateImageFlowViewProps> = ({
+  notes,
+  onNoteClick,
+  isShareMode = false,
+  selectedNotes = [],
+  onToggleSelect,
+}) => {
+  // 获取烘焙商相关设置
+  const roasterFieldEnabled = useSettingsStore(
+    state => state.settings.roasterFieldEnabled
+  );
+  const roasterSeparator = useSettingsStore(
+    state => state.settings.roasterSeparator
+  );
+  const noteIds = useMemo(() => notes.map(note => note.id), [notes]);
+  const noteImageIds = useBrewingNoteImageIds(noteIds);
+
+  // 只显示有图片的笔记
+  const notesWithImages = useMemo(
+    () => notes.filter(note => note.image || noteImageIds.has(note.id)),
+    [noteImageIds, notes]
+  );
+
+  // 按日期分组笔记
+  const groupedNotes = useMemo(() => {
+    if (notesWithImages.length === 0) return {};
+
+    // 首先检查是否只有一个年份
+    const years = new Set(notesWithImages.map(note => getYear(note.timestamp)));
+    const showYear = years.size > 1;
+
+    const groups: GroupedNotes = {};
+
+    notesWithImages.forEach(note => {
+      const dateKey = formatChineseDate(note.timestamp, showYear);
+      if (!groups[dateKey]) {
+        groups[dateKey] = [];
+      }
+      groups[dateKey].push(note);
+    });
+
+    // 按日期排序（最新的在前）
+    const sortedGroups: GroupedNotes = {};
+    Object.keys(groups)
+      .sort((a, b) => {
+        // 获取每个组中最新的时间戳进行排序
+        const aLatest = Math.max(...groups[a].map(note => note.timestamp));
+        const bLatest = Math.max(...groups[b].map(note => note.timestamp));
+        return bLatest - aLatest;
+      })
+      .forEach(date => {
+        // 每个日期内的笔记按时间排序（最新的在前）
+        sortedGroups[date] = groups[date].sort(
+          (a, b) => b.timestamp - a.timestamp
+        );
+      });
+
+    return sortedGroups;
+  }, [notesWithImages]);
+
+  const handleNoteClick = (note: BrewingNote) => {
+    if (isShareMode && onToggleSelect) {
+      onToggleSelect(note.id, !selectedNotes.includes(note.id));
+    } else {
+      onNoteClick(note);
+    }
+  };
+
+  return (
+    <div className="pb-20">
+      {Object.entries(groupedNotes).map(([date, dateNotes]) => (
+        <div key={date}>
+          {/* 日期标题 */}
+          <div className="sticky top-0 z-10 bg-neutral-50 px-6 py-2 dark:bg-neutral-900">
+            <div className="text-xs font-medium tracking-wide text-neutral-800 dark:text-neutral-100">
+              {date}
+              {/* <span className="ml-2 text-xs text-neutral-500 dark:text-neutral-400">
+                                ({dateNotes.length} 张图片)
+                            </span> */}
+            </div>
+          </div>
+
+          {/* 该日期的图片网格 - 响应式布局 */}
+          <div className="grid grid-cols-3 gap-1 px-1 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            {dateNotes.map(note => {
+              const beanName =
+                formatNoteBeanDisplayName(note.coffeeBeanInfo, {
+                  roasterFieldEnabled,
+                  roasterSeparator,
+                }) || '未知豆子';
+              const isSelected = selectedNotes.includes(note.id);
+
+              return (
+                <div
+                  key={note.id}
+                  className={`relative aspect-square cursor-pointer ${
+                    isShareMode && isSelected
+                      ? 'ring-2 ring-blue-500 ring-offset-1'
+                      : ''
+                  }`}
+                  onClick={() => handleNoteClick(note)}
+                >
+                  {/* 图片容器 */}
+                  <div className="relative h-full w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                    <DateFlowNoteImage note={note} alt={beanName} />
+                  </div>
+
+                  {/* 分享模式下的选择指示器 */}
+                  {isShareMode && (
+                    <div className="absolute top-1 right-1">
+                      <div
+                        className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
+                          isSelected
+                            ? 'border-blue-500 bg-blue-500'
+                            : 'border-neutral-300 bg-white dark:border-neutral-600 dark:bg-neutral-800'
+                        }`}
+                      >
+                        {isSelected && (
+                          <svg
+                            className="h-3 w-3 text-white"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const DateFlowNoteImage: React.FC<{ note: BrewingNote; alt: string }> = ({
+  note,
+  alt,
+}) => {
+  const fallback = React.useMemo(() => {
+    if (note.images && note.images.length > 0) return note.images;
+    if (note.image) return [note.image];
+    return [];
+  }, [note.images, note.image]);
+  const { ref, images } = useBrewingNoteImagesWhenVisible(note.id, fallback);
+  const image = images[0];
+
+  return (
+    <div ref={ref} className="absolute inset-0">
+      {image ? (
+        <Image
+          src={image}
+          alt={alt}
+          fill
+          className="object-cover"
+          sizes="(min-width: 1280px) 16vw, (min-width: 1024px) 20vw, (min-width: 768px) 25vw, 33vw"
+          loading="lazy"
+        />
+      ) : null}
+    </div>
+  );
+};
+
+export default DateImageFlowView;

@@ -1,0 +1,543 @@
+'use client';
+
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useMemo,
+} from 'react';
+import { createPortal } from 'react-dom';
+import { motion, AnimatePresence, useAnimation } from 'framer-motion';
+import Image from 'next/image';
+import { CoffeeBean } from '@/types/app';
+import {
+  RandomCoffeeBeanSelector,
+  getRandomCoffeeBeanSettings,
+} from '@/lib/utils/randomCoffeeBeanUtils';
+import { useModalHistory } from '@/lib/hooks/useModalHistory';
+import { useRoasterLogo, useSettingsStore } from '@/lib/stores/settingsStore';
+import {
+  formatBeanDisplayName,
+  getRoasterName,
+  type RoasterSettings,
+} from '@/lib/utils/beanVarietyUtils';
+import { useCoffeeBeanImage } from '@/lib/hooks/useCoffeeBeanImage';
+
+interface CoffeeBeanRandomPickerProps {
+  beans: CoffeeBean[];
+  isOpen: boolean;
+  onClose: () => void;
+  onSelect: (bean: CoffeeBean) => void;
+  isLongPress?: boolean; // 是否为长按触发的随机选择
+}
+
+const CoffeeBeanRandomPicker: React.FC<CoffeeBeanRandomPickerProps> = ({
+  beans,
+  isOpen,
+  onClose,
+  onSelect,
+  isLongPress = false,
+}) => {
+  // 获取烘焙商显示设置
+  const roasterFieldEnabled = useSettingsStore(
+    state => state.settings.roasterFieldEnabled
+  );
+  const roasterSeparator = useSettingsStore(
+    state => state.settings.roasterSeparator
+  );
+  const roasterSettings = useMemo(
+    () => ({ roasterFieldEnabled, roasterSeparator }),
+    [roasterFieldEnabled, roasterSeparator]
+  );
+
+  // 历史栈管理
+  useModalHistory({
+    id: 'random-picker',
+    isOpen,
+    onClose,
+  });
+
+  // 容器变体
+  const containerVariants = {
+    open: {
+      opacity: 1,
+      transition: { duration: 0.3 },
+    },
+    closed: {
+      opacity: 0,
+      transition: { duration: 0.3 },
+    },
+  };
+
+  const content = (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="pt-safe-top fixed inset-0 z-90 flex items-center justify-center bg-neutral-50/90 backdrop-blur-xs dark:bg-neutral-900/90"
+          initial="closed"
+          animate="open"
+          exit="closed"
+          variants={containerVariants}
+        >
+          <RandomPickerSession
+            beans={beans}
+            onClose={onClose}
+            onSelect={onSelect}
+            isLongPress={isLongPress}
+            roasterSettings={roasterSettings}
+          />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(content, document.body);
+};
+
+interface RandomPickerSessionProps {
+  beans: CoffeeBean[];
+  onClose: () => void;
+  onSelect: (bean: CoffeeBean) => void;
+  isLongPress: boolean;
+  roasterSettings: RoasterSettings;
+}
+
+const RandomPickerSession: React.FC<RandomPickerSessionProps> = ({
+  beans,
+  onClose,
+  onSelect,
+  isLongPress,
+  roasterSettings,
+}) => {
+  // 卡片容器控制器
+  const controls = useAnimation();
+  // 选中的豆子索引
+  const [_selectedIndex, setSelectedIndex] = useState<number>(0);
+  // 容器引用
+  const containerRef = useRef<HTMLDivElement>(null);
+  // 卡片引用，用于动态获取实际尺寸
+  const cardRef = useRef<HTMLDivElement>(null);
+  // 动态获取的卡片尺寸
+  const [cardDimensions, setCardDimensions] = useState({
+    width: 160,
+    margin: 12,
+    totalWidth: 172,
+  });
+  // 卡片尺寸是否已初始化
+  const [cardDimensionsReady, setCardDimensionsReady] = useState(false);
+  // 随机咖啡豆设置
+  const randomSettings = useMemo(() => getRandomCoffeeBeanSettings(), []);
+
+  // 动画过渡参数
+  const springTransition = { stiffness: 500, damping: 25 };
+
+  // 使用memoized的选择器实例
+  const selector = useMemo(
+    () => new RandomCoffeeBeanSelector(randomSettings),
+    [randomSettings]
+  );
+
+  // 按类型分离咖啡豆
+  const espressoBeans = useMemo(
+    () => beans.filter(bean => bean.beanType === 'espresso'),
+    [beans]
+  );
+  const filterBeans = useMemo(
+    () => beans.filter(bean => bean.beanType === 'filter'),
+    [beans]
+  );
+  const omniBeans = useMemo(
+    () => beans.filter(bean => bean.beanType === 'omni'),
+    [beans]
+  );
+
+  // 根据是否长按决定咖啡豆类型，然后过滤
+  const { beanType: targetBeanType } = randomSettings?.enableLongPressRandomType
+    ? selector.selectRandomBeanByPressType(
+        espressoBeans,
+        filterBeans,
+        omniBeans,
+        isLongPress
+      )
+    : { beanType: undefined };
+
+  // 获取有效的豆子列表（使用我们的新工具函数进行过滤）
+  const validBeans = useMemo(() => {
+    return targetBeanType === 'espresso'
+      ? selector.filterAvailableBeans(espressoBeans, targetBeanType)
+      : targetBeanType === 'filter'
+        ? selector.filterAvailableBeans(filterBeans, targetBeanType)
+        : targetBeanType === 'omni'
+          ? selector.filterAvailableBeans(omniBeans, targetBeanType)
+          : [
+              ...selector.filterAvailableBeans(espressoBeans),
+              ...selector.filterAvailableBeans(filterBeans),
+              ...selector.filterAvailableBeans(omniBeans),
+            ];
+  }, [selector, espressoBeans, filterBeans, omniBeans, targetBeanType]);
+
+  // 检查是否只有一款咖啡豆
+  const isSingleBean = validBeans.length === 1;
+  // 动画状态
+  const [animationState, setAnimationState] = useState<
+    'initial' | 'selecting' | 'selected'
+  >(() => (isSingleBean ? 'selected' : 'initial'));
+  // 当前选中的豆子
+  const [selectedBean, setSelectedBean] = useState<CoffeeBean | null>(() =>
+    isSingleBean ? validBeans[0] : null
+  );
+
+  // 重置组件状态
+  const resetState = useCallback(() => {
+    setAnimationState('initial');
+    setSelectedBean(null);
+    setCardDimensionsReady(false);
+    controls.set({ x: 0 });
+  }, [controls]);
+
+  // 动态获取卡片尺寸
+  useEffect(() => {
+    const updateCardDimensions = () => {
+      if (cardRef.current && cardRef.current.nextElementSibling) {
+        const rect = cardRef.current.getBoundingClientRect();
+        const nextRect = (
+          cardRef.current.nextElementSibling as HTMLElement
+        ).getBoundingClientRect();
+
+        // 计算实际的卡片间距
+        const actualMargin = nextRect.left - rect.right;
+
+        setCardDimensions({
+          width: rect.width,
+          margin: actualMargin,
+          totalWidth: rect.width + actualMargin,
+        });
+        setCardDimensionsReady(true);
+
+        console.warn('Card dimensions updated:', {
+          width: rect.width,
+          margin: actualMargin,
+          totalWidth: rect.width + actualMargin,
+        });
+      }
+    };
+
+    // 延迟一帧确保DOM已渲染
+    requestAnimationFrame(updateCardDimensions);
+
+    // 监听字体缩放变化
+    const handleFontZoomChange = () => {
+      requestAnimationFrame(() => {
+        updateCardDimensions();
+        // 如果当前正在显示动画，重新开始
+        if (animationState === 'selecting' && !isSingleBean) {
+          setTimeout(() => {
+            resetState();
+          }, 50);
+        }
+      });
+    };
+
+    window.addEventListener('fontZoomChange', handleFontZoomChange);
+    window.addEventListener('resize', updateCardDimensions);
+
+    return () => {
+      window.removeEventListener('fontZoomChange', handleFontZoomChange);
+      window.removeEventListener('resize', updateCardDimensions);
+    };
+  }, [animationState, isSingleBean, resetState]);
+
+  // 开始随机选择动画
+  const startRandomSelection = useCallback(async () => {
+    if (validBeans.length === 0 || !containerRef.current) return;
+
+    setAnimationState('selecting');
+
+    try {
+      // 获取容器宽度以计算中心位置
+      const containerWidth = containerRef.current.clientWidth;
+
+      // 使用我们的工具函数随机选择一个豆子
+      if (validBeans.length === 0) return;
+
+      const randomIndex = Math.floor(Math.random() * validBeans.length);
+      const randomBean = validBeans[randomIndex];
+
+      // 计算初始位置和最终位置
+      const initialX = (containerWidth - cardDimensions.width) / 2; // 让第一个卡片在中心
+
+      // 简化动画算法：直接计算最终位置
+      // 让动画滚动足够多的卡片来营造旋转效果，最终停在选中的卡片
+      const totalScrollDistance =
+        (validBeans.length * 3 + randomIndex) * cardDimensions.totalWidth;
+
+      console.warn('Animation calculation:', {
+        containerWidth,
+        cardWidth: cardDimensions.width,
+        cardMargin: cardDimensions.margin,
+        cardTotalWidth: cardDimensions.totalWidth,
+        randomIndex,
+        initialX,
+        totalScrollDistance,
+        finalX: initialX - totalScrollDistance,
+      });
+
+      // 设置初始位置并直接执行动画
+      controls.set({ x: initialX });
+
+      // 使用更优化的动画设置
+      await controls.start({
+        x: initialX - totalScrollDistance,
+        transition: {
+          duration: 3.6, // 稍微缩短动画时间
+          ease: [0.2, 0.4, 0.2, 0.98], // 更简单的缓动函数
+          // 使用tween而不是spring可能更流畅
+        },
+      });
+
+      // 动画完成后设置状态
+      setSelectedBean(randomBean);
+      setSelectedIndex(randomIndex);
+      setAnimationState('selected');
+    } catch (error) {
+      console.error('Animation error:', error);
+      // 错误恢复
+      setAnimationState('initial');
+    }
+  }, [
+    validBeans,
+    controls,
+    cardDimensions.width,
+    cardDimensions.totalWidth,
+    cardDimensions.margin,
+  ]);
+
+  // 重新选择
+  const handleReshuffle = useCallback(() => {
+    resetState();
+    startRandomSelection();
+  }, [resetState, startRandomSelection]);
+
+  // 确认选择当前豆子
+  const handleConfirm = useCallback(() => {
+    if (selectedBean) {
+      // 先关闭 picker（触发历史栈清理），再调用 onSelect
+      // 这样确保 picker 的历史条目在父组件可能推入新历史之前被清理
+      onClose();
+      // 延迟调用 onSelect，确保历史栈清理完成
+      setTimeout(() => {
+        onSelect(selectedBean);
+      }, 60);
+    }
+  }, [selectedBean, onSelect, onClose]);
+
+  // 自动开始动画或直接选择
+  useEffect(() => {
+    if (animationState === 'initial' && validBeans.length > 0) {
+      if (!isSingleBean && cardDimensionsReady) {
+        // 多款咖啡豆时需要等待卡片尺寸后开始滚动动画
+        startRandomSelection();
+      }
+    }
+  }, [
+    animationState,
+    validBeans.length,
+    isSingleBean,
+    startRandomSelection,
+    cardDimensionsReady,
+  ]);
+
+  // 为动画准备数据 - 单豆时只显示一个，多豆时创建足够长的序列用于滚动动画
+  const displayBeans = isSingleBean
+    ? validBeans
+    : [
+        ...validBeans,
+        ...validBeans,
+        ...validBeans,
+        ...validBeans,
+        ...validBeans,
+      ];
+
+  return (
+    <>
+      {/* 根据咖啡豆数量显示不同内容 */}
+      {validBeans.length === 0 ? (
+        // 空状态
+        <div className="relative flex h-full w-full flex-col items-center justify-center p-6">
+          <div className="text-center">
+            <div className="mb-4 text-6xl">☕</div>
+            <h2 className="mb-2 text-xl font-medium text-neutral-800 dark:text-neutral-100">
+              暂无可选咖啡豆
+            </h2>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              请先添加咖啡豆或检查筛选条件
+            </p>
+          </div>
+        </div>
+      ) : (
+        // 统一的选择界面
+        <div className="relative flex h-full w-full flex-col items-center justify-center p-6">
+          {/* 中间指示器和卡片容器 */}
+          <div className="relative w-full max-w-md" ref={containerRef}>
+            {/* 中间指示器 - 永远在中间 */}
+            {!isSingleBean && (
+              <div
+                className="pointer-events-none absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-lg border-2 border-neutral-800/50 dark:border-neutral-100"
+                style={{
+                  width: `${cardDimensions.width}px`,
+                  height: '132px', // 高度保持固定，因为它不受字体缩放影响
+                }}
+              ></div>
+            )}
+
+            {/* 创建渐变遮罩效果 - 只在多豆时显示 */}
+            {!isSingleBean && (
+              <div className="fade-mask-x-edges pointer-events-none absolute inset-0 z-10 bg-white/95 dark:bg-neutral-900/95"></div>
+            )}
+
+            {/* 横向卡片容器 */}
+            <div className="relative h-[132px] w-full overflow-hidden">
+              <motion.div
+                className={`flex space-x-3 ${isSingleBean ? 'justify-center' : 'absolute'}`}
+                animate={controls}
+                style={{ willChange: 'transform' }} // 性能优化
+              >
+                {displayBeans.map((bean, index) => (
+                  <div
+                    key={`${bean.id}-${index}`}
+                    ref={index === 0 ? cardRef : null}
+                    className={`flex h-[132px] w-[160px] shrink-0 flex-col items-center justify-center rounded-lg border-2 bg-white p-3 dark:bg-neutral-800 ${
+                      isSingleBean && animationState === 'selected'
+                        ? 'border-neutral-800/50 dark:border-neutral-100'
+                        : 'border-neutral-200/50 dark:border-neutral-700'
+                    }`}
+                  >
+                    <RandomPickerBeanImage
+                      bean={bean}
+                      priority={index < 10}
+                      roasterSettings={roasterSettings}
+                    />
+                    <div className="w-full text-center">
+                      <h3 className="text-sm font-medium">
+                        {formatBeanDisplayName(bean, roasterSettings)}
+                      </h3>
+                    </div>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+
+          {/* 底部按钮 - 使用固定高度避免布局抖动 */}
+          <div className="mt-12 flex h-14 items-center justify-center gap-4">
+            <AnimatePresence>
+              {animationState === 'selected' && (
+                <>
+                  <motion.button
+                    type="button"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={springTransition}
+                    className="rounded-full bg-neutral-800 px-8 py-3 text-white dark:bg-neutral-100 dark:text-neutral-900"
+                    onClick={handleConfirm}
+                  >
+                    使用
+                  </motion.button>
+
+                  <motion.button
+                    type="button"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={springTransition}
+                    className="rounded-full bg-neutral-100 px-8 py-3 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-100"
+                    onClick={isSingleBean ? onClose : handleReshuffle}
+                  >
+                    {isSingleBean ? '取消' : '重选'}
+                  </motion.button>
+                </>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+      )}
+
+      {/* 关闭按钮 */}
+      <motion.button
+        type="button"
+        className="absolute top-[calc(env(safe-area-inset-top)+36px)] right-6 rounded-full bg-neutral-100 p-2 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-100"
+        onClick={onClose}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </motion.button>
+    </>
+  );
+};
+
+const RandomPickerBeanImage: React.FC<{
+  bean: CoffeeBean;
+  priority: boolean;
+  roasterSettings: RoasterSettings;
+}> = ({ bean, priority, roasterSettings }) => {
+  const [failedImageSource, setFailedImageSource] = useState<string | null>(
+    null
+  );
+  const beanImage = useCoffeeBeanImage(bean.id, {
+    preferThumbnail: true,
+  });
+  const roasterName = getRoasterName(bean, roasterSettings);
+  const roasterLogo = useRoasterLogo(
+    roasterName && roasterName !== '未知烘焙商' ? roasterName : null
+  );
+  const imageSource = beanImage || roasterLogo;
+  const imageError = failedImageSource === imageSource;
+  const handleImageError = useCallback(() => {
+    setFailedImageSource(imageSource);
+  }, [imageSource]);
+
+  if (!imageSource || imageError) {
+    return (
+      <div className="mb-2 flex h-16 w-full items-center justify-center">
+        <span className="text-2xl">☕</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative mb-2 h-16 w-full">
+      <Image
+        src={imageSource}
+        alt={bean.name}
+        fill
+        className="object-contain"
+        sizes="(max-width: 768px) 100vw, 160px"
+        loading="eager"
+        priority={priority}
+        onError={handleImageError}
+      />
+    </div>
+  );
+};
+
+export default CoffeeBeanRandomPicker;
