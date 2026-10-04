@@ -151,7 +151,7 @@ const SettingsSearchBar: React.FC<SettingsSearchBarProps> = ({
               type="button"
               onMouseDown={handleClearMouseDown}
               onClick={handleClearQuery}
-              className="flex size-11 shrink-0 items-center justify-center rounded-full border border-black/5 bg-neutral-100/95 text-neutral-800 shadow-lg shadow-black/5 backdrop-blur-xl transition-transform active:scale-95 dark:border-white/5 dark:bg-neutral-800/95 dark:text-neutral-100 dark:shadow-black/20"
+              className="flex size-11 shrink-0 items-center justify-center rounded-full border border-black/5 bg-neutral-100/95 text-neutral-800 shadow-lg shadow-black/5 backdrop-blur-xl transition-transform active:scale-[0.96] dark:border-white/5 dark:bg-neutral-800/95 dark:text-neutral-100 dark:shadow-black/20"
               aria-label="Отменить поиск"
             >
               <X className="size-5 stroke-[1.75px]" />

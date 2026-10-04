@@ -778,7 +778,7 @@ const GreenBeanAttributeStats: React.FC<GreenBeanAttributeStatsProps> = ({
           <button
             type="button"
             onClick={() => setIsEditorOpen(true)}
-            className="inline-flex min-h-10 cursor-pointer items-center rounded-full bg-neutral-100 px-4 text-xs font-medium text-neutral-600 transition-[background-color,transform] active:scale-[0.96] active:bg-neutral-200 dark:bg-neutral-800/60 dark:text-neutral-300 dark:active:bg-neutral-700/70"
+            className="inline-flex min-h-10 cursor-pointer items-center rounded-full bg-neutral-100 px-4 text-xs font-medium text-neutral-600 transition-[background-color,scale] active:scale-[0.96] active:bg-neutral-200 dark:bg-neutral-800/60 dark:text-neutral-300 dark:active:bg-neutral-700/70"
           >
             Изменить
           </button>

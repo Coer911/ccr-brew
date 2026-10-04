@@ -341,7 +341,7 @@ const ActionDrawerContent: React.FC<ActionDrawerContentProps> = ({
  * - 次要按钮：`bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300`
  * - 主要按钮：`bg-neutral-900 text-white dark:bg-white dark:text-neutral-900`
  * - 危险按钮：`bg-red-500 text-white dark:bg-red-600`
- * - 交互反馈：`transition-transform active:scale-[0.98]`
+ * - 交互反馈：`transition-transform active:scale-[0.96]`
  */
 const ActionDrawerActions: React.FC<ActionDrawerActionsProps> = ({
   children,
@@ -350,7 +350,7 @@ const ActionDrawerActions: React.FC<ActionDrawerActionsProps> = ({
 
 /** 按钮基础样式 */
 const buttonBaseClass =
-  'flex-1 rounded-full px-4 py-3 text-sm font-medium transition-transform active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100';
+  'flex-1 rounded-full px-4 py-3 text-sm font-medium transition-transform active:scale-[0.96] disabled:opacity-50 disabled:active:scale-100';
 
 /**
  * 主要按钮组件

@@ -206,7 +206,7 @@ const PageStackDrawer: React.FC<PageStackDrawerProps> = ({
               <button
                 type="button"
                 onClick={canGoBack ? onBack : onCancel}
-                className="w-fit cursor-pointer rounded-full bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-600 transition active:scale-95 dark:bg-neutral-800 dark:text-neutral-300"
+                className="w-fit cursor-pointer rounded-full bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-600 transition active:scale-[0.96] dark:bg-neutral-800 dark:text-neutral-300"
               >
                 {visibleSnapshot.canGoBack
                   ? visibleSnapshot.backLabel || 'Назад'
@@ -226,7 +226,7 @@ const PageStackDrawer: React.FC<PageStackDrawerProps> = ({
                         type="button"
                         onClick={action.onClick}
                         disabled={action.disabled}
-                        className="cursor-pointer px-4 py-2 transition active:scale-95 disabled:cursor-default disabled:opacity-30 disabled:active:scale-100"
+                        className="cursor-pointer px-4 py-2 transition active:scale-[0.96] disabled:cursor-default disabled:opacity-30 disabled:active:scale-100"
                       >
                         {action.label}
                       </button>
@@ -238,7 +238,7 @@ const PageStackDrawer: React.FC<PageStackDrawerProps> = ({
                   type="button"
                   onClick={onDone}
                   disabled={visibleSnapshot.doneDisabled}
-                  className="ml-auto w-fit cursor-pointer rounded-full bg-neutral-100 px-4 py-2 text-sm font-semibold text-neutral-800 transition active:scale-95 disabled:cursor-default disabled:opacity-30 disabled:active:scale-100 dark:bg-neutral-800 dark:text-neutral-100"
+                  className="ml-auto w-fit cursor-pointer rounded-full bg-neutral-100 px-4 py-2 text-sm font-semibold text-neutral-800 transition active:scale-[0.96] disabled:cursor-default disabled:opacity-30 disabled:active:scale-100 dark:bg-neutral-800 dark:text-neutral-100"
                 >
                   {visibleSnapshot.doneLabel}
                 </button>

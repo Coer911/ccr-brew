@@ -767,7 +767,7 @@ const CoffeeBeanForm = forwardRef<CoffeeBeanFormHandle, CoffeeBeanFormProps>(
       return (
         <div className="h-1 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
           <div
-            className="h-full bg-neutral-800 transition-all duration-300 ease-in-out dark:bg-neutral-200"
+            className="h-full bg-neutral-800 transition-[width] duration-300 ease-in-out dark:bg-neutral-200"
             style={{ width: `${progress}%` }}
           />
         </div>

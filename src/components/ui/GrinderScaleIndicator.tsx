@@ -114,7 +114,7 @@ const GrinderScaleIndicator: React.FC<GrinderScaleIndicatorProps> = ({
         onClick={handleClick}
         className={`${BUTTON_BASE_CLASS} flex h-12.5 w-12.5 cursor-pointer items-center justify-center font-medium text-neutral-800 dark:text-neutral-100`}
         whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        whileTap={{ scale: 0.96 }}
         transition={SPRING_TRANSITION}
       >
         <span

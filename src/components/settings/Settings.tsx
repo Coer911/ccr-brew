@@ -635,7 +635,7 @@ const Settings: React.FC<SettingsProps> = ({
               setTimeout(() => performQuickSync('upload'), 250);
             }}
             disabled={isSyncing}
-            className={`flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100 text-neutral-700 transition-[transform,opacity,background-color] ease-out hover:bg-neutral-200 active:scale-95 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 ${
+            className={`flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100 text-neutral-700 transition-[scale,opacity,background-color] ease-out hover:bg-neutral-200 active:scale-[0.96] dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 ${
               showSyncMenu && !isSyncing
                 ? 'translate-x-0 opacity-100'
                 : 'pointer-events-none translate-x-4 opacity-0'
@@ -653,7 +653,7 @@ const Settings: React.FC<SettingsProps> = ({
               setTimeout(() => performQuickSync('download'), 250);
             }}
             disabled={isSyncing}
-            className={`flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100 text-neutral-700 transition-[transform,opacity,background-color] ease-out hover:bg-neutral-200 active:scale-95 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 ${
+            className={`flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100 text-neutral-700 transition-[scale,opacity,background-color] ease-out hover:bg-neutral-200 active:scale-[0.96] dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 ${
               showSyncMenu && !isSyncing
                 ? 'translate-x-0 opacity-100'
                 : 'pointer-events-none translate-x-4 opacity-0'
@@ -667,7 +667,7 @@ const Settings: React.FC<SettingsProps> = ({
             type="button"
             onClick={() => !isSyncing && setShowSyncMenu(!showSyncMenu)}
             disabled={isSyncing}
-            className={`flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100 text-neutral-700 transition-[transform,background-color] duration-150 ease-out hover:bg-neutral-200 active:scale-95 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 ${isSyncing ? 'cursor-default' : ''}`}
+            className={`flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100 text-neutral-700 transition-[scale,background-color] duration-150 ease-out hover:bg-neutral-200 active:scale-[0.96] dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 ${isSyncing ? 'cursor-default' : ''}`}
           >
             {isSyncing ? (
               <LoadingSpinner className="size-5" />

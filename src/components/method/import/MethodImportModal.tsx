@@ -520,14 +520,14 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
       {/* 操作按钮列表 */}
       <div className="flex flex-col gap-2">
         <motion.button
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.96 }}
           onClick={handleUploadImageClick}
           className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
         >
           Распознать рецепт по фото
         </motion.button>
         <motion.button
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.96 }}
           onClick={handleInputJSON}
           className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
         >
@@ -538,7 +538,7 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
           <>
             <ActionDrawer.Divider />
             <motion.button
-              whileTap={{ scale: 0.98 }}
+              whileTap={{ scale: 0.96 }}
               onClick={handleSelectFromEquipment}
               className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
             >
@@ -581,14 +581,14 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
         />
         <div className="flex gap-2">
           <motion.button
-            whileTap={{ scale: 0.98 }}
+            whileTap={{ scale: 0.96 }}
             onClick={handleCancelJsonInput}
             className="flex-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
           >
             Отмена
           </motion.button>
           <motion.button
-            whileTap={!jsonInputValue.trim() ? undefined : { scale: 0.98 }}
+            whileTap={!jsonInputValue.trim() ? undefined : { scale: 0.96 }}
             onClick={handleSubmitJson}
             disabled={!jsonInputValue.trim()}
             className={`flex-1 rounded-full px-4 py-3 text-sm font-medium transition-colors ${

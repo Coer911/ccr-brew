@@ -220,7 +220,7 @@ const RatingDrawer: React.FC<RatingDrawerProps> = ({
                     return (
                       <motion.button
                         key={star}
-                        whileTap={{ scale: 0.9 }}
+                        whileTap={{ scale: 0.96 }}
                         onClick={() => {
                           // 总体评分始终支持半星：1 → 0.5 → 0，其他：整星 → 半星 → 整星
                           if (star === 1 && tempRating === 0.5) {
@@ -307,7 +307,7 @@ const RatingDrawer: React.FC<RatingDrawerProps> = ({
                             return (
                               <motion.button
                                 key={star}
-                                whileTap={{ scale: 0.9 }}
+                                whileTap={{ scale: 0.96 }}
                                 onClick={() => {
                                   if (halfStep) {
                                     // 半星模式：1 → 0.5 → 0，其他：整星 → 半星 → 整星

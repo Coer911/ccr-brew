@@ -199,7 +199,7 @@ const EquipmentRow: React.FC<EquipmentRowProps> = ({
                 exit={{ opacity: 0.6, filter: 'blur(2px)' }}
                 transition={{ duration: 0.2 }}
                 onClick={() => onToggleActions(equipment.id)}
-                className="rounded-md p-2 transition-all duration-150 hover:bg-neutral-100 active:bg-neutral-200 dark:hover:bg-neutral-700 dark:active:bg-neutral-600"
+                className="rounded-md p-2 transition-colors duration-150 hover:bg-neutral-100 active:bg-neutral-200 dark:hover:bg-neutral-700 dark:active:bg-neutral-600"
               >
                 <span className="flex h-4 w-4 items-center justify-center text-lg leading-none font-bold text-neutral-600 select-none dark:text-neutral-400">
                   ⋯
@@ -431,7 +431,7 @@ const EquipmentManagementDrawer: React.FC<EquipmentManagementDrawerProps> = ({
             <button
               type="button"
               onClick={handleAddEquipment}
-              className="flex items-center justify-center rounded-full bg-neutral-100 px-3 py-1 transition-all duration-150 active:scale-95 active:opacity-80 dark:bg-neutral-800"
+              className="flex items-center justify-center rounded-full bg-neutral-100 px-3 py-1 transition-[scale,opacity] duration-150 active:scale-[0.96] active:opacity-80 dark:bg-neutral-800"
             >
               <span className="text-sm font-medium text-neutral-800 dark:text-neutral-100">
                 + Добавить устройство

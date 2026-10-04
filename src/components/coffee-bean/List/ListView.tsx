@@ -382,7 +382,7 @@ const CoffeeBeanList: React.FC<CoffeeBeanListProps> = ({
       {/* 添加"不选择咖啡豆"选项 */}
       <button
         type="button"
-        className="group relative mb-5 w-full cursor-pointer rounded text-left text-neutral-500 transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-neutral-400/50 focus-visible:ring-offset-4 focus-visible:ring-offset-neutral-50 dark:text-neutral-400 dark:focus-visible:ring-neutral-500/60 dark:focus-visible:ring-offset-neutral-900"
+        className="group relative mb-5 w-full cursor-pointer rounded text-left text-neutral-500 transition-shadow duration-300 outline-none focus-visible:ring-2 focus-visible:ring-neutral-400/50 focus-visible:ring-offset-4 focus-visible:ring-offset-neutral-50 dark:text-neutral-400 dark:focus-visible:ring-neutral-500/60 dark:focus-visible:ring-offset-neutral-900"
         onClick={() => onSelect(null, null)}
       >
         <div className="cursor-pointer">

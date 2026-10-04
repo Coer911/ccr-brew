@@ -1159,7 +1159,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
                 contain: 'layout',
                 backfaceVisibility: 'hidden',
               }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.96 }}
             >
               <span>
                 {hasStartedOnce && !isRunning && currentTime > 0
@@ -1311,7 +1311,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
                         transition={{ duration: 0.26 }}
                         className="m flex transform-gpu flex-row items-baseline justify-between border-l border-neutral-300 pl-3 dark:border-neutral-700"
                         style={{
-                          willChange: 'transform, opacity, height',
+                          willChange: 'transform, opacity',
                           backfaceVisibility: 'hidden',
                         }}
                       >
@@ -1497,7 +1497,6 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
                           ease: [0.4, 0, 0.2, 1],
                         }}
                         style={{
-                          willChange: 'width',
                           transformOrigin: 'left center',
                           contain: 'layout',
                           backfaceVisibility: 'hidden',
@@ -1665,7 +1664,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
             <motion.button
               onClick={isRunning ? pauseTimer : startTimer}
               className={`${localShowFlowRate ? 'h-11 w-11 sm:h-12 sm:w-12' : 'h-12 w-12 sm:h-14 sm:w-14'} flex shrink-0 transform-gpu items-center justify-center rounded-full bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400`}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.96 }}
               transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
               style={{
                 willChange: 'transform',
@@ -1717,7 +1716,7 @@ const BrewingTimer: React.FC<BrewingTimerProps> = ({
                   : resetTimer // 非初始状态：重置计时器
               }
               className={`${localShowFlowRate ? 'h-11 w-11 sm:h-12 sm:w-12' : 'h-12 w-12 sm:h-14 sm:w-14'} flex shrink-0 transform-gpu items-center justify-center rounded-full bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400`}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.96 }}
               transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }}
               style={{
                 willChange: 'transform',

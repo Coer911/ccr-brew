@@ -225,7 +225,7 @@ function PickerRow<T>({
   return (
     <motion.button
       type="button"
-      whileTap={disabled ? undefined : { scale: 0.98 }}
+      whileTap={disabled ? undefined : { scale: 0.96 }}
       onClick={handleClick}
       disabled={disabled}
       className={`flex w-full shrink-0 items-center justify-between gap-3 rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white ${

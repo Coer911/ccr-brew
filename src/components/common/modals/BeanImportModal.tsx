@@ -1285,21 +1285,21 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
       {/* 操作按钮列表 */}
       <div className="flex flex-col gap-2">
         <motion.button
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.96 }}
           onClick={handleOpenCamera}
           className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
         >
           Распознать пачку камерой
         </motion.button>
         <motion.button
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.96 }}
           onClick={handleUploadImageClick}
           className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
         >
           Распознать по фото
         </motion.button>
         <motion.button
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.96 }}
           onClick={handleInputJSON}
           className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
         >
@@ -1309,7 +1309,7 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
           <>
             <ActionDrawer.Divider />
             <motion.button
-              whileTap={{ scale: 0.98 }}
+              whileTap={{ scale: 0.96 }}
               onClick={handleUploadPackageClick}
               className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
             >
@@ -1352,14 +1352,14 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
         />
         <div className="flex gap-2">
           <motion.button
-            whileTap={{ scale: 0.98 }}
+            whileTap={{ scale: 0.96 }}
             onClick={handleCancelJsonInput}
             className="flex-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
           >
             Отмена
           </motion.button>
           <motion.button
-            whileTap={!jsonInputValue.trim() ? undefined : { scale: 0.98 }}
+            whileTap={!jsonInputValue.trim() ? undefined : { scale: 0.96 }}
             onClick={handleSubmitJson}
             disabled={!jsonInputValue.trim()}
             className={`flex-1 rounded-full px-4 py-3 text-sm font-medium transition-colors ${
@@ -1501,7 +1501,7 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
                 <img
                   src={img.previewUrl}
                   alt="Снято"
-                  className={`h-full w-full object-cover transition-[filter,transform] duration-200 ${
+                  className={`h-full w-full object-cover transition-[filter] duration-200 ${
                     img.status === 'error' ? 'brightness-50 grayscale' : ''
                   }`}
                 />
@@ -1570,14 +1570,14 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
       {cameraStatus === 'error' ? (
         <div className="flex gap-2">
           <motion.button
-            whileTap={{ scale: 0.98 }}
+            whileTap={{ scale: 0.96 }}
             onClick={goBackToMain}
             className="flex-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
           >
             Отмена
           </motion.button>
           <motion.button
-            whileTap={{ scale: 0.98 }}
+            whileTap={{ scale: 0.96 }}
             onClick={handleUploadImageClick}
             className="flex-1 rounded-full bg-neutral-900 px-4 py-3 text-sm font-medium text-white dark:bg-white dark:text-neutral-900"
           >
@@ -1587,7 +1587,7 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
       ) : (
         <div className="flex gap-2">
           <motion.button
-            whileTap={isMultiRecognizing ? undefined : { scale: 0.98 }}
+            whileTap={isMultiRecognizing ? undefined : { scale: 0.96 }}
             onClick={goBackToMain}
             disabled={isMultiRecognizing}
             className="flex-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
@@ -1604,7 +1604,7 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
                 isMultiRecognizing ||
                 selectedImages.length >= MAX_IMAGES
               }
-              className={`min-w-0 flex-1 px-4 py-3 transition-opacity active:scale-[0.98] disabled:active:scale-100 ${
+              className={`min-w-0 flex-1 px-4 py-3 transition-[opacity,scale] active:scale-[0.96] disabled:active:scale-100 ${
                 cameraStatus === 'ready' &&
                 !isCameraCapturing &&
                 !isMultiRecognizing &&
@@ -1620,7 +1620,7 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
               type="button"
               onClick={handleRecognizeCameraImages}
               disabled={selectedImages.length === 0 || isMultiRecognizing}
-              className={`min-w-0 flex-1 px-4 py-3 transition-opacity active:scale-[0.98] disabled:active:scale-100 ${
+              className={`min-w-0 flex-1 px-4 py-3 transition-[opacity,scale] active:scale-[0.96] disabled:active:scale-100 ${
                 selectedImages.length > 0 && !isMultiRecognizing
                   ? ''
                   : 'opacity-40'
@@ -1671,7 +1671,7 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
               <img
                 src={img.previewUrl}
                 alt="Просмотр"
-                className={`h-full w-full object-cover transition-all duration-300 ${
+                className={`h-full w-full object-cover transition-[scale,filter] duration-300 ${
                   img.status === 'processing'
                     ? 'scale-[1.02] brightness-90'
                     : ''
@@ -1728,7 +1728,7 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
                 <button
                   type="button"
                   onClick={() => handleRemoveImage(img.id)}
-                  className="absolute top-1.5 right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-neutral-900/60 text-white backdrop-blur-sm transition-all hover:bg-neutral-900/80 dark:bg-white/60 dark:text-neutral-900 dark:hover:bg-white/80"
+                  className="absolute top-1.5 right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-neutral-900/60 text-white backdrop-blur-sm transition-colors hover:bg-neutral-900/80 dark:bg-white/60 dark:text-neutral-900 dark:hover:bg-white/80"
                 >
                   <svg
                     className="h-3 w-3"
@@ -1777,7 +1777,7 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
       {/* 操作按钮 */}
       <div className="flex gap-2">
         <motion.button
-          whileTap={isMultiRecognizing ? undefined : { scale: 0.98 }}
+          whileTap={isMultiRecognizing ? undefined : { scale: 0.96 }}
           onClick={goBackToMain}
           disabled={isMultiRecognizing}
           className={`flex-1 rounded-full px-4 py-3 text-sm font-medium transition-colors ${
@@ -1789,7 +1789,7 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
           Отмена
         </motion.button>
         <motion.button
-          whileTap={isMultiRecognizing ? undefined : { scale: 0.98 }}
+          whileTap={isMultiRecognizing ? undefined : { scale: 0.96 }}
           onClick={handleMultiRecognition}
           disabled={isMultiRecognizing}
           className={`flex-1 rounded-full px-4 py-3 text-sm font-medium transition-colors ${

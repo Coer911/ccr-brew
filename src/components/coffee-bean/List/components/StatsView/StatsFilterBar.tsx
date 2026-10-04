@@ -408,7 +408,7 @@ const StatsFilterBar: React.FC<StatsFilterBarProps> = ({
                 exit={FILTER_ANIMATION.exit}
                 transition={FILTER_ANIMATION.transition}
                 className="overflow-hidden"
-                style={{ willChange: 'height, opacity, transform' }}
+                style={{ willChange: 'opacity, transform' }}
               >
                 <div className="px-6 py-4">
                   {/* 统计类型（生豆/熟豆） */}

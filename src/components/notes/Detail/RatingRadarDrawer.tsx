@@ -552,7 +552,7 @@ const RatingRadarDrawer: React.FC<RatingRadarDrawerProps> = ({
           }`}
         >
           <div
-            className={`transition-all duration-300 ease-out ${
+            className={`transition-[width] duration-300 ease-out ${
               align === 'left' ? 'origin-top-left' : 'origin-top'
             }`}
             style={{ width: `${scale * 100}%` }}
@@ -597,7 +597,7 @@ const RatingRadarDrawer: React.FC<RatingRadarDrawerProps> = ({
             >
               <button
                 type="button"
-                className="flex h-11 w-11 flex-none touch-none items-center justify-center rounded-full bg-neutral-100 text-neutral-600 transition-transform select-none active:scale-95 dark:bg-neutral-800 dark:text-neutral-400"
+                className="flex h-11 w-11 flex-none touch-none items-center justify-center rounded-full bg-neutral-100 text-neutral-600 transition-transform select-none active:scale-[0.96] dark:bg-neutral-800 dark:text-neutral-400"
                 onClick={() => setIsAdjusting(true)}
                 onPointerDown={handleLongPressStart}
                 onPointerUp={handleLongPressEnd}
@@ -638,7 +638,7 @@ const RatingRadarDrawer: React.FC<RatingRadarDrawerProps> = ({
                 />
                 <button
                   type="button"
-                  className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-neutral-100 text-neutral-700 transition-transform active:scale-95 dark:bg-neutral-800 dark:text-neutral-300"
+                  className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-neutral-100 text-neutral-700 transition-transform active:scale-[0.96] dark:bg-neutral-800 dark:text-neutral-300"
                   onClick={() => setIsComparing(false)}
                 >
                   <Check size={20} />
@@ -695,7 +695,7 @@ const RatingRadarDrawer: React.FC<RatingRadarDrawerProps> = ({
 
                 <button
                   type="button"
-                  className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-neutral-100 text-neutral-700 transition-transform active:scale-95 dark:bg-neutral-800 dark:text-neutral-300"
+                  className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-neutral-100 text-neutral-700 transition-transform active:scale-[0.96] dark:bg-neutral-800 dark:text-neutral-300"
                   onClick={() => setIsAdjusting(false)}
                 >
                   <Check size={20} />
