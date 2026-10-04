@@ -68,7 +68,7 @@ const StatsSectionRow: React.FC<StatsSectionRowProps> = ({
           onPointerDown={startDrag}
           onPointerUp={() => onDragStateChange(false)}
           onPointerCancel={() => onDragStateChange(false)}
-          className="-ml-2 flex size-10 shrink-0 cursor-grab touch-none items-center justify-center rounded-lg text-neutral-400 transition-[background-color,transform] select-none active:scale-[0.96] active:cursor-grabbing active:bg-black/5 dark:text-neutral-500 dark:active:bg-white/5"
+          className="-ml-2 flex size-10 shrink-0 cursor-grab touch-none items-center justify-center rounded-lg text-neutral-400 transition-[background-color,scale] select-none active:scale-[0.96] active:cursor-grabbing active:bg-black/5 dark:text-neutral-500 dark:active:bg-white/5"
           data-vaul-no-drag
         >
           <GripVertical className="size-4" strokeWidth={2.25} />

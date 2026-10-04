@@ -1,4 +1,8 @@
-import { API_CONFIG } from './shared/config';
+import {
+  API_CONFIG,
+  BUILTIN_RECOGNITION_UNAVAILABLE_MESSAGE,
+  IS_BUILTIN_API_ENABLED,
+} from './shared/config';
 import { fetchWithTimeout, isTimeoutError } from './shared/request';
 import {
   normalizeRecognitionErrorMessage,
@@ -305,10 +309,14 @@ async function recognizeBeanImageWithCustomAPI(
   try {
     const baseUrl = customConfig.apiBaseUrl.trim().replace(/\/+$/, '');
     if (!baseUrl) {
-      throw new Error('Экспериментальное распознавание включено, но адрес API не задан');
+      throw new Error(
+        'Экспериментальное распознавание включено, но адрес API не задан'
+      );
     }
     if (!/^https?:\/\//i.test(baseUrl)) {
-      throw new Error('Адрес экспериментального API должен начинаться с http:// или https://');
+      throw new Error(
+        'Адрес экспериментального API должен начинаться с http:// или https://'
+      );
     }
     const model = resolveBeanRecognitionModel(customConfig.model);
 
@@ -385,7 +393,9 @@ async function recognizeBeanImageWithCustomAPI(
       return normalizeRecognizedBeanPayload(result, fieldSettings);
     }
 
-    throw new Error('Экспериментальное распознавание вернуло неподдерживаемый формат, проверьте совместимость API');
+    throw new Error(
+      'Экспериментальное распознавание вернуло неподдерживаемый формат, проверьте совместимость API'
+    );
   } catch (error) {
     if (isTimeoutError(error)) {
       throw new Error(
@@ -417,6 +427,10 @@ export async function recognizeBeanImage(
     );
   }
 
+  if (!IS_BUILTIN_API_ENABLED) {
+    throw new Error(BUILTIN_RECOGNITION_UNAVAILABLE_MESSAGE);
+  }
+
   const apiUrl = `${API_CONFIG.baseURL}/api/recognize-bean`;
 
   const formData = new FormData();
@@ -438,7 +452,9 @@ export async function recognizeBeanImage(
     });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: 'Ошибка запроса' }));
+      const error = await response
+        .json()
+        .catch(() => ({ error: 'Ошибка запроса' }));
       throw new Error(error.error || `Ошибка запроса: ${response.status}`);
     }
 
@@ -459,7 +475,9 @@ export async function recognizeBeanImage(
       error instanceof TypeError &&
       error.message.includes('Failed to fetch')
     ) {
-      throw new Error('Ошибка запроса, проверьте интернет или обновите приложение');
+      throw new Error(
+        'Ошибка запроса, проверьте интернет или обновите приложение'
+      );
     }
 
     if (isTimeoutError(error)) {
@@ -569,7 +587,9 @@ export async function testCustomBeanRecognitionConfig(
     return { endpoint, model, durationMs };
   } catch (error) {
     if (isTimeoutError(error)) {
-      throw new Error('Время проверки истекло: проверьте сеть и доступность API-шлюза или попробуйте позже');
+      throw new Error(
+        'Время проверки истекло: проверьте сеть и доступность API-шлюза или попробуйте позже'
+      );
     }
     if (error instanceof Error) {
       throw new Error(normalizeRecognitionErrorMessage(error.message));

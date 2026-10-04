@@ -711,7 +711,7 @@ const TabContent: React.FC<TabContentProps> = ({
             transition={springTransition}
             className={`${buttonBaseClass} pointer-events-auto flex items-center justify-center p-4`}
             whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.96 }}
           >
             <Shuffle className="h-4 w-4" strokeWidth="3" />
           </motion.button>
@@ -751,7 +751,7 @@ const TabContent: React.FC<TabContentProps> = ({
               transition={springTransition}
               className={`${buttonBaseClass} pointer-events-auto flex items-center justify-center p-4`}
               whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.96 }}
             >
               {isSearching ? (
                 <X className="h-4 w-4" strokeWidth="3" />

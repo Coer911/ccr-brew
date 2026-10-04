@@ -5,7 +5,8 @@
 
 import { APP_VERSION } from '@/lib/core/config';
 
-const DEFAULT_VERSION_URL = 'https://coffee.chu3.top/version.json';
+// version.json публикуется вместе с сайтом, поэтому по умолчанию читаем его с того же адреса.
+const DEFAULT_VERSION_URL = '/version.json';
 
 // 远程版本信息接口
 interface RemoteVersionInfo {
@@ -70,7 +71,6 @@ function compareVersions(v1: string, v2: string): number {
  */
 export async function checkForUpdates(): Promise<VersionCheckResult> {
   try {
-    // 默认读取线上版本清单，避免离线原生包只读到包内 version.json。
     const baseUrl = process.env.NEXT_PUBLIC_VERSION_URL || DEFAULT_VERSION_URL;
     const separator = baseUrl.includes('?') ? '&' : '?';
     const requestUrl = `${baseUrl}${separator}t=${Date.now()}`;

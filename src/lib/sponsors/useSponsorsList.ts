@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { API_CONFIG } from '@/lib/api/shared/config';
+import { API_CONFIG, IS_BUILTIN_API_ENABLED } from '@/lib/api/shared/config';
 import { Storage } from '@/lib/core/storage';
 import { sponsorsList as fallbackSponsorsList } from '@/lib/core/config';
 
@@ -55,6 +55,7 @@ const saveCachedSponsorsList = async (names: string[]): Promise<void> => {
 };
 
 const fetchSponsorsList = async (): Promise<CachedSponsorsList | null> => {
+  if (!IS_BUILTIN_API_ENABLED) return null;
   try {
     const response = await fetch(`${API_CONFIG.baseURL}/api/sponsors`, {
       headers: { Accept: 'application/json' },

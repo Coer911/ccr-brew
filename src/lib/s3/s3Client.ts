@@ -132,7 +132,8 @@ export class S3Client {
     try {
       const downloaded = await this.downloadFile(testKey);
       if (downloaded !== testContent) {
-        this.lastError = 'Тестовый файл прочитан с ошибкой: содержимое не совпадает с загруженным';
+        this.lastError =
+          'Тестовый файл прочитан с ошибкой: содержимое не совпадает с загруженным';
         return false;
       }
       return true;
@@ -693,6 +694,7 @@ export class S3Client {
   }
 
   private shouldUseS3Proxy(url: string): boolean {
+    if (!process.env.NEXT_PUBLIC_S3_PROXY_URL) return false;
     try {
       return this.isCstCloudEndpoint(new URL(url).hostname);
     } catch {
@@ -701,8 +703,7 @@ export class S3Client {
   }
 
   private buildS3ProxyUrl(url: string): string {
-    const proxyBase =
-      process.env.NEXT_PUBLIC_S3_PROXY_URL || 'https://cors.chu3.top/s3?url=';
+    const proxyBase = process.env.NEXT_PUBLIC_S3_PROXY_URL || '';
     return `${proxyBase}${encodeURIComponent(url)}`;
   }
 

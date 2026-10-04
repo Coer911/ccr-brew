@@ -166,7 +166,7 @@ const BrewingTimerSettings: React.FC<BrewingTimerSettingsProps> = ({
                     }}
                     className="peer sr-only"
                   />
-                  <div className="peer h-5 w-9 rounded-full bg-neutral-200 peer-checked:bg-neutral-600 after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full dark:bg-neutral-700 dark:peer-checked:bg-neutral-500" />
+                  <div className="peer h-5 w-9 rounded-full bg-neutral-200 peer-checked:bg-neutral-600 after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-transform after:content-[''] peer-checked:after:translate-x-full dark:bg-neutral-700 dark:peer-checked:bg-neutral-500" />
                 </label>
               </div>
               <div className="flex items-center justify-between">
@@ -182,7 +182,7 @@ const BrewingTimerSettings: React.FC<BrewingTimerSettingsProps> = ({
                     }}
                     className="peer sr-only"
                   />
-                  <div className="peer h-5 w-9 rounded-full bg-neutral-200 peer-checked:bg-neutral-600 after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full dark:bg-neutral-700 dark:peer-checked:bg-neutral-500" />
+                  <div className="peer h-5 w-9 rounded-full bg-neutral-200 peer-checked:bg-neutral-600 after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-transform after:content-[''] peer-checked:after:translate-x-full dark:bg-neutral-700 dark:peer-checked:bg-neutral-500" />
                 </label>
               </div>
               <div className="space-y-2">

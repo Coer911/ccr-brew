@@ -593,7 +593,7 @@ const CoffeeOriginMap: React.FC<CoffeeOriginMapProps> = memo(
                         ? 'bg-neutral-300/50 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-100'
                         : 'bg-neutral-200/50 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-300'
                     }`}
-                    whileTap={{ scale: 0.95 }}
+                    whileTap={{ scale: 0.96 }}
                   >
                     <span>{region.name}</span>
                     <span>{region.count}</span>

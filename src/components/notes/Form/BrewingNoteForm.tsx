@@ -1605,7 +1605,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
             <button
               type="button"
               onClick={() => setExpandedFlavorBeanId(bean.id)}
-              className="inline-flex h-6 shrink-0 items-center gap-1.5 rounded bg-neutral-100/80 px-1.5 py-0.5 text-sm font-medium text-neutral-500 transition-all duration-150 ease-out hover:bg-neutral-100 hover:text-neutral-600 dark:bg-neutral-800/40 dark:text-neutral-500 dark:hover:bg-neutral-800/60 dark:hover:text-neutral-400"
+              className="inline-flex h-6 shrink-0 items-center gap-1.5 rounded bg-neutral-100/80 px-1.5 py-0.5 text-sm font-medium text-neutral-500 transition-colors duration-150 ease-out hover:bg-neutral-100 hover:text-neutral-600 dark:bg-neutral-800/40 dark:text-neutral-500 dark:hover:bg-neutral-800/60 dark:hover:text-neutral-400"
             >
               <CornerDownRight className="h-3.5 w-3.5" />
               Показать вкусы
@@ -1877,7 +1877,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
                       setShowImagePreview(true);
                     }}
                     whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileTap={{ scale: 0.96 }}
                   >
                     <Image
                       src={img}
@@ -1990,7 +1990,7 @@ const BrewingNoteForm: React.FC<BrewingNoteFormProps> = ({
                       prevIncrease => !prevIncrease
                     )
                   }
-                  className="inline-flex h-6 shrink-0 items-center gap-1.5 rounded bg-neutral-100/80 px-1.5 py-0.5 text-sm font-medium text-neutral-500 transition-all duration-150 ease-out hover:bg-neutral-100 hover:text-neutral-600 dark:bg-neutral-800/40 dark:text-neutral-500 dark:hover:bg-neutral-800/60 dark:hover:text-neutral-400"
+                  className="inline-flex h-6 shrink-0 items-center gap-1.5 rounded bg-neutral-100/80 px-1.5 py-0.5 text-sm font-medium text-neutral-500 transition-colors duration-150 ease-out hover:bg-neutral-100 hover:text-neutral-600 dark:bg-neutral-800/40 dark:text-neutral-500 dark:hover:bg-neutral-800/60 dark:hover:text-neutral-400"
                 >
                   <CornerDownRight className="h-3.5 w-3.5" />
                   {isCapacityAdjustmentIncrease

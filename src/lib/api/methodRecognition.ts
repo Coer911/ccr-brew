@@ -1,4 +1,8 @@
-import { API_CONFIG } from './shared/config';
+import {
+  API_CONFIG,
+  BUILTIN_RECOGNITION_UNAVAILABLE_MESSAGE,
+  IS_BUILTIN_API_ENABLED,
+} from './shared/config';
 import { fetchWithTimeout, isTimeoutError } from './shared/request';
 import {
   normalizeRecognitionErrorMessage,
@@ -9,6 +13,10 @@ import {
 export async function recognizeMethodImage(imageFile: File): Promise<unknown> {
   // 验证文件安全性
   validateRecognitionImageFile(imageFile);
+
+  if (!IS_BUILTIN_API_ENABLED) {
+    throw new Error(BUILTIN_RECOGNITION_UNAVAILABLE_MESSAGE);
+  }
 
   const apiUrl = `${API_CONFIG.baseURL}/api/recognize-method`;
 

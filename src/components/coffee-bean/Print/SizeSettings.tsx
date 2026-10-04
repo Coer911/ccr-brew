@@ -55,7 +55,7 @@ export const SizeSettings: React.FC<SizeSettingsProps> = ({
         <button
           type="button"
           onClick={toggleEdit}
-          className={`flex items-center gap-1 rounded px-2 py-1 text-xs font-medium transition-all ${
+          className={`flex items-center gap-1 rounded px-2 py-1 text-xs font-medium transition-colors ${
             editMode
               ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
               : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700'
@@ -81,7 +81,7 @@ export const SizeSettings: React.FC<SizeSettingsProps> = ({
               type="button"
               onClick={() => !editMode && onSelectSize(size.width, size.height)}
               disabled={editMode}
-              className={`rounded-[3px] bg-neutral-100 px-3 py-2 text-xs font-medium text-neutral-700 transition-all hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${
+              className={`rounded-[3px] bg-neutral-100 px-3 py-2 text-xs font-medium text-neutral-700 transition-[color,background-color,opacity] hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 ${
                 config.width === size.width &&
                 config.height === size.height &&
                 !editMode

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useMemo, useRef } from 'react';
+import { IS_BUILTIN_API_ENABLED } from '@/lib/api/shared/config';
 import { motion } from 'framer-motion';
 import ActionDrawer from '@/components/common/ui/ActionDrawer';
 import { showToast } from '@/components/common/feedback/LightToast';
@@ -306,7 +307,10 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : 'Неизвестная ошибка';
-        showToast({ type: 'error', title: `Не удалось добавить: ${errorMessage}` });
+        showToast({
+          type: 'error',
+          title: `Не удалось добавить: ${errorMessage}`,
+        });
       }
     },
     [allowEmptyStages, existingMethods, onImport, onClose]
@@ -438,7 +442,10 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
         console.error('图片识别失败:', error);
         showToast({
           type: 'error',
-          title: error instanceof Error ? error.message : 'Не удалось распознать фото',
+          title:
+            error instanceof Error
+              ? error.message
+              : 'Не удалось распознать фото',
         });
         setIsRecognizing(false);
         URL.revokeObjectURL(imageUrl);
@@ -478,7 +485,10 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
       if (methodData && 'params' in methodData && 'name' in methodData) {
         await handleImportData(methodData);
       } else {
-        showToast({ type: 'error', title: 'Не удалось разобрать введённые данные' });
+        showToast({
+          type: 'error',
+          title: 'Не удалось разобрать введённые данные',
+        });
       }
     } catch (_error) {
       showToast({ type: 'error', title: 'Неверный формат данных' });
@@ -501,11 +511,16 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
       {/* 内容区域 */}
       <ActionDrawer.Content>
         <p className="text-neutral-500 dark:text-neutral-400">
-          Советуем
-          <span className="text-neutral-800 dark:text-neutral-200">
-            распознавание по фото
-          </span>
-          Добавьте рецепт — или отправьте фото и
+          {IS_BUILTIN_API_ENABLED && (
+            <>
+              Советуем
+              <span className="mx-0.5 text-neutral-800 dark:text-neutral-200">
+                распознавание по фото
+              </span>
+              — или отправьте фото и
+            </>
+          )}
+          {!IS_BUILTIN_API_ENABLED && 'Отправьте фото рецепта и'}
           <button
             type="button"
             onClick={handleCopyPrompt}
@@ -519,15 +534,17 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
 
       {/* 操作按钮列表 */}
       <div className="flex flex-col gap-2">
+        {IS_BUILTIN_API_ENABLED && (
+          <motion.button
+            whileTap={{ scale: 0.96 }}
+            onClick={handleUploadImageClick}
+            className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
+          >
+            Распознать рецепт по фото
+          </motion.button>
+        )}
         <motion.button
-          whileTap={{ scale: 0.98 }}
-          onClick={handleUploadImageClick}
-          className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
-        >
-          Распознать рецепт по фото
-        </motion.button>
-        <motion.button
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.96 }}
           onClick={handleInputJSON}
           className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
         >
@@ -538,7 +555,7 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
           <>
             <ActionDrawer.Divider />
             <motion.button
-              whileTap={{ scale: 0.98 }}
+              whileTap={{ scale: 0.96 }}
               onClick={handleSelectFromEquipment}
               className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
             >
@@ -581,14 +598,14 @@ const MethodImportModal: React.FC<MethodImportModalProps> = ({
         />
         <div className="flex gap-2">
           <motion.button
-            whileTap={{ scale: 0.98 }}
+            whileTap={{ scale: 0.96 }}
             onClick={handleCancelJsonInput}
             className="flex-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
           >
             Отмена
           </motion.button>
           <motion.button
-            whileTap={!jsonInputValue.trim() ? undefined : { scale: 0.98 }}
+            whileTap={!jsonInputValue.trim() ? undefined : { scale: 0.96 }}
             onClick={handleSubmitJson}
             disabled={!jsonInputValue.trim()}
             className={`flex-1 rounded-full px-4 py-3 text-sm font-medium transition-colors ${

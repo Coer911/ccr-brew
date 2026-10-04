@@ -496,7 +496,7 @@ const ArtisticShareDrawer: React.FC<ArtisticShareDrawerProps> = ({
                       activeTab: tab.id,
                     }))
                   }
-                  className={`rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
+                  className={`rounded-full px-4 py-1.5 text-xs font-medium transition-[color,background-color,box-shadow] ${
                     activeTab === tab.id
                       ? 'bg-white text-neutral-900 shadow-sm dark:bg-neutral-700 dark:text-white'
                       : 'text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200'

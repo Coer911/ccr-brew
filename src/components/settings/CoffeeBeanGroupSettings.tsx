@@ -317,7 +317,7 @@ const StackedDrawer: React.FC<StackedDrawerProps> = ({
               <button
                 type="button"
                 onClick={onCancel}
-                className="cursor-pointer rounded-full bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-600 transition active:scale-95 dark:bg-neutral-800 dark:text-neutral-300"
+                className="cursor-pointer rounded-full bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-600 transition active:scale-[0.96] dark:bg-neutral-800 dark:text-neutral-300"
               >
                 Отмена
               </button>
@@ -328,7 +328,7 @@ const StackedDrawer: React.FC<StackedDrawerProps> = ({
                 type="button"
                 onClick={onDone}
                 disabled={doneDisabled}
-                className="cursor-pointer rounded-full bg-neutral-100 px-4 py-2 text-sm font-semibold text-neutral-800 transition active:scale-95 disabled:cursor-default disabled:opacity-30 disabled:active:scale-100 dark:bg-neutral-800 dark:text-neutral-100"
+                className="cursor-pointer rounded-full bg-neutral-100 px-4 py-2 text-sm font-semibold text-neutral-800 transition active:scale-[0.96] disabled:cursor-default disabled:opacity-30 disabled:active:scale-100 dark:bg-neutral-800 dark:text-neutral-100"
               >
                 {doneLabel}
               </button>
@@ -676,7 +676,7 @@ const BeanPickerDrawer: React.FC<BeanPickerDrawerProps> = ({
                       type="button"
                       onClick={() => handleSelectedChipClick(bean.id)}
                       title={chipName}
-                      className={`flex max-w-full cursor-pointer items-center gap-1.5 rounded-full py-1 pr-3 pl-1.5 text-sm font-medium transition active:scale-[0.98] ${
+                      className={`flex max-w-full cursor-pointer items-center gap-1.5 rounded-full py-1 pr-3 pl-1.5 text-sm font-medium transition active:scale-[0.96] ${
                         isActive
                           ? 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900'
                           : 'bg-neutral-200/75 text-neutral-800 dark:bg-neutral-700/70 dark:text-neutral-100'

@@ -5,8 +5,9 @@ RUN npm install -g pnpm@10.28.0
 COPY package.json pnpm-lock.yaml .pnpmrc* ./
 RUN pnpm install --frozen-lockfile
 COPY . .
-# Адрес сайта для метаданных (можно передать при сборке).
-ARG NEXT_PUBLIC_SITE_URL
+# Адрес сайта для canonical и превью ссылок, например https://brew.example.ru.
+# Без него сайт собирается, но эти теги не выводятся.
+ARG NEXT_PUBLIC_SITE_URL=
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL NEXT_TELEMETRY_DISABLED=1
 RUN pnpm build
 

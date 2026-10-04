@@ -150,14 +150,14 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
       </ActionDrawer.Content>
       <div className="flex flex-col gap-2">
         <motion.button
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.96 }}
           onClick={goToNextStep}
           className="w-full rounded-full bg-neutral-900 px-4 py-3 text-sm font-medium text-white dark:bg-white dark:text-neutral-900"
         >
           Начать настройку
         </motion.button>
         <motion.button
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.96 }}
           onClick={handleClose}
           className="w-full rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
         >
@@ -191,14 +191,14 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
       </ActionDrawer.Content>
       <div className="flex flex-col gap-2">
         <motion.button
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.96 }}
           onClick={goToNextStep}
           className="w-full rounded-full bg-neutral-900 px-4 py-3 text-sm font-medium text-white dark:bg-white dark:text-neutral-900"
         >
           Готово, дальше
         </motion.button>
         <motion.button
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.96 }}
           onClick={goBack}
           className="w-full rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
         >
@@ -238,14 +238,14 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
       </ActionDrawer.Content>
       <div className="flex flex-col gap-2">
         <motion.button
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.96 }}
           onClick={goToNextStep}
           className="w-full rounded-full bg-neutral-900 px-4 py-3 text-sm font-medium text-white dark:bg-white dark:text-neutral-900"
         >
           Пароль приложения создан, дальше
         </motion.button>
         <motion.button
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.96 }}
           onClick={goBack}
           className="w-full rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
         >
@@ -347,7 +347,7 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
         {/* 操作按钮 */}
         <div className="flex gap-2">
           <motion.button
-            whileTap={{ scale: 0.98 }}
+            whileTap={{ scale: 0.96 }}
             onClick={goBack}
             className="flex-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
           >
@@ -357,7 +357,7 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
             whileTap={
               !formData.username || !formData.password || isConnecting
                 ? undefined
-                : { scale: 0.98 }
+                : { scale: 0.96 }
             }
             onClick={testConnection}
             disabled={!formData.username || !formData.password || isConnecting}
@@ -390,7 +390,7 @@ const WebDAVTutorialModal: React.FC<WebDAVTutorialModalProps> = ({
       </ActionDrawer.Content>
       <div className="flex flex-col gap-2">
         <motion.button
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.96 }}
           onClick={handleClose}
           className="w-full rounded-full bg-neutral-900 px-4 py-3 text-sm font-medium text-white dark:bg-white dark:text-neutral-900"
         >

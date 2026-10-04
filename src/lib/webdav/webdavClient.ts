@@ -18,8 +18,9 @@ export class WebDAVClient {
     this.config = config;
     // 创建基础认证头
     this.authHeader = `Basic ${btoa(`${config.username}:${config.password}`)}`;
-    // WebDAV 始终通过统一的 CORS 代理访问，避免端侧再分叉。
-    this.corsProxy = 'https://cors.chu3.top/raw?url=';
+    // Сторонний CORS-прокси не используем: без NEXT_PUBLIC_WEBDAV_PROXY_URL
+    // запросы идут напрямую на WebDAV-сервер пользователя.
+    this.corsProxy = process.env.NEXT_PUBLIC_WEBDAV_PROXY_URL || '';
   }
 
   getLastError(): string | null {
@@ -47,7 +48,9 @@ export class WebDAVClient {
         // 检查是否有错误
         if (json.status?.error) {
           const error = json.status.error;
-          return error.message || error.code || error.name || 'Ошибка прокси-запроса';
+          return (
+            error.message || error.code || error.name || 'Ошибка прокси-запроса'
+          );
         }
 
         // 检查 contents 是否为 null（代理请求失败的另一种情况）
@@ -202,7 +205,8 @@ export class WebDAVClient {
           console.log(
             `[WebDAV] 响应内容片段: ${responseText.substring(0, 500)}`
           );
-          this.lastError = 'Ошибка авторизации — проверьте логин, пароль и права доступа';
+          this.lastError =
+            'Ошибка авторизации — проверьте логин, пароль и права доступа';
           return false;
         }
 
@@ -768,7 +772,8 @@ export class WebDAVClient {
             mkcolText.includes('Unauthorized') ||
             mkcolText.includes('Forbidden');
           if (hasAuthError) {
-            this.lastError = 'Не удалось создать папку: нет авторизации или прав';
+            this.lastError =
+              'Не удалось создать папку: нет авторизации или прав';
             this.logSummary('mkdir', {
               path: currentPath,
               url: currentUrl,
@@ -835,6 +840,7 @@ export class WebDAVClient {
    * 获取代理后的 URL
    */
   private getProxiedUrl(originalUrl: string): string {
+    if (!this.corsProxy) return originalUrl;
     return `${this.corsProxy}${encodeURIComponent(originalUrl)}`;
   }
 

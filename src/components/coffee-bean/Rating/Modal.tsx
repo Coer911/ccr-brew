@@ -229,7 +229,7 @@ const CoffeeBeanRatingModal: React.FC<CoffeeBeanRatingModalProps> = ({
                     return (
                       <motion.button
                         key={star}
-                        whileTap={{ scale: 0.9 }}
+                        whileTap={{ scale: 0.96 }}
                         onClick={() =>
                           setOverallRating(
                             overallRating === star ? star - 0.5 : star
@@ -272,14 +272,14 @@ const CoffeeBeanRatingModal: React.FC<CoffeeBeanRatingModalProps> = ({
 
             <div className="flex gap-2">
               <motion.button
-                whileTap={{ scale: 0.98 }}
+                whileTap={{ scale: 0.96 }}
                 onClick={handleCancel}
                 className="flex-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300"
               >
                 Отмена
               </motion.button>
               <motion.button
-                whileTap={{ scale: 0.98 }}
+                whileTap={{ scale: 0.96 }}
                 onClick={handleSave}
                 className="flex-1 rounded-full bg-neutral-800 px-4 py-3 text-sm font-medium text-white transition-colors dark:bg-white dark:text-neutral-900"
               >

@@ -60,29 +60,7 @@ interface AboutSettingsProps {
 
 const AboutSettings: React.FC<AboutSettingsProps> = ({ onClose }) => {
   const [isVisible, setIsVisible] = React.useState(false);
-  const [commitCount, setCommitCount] = React.useState<number | null>(null);
-  useScrollToHighlightedSetting(commitCount);
-
-  React.useEffect(() => {
-    fetch('https://gitee.com/api/v5/repos/chu3/brew-guide/contributors')
-      .then(res => (res.ok ? res.json() : Promise.reject()))
-      .then((data: { contributions: number }[]) => {
-        setCommitCount(data.reduce((sum, c) => sum + c.contributions, 0));
-      })
-      .catch(() => {
-        fetch(
-          'https://api.github.com/repos/chuthree/brew-guide/commits?per_page=1',
-          { method: 'HEAD' }
-        )
-          .then(res => {
-            const match = res.headers
-              .get('link')
-              ?.match(/page=(\d+)>; rel="last"/);
-            if (match) setCommitCount(parseInt(match[1], 10));
-          })
-          .catch(() => {});
-      });
-  }, []);
+  useScrollToHighlightedSetting();
 
   const handleCloseWithAnimation = React.useCallback(() => {
     setIsVisible(false);
@@ -112,49 +90,40 @@ const AboutSettings: React.FC<AboutSettingsProps> = ({ onClose }) => {
   }, []);
 
   return (
-    <SettingPage title="О приложении" isVisible={isVisible} onClose={handleClose}>
+    <SettingPage
+      title="О приложении"
+      isVisible={isVisible}
+      onClose={handleClose}
+    >
       <div className="px-6 pt-4 pb-6">
         <div className="space-y-4 text-base leading-relaxed font-medium">
           <p>
-            Cultura Brew основан на открытом проекте Brew Guide (chu3), который появился из личной потребности и развивается при поддержке сообщества — это
+            Cultura Brew основан на открытом проекте Brew Guide (chu3), который
+            появился из личной потребности и развивается при поддержке
+            сообщества — это{' '}
             <span className="underline decoration-pink-500 decoration-wavy">
               проект на энтузиазме
             </span>
             .
           </p>
-          {commitCount ? (
-            <p>
-              Через
-              <a
-                href="https://github.com/chuthree/brew-guide/commits/main"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={handleExternalUrlClick}
-                className="mx-0.5 text-neutral-800 underline dark:text-neutral-200"
-              >
-                {commitCount}
-              </a>
-              коммитов он стал таким, каким вы его видите.
-            </p>
-          ) : (
-            <p>
-              Через
-              <span className="mx-0.5 inline-block h-4 w-8 animate-pulse rounded bg-neutral-200 align-middle dark:bg-neutral-700" />
-              коммитов он стал таким, каким вы его видите.
-            </p>
-          )}
           <hr className="my-6" />
           <CollapsibleSection title="Политика конфиденциальности">
             <p>
-              Приложение не использует веб-аналитику и сторонние сервисы статистики и не собирает данные о посещениях и устройствах.
+              Приложение не использует веб-аналитику и сторонние сервисы
+              статистики и не собирает данные о посещениях и устройствах.
             </p>
             <p>
-              Всё зерно и записи заварок хранятся на вашем устройстве. Если включить облачную синхронизацию, данные синхронизируются с вашим собственным сервером (WebDAV/S3/Supabase) — приложение их не видит и не хранит.
+              Всё зерно и записи заварок хранятся на вашем устройстве. Если
+              включить облачную синхронизацию, данные синхронизируются с вашим
+              собственным сервером (WebDAV/S3/Supabase) — приложение их не видит
+              и не хранит.
             </p>
             <p>
-              При распознавании по фото (зерно/рецепты) фото отправляется на сервер для ИИ-анализа и сразу удаляется после обработки, без сохранения.
+              Распознавание по фото работает только через ИИ-сервис, который вы
+              сами подключили в разделе «Эксперименты». Фото отправляется
+              напрямую в этот сервис.
             </p>
-</CollapsibleSection>
+          </CollapsibleSection>
           <CollapsibleSection title="Благодарности открытому ПО">
             <p>
               В проекте используется{' '}

@@ -973,7 +973,7 @@ const FilterTabs: React.FC<FilterTabsProps> = memo(function FilterTabs({
                 exit={FILTER_ANIMATION.exit}
                 transition={FILTER_ANIMATION.transition}
                 className="overflow-hidden"
-                style={{ willChange: 'height, opacity, transform' }}
+                style={{ willChange: 'opacity, transform' }}
               >
                 <div className="px-6 py-4">
                   <div className="space-y-4">

@@ -91,7 +91,7 @@ function SettingReorderableRow<T>({
             }`}
           >
             <span
-              className={`absolute inset-0 flex items-center justify-center text-neutral-400 transition-[opacity,transform,filter] duration-300 ease-[cubic-bezier(0.2,0,0,1)] dark:text-neutral-500 ${
+              className={`absolute inset-0 flex items-center justify-center text-neutral-400 transition-[opacity,scale,filter] duration-300 ease-[cubic-bezier(0.2,0,0,1)] dark:text-neutral-500 ${
                 isReorderMode
                   ? 'scale-[0.25] opacity-0 blur-xs'
                   : 'blur-0 scale-100 opacity-100'
@@ -140,7 +140,7 @@ function SettingReorderableRow<T>({
           tabIndex={isReorderMode ? 0 : -1}
           disabled={!isReorderMode}
           onPointerDown={handleDragHandlePointerDown}
-          className={`-mr-2 flex h-10 w-10 cursor-grab touch-none items-center justify-center rounded-lg text-neutral-400 transition-[opacity,transform,filter,background-color] duration-300 ease-[cubic-bezier(0.2,0,0,1)] select-none active:cursor-grabbing active:bg-black/5 dark:text-neutral-500 dark:active:bg-white/5 ${
+          className={`-mr-2 flex h-10 w-10 cursor-grab touch-none items-center justify-center rounded-lg text-neutral-400 transition-[opacity,scale,filter,background-color] duration-300 ease-[cubic-bezier(0.2,0,0,1)] select-none active:cursor-grabbing active:bg-black/5 dark:text-neutral-500 dark:active:bg-white/5 ${
             reorderAction ? '' : '-ml-8'
           } ${
             isReorderMode
