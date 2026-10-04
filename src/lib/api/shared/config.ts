@@ -1,23 +1,11 @@
-const DEFAULT_API_BASE_URL = 'https://coffee.chu3.top';
-const BUNDLED_APP_HOSTNAMES = new Set(['app', 'tauri.localhost']);
-
-function getDefaultApiBaseUrl() {
-  if (typeof window !== 'undefined') {
-    const { hostname, origin, protocol } = window.location;
-    const isWebOrigin = protocol === 'http:' || protocol === 'https:';
-
-    if (isWebOrigin && !BUNDLED_APP_HOSTNAMES.has(hostname)) {
-      return origin;
-    }
-  }
-  return DEFAULT_API_BASE_URL;
-}
-
+// Собственного API-сервера у сайта нет: встроенные функции (распознавание по фото,
+// список спонсоров) включаются только при заданном NEXT_PUBLIC_API_URL.
 export const API_CONFIG = {
-  // 部署网页走同域 Functions；打包应用没有本地 Functions，统一回退线上服务。
-  baseURL: (process.env.NEXT_PUBLIC_API_URL || getDefaultApiBaseUrl()).replace(
-    /\/+$/,
-    ''
-  ),
+  baseURL: (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/+$/, ''),
   timeoutMs: 125000,
 } as const;
+
+export const IS_BUILTIN_API_ENABLED = API_CONFIG.baseURL !== '';
+
+export const BUILTIN_RECOGNITION_UNAVAILABLE_MESSAGE =
+  'Распознавание по фото недоступно. Скопируйте запрос для любого ИИ или подключите свой ИИ-сервис в разделе «Эксперименты».';

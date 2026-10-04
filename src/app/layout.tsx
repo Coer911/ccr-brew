@@ -31,8 +31,14 @@ const geistMono = localFont({
 });
 
 const SEO_TITLE = 'Cultura Brew';
-// Адрес сайта задаётся при сборке; по умолчанию — заглушка для метаданных.
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://cultura-brew.local').replace(/\/+$/, '') + '/';
+// Адрес сайта задаётся при сборке (NEXT_PUBLIC_SITE_URL). Без него абсолютные ссылки
+// (canonical, Open Graph) не выводим, чтобы не публиковать чужой или выдуманный домен.
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL
+  ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/+$/, '') + '/'
+  : null;
+const SHARE_IMAGE_URL = SITE_URL
+  ? SITE_URL + 'images/icons/app/icon-512x512-opaque.png'
+  : null;
 
 const encodeJsonForHtml = (value: unknown) =>
   JSON.stringify(value).replace(/[<>&]/g, char => {
@@ -54,7 +60,7 @@ const STRUCTURED_DATA_JSON = encodeJsonForHtml({
   name: 'Cultura Brew',
   applicationCategory: 'LifestyleApplication',
   operatingSystem: 'Web, iOS, Android',
-  url: SITE_URL,
+  ...(SITE_URL && { url: SITE_URL }),
   author: {
     '@type': 'Organization',
     name: 'Cultura Coffee',
@@ -68,7 +74,7 @@ const STRUCTURED_DATA_JSON = encodeJsonForHtml({
 
 // SEO constants
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
+  ...(SITE_URL && { metadataBase: new URL(SITE_URL) }),
   title: SEO_TITLE,
   keywords: [
     'Cultura Brew',
@@ -82,30 +88,28 @@ export const metadata: Metadata = {
     'дегустационные заметки',
   ],
   manifest: '/manifest.json',
-  alternates: {
-    canonical: SITE_URL,
-  },
+  ...(SITE_URL && { alternates: { canonical: SITE_URL } }),
   openGraph: {
     title: SEO_TITLE,
-    url: SITE_URL,
+    ...(SITE_URL && { url: SITE_URL }),
     siteName: 'Cultura Brew',
     locale: 'ru_RU',
     type: 'website',
-    images: [
-      {
-        url: SITE_URL + 'images/icons/app/icon-512x512-opaque.png',
-        width: 512,
-        height: 512,
-        alt: 'Cultura Brew',
-      },
-    ],
+    ...(SHARE_IMAGE_URL && {
+      images: [
+        {
+          url: SHARE_IMAGE_URL,
+          width: 512,
+          height: 512,
+          alt: 'Cultura Brew',
+        },
+      ],
+    }),
   },
   twitter: {
-    card: 'summary_large_image',
+    card: SHARE_IMAGE_URL ? 'summary_large_image' : 'summary',
     title: SEO_TITLE,
-    images: [
-      SITE_URL + 'images/icons/app/icon-512x512-opaque.png',
-    ],
+    ...(SHARE_IMAGE_URL && { images: [SHARE_IMAGE_URL] }),
   },
   robots: {
     index: true,

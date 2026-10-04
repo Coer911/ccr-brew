@@ -22,6 +22,7 @@ import {
   DEFAULT_BEAN_RECOGNITION_PROMPT,
   type CustomBeanRecognitionConfig,
 } from '@/lib/api/beanRecognition';
+import { IS_BUILTIN_API_ENABLED } from '@/lib/api/shared/config';
 import { normalizeCoffeeBeanPayloadForFieldConfig } from '@/lib/coffee-beans/beanFields';
 import { isSupportedSourceImageFile } from '@/lib/images/imageFormat';
 import {
@@ -552,7 +553,9 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
         ) {
           showToast({
             type: 'error',
-            title: isArray ? 'У части данных нет названия зерна' : 'В данных нет названия зерна',
+            title: isArray
+              ? 'У части данных нет названия зерна'
+              : 'В данных нет названия зерна',
           });
           return;
         }
@@ -573,7 +576,10 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : 'Неизвестная ошибка';
-        showToast({ type: 'error', title: `Не удалось добавить: ${errorMessage}` });
+        showToast({
+          type: 'error',
+          title: `Не удалось добавить: ${errorMessage}`,
+        });
       }
     },
     [ensureStringFields, fieldSettings, onImport, onClose]
@@ -610,6 +616,10 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
       openJsonInput();
     }
   }, [handleImportData, openJsonInput]);
+
+  // Без собственного API распознавание доступно только через свой ИИ-сервис.
+  const canRecognizeImages =
+    USE_MOCK_API || IS_BUILTIN_API_ENABLED || !!customRecognitionConfig;
 
   // 识别单张图片的核心函数
   const recognizeSingleImage = useCallback(
@@ -692,7 +702,10 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
       } catch (error) {
         showToast({
           type: 'error',
-          title: error instanceof Error ? error.message : 'Не удалось распознать фото',
+          title:
+            error instanceof Error
+              ? error.message
+              : 'Не удалось распознать фото',
         });
         setIsRecognizing(false);
         URL.revokeObjectURL(imageUrl);
@@ -756,7 +769,10 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
   const handleImportPackageFile = useCallback(
     async (file: File) => {
       if (!settings?.experimentalBeanSharePackageEnabled) {
-        showToast({ type: 'error', title: 'Сначала включите «Импорт архивов через Поделиться»' });
+        showToast({
+          type: 'error',
+          title: 'Сначала включите «Импорт архивов через Поделиться»',
+        });
         return;
       }
 
@@ -769,7 +785,9 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
         showToast({
           type: 'error',
           title:
-            error instanceof Error ? error.message : 'Не удалось импортировать архив с зерном',
+            error instanceof Error
+              ? error.message
+              : 'Не удалось импортировать архив с зерном',
         });
       }
     },
@@ -790,7 +808,10 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
 
       if (packageFiles.length > 0) {
         if (selectedFiles.length > 1 || packageFiles.length > 1) {
-          showToast({ type: 'error', title: 'За раз можно импортировать только один архив' });
+          showToast({
+            type: 'error',
+            title: 'За раз можно импортировать только один архив',
+          });
         } else {
           await handleImportPackageFile(packageFiles[0]);
         }
@@ -899,7 +920,8 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
               ? {
                   ...i,
                   status: 'error',
-                  error: error instanceof Error ? error.message : 'Не распознано',
+                  error:
+                    error instanceof Error ? error.message : 'Не распознано',
                 }
               : i
           )
@@ -1005,7 +1027,8 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
 
       showToast({
         type: 'error',
-        title: error instanceof Error ? error.message : 'Не удалось открыть галерею',
+        title:
+          error instanceof Error ? error.message : 'Не удалось открыть галерею',
       });
     }
   }, [processImageFiles]);
@@ -1034,7 +1057,10 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
     } catch (_error) {
       setIsTorchSupported(false);
       setIsTorchOn(false);
-      showToast({ type: 'error', title: 'Это устройство не управляет вспышкой' });
+      showToast({
+        type: 'error',
+        title: 'Это устройство не управляет вспышкой',
+      });
     }
   }, [isTorchOn, isTorchSupported]);
 
@@ -1164,7 +1190,10 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
     }
 
     if (selectedImages.length >= MAX_IMAGES) {
-      showToast({ type: 'info', title: `Можно оставить не больше ${MAX_IMAGES} фото` });
+      showToast({
+        type: 'info',
+        title: `Можно оставить не больше ${MAX_IMAGES} фото`,
+      });
       return;
     }
 
@@ -1186,7 +1215,10 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
     } catch (error) {
       showToast({
         type: 'error',
-        title: error instanceof Error ? error.message : 'Не удалось сфотографировать',
+        title:
+          error instanceof Error
+            ? error.message
+            : 'Не удалось сфотографировать',
       });
     } finally {
       setIsCameraCapturing(false);
@@ -1226,7 +1258,10 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
         setJsonInputValue('');
         setCurrentStep('main');
       } else {
-        showToast({ type: 'error', title: 'Не удалось разобрать введённые данные' });
+        showToast({
+          type: 'error',
+          title: 'Не удалось разобрать введённые данные',
+        });
       }
     } catch (_error) {
       showToast({ type: 'error', title: 'Неверный формат данных' });
@@ -1266,11 +1301,16 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
       {/* 内容区域 */}
       <ActionDrawer.Content>
         <p className="text-neutral-500 dark:text-neutral-400">
-          Советуем
-          <span className="text-neutral-800 dark:text-neutral-200">
-            распознавание по фото
-          </span>
-          — или отправьте фото и
+          {canRecognizeImages && (
+            <>
+              Советуем
+              <span className="text-neutral-800 dark:text-neutral-200">
+                распознавание по фото
+              </span>
+              — или отправьте
+            </>
+          )}
+          {canRecognizeImages ? ' фото и' : 'Отправьте фото пачки и'}
           <button
             type="button"
             onClick={handleCopyPrompt}
@@ -1284,20 +1324,24 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
 
       {/* 操作按钮列表 */}
       <div className="flex flex-col gap-2">
-        <motion.button
-          whileTap={{ scale: 0.96 }}
-          onClick={handleOpenCamera}
-          className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
-        >
-          Распознать пачку камерой
-        </motion.button>
-        <motion.button
-          whileTap={{ scale: 0.96 }}
-          onClick={handleUploadImageClick}
-          className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
-        >
-          Распознать по фото
-        </motion.button>
+        {canRecognizeImages && (
+          <>
+            <motion.button
+              whileTap={{ scale: 0.96 }}
+              onClick={handleOpenCamera}
+              className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
+            >
+              Распознать пачку камерой
+            </motion.button>
+            <motion.button
+              whileTap={{ scale: 0.96 }}
+              onClick={handleUploadImageClick}
+              className="w-full rounded-full bg-neutral-100 px-4 py-3 text-left text-sm font-medium text-neutral-800 dark:bg-neutral-800 dark:text-white"
+            >
+              Распознать по фото
+            </motion.button>
+          </>
+        )}
         <motion.button
           whileTap={{ scale: 0.96 }}
           onClick={handleInputJSON}
@@ -1434,7 +1478,9 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
                   type="button"
                   whileTap={{ scale: 0.96 }}
                   onClick={handleToggleTorch}
-                  aria-label={isTorchOn ? 'Выключить вспышку' : 'Включить вспышку'}
+                  aria-label={
+                    isTorchOn ? 'Выключить вспышку' : 'Включить вспышку'
+                  }
                   aria-pressed={isTorchOn}
                   className={`absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full backdrop-blur-md transition-colors ${
                     isTorchOn
@@ -1473,7 +1519,8 @@ const BeanImportModal: React.FC<BeanImportModalProps> = ({
             <span className="text-neutral-800 dark:text-neutral-200">
               Наведите на пачку зерна,
             </span>
-            поместите её в рамку и снимайте; если картинка мутная — протрите объектив.
+            поместите её в рамку и снимайте; если картинка мутная — протрите
+            объектив.
           </p>
         </div>
 
