@@ -1,14 +1,15 @@
-# Dockhost: проект ccr-brew — Cultura Brew (статичный сайт, nginx на 8080).
+# Dockhost: проект price (c46c3394-2aac-4840-9d40-444fe77e95b4) — Cultura Brew
+# (статичный сайт, nginx слушает 80 и 8080).
 # Сервер и база не нужны, переменных окружения и секретов нет.
 #
 # На Mac:
 #   export PATH="$HOME/.dockhost/bin:$PATH"
-#   dockhost repository build --name brew --project ccr-brew
-#   # подставьте ID проекта и полный Git SHA собранного образа в containers.brew.image
+#   dockhost repository build --name brew --project price
+#   # подставьте полный Git SHA собранного образа в containers.brew.image
 #   dockhost compose apply ./dockhost.yaml
 
 version: 1
-project: ccr-brew
+project: price
 
 repositories:
   brew:
@@ -24,7 +25,7 @@ repositories:
 
 containers:
   brew:
-    image: dockhost.io/<ID_ПРОЕКТА>/build/brew:<GIT_SHA>
+    image: dockhost.io/c46c3394-2aac-4840-9d40-444fe77e95b4/build/brew:<GIT_SHA>
     replicas: 1
     resources:
       memory: 256MiB
